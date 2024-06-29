@@ -1,0 +1,15 @@
+Package: EcoPostView
+Title: an EcologicalPosteriorView
+Version: 0.0.0.9000
+Authors@R: 
+    person("Willem", "Kaijser", ,"wimkaijser@outlook.com", role = c("aut", "cre"),
+           comment = c(ORCID = "YOUR-ORCID-ID"))
+Description: Used to make probablistic statements on ecological phenomenon.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.3
+Imports: R2jags (>= 0.7-1), ggplot2 (>= 3.3.6), tidyr (>= 1.2.0), cowplot (>= 1.1.3)
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3

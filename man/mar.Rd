@@ -2,7 +2,7 @@
 % Please edit documentation in R/mar.R
 \name{mar}
 \alias{mar}
-\title{Title}
+\title{Title Meta-Analysis over Regression coefficients (MAR)}
 \usage{
 mar(
   estimate,
@@ -67,10 +67,10 @@ mar(
 
 \item{n_burnin}{Length of the burn-in}
 
-\item{Rhat_warn}{When higher retursn an warning}
+\item{Rhat_warn}{When higher returns an warning}
 
 \item{Eff_warn}{When lower returns a warning}
 }
 \description{
-Title
+Title Meta-Analysis over Regression coefficients (MAR)
 }

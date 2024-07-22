@@ -1,4 +1,4 @@
-#' Title
+#' Title Meta-Analysis over Regression coefficients (MAR)
 #'
 #' @param estimate The model estimates
 #' @param stderr The standard error of the model estimates
@@ -90,41 +90,72 @@ mar <- function(estimate, stderr, parameter, predictor,
                                        Prior_mu=mod_data$Pm,
                                        Prior_se=mod_data$Pe))}else if(get_prior_only == F){
 
-                                         meta_analysis <- function(){
+                                         if(mod_data$npw>1){
+                                           meta_analysis <- function(){
 
-                                           ##likelihood
-                                           for (i in 1:N){
-                                             est[i]  ~ dnorm(mu2[i], tau2[i])
-                                             mu2[i]  ~ dnorm(mu1[i], tau1[level[i]])
-                                             mu1[i]  <-mu[level[i]] + adjust[level[i]]*grad_expr[i]
-                                             tau2[i] <-1/(se[i]^2)
+                                             ##likelihood
+                                             for (i in 1:N){
+                                               est[i]  ~ dnorm(mu2[i], tau2[i])
+                                               mu2[i]  ~ dnorm(mu1[i], tau1[level[i]])
+                                               mu1[i]  <-mu[level[i]] + adjust1[level[i]]*grad_expr[i] + adjust2[level[i]]*log(1/se[i])
+                                               tau2[i] <-1/(se[i]^2)
 
-                                             tvar[i] <- 1/tau2[i]+bvar[level[i]]
-                                             I[i]    <- bvar[level[i]]/tvar[level[i]]}
+                                               tvar[i] <- 1/tau2[i]+bvar[level[i]]
+                                               I[i]    <- bvar[level[i]]/tvar[level[i]]}
 
-                                           sigma_individual  ~ dunif(0, Ps)
+                                             sigma_individual  ~ dunif(0, Ps)
 
-                                           ##priors
-                                           for(j in 1:L){
-                                             adjust[j]      ~ dnorm(0, 1/0.15^2)
-                                             for(k in 1:npw){
-                                               mu_M[j,k]    ~ dnorm(Pm[j,k], 1/Pe[j,k]^2);T(l_trunc, u_trunc)}
+                                             ##priors
+                                             for(j in 1:L){
+                                               adjust1[j]      ~ dnorm(0, 1/0.15^2)
+                                               adjust2[j]      ~ dnorm(0, 1/0.15^2)
+                                               for(k in 1:npw){
+                                                 mu_M[j,k]    ~ dnorm(Pm[j,k], 1/Pe[j,k]^2)}
 
-                                             d[j]            ~ dcat(pw[1:npw])
+                                               d[j]            ~ dcat(pw[1:npw])
 
-                                             mu[j]           <- inprod(mu_M[j, 1:npw], d[j] == 1:npw)
+                                               mu[j]           <- inprod(mu_M[j, 1:npw], d[j] == 1:npw)
 
-                                             tau1[j]         <- 1/sigma_individual^2
+                                               tau1[j]         <- 1/sigma_individual^2
 
-                                             ##variance between studies
-                                             bvar[j]   <- 1 / tau1[j]}
+                                               ##variance between studies
+                                               bvar[j]   <- 1 / tau1[j]}
 
-                                           for(k in 1:L){I2[k] <- 1-sum(I[k])/Lc[L]}}
+                                             for(k in 1:L){I2[k] <- 1-sum(I[k])/Lc[L]}}}else{
+                                               meta_analysis <- function(){
+
+                                                 ##likelihood
+                                                 for (i in 1:N){
+                                                   est[i]  ~ dnorm(mu2[i], tau2[i])
+                                                   mu2[i]  ~ dnorm(mu1[i], tau1[level[i]])
+                                                   mu1[i]  <-mu[level[i]] + adjust1[level[i]]*grad_expr[i] + adjust2[level[i]]*log(1/se[i])
+                                                   tau2[i] <-1/(se[i]^2)
+
+                                                   tvar[i] <- 1/tau2[i]+bvar[level[i]]
+                                                   I[i]    <- bvar[level[i]]/tvar[level[i]]}
+
+                                                 sigma_individual  ~ dunif(0, Ps)
+
+                                                 ##priors
+                                                 for(j in 1:L){
+                                                   adjust1[j]      ~ dnorm(0, 1/0.15^2)
+                                                   adjust2[j]      ~ dnorm(0, 1/0.15^2)
+
+                                                   mu[j]           ~ dnorm(Pm[j], 1/Pe[j]^2)
+
+
+
+                                                   tau1[j]         <- 1/sigma_individual^2
+
+                                                   ##variance between studies
+                                                   bvar[j]   <- 1 / tau1[j]}
+
+                                                 for(k in 1:L){I2[k] <- 1-sum(I[k])/Lc[L]}}}
 
                                          #Run the model
                                          model <- jags.parallel(data = mod_data,
                                                                 model.file = meta_analysis,
-                                                                parameters.to.save =  c("mu", "d", "adjust", "I2"),
+                                                                parameters.to.save =  c("mu", "d", "adjust1", "adjust2", "I2"),
                                                                 n.chains = n_chain,
                                                                 n.thin = n_thin,
                                                                 jags.seed = n_seed,
@@ -153,26 +184,32 @@ mar <- function(estimate, stderr, parameter, predictor,
                                          #Extract chains for means
                                          mcmc_mu         <- extract_chain(model$BUGSoutput$sims.list$mu, mod_data)
 
-                                         #Extract chains for adjustment
-                                         mcmc_adj        <- extract_chain(model$BUGSoutput$sims.list$adjust, mod_data)
+                                         #Extract chains for adjustment1
+                                         mcmc_adj1        <- extract_chain(model$BUGSoutput$sims.list$adjust1, mod_data)
+
+                                         #Extract chains for adjustment2
+                                         mcmc_adj2        <- extract_chain(model$BUGSoutput$sims.list$adjust2, mod_data)
 
                                          #Extract chains for I2
                                          mcmc_I2         <- extract_chain(model$BUGSoutput$sims.list$I2, mod_data)
 
-                                         #Extract chains for d
+                                         #Extract chains for posterior weights
+                                         if(mod_data$npw>1){
                                          mcmc_podd       <- extract_chain(model$BUGSoutput$sims.list$d, mod_data)
 
                                          #Total support per model
-                                         support         <- table(mcmc_podd$estimate)/sum(table(mcmc_podd$estimate))/mod_data$pw
+                                         support         <- table(mcmc_podd$estimate)/sum(table(mcmc_podd$estimate))/mod_data$pw}
+
 
                                          return(list(Estimates=split(mcmc_mu, mcmc_mu$parameter),
-                                                     Gain=split(mcmc_podd, mcmc_mu$parameter),
+                                                     Gain=ifelse(mod_data$npw>1, split(mcmc_podd, mcmc_mu$parameter), NA),
                                                      N_level=table(mod_data$level),
                                                      Chains_mu=mcmc_mu,
-                                                     Chains_adj=mcmc_adj,
-                                                     Chains_podd=mcmc_podd,
+                                                     Chains_adj1=mcmc_adj1,
+                                                     Chains_adj2=mcmc_adj2,
+                                                     Chains_podd=ifelse(mod_data$npw>1, mcmc_podd, NA),
                                                      Chains_I2=mcmc_I2,
-                                                     Poster_to_prior_odds=support,
+                                                     Poster_to_prior_odds=ifelse(mod_data$npw>1, support, NA),
                                                      Prior_weight=mod_data$pw,
                                                      JAGS_model=model,
                                                      Data=mod_data,

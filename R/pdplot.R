@@ -27,14 +27,7 @@ pdplot <- function(object, interval=0.9, display="b1",
                    xylab_size=3, xtext_size=8){
 
 #Extract b1 or b0
-if(display=="b1"){object1   <- object$Estimates$b1; object2 <- object$Gain$b1}else{stop("b0 not yet implemented")}
-
-#Information gain
-postodds_mcmc               <- split(object2$estimate, paste(object2$group, object2$predictor, object2$link, sep="_"))
-prior_odds                  <- object$Prior_weight
-gain                        <- do.call(rbind, lapply(postodds_mcmc, function(x) 1/length(prior_odds)*sum(2*abs((table(x)/sum(table(x))/prior_odds)/(1+table(x)/sum(table(x))/prior_odds)-0.5))))
-gain                        <- data.frame(code=rownames(gain), mppir=gain)
-rownames(gain)              <- NULL
+if(display=="b1"){object1   <- object$Estimates$b1}else{stop("b0 not yet implemented")}
 
 #Sample size
 df_n                        <- setNames(as.data.frame(object$N_level), c("code", "n"))
@@ -49,7 +42,6 @@ split_mcmc       <- split(object1$estimate, paste(object1$group, object1$predict
 #unique combinations
 names_mcmc  <- expand.grid(unique(object1$group), unique(object1$predictor), unique(object1$link))
 names_mcmc  <- setNames(cbind(names_mcmc, apply(names_mcmc, 1, paste, collapse = "_")), c("group", "predictor", "link", "code"))
-names_mcmc  <- merge(names_mcmc, gain, by="code", all.x = T)
 names_mcmc  <- merge(names_mcmc, df_n, by="code", all.x = T)
 
 #count groups and predictors
@@ -80,7 +72,7 @@ if(!is.null(order_group)&&!is.null(order_group)){
 
 #create a list to store figures
 plot_list              <- list()
-est_df                 <- setNames(as.data.frame(array(NA, dim=c(nrow(names_mcmc), 7))), c("map", "mu", "se", "ll", "ul", "mppir", "x"))
+est_df                 <- setNames(as.data.frame(array(NA, dim=c(nrow(names_mcmc), 6))), c("map", "mu", "se", "ll", "ul", "x"))
 
 for(i in 1:length(split_mcmc)){
 
@@ -90,7 +82,7 @@ maxpost <- function(x){d <- density(x); d$x[which.max(d$y)]}
 
 est_df[i,]              <- c(maxpost(split_mcmc[[i]]), mean(split_mcmc[[i]]),
                              sd(split_mcmc[[i]]), quantile(split_mcmc[[i]], interval_level[1]),
-                             quantile(split_mcmc[[i]], interval_level[2]), names_mcmc$mppir[i], x=0)
+                             quantile(split_mcmc[[i]], interval_level[2]), x=0)
 
 if(max(abs(range(split_mcmc[[i]])))>1){
       xbreaks <- scale_x_continuous(breaks = seq(-2,2,1))
@@ -120,7 +112,7 @@ if(sign(est_df[i,]$map)==1){
 
 y_loc <- yrange_pl[2]-diff(yrange_pl)/5
 
-lab_pl <- paste0("map=", round(est_df[i,]$map,2),"\nse=", round(est_df[i,]$se,2), "\nmppir=", round(est_df[i,]$mppir,2))
+lab_pl <- paste0("map=", round(est_df[i,]$map,2),"\nse=", round(est_df[i,]$se,2))
 pl     <- pl+annotate("text", x=x_loc, y_loc, label=lab_pl, size=label_size)
 
 plot_list[[names_mcmc$code[i]]] <- pl
@@ -157,8 +149,4 @@ pl1 <- cowplot::plot_grid(groupnameplots, densplots, rel_widths = c(left_label, 
 pl2 <- cowplot::plot_grid(prednameplots, pl1, xtitle, rel_heights = c(top_label, 1-(top_label+0.03), 0.03), ncol = 1)
 dens_list[[i]] <- cowplot::plot_grid(pl2, ytitle, rel_widths = c(0.9, 0.03))}
 
-total_podds <- (table(object2$estimate)/sum(table(object2$estimate)))/prior_odds
-
-return(list(posterior_density=dens_list, summary=est_df[,-ncol(est_df)],
-            total_odds=rbind(`posterior to prior odds`=total_podds,
-                             `posterior to prior prob`=total_podds/(1+total_podds))))}
+return(list(posterior_density=dens_list, summary=est_df[,-ncol(est_df)]))}

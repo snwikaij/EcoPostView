@@ -2,7 +2,7 @@
 % Please edit documentation in R/mar.R
 \name{mar}
 \alias{mar}
-\title{Title Meta-Analysis over Regression coefficients (MAR)}
+\title{Title}
 \usage{
 mar(
   estimate,
@@ -11,14 +11,14 @@ mar(
   predictor,
   link_function,
   grouping,
-  gradient_dependency,
+  PEESE = TRUE,
+  RE = TRUE,
   prior_mu = 0,
-  prior_mu_se = 1,
-  prior_sd_max = 5,
+  prior_mu_se = 0.5,
+  prior_sigma_max = 5,
   prior_weights = 1,
+  interval = 0.9,
   get_prior_only = FALSE,
-  lower_trunc = -1e+07,
-  upper_trunc = 1e+07,
   n_chain = 2,
   n_thin = 1,
   n_seed = 666,
@@ -29,48 +29,77 @@ mar(
 )
 }
 \arguments{
-\item{estimate}{The model estimates}
+\item{estimate}{Parameter b0 or b1 estimated from a LM or GLM}
 
-\item{stderr}{The standard error of the model estimates}
+\item{stderr}{Standard error belonging to b0 and b1}
 
-\item{parameter}{The model parameter b0 or b1}
+\item{parameter}{A category (name) either b0 or b1}
 
-\item{predictor}{The name of the predictor}
+\item{predictor}{A predictor name (e.g., salinity) as multiple predictors can be handled.}
 
-\item{link_function}{The link of the model}
+\item{link_function}{The link function of the LM or GLM currently only 'identity', 'logit' and 'log' are supported}
 
-\item{grouping}{The names of the groups}
+\item{grouping}{A category (name) for the group as multiple groups can be handled.}
 
-\item{gradient_dependency}{A value that expresses the gradient dependency, mean, variance, min, max, cv, etc.}
+\item{PEESE}{An argument indicating if PEESE should be used (default  PEESE=TRUE)}
 
-\item{prior_mu}{Priors for the mean}
+\item{RE}{An argument indicating if RE or FE should be used (default RE=TRUE)}
 
-\item{prior_mu_se}{Priors for the standard error of the mean of the mean}
+\item{prior_mu}{Prior for the mean which can be vector or matrix}
 
-\item{prior_sd_max}{Maximum value for the variance of the prior (it is a uniform prior starting at 0).}
+\item{prior_mu_se}{Prior for the se which can be vector or matrix}
 
-\item{prior_weights}{The weights attached to each prior (prior odds)}
+\item{prior_sigma_max}{Prior for sigma is not used when RE=FALSE and is a uniform prior starting at 0 restricted and given value (default=5)}
 
-\item{get_prior_only}{Argument when true a list is returned for adjustment}
+\item{prior_weights}{Prior weights when Bayesian model averaging is applied}
 
-\item{lower_trunc}{lower truncation}
+\item{interval}{The interval level for the summary (default=0.9)}
 
-\item{upper_trunc}{upper truncation}
+\item{get_prior_only}{If it is unclear how many levels and how to formulate multiple priors for each level this argument will only return a data frame of priors}
 
-\item{n_chain}{The number of chains}
+\item{n_chain}{Number of chains}
 
-\item{n_thin}{Thinning step}
+\item{n_thin}{Thinning interval of the chains}
 
 \item{n_seed}{Seed}
 
 \item{n_iter}{Number of iterations}
 
-\item{n_burnin}{Length of the burn-in}
+\item{n_burnin}{Burn-in period}
 
-\item{Rhat_warn}{When higher returns an warning}
+\item{Rhat_warn}{Warning leve for Rhat}
 
-\item{Eff_warn}{When lower returns a warning}
+\item{Eff_warn}{Warning level for Effective sample size}
+}
+\value{
+Returns a summary, all chains per level and a list of all model specifications
 }
 \description{
-Title Meta-Analysis over Regression coefficients (MAR)
+Full Bayesian meta-analytic method using Bayesian Model Averaging, with random-effect (RE), fixed-effect (FE) in combination
+with Precision Effect Estimate with Standard Error (PEESE; Stanley  and Doucouliagos (2013)). The goals of this function is to
+analyse the parameter estimates intercepts (b0) and regression coefficients (b1) of LM or GLM models with 'identity', 'log' or 'logit'
+link.
+
+This was package was especially develop to analyse the  parameters when the independent variable (predictor variable) was log (natural log)
+transformed and either the link functions are 'log' or 'logit' are used, or the dependent variable (target or response variable) is log transformed and
+'identity' link is used. Under such conditions the estimate parameter is named the (semi-)elasticity coefficient. The
+elasticity coefficient indicates the percentage change in the target variable per 1 percent increase in the predictor variable.
+The advantage is that the units of the regression coefficient (b1) are retained: g(E(y|x))=b0+b1\emph{log(x)+error. If the link function (g) is a
+log-link the log(E(y|x))=b0+b1}log(x) and so b1=log(E(y|x))/log(x) the units for x (e.g.,TP mg/L) and y (e.g., species richness) are retained.
+And b1 still has its interpretation on the log-scale (log(species richness)/log(TP mg/L)). Therefore if b1=-0.2 this indicates
+a 0.2\% decline in species richness per increase in 1\% TP. Furthermore, the decline in species richness can still be predicted
+as a function of the increase in log(x) because 'species  richness' = exp(b1*log(x)). This also makes broad comparisons
+between different 'groupings' possible due to the scaling of the parameters.
+
+This does not mean that other estimated parameters cannot be analysed. However, I specifically designed this for comparisons
+(e.g., using density plots in the pdplot function) among such parameters or to generate  and finally to generate HOP-lines
+using the (hop function). This can all be performed without losing the interpretation of the parameter which then tells us something
+ecological senseful between predictor and target variable. This 'sense' is lost when looking at correlation coefficients, or standardized
+effect sizes (Tukey 1969; Baguley 2009; Correl et al., 2020). Hence, what does Cohens' D tell us about the impact of oxygen depletion on EPT-taxa
+When it is 1 that the mean difference between two groups divided by its pooled standard deviation is 1. An how do we judge this to
+be ecologically 'relevant'. Relatively little considering there is a gradual relation between O2 and the number of EPT-taxa, which is only
+retained within the units of the parameter e.g., -0.2 EPT-taxa/log(O2 mg/L). Additionally is our data so noisy that any deviation is
+expected due to the noise alone. More importantly we cannot either asses our long-run estimations or used them in our prior or compare
+our posterior. Thus transforming to standardized-effect sizes is an increadible waste of information if the underlying data not is
+provided.
 }

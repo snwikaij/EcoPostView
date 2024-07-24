@@ -179,7 +179,7 @@ mar <- function(estimate, stderr, parameter, predictor,
                                                  ##likelihood
                                                  for (i in 1:N){
                                                    est[i]  ~  dnorm(mu1[i], tau1[i])
-                                                   mu1[i]  <- mu[level[i]] +ifelse(PEESE==1,  beta_PEESE[level[i]]*log(1/se[i]^2), 0)
+                                                   mu1[i]  <- mu[level[i]] +ifelse(PEESE==1,  beta_PEESE[level[i]]*log(1/se[i]), 0)
                                                    tau1[i] <- 1/(se[i]^2)}
 
                                                  ##priors
@@ -197,7 +197,7 @@ mar <- function(estimate, stderr, parameter, predictor,
                                                    ##likelihood
                                                    for (i in 1:N){
                                                      est[i]  ~  dnorm(mu1[i], tau1[i])
-                                                     mu1[i]  <- mu[level[i]] + ifelse(PEESE==1, beta_PEESE[level[i]]*log(1/se[i]^2), 0)
+                                                     mu1[i]  <- mu[level[i]] + ifelse(PEESE==1, beta_PEESE[level[i]]*log(1/se[i]), 0)
                                                      tau1[i] <- 1/(se[i]^2)}
 
                                                    ##priors

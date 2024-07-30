@@ -79,8 +79,6 @@ one_plot <- ggplot(hops_realized, aes(x, y, group=as.factor(j)))+
        geom_line(data=expected, aes(x, y), lwd=.8, inherit.aes = F)+
        theme_classic()+
        theme(axis.title.y = element_blank(),
-                axis.text.y = element_blank(),
-                axis.ticks.y = element_blank(),
                 legend.position = "none")
 
 return(one_plot)}

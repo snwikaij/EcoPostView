@@ -35,15 +35,6 @@ priors[,3] <- rbeta(nsim, prior_cens[1], prior_cens[2])
 priors[,4] <- round(nz*priors[,3])
 priors[,5] <- nz-priors[,4]
 
-#mode density function
-#' Title
-#'
-#' @param x
-#'
-#' @return
-#' @export
-#'
-#' @examples
 mod_dens <- function(x){d <- density(x); d$x[which.max(d$y)]}
 
 #parameters of the data

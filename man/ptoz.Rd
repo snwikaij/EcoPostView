@@ -4,7 +4,17 @@
 \alias{ptoz}
 \title{Title}
 \usage{
-ptoz(coef = NULL, sei = NULL, zi = NULL, pi = NULL, names = NULL, alpha = 0.05)
+ptoz(
+  coef = NULL,
+  sei = NULL,
+  zi = NULL,
+  pi = NULL,
+  names = NULL,
+  alpha = 0.05,
+  absolute = F,
+  xlim = NULL,
+  ylim = NULL
+)
 }
 \arguments{
 \item{coef}{The Effect-size}

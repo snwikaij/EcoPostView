@@ -1,10 +1,10 @@
 Package: EcoPostView
-Title: an EcologicalPosteriorView
+Title: an Ecological Posterior View
 Version: 0.0.0.9000
 Authors@R: 
     person("Willem", "Kaijser", ,"wimkaijser@outlook.com", role = c("aut", "cre"),
            comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: Used to make probablistic statements on ecological phenomenon.
+Description: Usable for infering on ecological phenomenon described by parameters.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

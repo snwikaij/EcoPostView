@@ -6,13 +6,12 @@
 \usage{
 abctoz(
   z,
-  interval = 0.9,
   nsim = 50000,
-  accept_max_dist = 0.4,
-  prior_mu = c(1.5, 0.35),
-  prior_sd = c(0.4, 0.4),
-  prior_cens = c(4, 2),
-  n_dens = 100,
+  prior_mu = c(0, 1),
+  prior_sd = c(1, 1),
+  prior_threshold = c(1.96, 0.1),
+  prior_cens = c(1, 2),
+  distribution = "t",
   print_progress = T,
   seed = 123
 )
@@ -20,11 +19,7 @@ abctoz(
 \arguments{
 \item{z}{A numeric vector of z values}
 
-\item{interval}{Credibility level at 0.9}
-
 \item{nsim}{Number of simulations}
-
-\item{accept_max_dist}{Threshold for minimal acceptable distance}
 
 \item{prior_mu}{Prior values for mu(Z) following a truncated (0) normal distribution, which needs to notated c(mean, sd)}
 
@@ -32,11 +27,11 @@ abctoz(
 
 \item{prior_cens}{Prior values for the fractions of censored samples following a beta distribution, which needs to be notated as c(alpha, beta)}
 
-\item{n_dens}{Number of density lines simulated from the posterior values mu(Z), sd(Z) and censored fraction (f)}
-
 \item{print_progress}{Print the progress of simulations}
 
 \item{seed}{Set the seed}
+
+\item{z_cut}{Cut-off value for the z value}
 }
 \description{
 Aproximated Bayesian Computation to derive Z (ABC-to-z)

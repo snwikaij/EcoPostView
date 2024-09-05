@@ -15,7 +15,8 @@ hop(
   shift_b0 = 0,
   xlimit = c(-5, 10),
   ylimit = NULL,
-  xlab = NULL
+  xlab = NULL,
+  ylab = NULL
 )
 }
 \arguments{

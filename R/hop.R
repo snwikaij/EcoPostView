@@ -14,7 +14,7 @@
 #'
 hop <- function(object, group=NULL, predictor=NULL, link_function=NULL,
                 nr_hops=1500, resolution=300, exponentiate=F, shift_b0=0,
-                xlimit=c(-5, 10), ylimit=NULL, xlab=NULL){
+                xlimit=c(-5, 10), ylimit=NULL, xlab=NULL, ylab=NULL){
 
 if(all(!names(object$Estimates) %in% c("b0", "b1")))stop("To create HOP-lines both b0 and b1 are needed E(y|x)=b0+b1x")
 
@@ -52,7 +52,7 @@ hop_lines <- vector("list", nr_hops)
 for(i in 1:nr_hops){hop_lines[[i]] <- oneHOP(hops_df$b0[i]+shift_b0, hops_df$b1[i], xl, link_function, i)}
 
 #all hop lines in data frame format
-hops_realized <- as.data.frame(do.call(rbind, hop_lines))
+hops_realized   <- as.data.frame(do.call(rbind, hop_lines))
 hops_realized$j <- as.factor(hops_realized$j)
 
 #maximum a posteriori value
@@ -66,6 +66,7 @@ hops_realized$x <- exp(hops_realized$x)
 expected$x      <- exp(expected$x)}
 
 if(is.null(xlab)){xlab_text <- xlab(predictor)}else{xlab_text <- xlab(xlab)}
+if(is.null(ylab)){ylab_text <- NULL}else{ylab_text <- ylab(ylab)}
 
 if(is.null(ylimit)){
 miny <- round(quantile(aggregate(data=hops_realized, y~j, min)[,2], .025))
@@ -74,12 +75,11 @@ miny <- ylimit[1]
 maxy <- ylimit[2]}
 
 one_plot <- ggplot(hops_realized, aes(x, y, group=as.factor(j)))+
-       ylim(miny, maxy)+xlab_text+
+       ylim(miny, maxy)+xlab_text+ylab_text+
        geom_line(lwd=1.2, alpha=0.05, col="grey60")+
        geom_line(data=expected, aes(x, y), lwd=.8, inherit.aes = F)+
        theme_classic()+
-       theme(axis.title.y = element_blank(),
-                legend.position = "none")
+       theme(legend.position = "none")
 
 return(one_plot)}
 

@@ -2,7 +2,7 @@
 % Please edit documentation in R/pdplot.R
 \name{pdplot}
 \alias{pdplot}
-\title{Summarizing posterior density plots}
+\title{Posterior density plots}
 \usage{
 pdplot(
   object,
@@ -57,5 +57,5 @@ pdplot(
 \item{xtext_size}{size of the x-axis text}
 }
 \description{
-Summarizing posterior density plots
+Posterior density plots
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/meta.R
 \name{meta}
 \alias{meta}
-\title{Title}
+\title{Meta analysis function}
 \usage{
 meta(
   estimate,

@@ -2,7 +2,7 @@
 % Please edit documentation in R/hop.R
 \name{hop}
 \alias{hop}
-\title{Title}
+\title{Hypothetical outcome plots}
 \usage{
 hop(
   object,
@@ -16,7 +16,11 @@ hop(
   xlimit = c(-5, 10),
   ylimit = NULL,
   xlab = NULL,
-  ylab = NULL
+  ylab = NULL,
+  xlabsize = 8,
+  ylabsize = 8,
+  xtextsize = 10,
+  ytextsize = 10
 )
 }
 \arguments{
@@ -38,10 +42,10 @@ hop(
 
 \item{xlimit}{The limits of the x-axis}
 
-\item{ylimit}{The limits of tye y-axis}
+\item{ylimit}{The limits of the y-axis}
 
 \item{xlab}{The x-label text}
 }
 \description{
-Title
+Hypothetical outcome plots
 }

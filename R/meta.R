@@ -1,4 +1,4 @@
-#' Title
+#' Meta analysis function
 #'
 #' @param estimate Parameter b0 or b1 estimated from a LM or GLM.
 #' @param stderr Standard error belonging to b0 and b1.
@@ -150,6 +150,8 @@ meta <- function(estimate, stderr, parameter, predictor,
                                               mu1[i]  <- mu[level[i]] + ifelse(method==0, 0, ifelse(method==1, beta_adjust[level[i]]*(1/se[i]), beta_adjust[level[i]]*(1/Nsamp[i])))
                                               tau2[i] <- 1/(se[i]^2)}
 
+                                            resid <- est-mu2
+
                                             sigma  ~ dunif(0, Ps)
 
                                             ##priors
@@ -176,6 +178,8 @@ meta <- function(estimate, stderr, parameter, predictor,
                                                 mu1[i]  <- mu[level[i]] + ifelse(method==0, 0, ifelse(method==1, beta_adjust[level[i]]*(1/se[i]), beta_adjust[level[i]]*(1/Nsamp[i]))) +
                                                            beta_random[level[i]]*random[i]
                                                 tau2[i] <- 1/(se[i]^2)}
+
+                                              resid <- est-mu2
 
                                               sigma  ~ dunif(0, Ps)
 
@@ -204,6 +208,8 @@ meta <- function(estimate, stderr, parameter, predictor,
                                                 mu1[i]  <- mu[level[i]] +ifelse(method==0, 0, ifelse(method==1, beta_adjust[level[i]]*(1/se[i]), beta_adjust[level[i]]*(1/Nsamp[i])))+
                                                   inprod(beta_random[level[i], ], random[i, ])
                                                 tau2[i] <- 1/(se[i]^2)}
+
+                                              resid <- est-mu2
 
                                               sigma  ~ dunif(0, Ps)
 
@@ -235,6 +241,8 @@ meta <- function(estimate, stderr, parameter, predictor,
                                               mu1[i]  <- mu[level[i]] + ifelse(method==0, 0, ifelse(method==1, beta_adjust[level[i]]*(1/se[i]), beta_adjust[level[i]]*(1/Nsamp[i])))
                                               tau2[i] <- 1/(se[i]^2)}
 
+                                            resid <- est-mu2
+
                                             sigma  ~ dunif(0, Ps)
 
                                             ##priors
@@ -257,6 +265,8 @@ meta <- function(estimate, stderr, parameter, predictor,
                                                 mu1[i]  <- mu[level[i]] + ifelse(method==0, 0, ifelse(method==1, beta_adjust[level[i]]*(1/se[i]), beta_adjust[level[i]]*(1/Nsamp[i])))+
                                                            beta_random[level[i]]*random[i]
                                                 tau2[i] <- 1/(se[i]^2)}
+
+                                              resid <- est-mu2
 
                                               sigma  ~ dunif(0, Ps)
 
@@ -282,6 +292,8 @@ meta <- function(estimate, stderr, parameter, predictor,
                                                   ifelse(method==0, 0, ifelse(method==1, beta_adjust[level[i]]*(1/se[i]), beta_adjust[level[i]]*(1/Nsamp[i])))+
                                                   inprod(beta_random[level[i], ], random[i, ])
                                                 tau2[i] <- 1/(se[i]^2)}
+
+                                              resid <- est-mu2
 
                                               sigma  ~ dunif(0, Ps)
 
@@ -309,6 +321,8 @@ meta <- function(estimate, stderr, parameter, predictor,
                                                mu1[i]  <- mu[level[i]] + ifelse(method==0, 0, ifelse(method==1, beta_adjust[level[i]]*(1/se[i]), beta_adjust[level[i]]*(1/Nsamp[i])))
                                                tau1[i] <- 1/(se[i]^2)}
 
+                                             resid <- est-mu1
+
                                              ##priors
                                              for(j in 1:L){
                                                beta_adjust[j]   ~ dnorm(0, 1/0.5^2)
@@ -328,6 +342,8 @@ meta <- function(estimate, stderr, parameter, predictor,
                                                      ifelse(method==0, 0, ifelse(method==1, beta_adjust[level[i]]*(1/se[i]), beta_adjust[level[i]]*(1/Nsamp[i])))+
                                                               beta_random[level[i]]*random[i]
                                                    tau1[i] <- 1/(se[i]^2)}
+
+                                                 resid <- est-mu1
 
                                                  ##priors
                                                  for(j in 1:L){
@@ -349,6 +365,8 @@ meta <- function(estimate, stderr, parameter, predictor,
                                                      ifelse(method==0, 0, ifelse(method==1, beta_adjust[level[i]]*(1/se[i]), beta_adjust[level[i]]*(1/Nsamp[i])))+
                                                      inprod(beta_random[level[i], ], random[i, ])
                                                    tau1[i] <- 1/(se[i]^2)}
+
+                                                 resid <- est-mu1
 
                                                  ##priors
                                                  for(j in 1:L){
@@ -372,6 +390,8 @@ meta <- function(estimate, stderr, parameter, predictor,
                                                    mu1[i]  <- mu[level[i]] + ifelse(method==0, 0, ifelse(method==1, beta_adjust[level[i]]*(1/se[i]), beta_adjust[level[i]]*(1/Nsamp[i])))
                                                    tau1[i] <- 1/(se[i]^2)}
 
+                                                 resid <- est-mu1
+
                                                  ##priors
                                                  for(j in 1:L){
                                                    beta_adjust[j]   ~ dnorm(0, 1/0.5^2)
@@ -387,6 +407,8 @@ meta <- function(estimate, stderr, parameter, predictor,
                                                    ifelse(method==0, 0, ifelse(method==1, beta_adjust[level[i]]*(1/se[i]), beta_adjust[level[i]]*(1/Nsamp[i]))) +
                                                             beta_random[level[i]]*random[i]
                                                  tau1[i] <- 1/(se[i]^2)}
+
+                                               resid <- est-mu1
 
                                                ##priors
                                                for(j in 1:L){
@@ -404,6 +426,8 @@ meta <- function(estimate, stderr, parameter, predictor,
                                                      ifelse(method==0, 0, ifelse(method==1, beta_adjust[level[i]]*(1/se[i]), beta_adjust[level[i]]*(1/Nsamp[i]))) +
                                                      inprod(beta_random[level[i], ], random[i, ])
                                                    tau1[i] <- 1/(se[i]^2)}
+
+                                                 resid <- est-mu1
 
                                                  ##priors
                                                  for(j in 1:L){
@@ -441,15 +465,40 @@ meta <- function(estimate, stderr, parameter, predictor,
                                            colnames(mcmclong) <- c("parameter", "predictor", "link", "group", "estimate")
                                            return(mcmclong)}
 
+                                         #Extract residuals of the model
+                                         mcmc_resid           <- colMeans(model$BUGSoutput$sims.list$resid)
+
                                          #Extract chains for means
                                          mcmc_mu           <- extract_chain(model$BUGSoutput$sims.list$mu, mod_data)
                                          split_par         <- split(mcmc_mu, mcmc_mu$parameter)
 
                                          #summarize mu
-                                         interval_level              <- 0.5+c(-1,1)*interval/2
-                                         maxpost <- function(x){d <- density(x); d$x[which.max(d$y)]}
+                                         #ETI intervals
+                                         #interval_level      <- 0.5+c(-1,1)*interval/2
+                                         #HDI intervals
+                                         hdi_fun              <- function(x, level){
+
+                                           orddata   <- sort(x)
+                                           nord      <- length(x)
+                                           infomass  <- ceiling(level*nord)
+                                           outmass   <- nord-infomass
+
+                                           min_width <- Inf
+                                           ll        <- NA
+                                           ul        <- NA
+
+                                           for(i in 1:(outmass+1)){
+                                             int_width <- orddata[i+infomass-1]-orddata[i]
+
+                                             if(int_width < min_width){
+                                               min_width <- int_width
+                                               ll <- orddata[i]
+                                               ul <- orddata[i+infomass-1]}}
+
+                                           c(ll, ul)}
+                                         maxpost              <- function(x){d <- density(x); d$x[which.max(d$y)]}
                                          basic_summary        <- aggregate(data=split_par$b1, estimate~., function(x) c(maxpost(x), mean(x), sd(x),
-                                                                                                                        quantile(x, interval_level[1]), quantile(x, interval_level[2])))
+                                                                                                                        hdi_fun(x, level = interval)))
                                          if(RE==T){
                                            mcmc_I2       <- extract_chain(model$BUGSoutput$sims.list$I2, mod_data)
                                            mcmc_I2_b1    <- mcmc_I2[mcmc_I2$parameter!="b0",]
@@ -480,6 +529,7 @@ meta <- function(estimate, stderr, parameter, predictor,
                                                      Chains_sigma=mcmc_sigma,
                                                      Chains_adjust=mcmc_adjust,
                                                      Chains_podd=mcmc_podd,
+                                                     Residuals=mcmc_resid,
                                                      N_level=table(mod_data$level),
                                                      model=list(Prior_weight=mod_data$pw, JAGS_model=model,
                                                                 Data=mod_data, Priors=data.frame(Levels=levels(mod_data$level),

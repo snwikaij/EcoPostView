@@ -1,11 +1,14 @@
-#' Title
+#' P-to-z-values transformation
 #'
 #' @param coef The Effect-size
 #' @param sei Standard error
 #' @param zi z-value
 #' @param pi p-value
 #' @param names Additional names
-#' @param alpha alpha level
+#' @param alpha Alpha level
+#' @param absolute Display coefficient on the absolute scale
+#' @param xlim Limits of the x-axis
+#' @param ylim Limits of the y-axis
 #'
 ptoz <- function(coef=NULL, sei=NULL, zi=NULL, pi=NULL, names=NULL, alpha=0.05,
                  absolute=F, xlim=NULL, ylim=NULL){

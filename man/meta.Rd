@@ -19,7 +19,7 @@ meta(
   prior_mu_se = 0.5,
   prior_sigma_max = 5,
   prior_weights = 1,
-  interval = 0.9,
+  interval = 0.931,
   get_prior_only = FALSE,
   n_chain = 2,
   n_thin = 1,

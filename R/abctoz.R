@@ -1,10 +1,10 @@
 #' Aproximated Bayesian Computation to derive Z (ABC-to-z)
 #'
 #' @param z A numeric vector of z values
-#' @param z_cut Cut-off value for the z value
 #' @param nsim Number of simulations
 #' @param prior_mu Prior values for mu(Z) following a truncated (0) normal distribution, which needs to notated c(mean, sd)
 #' @param prior_sd Prior values for sd(Z) following a gamma distribution, which needs to be notated c(shape, rate)
+#' @param prior_threshold Prior values for the threshold for 'significance'
 #' @param prior_cens Prior values for the fractions of censored samples following a beta distribution, which needs to be notated as c(alpha, beta)
 #' @param print_progress Print the progress of simulations
 #' @param seed Set the seed

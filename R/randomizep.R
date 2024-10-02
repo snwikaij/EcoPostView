@@ -6,10 +6,6 @@
 #' If specific is False for every operator that is "smaller' p~Uniform(0, 0.05) often a proper approach.
 #' @param seed Fixed seed set by default to 123
 #'
-#' @return
-#' @export
-#'
-#' @examples
 randomizep <- function(p, operator, specific=T, seed=123){
 
   df  <- data.frame(p=p, operator=operator)

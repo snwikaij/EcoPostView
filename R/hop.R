@@ -11,6 +11,11 @@
 #' @param xlimit The limits of the x-axis
 #' @param ylimit The limits of the y-axis
 #' @param xlab The x-label text
+#' @param ylab The y-label text
+#' @param xlabsize The size of the x-label text
+#' @param ylabsize The size of the y-label text
+#' @param xtextsize The size of the x-axis text
+#' @param ytextsize The size of the y-axis text
 #'
 hop <- function(object, group=NULL, predictor=NULL, link_function=NULL,
                 nr_hops=1500, resolution=300, exponentiate=F, shift_b0=0,

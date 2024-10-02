@@ -3,9 +3,9 @@
 #' @param obj An object from the abctoz function
 #' @param dist_threshold A threshold to accept the number of iterations
 #' @param interval Interval level
-#' @param n_dens number of density curves to generate
-#' @param xposq values for position of text along x-axis
-#' @param yposq values for position of text along y-axis
+#' @param n_dens Number of density curves to generate
+#' @param xpos Values for position of text along x-axis
+#' @param alpha_dens Transparency of the density lines
 #'
 extrabc <- function(obj, dist_threshold=0.3,
                     interval=0.9, n_dens=100,

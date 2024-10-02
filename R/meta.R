@@ -64,7 +64,7 @@ meta <- function(estimate, stderr, parameter, predictor,
                 prior_mu_se=0.5,
                 prior_sigma_max=5,
                 prior_weights=1,
-                interval=0.9,
+                interval=0.931,
                 get_prior_only = FALSE,
                 n_chain = 2,
                 n_thin = 1,
@@ -439,7 +439,7 @@ meta <- function(estimate, stderr, parameter, predictor,
                                          #Run the model
                                          model <- jags.parallel(data = mod_data,
                                                                 model.file = meta_analysis,
-                                                                parameters.to.save =  c("mu", "d", "I2", "sigma", "beta_random", "beta_adjust"),
+                                                                parameters.to.save =  c("mu", "d", "I2", "sigma", "beta_random", "beta_adjust", "resid"),
                                                                 n.chains = n_chain,
                                                                 n.thin = n_thin,
                                                                 jags.seed = n_seed,
@@ -465,8 +465,8 @@ meta <- function(estimate, stderr, parameter, predictor,
                                            colnames(mcmclong) <- c("parameter", "predictor", "link", "group", "estimate")
                                            return(mcmclong)}
 
-                                         #Extract residuals of the model
-                                         mcmc_resid           <- colMeans(model$BUGSoutput$sims.list$resid)
+                                         #Extract posterior residual means of the model
+                                         mcmc_mu_resid     <- colMeans(model$BUGSoutput$sims.list$resid)
 
                                          #Extract chains for means
                                          mcmc_mu           <- extract_chain(model$BUGSoutput$sims.list$mu, mod_data)
@@ -529,7 +529,7 @@ meta <- function(estimate, stderr, parameter, predictor,
                                                      Chains_sigma=mcmc_sigma,
                                                      Chains_adjust=mcmc_adjust,
                                                      Chains_podd=mcmc_podd,
-                                                     Residuals=mcmc_resid,
+                                                     Residuals=mcmc_mu_resid,
                                                      N_level=table(mod_data$level),
                                                      model=list(Prior_weight=mod_data$pw, JAGS_model=model,
                                                                 Data=mod_data, Priors=data.frame(Levels=levels(mod_data$level),

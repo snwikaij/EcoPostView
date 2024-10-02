@@ -437,7 +437,7 @@ meta <- function(estimate, stderr, parameter, predictor,
                                                    mu[j]              ~ dnorm(Pm[j], 1/Pe[j]^2)}}}}}
 
                                          #Run the model
-                                         model <- jags.parallel(data = mod_data,
+                                         model <- R2jags::jags.parallel(data = mod_data,
                                                                 model.file = meta_analysis,
                                                                 parameters.to.save =  c("mu", "d", "I2", "sigma", "beta_random", "beta_adjust", "resid"),
                                                                 n.chains = n_chain,

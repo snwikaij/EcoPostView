@@ -20,11 +20,11 @@ extrabc(
 
 \item{interval}{Interval level}
 
-\item{n_dens}{number of density curves to generate}
+\item{n_dens}{Number of density curves to generate}
 
-\item{xposq}{values for position of text along x-axis}
+\item{xpos}{Values for position of text along x-axis}
 
-\item{yposq}{values for position of text along y-axis}
+\item{alpha_dens}{Transparency of the density lines}
 }
 \description{
 Extract ABC values

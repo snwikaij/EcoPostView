@@ -45,6 +45,16 @@ hop(
 \item{ylimit}{The limits of the y-axis}
 
 \item{xlab}{The x-label text}
+
+\item{ylab}{The y-label text}
+
+\item{xlabsize}{The size of the x-label text}
+
+\item{ylabsize}{The size of the y-label text}
+
+\item{xtextsize}{The size of the x-axis text}
+
+\item{ytextsize}{The size of the y-axis text}
 }
 \description{
 Hypothetical outcome plots

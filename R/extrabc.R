@@ -29,10 +29,10 @@ extrabc <- function(obj, dist_threshold=0.3,
       p_org   <- predict(mod1 <- glm(par~dist, data=dfloc, family = gaussian(link="log")), type = "response")
       wt      <- 1/resid(lm(par~1, data=dfloc))^2
       p_wt    <-  predict(mod2 <- glm(par~dist, data=dfloc, family = gaussian(link="log"), weights = wt), type = "response")}
-    else if(link=="logit"){
-      p_org   <- predict(mod1 <- glm(par~dist, data=dfloc, family = gaussian(link="logit")), type = "response")
+    else if(link=="identity"){
+      p_org   <- predict(mod1 <- glm(par~dist, data=dfloc, family = gaussian(link="identity")), type = "response")
       wt      <- 1/resid(lm(par~1, data=dfloc))^2
-      p_wt    <-  predict(mod2 <- glm(par~dist, data=dfloc, family = gaussian(link="logit"), weights = wt), type = "response")}
+      p_wt    <-  predict(mod2 <- glm(par~dist, data=dfloc, family = gaussian(link="identity"), weights = wt), type = "response")}
 
     adjust  <- dfloc$par+p_wt-p_org
 

@@ -6,6 +6,7 @@
 #' @param prior_sd Prior values for sd(Z) following a gamma distribution, which needs to be notated c(shape, rate)
 #' @param prior_threshold Prior values for the threshold for 'significance'
 #' @param prior_cens Prior values for the fractions of censored samples following a beta distribution, which needs to be notated as c(alpha, beta)
+#' @param distribution Either shifted t-distribution or z-distribution
 #' @param print_progress Print the progress of simulations
 #' @param seed Set the seed
 #'

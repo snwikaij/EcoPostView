@@ -12,3 +12,4 @@ Imports: R2jags (>= 0.7-1), ggplot2 (>= 3.3.6), tidyr (>= 1.2.0), cowplot (>= 1.
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
+License: MIT + file LICENSE

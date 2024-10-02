@@ -2,7 +2,7 @@
 % Please edit documentation in R/ptoz.R
 \name{ptoz}
 \alias{ptoz}
-\title{Title}
+\title{P-to-z-values transformation}
 \usage{
 ptoz(
   coef = NULL,
@@ -27,8 +27,14 @@ ptoz(
 
 \item{names}{Additional names}
 
-\item{alpha}{alpha level}
+\item{alpha}{Alpha level}
+
+\item{absolute}{Display coefficient on the absolute scale}
+
+\item{xlim}{Limits of the x-axis}
+
+\item{ylim}{Limits of the y-axis}
 }
 \description{
-Title
+P-to-z-values transformation
 }

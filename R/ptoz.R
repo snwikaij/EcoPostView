@@ -10,6 +10,10 @@
 #' @param xlim Limits of the x-axis
 #' @param ylim Limits of the y-axis
 #'
+#' @importFrom stats rgamma
+#' @importFrom stats rbeta
+#' @importFrom stats density
+#' @importFrom stats sd
 ptoz <- function(coef=NULL, sei=NULL, zi=NULL, pi=NULL, names=NULL, alpha=0.05,
                  absolute=F, xlim=NULL, ylim=NULL){
 

@@ -25,13 +25,15 @@ abctoz(
 
 \item{prior_sd}{Prior values for sd(Z) following a gamma distribution, which needs to be notated c(shape, rate)}
 
+\item{prior_threshold}{Prior values for the threshold for 'significance'}
+
 \item{prior_cens}{Prior values for the fractions of censored samples following a beta distribution, which needs to be notated as c(alpha, beta)}
+
+\item{distribution}{Either shifted t-distribution or z-distribution}
 
 \item{print_progress}{Print the progress of simulations}
 
 \item{seed}{Set the seed}
-
-\item{z_cut}{Cut-off value for the z value}
 }
 \description{
 Aproximated Bayesian Computation to derive Z (ABC-to-z)

@@ -17,6 +17,13 @@
 #' @param xtextsize The size of the x-axis text
 #' @param ytextsize The size of the y-axis text
 #'
+#' @importFrom stats quantile
+#' @importFrom stats plogis
+#' @importFrom stats density
+#' @importFrom ggplot2 theme
+#' @importFrom ggplot2 element_text
+#'
+#' @export
 hop <- function(object, group=NULL, predictor=NULL, link_function=NULL,
                 nr_hops=1500, resolution=300, exponentiate=F, shift_b0=0,
                 xlimit=c(-5, 10), ylimit=NULL, xlab=NULL, ylab=NULL,

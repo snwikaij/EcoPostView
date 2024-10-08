@@ -17,6 +17,19 @@
 #' @param xylab_size x and y label size
 #' @param xtext_size size of the x-axis text
 #'
+#' @importFrom stats setNames
+#' @importFrom ggplot2 theme_void
+#' @importFrom ggplot2 scale_x_continuous
+#' @importFrom ggplot2 geom_density
+#' @importFrom ggplot2 geom_errorbarh
+#' @importFrom ggplot2 geom_vline
+#' @importFrom ggplot2 geom_density
+#' @importFrom ggplot2 theme
+#' @importFrom ggplot2 element_blank
+#' @importFrom ggplot2 element_text
+#' @importFrom ggplot2 element_line
+#'
+#' @export
 pdplot <- function(object, interval=0.9, display="b1",
                    order_predictor = NULL, order_group = NULL,
                    top_label=0.05, left_label=0.1,

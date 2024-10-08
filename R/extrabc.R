@@ -7,6 +7,28 @@
 #' @param xpos Values for position of text along x-axis
 #' @param alpha_dens Transparency of the density lines
 #'
+#' @importFrom stats predict
+#' @importFrom stats glm
+#' @importFrom stats gaussian
+#' @importFrom stats lm
+#' @importFrom stats resid
+#' @importFrom ggplot2 geom_smooth
+#' @importFrom ggplot2 aes
+#' @importFrom ggplot2 geom_point
+#' @importFrom ggplot2 facet_wrap
+#' @importFrom ggplot2 xlab
+#' @importFrom ggplot2 ylab
+#' @importFrom ggplot2 theme_classic
+#' @importFrom ggplot2 ggplot
+#' @importFrom ggplot2 aes
+#' @importFrom ggplot2 xlim
+#' @importFrom ggplot2 ylim
+#' @importFrom ggplot2 geom_histogram
+#' @importFrom ggplot2 ggplot_build
+#' @importFrom ggplot2 geom_line
+#' @importFrom ggplot2 annotate
+#'
+#' @export
 extrabc <- function(obj, dist_threshold=0.3,
                     interval=0.9, n_dens=100,
                     xpos=6, alpha_dens=0.3){

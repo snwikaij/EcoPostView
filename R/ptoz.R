@@ -14,6 +14,14 @@
 #' @importFrom stats rbeta
 #' @importFrom stats density
 #' @importFrom stats sd
+#' @importFrom stats qnorm
+#' @importFrom stats pnorm
+#' @importFrom stats quantile
+#' @importFrom ggplot2 geom_hline
+#' @importFrom ggplot2 scale_color_manual
+#' @importFrom ggplot2 theme
+#'
+#' @export
 ptoz <- function(coef=NULL, sei=NULL, zi=NULL, pi=NULL, names=NULL, alpha=0.05,
                  absolute=F, xlim=NULL, ylim=NULL){
 

@@ -2,7 +2,7 @@
 % Please edit documentation in R/meta.R
 \name{meta}
 \alias{meta}
-\title{Meta analysis function}
+\title{Bayesian meta analysis function}
 \usage{
 meta(
   estimate,
@@ -87,7 +87,7 @@ the inverse of the sample size (1/N). The full use of the meta function is the c
 the parameter estimates intercepts (b0) and regression coefficients (b1) on of LM or GLM models applied when the independent
 variable is continues.
 
-This was package was especially develop to analyse the  parameters when the independent variable (predictor variable) was log (natural log)
+This package was especially develop to analyse the  parameters when the independent variable (predictor variable) was log (natural log)
 transformed and either the link functions are 'log' or 'logit' are used, or the dependent variable (target or response variable) is log transformed and
 'identity' link is used. Under such conditions the estimate parameter is named the (semi-)elasticity coefficient. The
 elasticity coefficient indicates the percentage change in the target variable per 1 percent increase in the predictor variable.
@@ -101,12 +101,36 @@ between different 'groupings' possible due to the scaling of the parameters.
 This does not mean that other estimated parameters cannot be analysed. However, I specifically designed this for comparisons
 (e.g., using density plots in the pdplot function) among such parameters or to generate  and finally to generate HOP-lines
 using the (hop function). This can all be performed without losing the interpretation of the parameter which then tells us something
-ecological senseful between predictor and target variable. This 'sense' is lost when looking at correlation coefficients, or standardized
+ecological senseful about the relation between predictor and target variable. This 'sense' is lost when looking at correlation coefficients, or standardized
 effect sizes (Tukey 1969; Baguley 2009; Correl et al., 2020). Hence, what does Cohens' D tell us about the impact of oxygen depletion on EPT-taxa
-When it is 1 that the mean difference between two groups divided by its pooled standard deviation is 1. An how do we judge this to
-be ecologically 'relevant'. Relatively little considering there is a gradual relation between O2 and the number of EPT-taxa, which is only
+When it is found to be 1: The mean difference between two groups divided by its pooled standard deviation. And how do we judge this to
+be ecologically 'relevant'. Relatively little, considering there is a gradual relation between O2 and the number of EPT-taxa, which is only
 retained within the units of the parameter e.g., -0.2 EPT-taxa/log(O2 mg/L). Additionally is our data so noisy that any deviation is
 expected due to the noise alone. More importantly we cannot either asses our long-run estimations or used them in our prior or compare
 our posterior. Thus transforming to standardized-effect sizes is an incredible waste of information if the underlying data not is
 provided.
+}
+\note{
+If Nsamp (NA) this is replaced by 1 since 1/N where N=1 is 1=1/1. If parameters b0 or b1 or link functions are not given still a meta analysis is performed. One
+still needs to fill in the columns.
+}
+\examples{
+data("example1")
+
+#Standaard random effect (RE) meta-analysis
+mod <-meta(estimate=example1$est, stderr=example1$se,
+          parameter=example1$parameter, predictor=example1$predictor,
+          link_function=example1$link, grouping=example1$group)
+
+#Standaard random effect (RE) meta-analysis with egger's correction
+mod <-meta(estimate=example1$est, stderr=example1$se,
+          parameter=example1$parameter, predictor=example1$predictor,
+          link_function=example1$link, grouping=example1$group, method=1)
+
+#Standaard random effect (RE) meta-analysis with peter's correction
+mod <-meta(estimate=example1$est, stderr=example1$se,
+          parameter=example1$parameter, predictor=example1$predictor,
+          link_function=example1$link, grouping=example1$group,
+          Nsamp=example1$n, method=2)
+
 }

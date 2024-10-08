@@ -10,6 +10,7 @@
 #' @param print_progress Print the progress of simulations
 #' @param seed Set the seed
 #'
+#' @export
 abctoz <- function(z,
                    nsim=50000,
                    prior_mu=c(0, 1),

@@ -18,6 +18,8 @@
 #' standard error around 0 at the interval level (default 0.931).For 1/n the dashed lines represent the standard error if the
 #' standard deviation would be 1. In simple terms for both plot(1/se, se*z) and plot(1/n, 1/sqrt(n)). If an obvious bias would be
 #' present a diagonal pattern would become visible the points would then not follow the solid vertical line at 0.
+#'
+#' @export
 rescheck <- function(object, order_predictor = NULL, order_group = NULL, interval=0.931,
                      xlimit=0.9931, ylimit=c(0.0345, 0.9655), b0_out=T){
 

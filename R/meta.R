@@ -1,4 +1,4 @@
-#' Meta analysis function
+#' Bayesian meta analysis function
 #'
 #' @param estimate Parameter b0 or b1 estimated from a LM or GLM.
 #' @param stderr Standard error belonging to b0 and b1.
@@ -57,14 +57,34 @@
 #' our posterior. Thus transforming to standardized-effect sizes is an incredible waste of information if the underlying data not is
 #' provided.
 #'
+#'@note
+#'If Nsamp (NA) this is replaced by 1 since 1/N where N=1 is 1=1/1. If parameters b0 or b1 or link functions are not given still a meta analysis is performed. One
+#'still needs to fill in the columns.
+#'
 #'@examples
 #'data("example1")
 #'
+#'#Standaard random effect (RE) meta-analysis
 #'mod <-meta(estimate=example1$est, stderr=example1$se,
 #'           parameter=example1$parameter, predictor=example1$predictor,
 #'           link_function=example1$link, grouping=example1$group)
 #'
-#'meta(estimate=examp1_meta$)
+#'#Standaard random effect (RE) meta-analysis with egger's correction
+#'mod <-meta(estimate=example1$est, stderr=example1$se,
+#'           parameter=example1$parameter, predictor=example1$predictor,
+#'           link_function=example1$link, grouping=example1$group, method=1)
+#'
+#'#Standaard random effect (RE) meta-analysis with peter's correction
+#'mod <-meta(estimate=example1$est, stderr=example1$se,
+#'           parameter=example1$parameter, predictor=example1$predictor,
+#'           link_function=example1$link, grouping=example1$group,
+#'           Nsamp=example1$n, method=2)
+#'
+#' @importFrom stats sd
+#' @importFrom stats aggregate
+#' @importFrom stats density
+#'
+#' @export
 meta <- function(estimate, stderr, parameter, predictor,
                 link_function, grouping, random=NULL,
                 method=0, RE=TRUE, Nsamp=NULL,
@@ -119,9 +139,10 @@ meta <- function(estimate, stderr, parameter, predictor,
 
   if(all(method != c(0, 1, 2))){
     stop("method needs to be either 0 (='none'), 1 (='egger'), 2 (='peters')")}
-  if(method == "peters"){
+  if(method == 2){
     if(is.null(Nsamp) | length(Nsamp) != length(estimate)){stop("If method is 'peters' then length of Nsamp needs to be of the same length as
-                                             the estimates")}}else{Nsamp[is.na(Nsamp)] <- 1}
+                                             the estimates")}
+    Nsamp[is.na(Nsamp)] <- 1}else{Nsamp <- rep(1, length(estimate))}
 
   #Place all given data in a list
   mod_data <- list(est=as.numeric(estimate),

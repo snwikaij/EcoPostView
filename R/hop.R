@@ -79,7 +79,7 @@ hops_realized$x <- exp(hops_realized$x)
 expected$x      <- exp(expected$x)}
 
 if(is.null(xlab)){xlab_text <- ggplot2::xlab(predictor)}else{xlab_text <- ggplot2::xlab(xlab)}
-if(is.null(ylab)){ylab_text <- ""}else{ylab_text <- ggplot2::ylab(ylab)}
+if(is.null(ylab)){ylab_text <- ggplot2::ylab("")}else{ylab_text <- ggplot2::ylab(ylab)}
 
 if(is.null(ylimit)){
 miny <- round(quantile(aggregate(data=hops_realized, y~j, min)[,2], .025))

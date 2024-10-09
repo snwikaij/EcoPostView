@@ -10,14 +10,9 @@
 #'
 #' @description
 #' This function can be used to asses the bias of the model output. It is a visual ('eye balling') check
-#' for the distribution of the residuals. The residuals should be approximately 'randomly' distributed around 0 (x-axis)
-#' Compared to the inverse of the sample size (1/n) or inverse of the standard error (1/se). It is akin to classical funnel plots
-#' The dashed red lines in the figures are only a reference, they do not present a direct meaning full interpretation to the bias.
-#' Hence, if the 'effect-sizes' or parameter estimates are not standardized or are not elasticity coefficients the variance of the
-#' residuals is not as well behaved and points fall easy outside of these dashed lines. For 1/se the dashed lines represent the
-#' standard error around 0 at the interval level (default 0.931).For 1/n the dashed lines represent the standard error if the
-#' standard deviation would be 1. In simple terms for both plot(1/se, se*z) and plot(1/n, 1/sqrt(n)). If an obvious bias would be
-#' present a diagonal pattern would become visible the points would then not follow the solid vertical line at 0.
+#' for the distribution of the residuals. The residuals should be approximately 'randomly' distributed around 0 (origin) at the y-axis
+#' relative to the inverse of the sample size (1/n) or inverse of the standard error (1/se). It is akin to classical funnel plots
+#' If bias is clear a diagonal pattern would become visible the dashed red line would than not fall directly over the blue line.
 #'
 #' @export
 rescheck <- function(object, order_predictor = NULL, order_group = NULL, interval=0.931,
@@ -64,18 +59,18 @@ zval      <- qnorm(1 - (1 - interval)/2)
 n_vals    <- seq(1, 1000, 1)
 se_vals   <- seq(0.0001, max(abs(xlim_plot)), length.out=length(n_vals))
 
-#Combine all interval bounds to plot
+#If number of samples is used
 if(!is.null(object$model$Data$Nsamp)){
-bounds <- data.frame(n_vals=1/n_vals,
-                     se_vals=1/se_vals,
-                     n_bounds=c(-1*(1/sqrt(n_vals))*zval, ul=(1/sqrt(n_vals))*zval),
-                     se_bounds=c(-se_vals*zval, se_vals*zval),
-                     g=rep(c("ll", "ul"), each=length(n_vals)))
+#bounds <- data.frame(n_vals=1/n_vals,
+#                     se_vals=1/se_vals,
+#                     n_bounds=c(-1*(1/sqrt(n_vals))*zval, ul=(1/sqrt(n_vals))*zval),
+#                     se_bounds=c(-se_vals*zval, se_vals*zval),
+#                     g=rep(c("ll", "ul"), each=length(n_vals)))
 
 #Plot interval bounds for sample size for all samples
 plot_1_1 <- ggplot(df_resid, aes(1/n, resid))+xlab("Inverse sample size (1/n)")+ylab("Posterior mean model residuals")+
     geom_point(alpha=0.3, col="grey20")+xlim(0, 0.2)+ylim(ylim_plot[1], ylim_plot[2])+
-    geom_line(data=bounds, aes(x=n_vals, y=n_bounds, group=g), inherit.aes = F, col="dodgerblue2", lty=2, lwd=1.2)+
+    #geom_line(data=bounds, aes(x=n_vals, y=n_bounds, group=g), inherit.aes = F, col="dodgerblue2", lty=2, lwd=1.2)+
     geom_hline(yintercept = 0, lty=1, lwd=1.2,col="dodgerblue2")+
     geom_smooth(method = "lm", formula = 'y~x', se=F, col="tomato3", lty=2, lwd=1.2)+
     theme_classic()+
@@ -84,7 +79,7 @@ plot_1_1 <- ggplot(df_resid, aes(1/n, resid))+xlab("Inverse sample size (1/n)")+
 #Plot interval bounds for sample size per group
 plot_1_2 <- ggplot(df_resid, aes(1/n, resid))+xlab("Inverse sample size (1/n)")+ylab("Posterior mean model residuals")+
   geom_point(alpha=0.3, col="grey20")+xlim(0, 0.2)+ylim(ylim_plot[1], ylim_plot[2])+
-  geom_line(data=bounds, aes(x=n_vals, y=n_bounds, group=g), inherit.aes = F, col="dodgerblue2", lty=2, lwd=1.2)+
+  #geom_line(data=bounds, aes(x=n_vals, y=n_bounds, group=g), inherit.aes = F, col="dodgerblue2", lty=2, lwd=1.2)+
   geom_hline(yintercept = 0, lty=1, lwd=1.2,col="dodgerblue2")+
   geom_smooth(method = "lm", formula = 'y~x', se=F, col="tomato3", lty=2, lwd=1.2)+
   facet_wrap(.~group)+
@@ -94,23 +89,23 @@ plot_1_2 <- ggplot(df_resid, aes(1/n, resid))+xlab("Inverse sample size (1/n)")+
 #Plot interval bounds for sample size per predictor
 plot_1_3 <- ggplot(df_resid, aes(1/n, resid))+xlab("Inverse sample size (1/n)")+ylab("Posterior mean model residuals")+
   geom_point(alpha=0.3, col="grey20")+xlim(0, 0.2)+ylim(ylim_plot[1], ylim_plot[2])+
-  geom_line(data=bounds, aes(x=n_vals, y=n_bounds, group=g), inherit.aes = F, col="dodgerblue2", lty=2, lwd=1.2)+
+  #geom_line(data=bounds, aes(x=n_vals, y=n_bounds, group=g), inherit.aes = F, col="dodgerblue2", lty=2, lwd=1.2)+
   geom_hline(yintercept = 0, lty=1, lwd=1.2,col="dodgerblue2")+
   geom_smooth(method = "lm", formula = 'y~x', se=F, col="tomato3", lty=2, lwd=1.2)+
   facet_wrap(.~predictor)+
   theme_classic()+
   theme(plot.margin = unit(c(.1, .1, .1, .1), "mm"))}
 
-#Combine all interval bounds to plot without sample size
-if(is.null(object$model$Data$Nsamp)){
-bounds <- data.frame(se_vals=1/se_vals,
-                     n_bounds=c(-1*sd(df_resid$resid)/sqrt(n_vals)*zval, ul=sd(df_resid$resid)/sqrt(n_vals)*zval))}
+#if number of samples is not used
+#if(is.null(object$model$Data$Nsamp)){
+#bounds <- data.frame(se_vals=1/se_vals,
+#                     n_bounds=c(-1*sd(df_resid$resid)/sqrt(n_vals)*zval, ul=sd(df_resid$resid)/sqrt(n_vals)*zval))}
 
 #plot interval bounds for standard error
 plot_2_1 <- ggplot(df_resid, aes(1/se, resid))+xlab("Inverse standard error (1/se)")+ylab("Posterior mean model residuals")+
   geom_point(alpha=0.3, col="grey20")+
   xlim(0, xlim_plot[2])+ylim(ylim_plot[1], ylim_plot[2])+
-  geom_line(data=bounds, aes(x=se_vals, y=se_bounds, group=g), inherit.aes = F, col="dodgerblue2", lty=2, lwd=1.2)+
+  #geom_line(data=bounds, aes(x=se_vals, y=se_bounds, group=g), inherit.aes = F, col="dodgerblue2", lty=2, lwd=1.2)+
   geom_hline(yintercept = 0, lty=1, lwd=1.2,col="dodgerblue2")+
   geom_smooth(method = "lm", formula = 'y~x', se=F, col="tomato3", lty=2, lwd=1.2)+
   theme_classic()+
@@ -120,7 +115,7 @@ plot_2_1 <- ggplot(df_resid, aes(1/se, resid))+xlab("Inverse standard error (1/s
 plot_2_2 <- ggplot(df_resid, aes(1/se, resid))+xlab("Inverse standard error (1/se)")+ylab("Posterior mean model residuals")+
   geom_point(alpha=0.3, col="grey20")+
   xlim(0, xlim_plot[2])+ylim(ylim_plot[1], ylim_plot[2])+
-  geom_line(data=bounds, aes(x=se_vals, y=se_bounds, group=g), inherit.aes = F, col="dodgerblue2", lty=2, lwd=1.2)+
+  #geom_line(data=bounds, aes(x=se_vals, y=se_bounds, group=g), inherit.aes = F, col="dodgerblue2", lty=2, lwd=1.2)+
   geom_hline(yintercept = 0, lty=1, lwd=1.2,col="dodgerblue2")+
   geom_smooth(method = "lm", formula = 'y~x', se=F, col="tomato3", lty=2, lwd=1.2)+
   facet_wrap(.~group)+
@@ -131,7 +126,7 @@ plot_2_2 <- ggplot(df_resid, aes(1/se, resid))+xlab("Inverse standard error (1/s
 plot_2_3 <- ggplot(df_resid, aes(1/se, resid))+xlab("Inverse standard error (1/se)")+ylab("Posterior mean model residuals")+
   geom_point(alpha=0.3, col="grey20")+
   xlim(0, xlim_plot[2])+ylim(ylim_plot[1], ylim_plot[2])+
-  geom_line(data=bounds, aes(x=se_vals, y=se_bounds, group=g), inherit.aes = F, col="dodgerblue2", lty=2, lwd=1.2)+
+  #geom_line(data=bounds, aes(x=se_vals, y=se_bounds, group=g), inherit.aes = F, col="dodgerblue2", lty=2, lwd=1.2)+
   geom_hline(yintercept = 0, lty=1, lwd=1.2,col="dodgerblue2")+
   geom_smooth(method = "lm", formula = 'y~x', se=F, col="tomato3", lty=2, lwd=1.2)+
   facet_wrap(.~predictor)+

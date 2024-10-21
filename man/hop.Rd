@@ -10,13 +10,24 @@ hop(
   predictor = NULL,
   link_function = NULL,
   nr_hops = 1500,
-  resolution = 300,
-  exponentiate = F,
+  hop_lwd = 1.2,
+  hop_alpha = 0.05,
+  hop_col = "grey60",
+  expected_lwd = 0.8,
+  hop_resolution = 300,
+  pdp_resolution = 30,
+  exp_disp = F,
+  exp_axis = F,
   shift_b0 = 0,
+  gradient_title = "MAP",
+  gradient_col = c("magenta", "yellow", "cyan"),
   xlimit = c(-5, 10),
   ylimit = NULL,
   xlab = NULL,
   ylab = NULL,
+  round_x_axis = 2,
+  round_y_axis = 2,
+  breaks_axis = 5,
   xlabsize = 8,
   ylabsize = 8,
   xtextsize = 10,
@@ -34,11 +45,25 @@ hop(
 
 \item{nr_hops}{The number of HOP-lines to be generated}
 
-\item{resolution}{The resolution of the hop lines}
+\item{hop_lwd}{The line width of the hop-lines}
 
-\item{exponentiate}{Exponentiation of the predictor gradient}
+\item{hop_alpha}{The transparency of the hop-lines}
+
+\item{hop_col}{The color of the hop-lines}
+
+\item{expected_lwd}{The line width of the hop-lines}
+
+\item{hop_resolution}{The resolution of the hop lines}
+
+\item{pdp_resolution}{The resolution of the pdp grid}
+
+\item{exp_disp}{Exponentiation of the predictor gradient}
+
+\item{exp_axis}{Take the exponent of the axis number}
 
 \item{shift_b0}{Shifting the intercept up or down by adding values}
+
+\item{gradient_title}{Title of the gradient in a pdp-plot}
 
 \item{xlimit}{The limits of the x-axis}
 
@@ -48,6 +73,8 @@ hop(
 
 \item{ylab}{The y-label text}
 
+\item{breaks_axis}{The number of breaks on the axis}
+
 \item{xlabsize}{The size of the x-label text}
 
 \item{ylabsize}{The size of the y-label text}
@@ -55,6 +82,10 @@ hop(
 \item{xtextsize}{The size of the x-axis text}
 
 \item{ytextsize}{The size of the y-axis text}
+
+\item{gadient_col}{Color (or Colour for the grammar freak) for the gradient}
+
+\item{round_axis}{Round the number on the axis}
 }
 \description{
 Hypothetical outcome plots

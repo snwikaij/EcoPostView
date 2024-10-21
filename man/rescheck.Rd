@@ -31,12 +31,7 @@ rescheck(
 }
 \description{
 This function can be used to asses the bias of the model output. It is a visual ('eye balling') check
-for the distribution of the residuals. The residuals should be approximately 'randomly' distributed around 0 (x-axis)
-Compared to the inverse of the sample size (1/n) or inverse of the standard error (1/se). It is akin to classical funnel plots
-The dashed red lines in the figures are only a reference, they do not present a direct meaning full interpretation to the bias.
-Hence, if the 'effect-sizes' or parameter estimates are not standardized or are not elasticity coefficients the variance of the
-residuals is not as well behaved and points fall easy outside of these dashed lines. For 1/se the dashed lines represent the
-standard error around 0 at the interval level (default 0.931).For 1/n the dashed lines represent the standard error if the
-standard deviation would be 1. In simple terms for both plot(1/se, se*z) and plot(1/n, 1/sqrt(n)). If an obvious bias would be
-present a diagonal pattern would become visible the points would then not follow the solid vertical line at 0.
+for the distribution of the residuals. The residuals should be approximately 'randomly' distributed around 0 (origin) at the y-axis
+relative to the inverse of the sample size (1/n) or inverse of the standard error (1/se). It is akin to classical funnel plots
+If bias is clear a diagonal pattern would become visible the dashed red line would than not fall directly over the blue line.
 }

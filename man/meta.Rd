@@ -15,6 +15,7 @@ meta(
   method = 0,
   RE = TRUE,
   Nsamp = NULL,
+  mu_predv = NULL,
   prior_mu = 0,
   prior_mu_se = 0.5,
   prior_sigma_max = 5,
@@ -50,6 +51,8 @@ meta(
 \item{RE}{An argument indicating if RE or FE should be used (default RE=TRUE).}
 
 \item{Nsamp}{A vector with the number of samples for each estimate (only used when method = 2).}
+
+\item{mu_predv}{Means of the predictor variables used}
 
 \item{prior_mu}{Prior for the se which can be vector (Bayesian meta-analysis) or matrix (Bayesian meta-analysis with model averaging).}
 
@@ -117,17 +120,17 @@ still needs to fill in the columns.
 \examples{
 data("example1")
 
-#Standaard random effect (RE) meta-analysis
+#Standard random effect (RE) meta-analysis
 mod <-meta(estimate=example1$est, stderr=example1$se,
           parameter=example1$parameter, predictor=example1$predictor,
           link_function=example1$link, grouping=example1$group)
 
-#Standaard random effect (RE) meta-analysis with egger's correction
+#Standard random effect (RE) meta-analysis with egger's correction
 mod <-meta(estimate=example1$est, stderr=example1$se,
           parameter=example1$parameter, predictor=example1$predictor,
           link_function=example1$link, grouping=example1$group, method=1)
 
-#Standaard random effect (RE) meta-analysis with peter's correction
+#Standard random effect (RE) meta-analysis with peter's correction
 mod <-meta(estimate=example1$est, stderr=example1$se,
           parameter=example1$parameter, predictor=example1$predictor,
           link_function=example1$link, grouping=example1$group,

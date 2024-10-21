@@ -65,4 +65,26 @@ print(only_priors)
 #remove data frame of priors to keep environment clean
 rm(only_priors)
 
+## ----meta3 BMA----------------------------------------------------------------
+data("example2")
+print(example2)
+
+mod3 <- meta(estimate=example1$est,        
+                    stderr=example1$se,            
+                    parameter=example1$parameter,  
+                    predictor=example1$predictor,  
+                    link_function=example1$link,   
+                    grouping=example1$group,
+                    prior_mu = example2[c(2,4,6)],          #Prior for the mean
+                    prior_mu_se = example2[c(3,5,7)],       #Prior for the standard error of the mean
+                    prior_weights = c(1/3, 1/3, 1/3),       #Prior weights
+                    Nsamp=example1$n,            
+                    method=2,
+                    n_chain = 6)
+
+#Display the summarized results
+mod3$Summary
+
+#remove data frame of priors to keep environment clean
+rm(mod3)
 

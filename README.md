@@ -1,4 +1,4 @@
-# an Ecological Posterior View<br />
+# EcoPostView: Ecological Posterior View<br />
 This R package contains functions developed for my own work and personal interest. For detailed usage and examples, please refer to the accompanying publication(s). Most functions rely on JAGS, which requires installation (available here: [JAGS Download](https://sourceforge.net/projects/mcmc-jags/files/JAGS/4.x/Windows/)). After installing JAGS, you'll need to install the R2jags package in R. The focus of this package is on visualizing posterior distributions, with an emphasis on aquatic ecological data analysis.
 
 Any questions, feedback, or suggestions for improvements to enhance the functionality of the package are welcome.

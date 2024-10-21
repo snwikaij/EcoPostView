@@ -1,0 +1,113 @@
+---
+title: "EcoPostView: Ecological Posterior View"
+author: Willem (Wim) Kaijser
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{"EcoPostView: Ecological Posterior View"}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE,}
+options(rmarkdown.html_vignette.check_title = FALSE)
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# 1. Introduction
+
+Our ecological data is scattered around and noisy. It is often 'case-study' specific and not representative for the totality if conditions encountered. However, as ecologist you are not interested int case specific situations, but making probability statements on general patterns, visualizing them and predicting with them.
+
+If working with meta-data and uncovering patterns from literature, making predictions and probability statements are your goal, this R-package can help you make your life easier. The goal of this package is for you to use the benefits of the output of simple fitted Linear and Generalized Linear Models ((G)LMs) over multiple studies to combine using the strength of Bayesian Meta-analysis and the flexibility it offers to generalize a pooled (G)LM from multiple (G)LM outputs. 
+
+You need to find this information in figures, tables, data sets or combinations between them. In simple words we need a data set on which we can fit a (G)LM (see Kaijser et al, ...). This however, will show that most data is very noisy, perhaps biased and the heterogeneity is large. This is an issue for a focus on error-control and causality statements. Both need very clearly a controlled environment with a well setup experimental conditions and exclusion of confounding variables. Hence, error-control and causality start apriori (Fisher 1949, Pearl 2009, Mayo 2018). Of course this makes or information still useful for make probability statements or using the required information as apriori for an error-control or causality study. However, posterior probability statements, visualization and prediction are still within the range of all this information.
+
+To start with the examples and using this R-package both JAGS and devtools need to be installed. JAGS can be installed from https://sourceforge.net/projects/mcmc-jags/ and devtools can be install directly into R. The EcoPostView can be directly installed from GitHub for the most recent version. Ofcourse any problems or possible improvements can be directed to me if nicely asked.
+
+```{r setup}
+#install.packages("devtools")
+library(devtools)
+#install.github("snwikaij/EcoPostView")
+library(EcoPostView)
+```
+
+# 2. Obtaining data and fitting (G)LMs
+
+To obtain data from the (G)LMs we need to fit models. This data can be obtained from figures, tables, data sets or combinations (See Kaijser et al. ...). What we need from these models are the so called estimations of the model parameters. This are more commonly known as the intercept or slope. The intercept and slope can be used to predict: link(response variable) = intercept + slope * predictor variable. In a GLM the response variable is linked to to the linear component with a link-function. The 'identity' link function applies not link function it means that the mean (expected value) is directly related to the linear component. However in a GLM with, log- or logit-link it is easier to talk about log-linear or logit-linear relation. The slope is not a slope anymore because there is not straight line anymore between. Therefore the term coefficient or regression coefficient refers to this model parameter. When fitting a model it is convenient to note the source (e.g., DOI), the type of predictor variable (e.g., conductivity), response type (e.g., benthic invertebrates), link-function and if the model parameters is the intercept b0 or a regression coefficient b1. If multiple predictor variables are fitted in a model all regression coefficients.
+
+```{r data}
+data(example1)
+head(example1)
+
+```
+In the example above the column est (estimate) indicates the model parameters and the column se the (standard error of the estimate). The column group can be an organism group or specific species (or anything you wish to group by), the column predictor the specific predictor, the parameter whether the estimate is the intercept (b0) or a regression coefficient (b1) and the column link  contains the link function. An additional an recommended option is to include the sample size "n" for adjusting for 'small-sample-effect' (Peters et al., 2006; Moreno et al., 2009).
+
+# 3. The meta-function
+
+## 3.1 Basic function
+
+The meta function can include a random effect setting the argument RE=T (default), It has the option of placing a single or multipe random effect as a vector or matrix using the argument Random. It can adjust for the relation between the SE and model parameters using the inverse of the standard error 1/SE (method=1, Stanley and Doucouliagos, 2014) or inverse of the sample size 1/n (method=2, the latter option is performed below). Ofcourse if bias is considered minimal and neglect able non can be performed (method=1).
+
+```{r meta1}
+mod1 <- meta(estimate=example1$est,         #Model estimate
+             stderr=example1$se,            #Standard error of the model estimate
+             parameter=example1$parameter,  #Model parameter (b0 or b1)
+             predictor=example1$predictor,  #Predictor variable  (independent variable)
+             link_function=example1$link,   #Link function
+             grouping=example1$group,       #Group
+             Nsamp=example1$n,              #Sample size
+             method=2)                      #Adjustment method (0=none, 1=Egger's (1/se), 2=Peters (1/n))
+
+#remove model to keep the environment clean
+rm(mod1)
+
+```
+
+The meta-function returns a warnings that the MCMC-chains are not properly mixing. This can be an issue due to various reasons and assessed by looking at the 'raw' JAGS model output. I will not disply the full output, but can be displayed wit hthe code below.
+```{r meta1 warning}
+#mod1$model$JAGS_model
+```
+We can see that for "mu[3]" the effective sample size is 610. Most of these issues can be resolved by thinning the chains or increasing the number of chains. In this case n_chain=6 solves the issue. Increasing the number of chains can be an issue if the number of available cores is limited as each chain is run on a separate core. Other options are to set 'better' or 'stronger' priors or combinations between them. Moreover, if the issue is not an issue of the estimate 'mu' parameters in the raw JAGS output, the issue could be considered to be ignored. These choices are ultimately up to the user. An option to prevent warnings would be to set the warning level for Eff_warn lower i.e., Eff_warn = 500.
+```{r meta2}
+mod2 <-meta(estimate=example1$est,        
+            stderr=example1$se,            
+            parameter=example1$parameter,  
+            predictor=example1$predictor,  
+            link_function=example1$link,   
+            grouping=example1$group,       
+            Nsamp=example1$n,              
+            method=2,
+            n_chain = 6)                   #Increasing the number of chains from 2 to 6   
+
+#remove model to keep the environment clean
+rm(mod2)
+
+```
+
+## 3.2 Setting priors
+A benefit of the the Bayesian approach is that we can included prior information. Thereby explicitly adding more weight to more plausible outcomes of the model parameter. To set only single priors for each relation and parameter a specific structure is needed. A column with the 'level' names, priors for the mean (mu) and priors for the standard error (se). This structure can be show by setting the argument get_prior_only=T. On could create a table with the same names and order and solely changing mu to i.e., 0.2 or -0.2.
+
+``` {r meta2 example priors}
+only_priors <- meta(estimate=example1$est,        
+            stderr=example1$se,            
+            parameter=example1$parameter,  
+            predictor=example1$predictor,  
+            link_function=example1$link,   
+            grouping=example1$group,       
+            Nsamp=example1$n,            
+            method=2,
+            n_chain = 6,
+            get_prior_only=TRUE) #Only show the structure of the priors
+
+print(only_priors)
+
+#remove data frame of priors to keep environment clean
+rm(only_priors)
+
+```
+
+## 3.3 Setting multiple priors for Bayesian model averaging (under construction)
+
+A benefit of the the Bayesian approach is that we can included multiple priors to perform Bayesian Model Averaging (BMA;  Hoeting et al., 1999; Hinne et al., 2020). Thereby explicitly adding multiple possible scenarios that could have generated the observable data and aggregating this possibilities. To set only slingle priors for each relation and parameter a specific structure is needed. A column with the 'level' names, priors for the mean (mu) and priors for the standard errr (se). This structure can be show by setting the argument get_prior_only=T.

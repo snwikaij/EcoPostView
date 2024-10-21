@@ -5,11 +5,22 @@
 #' @param predictor The predictor
 #' @param link_function The link function
 #' @param nr_hops The number of HOP-lines to be generated
-#' @param resolution The resolution of the hop lines
-#' @param exponentiate Exponentiation of the predictor gradient
+#' @param hop_lwd The line width of the hop-lines
+#' @param hop_alpha The transparency of the hop-lines
+#' @param hop_col The color of the hop-lines
+#' @param expected_lwd The line width of the hop-lines
+#' @param hop_resolution The resolution of the hop lines
+#' @param pdp_resolution The resolution of the pdp grid
+#' @param exp_disp Exponentiation of the predictor gradient
+#' @param exp_axis Exponentiation the notation on the axis
 #' @param shift_b0 Shifting the intercept up or down by adding values
+#' @param gradient_title Title of the gradient in a pdp-plot
+#' @param gadient_col Color (or Colour for the grammar freak) for the gradient
 #' @param xlimit The limits of the x-axis
 #' @param ylimit The limits of the y-axis
+#' @param exp_axis Take the exponent of the axis number
+#' @param round_axis Round the number on the axis
+#' @param breaks_axis The number of breaks on the axis
 #' @param xlab The x-label text
 #' @param ylab The y-label text
 #' @param xlabsize The size of the x-label text
@@ -25,15 +36,32 @@
 #'
 #' @export
 hop <- function(object, group=NULL, predictor=NULL, link_function=NULL,
-                nr_hops=1500, resolution=300, exponentiate=F, shift_b0=0,
+                nr_hops=1500, hop_lwd=1.2, hop_alpha=0.05, hop_col="grey60",
+                expected_lwd=0.8, hop_resolution=300, pdp_resolution=30,
+                exp_disp=F, exp_axis=F, shift_b0=0, gradient_title="MAP",
+                gradient_col=c("magenta", "yellow", "cyan"),
                 xlimit=c(-5, 10), ylimit=NULL, xlab=NULL, ylab=NULL,
+                round_x_axis=2, round_y_axis=2, breaks_axis=5,
                 xlabsize=8, ylabsize=8, xtextsize=10, ytextsize=10){
 
+#Run script that falls outside hop or pdp
+#error if b0 and b1 are not given
 if(all(!names(object$Estimates) %in% c("b0", "b1")))stop("To create HOP-lines both b0 and b1 are needed E(y|x)=b0+b1x")
 
+#give error
+if(exp_disp == T & exp_axis==T){stop("Exponentiating and scaling the axis are not both possible")}
+
+#maximum a posterior value
+maxpost <- function(x){d <- density(x); d$x[which.max(d$y)]}
+
+if(length(predictor)==1){
 #generate warning for limits
-if(all(xlimit == c(-5, 10))){warning("xlimit are in default, check if this is appropriate.")}
-xl         <- seq(xlimit[1], xlimit[2], length.out=resolution)
+if(all(xlimit == c(-5, 10))){warning("xlimit is in default, check if this is appropriate.")}
+xl         <- seq(xlimit[1], xlimit[2], length.out=hop_resolution)
+
+#set names on axis
+if(is.null(xlab)){xlab_text <- ggplot2::xlab(predictor)}else{xlab_text <- ggplot2::xlab(xlab)}
+if(is.null(ylab)){ylab_text <- ggplot2::ylab("")}else{ylab_text <- ggplot2::ylab(ylab)}
 
 #subset the group, predictor and link
 b0_df <- object$Estimates$b0
@@ -68,35 +96,100 @@ for(i in 1:nr_hops){hop_lines[[i]] <- oneHOP(hops_df$b0[i]+shift_b0, hops_df$b1[
 hops_realized   <- as.data.frame(do.call(rbind, hop_lines))
 hops_realized$j <- as.factor(hops_realized$j)
 
-#maximum a posteriori value
-maxpost <- function(x){d <- density(x); d$x[which.max(d$y)]}
-
 #the expected value
 expected <-as.data.frame(oneHOP(maxpost(b0_df$estimate)+shift_b0, maxpost(b1_df$estimate), xl, link_function, 1))
 
-if(exponentiate == T){
-hops_realized$x <- exp(hops_realized$x)
-expected$x      <- exp(expected$x)}
-
-if(is.null(xlab)){xlab_text <- ggplot2::xlab(predictor)}else{xlab_text <- ggplot2::xlab(xlab)}
-if(is.null(ylab)){ylab_text <- ggplot2::ylab("")}else{ylab_text <- ggplot2::ylab(ylab)}
-
+#set limits for hops
 if(is.null(ylimit)){
 miny <- round(quantile(aggregate(data=hops_realized, y~j, min)[,2], .025))
 maxy <- quantile(aggregate(data=hops_realized, y~j, max)[,2], .975)}else{
 miny <- ylimit[1]
 maxy <- ylimit[2]}
 
+#exponentiate the display of the figure
+if(exp_disp == T & exp_axis==F){
+  hops_realized$x <- exp(hops_realized$x)
+  expected$x      <- exp(expected$x)}
+
+#display only exponent notation on the axis
+if(exp_axis==T & exp_disp == F){
+axis_x_dim <- scale_x_continuous(breaks = seq(min(hops_realized$x), max(hops_realized$x),
+                   length.out = breaks_axis), labels = function(x) round(exp(x),round__x_axis))}else{
+axis_x_dim <- scale_x_continuous(breaks = seq(min(hops_realized$x), max(hops_realized$x),
+                   length.out = breaks_axis), labels = function(x) round(x,round_x_axis))}
+
 one_plot <- ggplot(hops_realized, aes(x, y, group=as.factor(j)))+
        ylim(miny, maxy)+xlab_text+ylab_text+
-       geom_line(lwd=1.2, alpha=0.05, col="grey60")+
-       geom_line(data=expected, aes(x, y), lwd=.8, inherit.aes = F)+
-       theme_classic()+
+       geom_line(lwd=hop_lwd, alpha=hop_alpha, col=hop_col)+
+       geom_line(data=expected, aes(x, y), lwd=expected_lwd, inherit.aes = F)+
+       theme_classic()+axis_x_dim+
        theme(legend.position = "none",
              axis.text.x = element_text(size=xtextsize),
              axis.text.y = element_text(size=ytextsize),
              axis.title.x = element_text(size=xlabsize),
-             axis.title.y = element_text(size=ylabsize))
+             axis.title.y = element_text(size=ylabsize))}else if(length(predictor)==2){
+
+#set names on axis
+if(is.null(xlab)){xlab_text <- ggplot2::xlab(predictor[1])}else{xlab_text <- ggplot2::xlab(xlab)}
+if(is.null(ylab)){ylab_text <- ggplot2::ylab(predictor[2])}else{ylab_text <- ggplot2::ylab(ylab)}
+
+#subset the group, predictor and link
+b0_df <- object$Estimates$b0
+b1_df <- object$Estimates$b1
+
+#model parameters
+b0_theta   <- maxpost(b0_df$estimate[b0_df$group == group & b0_df$link == link_function])
+b1_theta_x <- maxpost(b1_df$estimate[b1_df$group == group & b1_df$predictor == predictor[1] & b1_df$link == link_function])
+b1_theta_y <- maxpost(b1_df$estimate[b1_df$group == group & b1_df$predictor == predictor[2] & b1_df$link == link_function])
+
+#create grid log scale
+if(exp_disp == F){
+  if(is.null(ylimit)){
+    ylimit <- xlimit
+    warning("ylimit is in NULL, then xlimit will be used in pdp.")}
+pred_grid <- expand.grid(x=seq(xlimit[1], xlimit[2], length.out=pdp_resolution),
+                         y=seq(ylimit[1], ylimit[2], length.out=pdp_resolution))
+
+if(link_function == 'identity'){pred_grid$yhat <- (b0_theta+shift_b0+b1_theta_x*pred_grid$x+b1_theta_y*pred_grid$y)}
+if(link_function == 'log'){pred_grid$yhat      <- exp(b0_theta+shift_b0+b1_theta_x*pred_grid$x+b1_theta_y*pred_grid$y)}
+if(link_function == 'logit'){pred_grid$yhat    <- plogis(b0_theta+shift_b0+b1_theta_x*pred_grid$x+b1_theta_y*pred_grid$y)}}
+
+#create grid on exp scale
+if(exp_disp == T & exp_axis == F){
+  if(is.null(ylimit)){
+    ylimit <- xlimit
+    warning("ylimit is in NULL, then xlimit will be used in pdp.")}
+pred_grid <- expand.grid(x=seq(exp(xlimit[1]), exp(xlimit[2]), length.out=pdp_resolution),
+                         y=seq(exp(ylimit[1]), exp(ylimit[2]), length.out=pdp_resolution))
+
+if(link_function == 'identity'){pred_grid$yhat <- (b0_theta+shift_b0+b1_theta_x*log(pred_grid$x)+b1_theta_y*log(pred_grid$y))}
+if(link_function == 'log'){pred_grid$yhat      <- exp(b0_theta+shift_b0+b1_theta_x*log(pred_grid$x)+b1_theta_y*log(pred_grid$y))}
+if(link_function == 'logit'){pred_grid$yhat    <- plogis(b0_theta+shift_b0+b1_theta_x*log(pred_grid$x)+b1_theta_y*log(pred_grid$y))}}
+
+#display only exponent the notation on the axis
+if(exp_disp == F & exp_axis == T){
+  axis_x_dim <- scale_x_continuous(breaks = seq(min(pred_grid$x), max(pred_grid$x),
+                                   length.out = breaks_axis), labels = function(x) round(exp(x),round_x_axis))
+  axis_y_dim <- scale_y_continuous(breaks = seq(min(pred_grid$y),  max(pred_grid$y),
+                                   length.out = breaks_axis), labels = function(y) round(exp(y), round_y_axis))}else{
+  axis_x_dim <- scale_x_continuous(breaks = seq(min(pred_grid$x),  max(pred_grid$x),
+                                   length.out = breaks_axis),
+                                   labels = function(x) round(x,round_x_axis))
+  axis_y_dim <- scale_y_continuous(breaks = seq(min(pred_grid$y) ,max(pred_grid$y),
+                                   length.out = breaks_axis),
+                                   labels = function(y) round(y, round_y_axis))}
+
+one_plot <- ggplot(pred_grid, aes(x = x, y = y, fill = yhat)) +
+  xlab_text+ylab_text+
+  geom_tile()+labs(fill=gradient_title)+
+  scale_fill_gradientn(colors = gradient_col) +
+  theme_classic()+axis_x_dim+axis_y_dim+
+  theme(
+    legend.position = "right",
+    axis.text.x = element_text(size = xtextsize),
+    axis.text.y = element_text(size = ytextsize),
+    axis.title.x = element_text(size = xlabsize),
+    axis.title.y = element_text(size = ylabsize))}else{stop("Only max two predictor variables are currently supported")}
 
 return(one_plot)}
 

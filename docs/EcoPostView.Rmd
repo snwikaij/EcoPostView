@@ -158,7 +158,16 @@ This is the most difficult part where the data needs to be gathered and extracte
 To display the posterior results one could display the results with a point and interval range. However, this interval displaying a strong boundary on a continues set of possibilities does not completely capture  the idea of the posterior probability distribution. Another option would be to display the Posterior Density Distribution (PDD) combined with the point and interval estimate. Hence, the PDD displays the possible values of the prior information where the pooled estimated might have originated from $P(\beta_{\text{pooled}} \mid \text{meta-data}, \text{ prior information})$ it is the inverse of the likelihood which informs us of the values of the meta-data given we elected a particular pooled estimate $P(\text{meta-data}\mid\beta_{\text{pooled}}  )$. This can be  performed with the pdplot function.
 
 ``` {r pdplot}
-pdplot(mod3)
+pdd <- pdplot(mod3)
+
+#for the models with the log-link
+print(pdd$posterior_density$log)
+
+#for the models with the logit-link
+print(pdd$posterior_density$logit)
+
+#summary belonging to the figures
+print(pdd$summary)
 
 ```
 for larger datasets with multiple groups and predictor variables the order of the PDDs can be changed by using the arguments "order_predictor" and "order_group" needing a character string with the names of the desired order.

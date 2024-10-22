@@ -357,6 +357,11 @@ priors</a></li>
 <li><a href="#setting-multiple-priors-for-bayesian-model-averaging" id="toc-setting-multiple-priors-for-bayesian-model-averaging">3.3
 Setting multiple priors for Bayesian Model Averaging</a></li>
 </ul></li>
+<li><a href="#display" id="toc-display">4. Display</a>
+<ul>
+<li><a href="#pdplot-function" id="toc-pdplot-function">4.1
+pdplot-function</a></li>
+</ul></li>
 <li><a href="#references" id="toc-references">References</a></li>
 </ul>
 </div>
@@ -624,40 +629,80 @@ default (93.1%). Additionally the <span class="math inline">\(I2\)</span> hetero
 <span id="cb7-18"><a href="#cb7-18" tabindex="-1"></a>                    <span class="at">predictor=</span>example1<span class="sc">$</span>predictor,  </span>
 <span id="cb7-19"><a href="#cb7-19" tabindex="-1"></a>                    <span class="at">link_function=</span>example1<span class="sc">$</span>link,   </span>
 <span id="cb7-20"><a href="#cb7-20" tabindex="-1"></a>                    <span class="at">grouping=</span>example1<span class="sc">$</span>group,</span>
-<span id="cb7-21"><a href="#cb7-21" tabindex="-1"></a>                    <span class="at">prior_mu =</span> example2[<span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">4</span>,<span class="dv">6</span>)],          <span class="co">#Prior for the mean</span></span>
-<span id="cb7-22"><a href="#cb7-22" tabindex="-1"></a>                    <span class="at">prior_mu_se =</span> example2[<span class="fu">c</span>(<span class="dv">3</span>,<span class="dv">5</span>,<span class="dv">7</span>)],       <span class="co">#Prior for the standard error of the mean</span></span>
-<span id="cb7-23"><a href="#cb7-23" tabindex="-1"></a>                    <span class="at">prior_weights =</span> <span class="fu">c</span>(<span class="dv">1</span><span class="sc">/</span><span class="dv">3</span>, <span class="dv">1</span><span class="sc">/</span><span class="dv">3</span>, <span class="dv">1</span><span class="sc">/</span><span class="dv">3</span>),       <span class="co">#Prior weights</span></span>
+<span id="cb7-21"><a href="#cb7-21" tabindex="-1"></a>                    <span class="at">prior_mu=</span>example2[<span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">4</span>,<span class="dv">6</span>)],          <span class="co">#Prior for the mean</span></span>
+<span id="cb7-22"><a href="#cb7-22" tabindex="-1"></a>                    <span class="at">prior_mu_se=</span>example2[<span class="fu">c</span>(<span class="dv">3</span>,<span class="dv">5</span>,<span class="dv">7</span>)],       <span class="co">#Prior for the standard error of the mean</span></span>
+<span id="cb7-23"><a href="#cb7-23" tabindex="-1"></a>                    <span class="at">prior_weights=</span><span class="fu">c</span>(<span class="dv">1</span><span class="sc">/</span><span class="dv">3</span>, <span class="dv">1</span><span class="sc">/</span><span class="dv">3</span>, <span class="dv">1</span><span class="sc">/</span><span class="dv">3</span>),       <span class="co">#Prior weights</span></span>
 <span id="cb7-24"><a href="#cb7-24" tabindex="-1"></a>                    <span class="at">Nsamp=</span>example1<span class="sc">$</span>n,            </span>
 <span id="cb7-25"><a href="#cb7-25" tabindex="-1"></a>                    <span class="at">method=</span><span class="dv">2</span>,</span>
-<span id="cb7-26"><a href="#cb7-26" tabindex="-1"></a>                    <span class="at">n_chain =</span> <span class="dv">6</span>)</span>
+<span id="cb7-26"><a href="#cb7-26" tabindex="-1"></a>                    <span class="at">n_chain=</span><span class="dv">6</span>)</span>
 <span id="cb7-27"><a href="#cb7-27" tabindex="-1"></a></span>
 <span id="cb7-28"><a href="#cb7-28" tabindex="-1"></a><span class="co">#Display the summarized results</span></span>
 <span id="cb7-29"><a href="#cb7-29" tabindex="-1"></a>mod3<span class="sc">$</span>Summary</span>
 <span id="cb7-30"><a href="#cb7-30" tabindex="-1"></a><span class="co">#&gt;   parameter predictor  link         group     map      mu     se      ll</span></span>
-<span id="cb7-31"><a href="#cb7-31" tabindex="-1"></a><span class="co">#&gt; 1        b1    Oxygen   log          Fish  0.2431  0.2567 0.0990  0.0757</span></span>
-<span id="cb7-32"><a href="#cb7-32" tabindex="-1"></a><span class="co">#&gt; 2        b1  Salinity   log          Fish -0.0781 -0.0672 0.0698 -0.1894</span></span>
-<span id="cb7-33"><a href="#cb7-33" tabindex="-1"></a><span class="co">#&gt; 3        b1    Oxygen logit          Fish  0.1255  0.0147 0.1849 -0.3366</span></span>
-<span id="cb7-34"><a href="#cb7-34" tabindex="-1"></a><span class="co">#&gt; 4        b1  Salinity logit          Fish -0.1700 -0.1455 0.1104 -0.3388</span></span>
-<span id="cb7-35"><a href="#cb7-35" tabindex="-1"></a><span class="co">#&gt; 5        b1    Oxygen   log Invertebrates  0.1546  0.1577 0.0577  0.0519</span></span>
-<span id="cb7-36"><a href="#cb7-36" tabindex="-1"></a><span class="co">#&gt; 6        b1  Salinity   log Invertebrates -0.1515 -0.1525 0.0366 -0.2201</span></span>
-<span id="cb7-37"><a href="#cb7-37" tabindex="-1"></a><span class="co">#&gt; 7        b1    Oxygen logit Invertebrates  0.0821  0.0698 0.0938 -0.1012</span></span>
-<span id="cb7-38"><a href="#cb7-38" tabindex="-1"></a><span class="co">#&gt; 8        b1  Salinity logit Invertebrates -0.2331 -0.2299 0.0551 -0.3288</span></span>
+<span id="cb7-31"><a href="#cb7-31" tabindex="-1"></a><span class="co">#&gt; 1        b1    Oxygen   log          Fish  0.2431  0.2567 0.0990  0.0936</span></span>
+<span id="cb7-32"><a href="#cb7-32" tabindex="-1"></a><span class="co">#&gt; 2        b1  Salinity   log          Fish -0.0781 -0.0672 0.0698 -0.1815</span></span>
+<span id="cb7-33"><a href="#cb7-33" tabindex="-1"></a><span class="co">#&gt; 3        b1    Oxygen logit          Fish  0.1255  0.0147 0.1849 -0.2934</span></span>
+<span id="cb7-34"><a href="#cb7-34" tabindex="-1"></a><span class="co">#&gt; 4        b1  Salinity logit          Fish -0.1700 -0.1455 0.1104 -0.3232</span></span>
+<span id="cb7-35"><a href="#cb7-35" tabindex="-1"></a><span class="co">#&gt; 5        b1    Oxygen   log Invertebrates  0.1546  0.1577 0.0577  0.0631</span></span>
+<span id="cb7-36"><a href="#cb7-36" tabindex="-1"></a><span class="co">#&gt; 6        b1  Salinity   log Invertebrates -0.1515 -0.1525 0.0366 -0.2132</span></span>
+<span id="cb7-37"><a href="#cb7-37" tabindex="-1"></a><span class="co">#&gt; 7        b1    Oxygen logit Invertebrates  0.0821  0.0698 0.0938 -0.0879</span></span>
+<span id="cb7-38"><a href="#cb7-38" tabindex="-1"></a><span class="co">#&gt; 8        b1  Salinity logit Invertebrates -0.2331 -0.2299 0.0551 -0.3222</span></span>
 <span id="cb7-39"><a href="#cb7-39" tabindex="-1"></a><span class="co">#&gt;        ul     I2</span></span>
-<span id="cb7-40"><a href="#cb7-40" tabindex="-1"></a><span class="co">#&gt; 1  0.4372 0.5846</span></span>
-<span id="cb7-41"><a href="#cb7-41" tabindex="-1"></a><span class="co">#&gt; 2  0.0641 0.5804</span></span>
-<span id="cb7-42"><a href="#cb7-42" tabindex="-1"></a><span class="co">#&gt; 3  0.3082 0.1012</span></span>
-<span id="cb7-43"><a href="#cb7-43" tabindex="-1"></a><span class="co">#&gt; 4  0.0655 0.2758</span></span>
-<span id="cb7-44"><a href="#cb7-44" tabindex="-1"></a><span class="co">#&gt; 5  0.2619 0.5979</span></span>
-<span id="cb7-45"><a href="#cb7-45" tabindex="-1"></a><span class="co">#&gt; 6 -0.0864 0.7354</span></span>
-<span id="cb7-46"><a href="#cb7-46" tabindex="-1"></a><span class="co">#&gt; 7  0.2376 0.3190</span></span>
-<span id="cb7-47"><a href="#cb7-47" tabindex="-1"></a><span class="co">#&gt; 8 -0.1282 0.2647</span></span>
-<span id="cb7-48"><a href="#cb7-48" tabindex="-1"></a></span>
-<span id="cb7-49"><a href="#cb7-49" tabindex="-1"></a><span class="co">#remove data frame of priors to keep environment clean</span></span>
-<span id="cb7-50"><a href="#cb7-50" tabindex="-1"></a><span class="fu">rm</span>(mod3)</span></code></pre></div>
+<span id="cb7-40"><a href="#cb7-40" tabindex="-1"></a><span class="co">#&gt; 1  0.4157 0.5846</span></span>
+<span id="cb7-41"><a href="#cb7-41" tabindex="-1"></a><span class="co">#&gt; 2  0.0473 0.5804</span></span>
+<span id="cb7-42"><a href="#cb7-42" tabindex="-1"></a><span class="co">#&gt; 3  0.2941 0.1012</span></span>
+<span id="cb7-43"><a href="#cb7-43" tabindex="-1"></a><span class="co">#&gt; 4  0.0367 0.2758</span></span>
+<span id="cb7-44"><a href="#cb7-44" tabindex="-1"></a><span class="co">#&gt; 5  0.2535 0.5979</span></span>
+<span id="cb7-45"><a href="#cb7-45" tabindex="-1"></a><span class="co">#&gt; 6 -0.0925 0.7354</span></span>
+<span id="cb7-46"><a href="#cb7-46" tabindex="-1"></a><span class="co">#&gt; 7  0.2188 0.3190</span></span>
+<span id="cb7-47"><a href="#cb7-47" tabindex="-1"></a><span class="co">#&gt; 8 -0.1412 0.2647</span></span></code></pre></div>
 <p>This is the most difficult part where the data needs to be gathered
 and extracted, (G)LMs need to be fitted, priors need to formulated and
 the whole model needs to be optimized to get a stable results. The
 display of the results requires less time.</p>
+</div>
+</div>
+<div id="display" class="section level1">
+<h1>4. Display</h1>
+<div id="pdplot-function" class="section level2">
+<h2>4.1 pdplot-function</h2>
+<p>To display the posterior results one could display the results with a
+point and interval range. However, this interval displaying a strong
+boundary on a continues set of possibilities does not completely capture
+the idea of the posterior probability distribution. Another option would
+be to display the Posterior Density Distribution (PDD) combined with the
+point and interval estimate. Hence, the PDD displays the possible values
+of the prior information where the pooled estimated might have
+originated from <span class="math inline">\(P(\beta_{\text{pooled}} \mid
+\text{meta-data}, \text{ prior information})\)</span> it is the inverse
+of the likelihood which informs us of the values of the meta-data given
+we elected a particular pooled estimate <span class="math inline">\(P(\text{meta-data}\mid\beta_{\text{pooled}}
+)\)</span>. This can be performed with the pdplot function.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>pdd <span class="ot">&lt;-</span> <span class="fu">pdplot</span>(mod3)</span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a><span class="co">#for the models with the log-link</span></span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a><span class="fu">print</span>(pdd<span class="sc">$</span>posterior_density<span class="sc">$</span>log)</span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a></span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a><span class="co">#for the models with the logit-link</span></span>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a><span class="fu">print</span>(pdd<span class="sc">$</span>posterior_density<span class="sc">$</span>logit)</span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a></span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a><span class="co">#summary belonging to the figures</span></span>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a><span class="fu">print</span>(pdd<span class="sc">$</span>summary)</span>
+<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a><span class="co">#&gt;       map      mu     se      ll      ul</span></span>
+<span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a><span class="co">#&gt; 1  0.2431  0.2567 0.0990  0.0936  0.4157</span></span>
+<span id="cb10-6"><a href="#cb10-6" tabindex="-1"></a><span class="co">#&gt; 2  0.1255  0.0147 0.1849 -0.2934  0.2941</span></span>
+<span id="cb10-7"><a href="#cb10-7" tabindex="-1"></a><span class="co">#&gt; 3 -0.0781 -0.0672 0.0698 -0.1815  0.0473</span></span>
+<span id="cb10-8"><a href="#cb10-8" tabindex="-1"></a><span class="co">#&gt; 4 -0.1700 -0.1455 0.1104 -0.3232  0.0367</span></span>
+<span id="cb10-9"><a href="#cb10-9" tabindex="-1"></a><span class="co">#&gt; 5  0.1546  0.1577 0.0577  0.0631  0.2535</span></span>
+<span id="cb10-10"><a href="#cb10-10" tabindex="-1"></a><span class="co">#&gt; 6  0.0821  0.0698 0.0938 -0.0879  0.2188</span></span>
+<span id="cb10-11"><a href="#cb10-11" tabindex="-1"></a><span class="co">#&gt; 7 -0.1515 -0.1525 0.0366 -0.2132 -0.0925</span></span>
+<span id="cb10-12"><a href="#cb10-12" tabindex="-1"></a><span class="co">#&gt; 8 -0.2331 -0.2299 0.0551 -0.3222 -0.1412</span></span></code></pre></div>
+<p>for larger datasets with multiple groups and predictor variables the
+order of the PDDs can be changed by using the arguments
+“order_predictor” and “order_group” needing a character string with the
+names of the desired order.</p>
 </div>
 </div>
 <div id="references" class="section level1">

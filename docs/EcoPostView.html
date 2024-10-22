@@ -341,81 +341,119 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <h4 class="author">Willem (Wim) Kaijser</h4>
 
 
+<div id="TOC">
+<ul>
+<li><a href="#introduction" id="toc-introduction">1.
+Introduction</a></li>
+<li><a href="#obtaining-data-and-fitting-glms" id="toc-obtaining-data-and-fitting-glms">2. Obtaining data and fitting
+(G)LMs</a></li>
+<li><a href="#the-meta-function" id="toc-the-meta-function">3. The
+meta-function</a>
+<ul>
+<li><a href="#basic-function" id="toc-basic-function">3.1 Basic
+function</a></li>
+<li><a href="#setting-priors" id="toc-setting-priors">3.2 Setting
+priors</a></li>
+<li><a href="#setting-multiple-priors-for-bayesian-model-averaging" id="toc-setting-multiple-priors-for-bayesian-model-averaging">3.3
+Setting multiple priors for Bayesian Model Averaging</a></li>
+</ul></li>
+<li><a href="#references" id="toc-references">References</a></li>
+</ul>
+</div>
 
 <div id="introduction" class="section level1">
 <h1>1. Introduction</h1>
-<p>Our ecological data is scattered around and noisy. It is often
-‘case-study’ specific and not representative for the totality if
-conditions encountered. However, as ecologist you are not interested int
-case specific situations, but making probability statements on general
-patterns, visualizing them and predicting with them.</p>
+<p>Ecological data is scattered around literature in different formats
+and very noisy. It is often ‘case-study’ specific and not representative
+for the totality if conditions encountered. However, as ecologist you
+are not interested in case specific situations, but making probability
+statements on general patterns, visualizing and predicting with
+them.</p>
 <p>If working with meta-data and uncovering patterns from literature,
 making predictions and probability statements are your goal, this
-R-package can help you make your life easier. The goal of this package
-is for you to use the benefits of the output of simple fitted Linear and
-Generalized Linear Models ((G)LMs) over multiple studies to combine
-using the strength of Bayesian Meta-analysis and the flexibility it
-offers to generalize a pooled (G)LM from multiple (G)LM outputs.</p>
-<p>You need to find this information in figures, tables, data sets or
-combinations between them. In simple words we need a data set on which
-we can fit a (G)LM (see Kaijser et al, …). This however, will show that
-most data is very noisy, perhaps biased and the heterogeneity is large.
-This is an issue for a focus on error-control and causality statements.
-Both need very clearly a controlled environment with a well setup
-experimental conditions and exclusion of confounding variables. Hence,
-error-control and causality start a-priori (Fisher 1949, Pearl 2009,
-Mayo 2018). Of course this makes or information still useful for make
-probability statements or using the required information as a-priori for
-an error-control or causality study. However, posterior probability
-statements, visualization and prediction are still within the range of
-all this information.</p>
-<p>To start with the examples and using this R-package both JAGS and
-devtools need to be installed. JAGS can be installed from <a href="https://sourceforge.net/projects/mcmc-jags/" class="uri">https://sourceforge.net/projects/mcmc-jags/</a> and devtools
-can be install directly into R. The EcoPostView can be directly
-installed from GitHub for the most recent version. Of course any
-problems or possible improvements can be directed to me if nicely
-asked.</p>
+R-package can help make your life easier. The goal of this package is
+for you combine the benefits of multiple fitted Linear and Generalized
+Linear Models ((G)LMs), using the flexibility and strength of Bayesian
+Meta-analysis to generalize to a pooled (G)LM.</p>
+<p>The information you are interested in is available from figures,
+tables, data sets or combinations between them. In simple words, we need
+a data set on which we can fit a (G)LM (see Kaijser et al, …). This,
+however, will show that most data is very noisy, perhaps biased and the
+heterogeneity amount studies is large. This is an issue for a focus on
+error-control and causality statements. Both need very clearly a
+controlled environment with a well setup experimental conditions and
+exclusion of confounding variables. Hence, error-control and causality
+start a-priori (Fisher 1949, Pearl 2009, Mayo 2018). Of course this
+makes or information still useful to make probability statements or
+using the information to a-priori setup an study focused on
+error-control or causality study. However, the focus lies here on making
+posterior probability statements, visualization and prediction are still
+with this information.</p>
+<p>To start usgin the R-package both JAGS and devtools need to be
+installed. JAGS can be installed from <a href="https://sourceforge.net/projects/mcmc-jags/" class="uri">https://sourceforge.net/projects/mcmc-jags/</a> and devtools
+can be install in R. For the most recent version of the EcoPostView it
+can be installed from GitHub. Of course, if nicely asked, any problems
+or possible improvements can be directed to me.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="co">#install.packages(&quot;devtools&quot;)</span></span>
 <span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">library</span>(devtools)</span>
 <span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="co">#&gt; Loading required package: usethis</span></span>
-<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a><span class="co">#install.github(&quot;snwikaij/EcoPostView&quot;)</span></span>
-<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a><span class="fu">library</span>(EcoPostView)</span></code></pre></div>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a><span class="co">#install.github(&quot;snwikaij/EcoPostView&quot;)</span></span>
+<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a><span class="fu">library</span>(EcoPostView)</span></code></pre></div>
 </div>
 <div id="obtaining-data-and-fitting-glms" class="section level1">
 <h1>2. Obtaining data and fitting (G)LMs</h1>
 <p>To obtain data from the (G)LMs we need to fit models. This data can
-be obtained from figures, tables, data sets or combinations (See Kaijser
-et al. …). What we need from these models are the so called estimations
-of the model parameters. This are more commonly known as the intercept
-or slope. The intercept and slope can be used to predict: link(response
-variable) = intercept + slope * predictor variable. In a GLM the
-response variable is linked to to the linear component with a
-link-function. The ‘identity’ link function applies not link function it
-means that the mean (expected value) is directly related to the linear
-component. However in a GLM with, log- or logit-link it is easier to
-talk about log-linear or logit-linear relation. The slope is not a slope
-anymore because there is not straight line anymore between. Therefore
-the term coefficient or regression coefficient refers to this model
-parameter. When fitting a model it is convenient to note the source
-(e.g., DOI), the type of predictor variable (e.g., conductivity),
-response type (e.g., benthic invertebrates), link-function and if the
-model parameters is the intercept b0 or a regression coefficient b1. If
-multiple predictor variables are fitted in a model all regression
-coefficients.</p>
+be obtained from figures (e.g., using WebPlotDigitizer), tables, data
+sets or combinations (See Kaijser et al. …). What is needed to combine
+these models are the so called estimations of the model parameters.
+These are more commonly known as the intercept or slope. The intercept
+(<em>b0</em> or <em>β0</em>) and slope (<em>b1</em> or <em>β1</em>) can
+be used to predict: <em>link(response variable) = b0 + b1 · predictor
+variable</em>. In a GLM the response variable is linked to to the linear
+component with a link-function often notated as <em>g(..)</em>. The
+‘identity’ link function applies no link function. This indicate that
+the mean (expected value notated as <em>E(y)</em> or <em>(E(y|x))</em>)
+is directly related to the linear component. However, in a GLM with,
+log- or logit-link it is easier to talk about log-linear relation <span class="math display">\[log(E(y \mid x)) = \beta_0 + \beta_1 \cdot
+x\]</span> or logit-linear relation <span class="math display">\[logit(E(y \mid x)) = \beta_0 + \beta_1 \cdot
+x\]</span> The slope is not a true slope anymore because there is not
+straight line anymore between the response and predictor variable.
+Therefore the term coefficient or regression coefficient refers to the
+model parameter (<em>β</em>). When fitting a model it is convenient to
+note the source (e.g., DOI), the type of predictor variable (e.g.,
+conductivity), group of the response type (e.g., benthic-invertebrates),
+link-function and if the model parameters is the intercept <em>b0</em>
+or a regression coefficient <em>b1</em>. If multiple predictor variables
+are fitted in a model all regression coefficients as notated as
+<em>b1</em> to distinguish it from the intercept <em>b0</em>.</p>
 <p>Heuristically, I prefer working often working with elasticity- or
 semi-elasticity coefficients (Woolridge, 2001). But there are enough
-reasons not to do so. The elasticity coefficient expresses the
-percentage change of y (response) as relative to x (predictor variable).
-Thus, 0.2 is 0.2% change in y given 1% in x. Hence, for a log-linear
-model Log(y)=b0+b1·log(x) and thus b1=Log(x)/Log(x). For the
-semi-elasticity coefficient (i.e., logit-linear) this only accounts
-partially and values closer 0 are better interpret able because
-Logit(y)=b0+b1·log(x) and thus b1=Logit(y)/log(x). This expressed the
-change in the log-odds per 1% elasticity (Cramer 1991; Woolridge, 2001).
-This makes it possible to coarsely compare among different models and
-still keeps the interpretation of connected to the units needed for
-prediction. Hence, we can still predict with the model and interpret the
-expected change of y given an increase in 1 log(x).</p>
+reasons not to do so and is dependent on the question and many other
+factors. The elasticity coefficient expresses the percentage change of
+<span class="math inline">\(y\)</span> (response) as relative to <span class="math inline">\(x\)</span> (predictor variable). Thus, 0.2 is 0.2%
+change in <span class="math inline">\(y\)</span> given 1% in <span class="math inline">\(x\)</span>. Hence, for a log-linear model <span class="math inline">\(log(E(y \mid x)) = \beta_0 + \beta_1 \cdot
+log(x)\)</span> and thus <span class="math inline">\(\beta_1 =
+\frac{\log(y)}{\log(x)}\)</span>. For the semi-elasticity coefficient
+(i.e., logit-linear) this only accounts partially and values closer 0
+are better interpret able because <span class="math inline">\(logit(E(y
+\mid x)) = \beta_0 + \beta_1 \cdot log(x)\)</span> and thus <span class="math inline">\(\beta_1 = \frac{logit(y)}{\log(x)}\)</span>. This
+expressed the change in the log-odds per 1% elasticity (Cramer 1991;
+Woolridge, 2001). This makes it possible to coarsely compare among
+different models and still keep the interpretation of to the units
+needed for prediction. Hence, we can still predict with the model and
+interpret the expected change of <span class="math inline">\(y\)</span>
+given an increase in <span class="math inline">\(1·log(x)\)</span>,
+because the units of <span class="math inline">\(x\)</span> are retain
+under the <span class="math inline">\(log\)</span>.</p>
+<p>I will keep these ‘unofficial expression’, due to the reference in
+the R-package to <em>b0</em> and <em>b1</em> while a proper notation
+would of course be more complex expressed as: <span class="math display">\[g(E(y \mid x_{ij})) = \sum_{j=1}^{v} \beta_j
+\cdot x_{ij}\]</span> Where <span class="math inline">\(x_{ij}\)</span>
+refers to the <span class="math inline">\(j\)</span> the predictor
+variable (e.g., salinity is <span class="math inline">\(j\)</span>=1 and
+light is <span class="math inline">\(j\)</span>=2) and <span class="math inline">\(i\)</span> is the <span class="math inline">\(i\)</span>-th observation. Here, <span class="math inline">\(v\)</span> represents the number of predictors. I
+will reduce the text to the basics.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">data</span>(example1)</span>
 <span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="fu">head</span>(example1)</span>
 <span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="co">#&gt;           group predictor parameter  link  n        est        se</span></span>
@@ -425,13 +463,15 @@ expected change of y given an increase in 1 log(x).</p>
 <span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a><span class="co">#&gt; 4 Invertebrates    Oxygen        b1   log 10 -0.1356232 0.3525578</span></span>
 <span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a><span class="co">#&gt; 5 Invertebrates  Salinity        b1 logit 27  0.8249000 0.2038000</span></span>
 <span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a><span class="co">#&gt; 6          Fish  Salinity        b1   log 25 -0.1509000 0.1432000</span></span></code></pre></div>
-<p>In the example above the column est (estimate) indicates the model
-parameters and the column se the (standard error of the estimate). The
-column group can be an organism group or specific species (or anything
-you wish to group by), the column predictor the specific predictor, the
-parameter whether the estimate is the intercept (b0) or a regression
-coefficient (b1) and the column link contains the link function. An
-additional an recommended option is to include the sample size “n” for
+<p>In the example above the column <strong>est</strong> (estimate)
+indicates the model parameters and the column <strong>se</strong> the
+(standard error of the estimate). The column <strong>group</strong> can
+be an organism group or specific species (or anything you wish to group
+by), the column <strong>predictor</strong> the specific predictor
+variable, the parameter whether the estimate is the intercept
+(<em>b0</em>) or a regression coefficient (<em>b1</em>) and the column
+<strong>link</strong>* contains the link function. An additional and
+recommended option is to include the sample size <strong>n</strong> for
 adjusting for ‘small-sample-effect’ (Peters et al., 2006; Moreno et al.,
 2009).</p>
 </div>
@@ -439,14 +479,25 @@ adjusting for ‘small-sample-effect’ (Peters et al., 2006; Moreno et al.,
 <h1>3. The meta-function</h1>
 <div id="basic-function" class="section level2">
 <h2>3.1 Basic function</h2>
-<p>The meta function can include a random effect setting the argument
-RE=T (default), It has the option of placing a single or multipe random
-effect as a vector or matrix using the argument Random. It can adjust
-for the relation between the SE and model parameters using the inverse
-of the standard error 1/SE (method=1, Stanley and Doucouliagos, 2014) or
-inverse of the sample size 1/n (method=2, the latter option is performed
-below). Ofcourse if bias is considered minimal and neglect able non can
-be performed (method=1).</p>
+<p>The meta function can include a random effect, by setting the
+argument RE=TRUE (default is TRUE). The structure is then <span class="math inline">\(\beta= \beta_{\text{pooled}} + u_i\)</span>. It
+has the option of placing a single or multiple random effect as a vector
+or matrix using the argument “random” the structure then becomes then
+<span class="math inline">\(\beta = \beta_{\text{pooled}} + u_i
++r_i\)</span> for a single random effect. It can adjust for the relation
+between the <span class="math inline">\(se\)</span> and model parameters
+using the inverse of the standard error <span class="math inline">\(1/se\)</span> (method=1, Stanley and Doucouliagos,
+2014). The structure is then <span class="math inline">\(\beta =
+\beta_{\text{pooled}} + u_i + \alpha \cdot
+\left(\frac{1}{se}\right)\)</span> or inverse of the sample size <span class="math inline">\(1/n\)</span> (method=2, the latter option is
+performed below) with the structure <span class="math inline">\(\beta =
+\beta_{\text{pooled}} + u_i + \alpha \cdot
+\left(\frac{1}{n}\right)\)</span>. Of course if bias is considered
+minimal and neglect able non can be performed (method=1). I still would
+like to include a third 4th option to utilize Robust Bayesian Model
+Averaging (RoBMA: Maier et al. 2023). But this sometimes adjust
+extremely when including <span class="math inline">\(1/se\)</span> and
+therefore I left this option open for now.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>mod1 <span class="ot">&lt;-</span> <span class="fu">meta</span>(<span class="at">estimate=</span>example1<span class="sc">$</span>est,         <span class="co">#Model estimate</span></span>
 <span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>             <span class="at">stderr=</span>example1<span class="sc">$</span>se,            <span class="co">#Standard error of the model estimate</span></span>
 <span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>             <span class="at">parameter=</span>example1<span class="sc">$</span>parameter,  <span class="co">#Model parameter (b0 or b1)</span></span>
@@ -471,12 +522,12 @@ these issues can be resolved by thinning the chains or increasing the
 number of chains. In this case n_chain=6 solves the issue. Increasing
 the number of chains can be an issue if the number of available cores is
 limited as each chain is run on a separate core. Other options are to
-set ‘better’ or ‘stronger’ priors or combinations between them.
-Moreover, if the issue is not an issue of the estimate ‘mu’ parameters
-in the raw JAGS output, the issue could be considered to be ignored.
-These choices are ultimately up to the user. An option to prevent
-warnings would be to set the warning level for Eff_warn lower i.e.,
-Eff_warn = 500.</p>
+set “better informed” or “stronger” priors or combinations between them.
+Moreover, if the issue is not an issue of the estimate “mu” parameter in
+the raw JAGS output, the issue could be considered to be ignored. These
+choices are ultimately up to the user. An option to prevent warnings
+would be to set the warning level for Eff_warn lower i.e., Eff_warn =
+500.</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>mod2 <span class="ot">&lt;-</span><span class="fu">meta</span>(<span class="at">estimate=</span>example1<span class="sc">$</span>est,        </span>
 <span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>            <span class="at">stderr=</span>example1<span class="sc">$</span>se,            </span>
 <span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>            <span class="at">parameter=</span>example1<span class="sc">$</span>parameter,  </span>
@@ -485,7 +536,7 @@ Eff_warn = 500.</p>
 <span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a>            <span class="at">grouping=</span>example1<span class="sc">$</span>group,       </span>
 <span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a>            <span class="at">Nsamp=</span>example1<span class="sc">$</span>n,              </span>
 <span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a>            <span class="at">method=</span><span class="dv">2</span>,</span>
-<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a>            <span class="at">n_chain =</span> <span class="dv">6</span>)                   <span class="co">#Increasing the number of chains from 2 to 6   </span></span>
+<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a>            <span class="at">n_chain=</span><span class="dv">6</span>)                   <span class="co">#Increasing the number of chains from 2 to 6   </span></span>
 <span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a></span>
 <span id="cb5-11"><a href="#cb5-11" tabindex="-1"></a><span class="co">#remove model to keep the environment clean</span></span>
 <span id="cb5-12"><a href="#cb5-12" tabindex="-1"></a><span class="fu">rm</span>(mod2)</span></code></pre></div>
@@ -493,33 +544,35 @@ Eff_warn = 500.</p>
 <div id="setting-priors" class="section level2">
 <h2>3.2 Setting priors</h2>
 <p>A benefit of the the Bayesian approach is that we can included prior
-information. Thereby explicitly adding more weight to more plausible
-outcomes of the model parameter or less weight to less plausible
-outcomes. To set only single priors for each relation and parameter a
-specific structure is needed. By default the model parameters are set
-with a mean (prior_mu) of 0 and se (prior_mu_se) of 0.5. The prior for
+information. Thereby explicitly shifting the weight of the outcome to
+more plausible values of the pooled model parameter or less weight to
+less plausible values. To set only a single prior for each relation and
+parameter a specific structure is needed. By default the model
+parameters are set as Gaussian/normally distributed with a mean (<span class="math inline">\(\mu\)</span>, prior_mu) of 0 and <span class="math inline">\(se\)</span> (prior_mu_se) of 0.5. The prior for
 the standard deviation is uniform where only the maximum value
-(prior_sigma_max) can be set which is at default 5. As a strongly
+(prior_sigma_max) can be set, which at default is 5. As a strongly
 critical side note. The priors do not need to stay the same, because I
-‘heuristically’ like to work with the elasticity- or semi-elasticity
+“heuristically” like to work with the elasticity- or semi-elasticity
 coefficients. THIS IS NOT A NECESSITY. Hence, not thinking about your
 prior even if not a lot of information is available to make an very
-strong prior (but at least informed) is often not doing a
-<code>Bayesian analysis</code> at all.</p>
-<p>A column with the ‘level’ names, priors for the mean (mu) and priors
-for the standard error (se). This structure can be show by setting the
-argument get_prior_only=T. On could create a table with the same names
-and order and solely changing mu to i.e., 0.2 or -0.2.</p>
+strong prior (but at least informed) is often not doing a Bayesian
+analysis at all.</p>
+<p>To get a nice table overview which can be adjusted an filled in with
+prior information the argument ‘get_prior_only’ can be set to ‘TRUE’.
+This will return a dataframe, with a column <strong>level</strong>
+names, priors for the <strong>mu</strong> (<span class="math inline">\(\mu\)</span>) and for the standard error (<span class="math inline">\(se\)</span>). The values in this can be set
+manually and re-included as a vector. How to do this will be explained
+in more detail in section 3.3.</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>only_priors <span class="ot">&lt;-</span> <span class="fu">meta</span>(<span class="at">estimate=</span>example1<span class="sc">$</span>est,        </span>
-<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>            <span class="at">stderr=</span>example1<span class="sc">$</span>se,            </span>
-<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>            <span class="at">parameter=</span>example1<span class="sc">$</span>parameter,  </span>
-<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a>            <span class="at">predictor=</span>example1<span class="sc">$</span>predictor,  </span>
-<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a>            <span class="at">link_function=</span>example1<span class="sc">$</span>link,   </span>
-<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a>            <span class="at">grouping=</span>example1<span class="sc">$</span>group,       </span>
-<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a>            <span class="at">Nsamp=</span>example1<span class="sc">$</span>n,            </span>
-<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a>            <span class="at">method=</span><span class="dv">2</span>,</span>
-<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a>            <span class="at">n_chain =</span> <span class="dv">6</span>,</span>
-<span id="cb6-10"><a href="#cb6-10" tabindex="-1"></a>            <span class="at">get_prior_only=</span><span class="cn">TRUE</span>) <span class="co">#Only show the structure of the priors</span></span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>                    <span class="at">stderr=</span>example1<span class="sc">$</span>se,            </span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>                    <span class="at">parameter=</span>example1<span class="sc">$</span>parameter,  </span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a>                    <span class="at">predictor=</span>example1<span class="sc">$</span>predictor,  </span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a>                    <span class="at">link_function=</span>example1<span class="sc">$</span>link,   </span>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a>                    <span class="at">grouping=</span>example1<span class="sc">$</span>group,       </span>
+<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a>                    <span class="at">Nsamp=</span>example1<span class="sc">$</span>n,            </span>
+<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a>                    <span class="at">method=</span><span class="dv">2</span>,</span>
+<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a>                    <span class="at">n_chain=</span><span class="dv">6</span>,</span>
+<span id="cb6-10"><a href="#cb6-10" tabindex="-1"></a>                    <span class="at">get_prior_only=</span><span class="cn">TRUE</span>) <span class="co">#Only show the structure of the priors</span></span>
 <span id="cb6-11"><a href="#cb6-11" tabindex="-1"></a></span>
 <span id="cb6-12"><a href="#cb6-12" tabindex="-1"></a><span class="fu">print</span>(only_priors)</span>
 <span id="cb6-13"><a href="#cb6-13" tabindex="-1"></a><span class="co">#&gt;                            Levels Prior_mu Prior_se</span></span>
@@ -547,8 +600,8 @@ weights to weight each prior as equally reasonable. In the example below
 there are three priors for each possible model. An the prior weights are
 set as 1/3.</p>
 <p>The results are summarized in a table describing Maximum A Priori
-values (MAP), the mean (Mu), standard error (SE) and the high density
-intervals at default. Additionally the I2 heterogenity is given.</p>
+values (MAP), the <span class="math inline">\(\mu\)</span>, <span class="math inline">\(se\)</span> and the high density intervals at
+default (93.1%). Additionally the <span class="math inline">\(I2\)</span> heterogeneity is given.</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;example2&quot;</span>)</span>
 <span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a><span class="fu">print</span>(example2)</span>
 <span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a><span class="co">#&gt; # A tibble: 8 × 7</span></span>
@@ -599,9 +652,10 @@ intervals at default. Additionally the I2 heterogenity is given.</p>
 <span id="cb7-48"><a href="#cb7-48" tabindex="-1"></a></span>
 <span id="cb7-49"><a href="#cb7-49" tabindex="-1"></a><span class="co">#remove data frame of priors to keep environment clean</span></span>
 <span id="cb7-50"><a href="#cb7-50" tabindex="-1"></a><span class="fu">rm</span>(mod3)</span></code></pre></div>
-<p>This is the most difficult part where the data needs to be gathered,
-priors need to formulated and the model needs to be optimized to get a
-stable chains. The display of the results requires less time.</p>
+<p>This is the most difficult part where the data needs to be gathered
+and extracted, (G)LMs need to be fitted, priors need to formulated and
+the whole model needs to be optimized to get a stable results. The
+display of the results requires less time.</p>
 </div>
 </div>
 <div id="references" class="section level1">
@@ -615,6 +669,9 @@ Averaging.” Advances in Methods and Practices in Psychological Science
 <p>Hoeting, Jennifer A., David Madigan, Adrian E. Raftery, and Chris T.
 Volinsky. 1999. “Bayesian Model Averaging: A Tutorial.” Statistical
 Science 14(4):382–417. doi: 10.1214/ss/1009212519.</p>
+<p>Maier, Maximilian, František Bartoš, and Eric-Jan Wagenmakers. 2023.
+“Robust Bayesian Meta-Analysis: Addressing Publication Bias with
+Model-Averaging.” Psychological Methods 28(1): 107–22. <a href="doi:10.1037/met0000405" class="uri">doi:10.1037/met0000405</a>.</p>
 <p>Moreno, Santiago G., Alex J. Sutton, Ae Ades, Tom D. Stanley, Keith
 R. Abrams, Jaime L. Peters, and Nicola J. Cooper. 2009. “Assessment of
 Regression-Based Methods to Adjust for Publication Bias through a

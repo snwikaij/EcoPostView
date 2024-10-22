@@ -158,7 +158,7 @@ for larger datasets with multiple groups and predictor variables the order of th
 ## 4.2 hop-function
 Hypothetical Outcome Plots are a useful method to visualize the possibilities the expected value could take on given a change in the predictor variable. These are so called HOPs (Kale et al. 2019). The hops lines are a simulation of possibilities from the posterior. Note that the function works under the idea of log transformed variables. This means that xlim (the limits of the figures) as given below are exp(3)=20 and exp(8)=2980 for conductivity. The y-axis is on the response scale. I hop soon to make it possible to use an argument that makes it possible to set the xlim on the raw. Below an example of the outcomes of the response of invertebrate taxonomic richness along  the conductivity gradient. 
 ```{r HOPs log salinity fig1, fig.width=6, fig.height=4, echo=FALSE}
-log_sal1 <- hop(mod2,                                   #object from the meta function
+log_sal1 <- hop(mod2,                                  #object from the meta function
     group="Invertebrates",                             #select group to out of Invertebrates and Fish
     predictor = "Salinity",                            #select group to out of Salinity and Oxygen
     xlab= expression(Ln(Conductivity ~ µS ~ cm^-1)),   #give x-axis a name
@@ -176,7 +176,7 @@ It is also possible to scale to display the exponentiate values on the x-axis us
 log_sal2 <- hop(mod2,                                   
     group="Invertebrates",                             
     predictor = "Salinity",                            
-    xlab= expression(Ln(Conductivity ~ µS ~ cm^-1)),   
+    xlab= expression(Conductivity ~ µS ~ cm^-1),   
     link_function = "log",                            
     ylab="Invertebrate taxonomic richness",            
     xlim=c(3, 8),                                      

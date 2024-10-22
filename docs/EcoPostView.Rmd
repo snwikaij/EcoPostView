@@ -171,7 +171,7 @@ log_sal1 <- hop(mod2,                                  #object from the meta fun
 print(log_sal1)
 ```
 It is also possible to scale to display the exponentiate values on the x-axis using the argument
-"exp_axis".
+"exp_axis". The observant reader might notice the taxonomic richness is ~15 under lower conductivity. This is correct, because the majority of the literature publish does not focus on species richnes, it often focuses on order or family richness.
 ```{r HOPs log salinity fig2, fig.width=6, fig.height=4, echo=FALSE}
 log_sal2 <- hop(mod2,                                   
     group="Invertebrates",                             
@@ -187,7 +187,25 @@ log_sal2 <- hop(mod2,
 print(log_sal2)
 ```
 
-## 4.3 Parital Dependency Plots (hop-function)
+## 4.3 Partial Dependency Plots (hop-function)
+There are multiple predictors is the dataset. Therefore it possible to display the MAP predicted value given a change in one of the two predictors. This can be performed by display in Partial Dependency Plots.
+
+```{r HOPs log salinity fig3, fig.width=6, fig.height=4, echo=FALSE}
+log_sal3 <- hop(mod2,                                              
+    group="Invertebrates",                            
+    predictor = c("Salinity", "Oxygen"),                     #select both Salinity and Oxygen
+    xlab= expression(Conductivity ~ µS ~ cm^-1),             #give x-axis a name
+    ylab= expression(Oxygen ~ mg ~ L^-1),                    #give x-axis a name
+    gradient_title = "MAP Invertebrate \ntaxonomic richness",#give the gradient a name
+    link_function = "log",
+    exp_axis = T, 
+    round_x_axis = 0,
+    xlim=c(3, 8),                                      
+    ylim=c(1.3, 2.8)) 
+
+print(log_sal3)
+```
+
 
 # References
 

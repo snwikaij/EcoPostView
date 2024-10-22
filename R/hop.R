@@ -35,6 +35,9 @@
 #' @importFrom ggplot2 element_text
 #' @importFrom ggplot2 scale_x_continuous
 #' @importFrom ggplot2 scale_y_continuous
+#' @importFrom ggplot2 geom_tile
+#' @importFrom ggplot2 labs
+#' @importFrom ggplot2 scale_fill_gradientn
 #'
 #' @export
 hop <- function(object, group=NULL, predictor=NULL, link_function=NULL,
@@ -183,8 +186,8 @@ if(exp_disp == F & exp_axis == T){
 
 one_plot <- ggplot(pred_grid, aes(x = x, y = y, fill = yhat)) +
   xlab_text+ylab_text+
-  geom_tile()+labs(fill=gradient_title)+
-  scale_fill_gradientn(colors = gradient_col) +
+  ggplot2::geom_tile()+ggplot2::labs(fill=gradient_title)+
+  ggplot2::scale_fill_gradientn(colors = gradient_col) +
   theme_classic()+axis_x_dim+axis_y_dim+
   theme(
     legend.position = "right",

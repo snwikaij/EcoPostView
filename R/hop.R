@@ -33,6 +33,8 @@
 #' @importFrom stats density
 #' @importFrom ggplot2 theme
 #' @importFrom ggplot2 element_text
+#' @importFrom ggplot2 scale_x_continuous
+#' @importFrom ggplot2 scale_y_continuous
 #'
 #' @export
 hop <- function(object, group=NULL, predictor=NULL, link_function=NULL,
@@ -46,7 +48,7 @@ hop <- function(object, group=NULL, predictor=NULL, link_function=NULL,
 
 #Run script that falls outside hop or pdp
 #error if b0 and b1 are not given
-if(all(!names(object$Estimates) %in% c("b0", "b1")))stop("To create HOP-lines both b0 and b1 are needed E(y|x)=b0+b1x")
+if(!all(c("b0", "b1") %in% names(object$Estimates)))stop("To create HOP-lines both b0 and b1 are needed E(y|x)=b0+b1x")
 
 #give error
 if(exp_disp == T & exp_axis==T){stop("Exponentiating and scaling the axis are not both possible")}
@@ -113,9 +115,9 @@ if(exp_disp == T & exp_axis==F){
 
 #display only exponent notation on the axis
 if(exp_axis==T & exp_disp == F){
-axis_x_dim <- scale_x_continuous(breaks = seq(min(hops_realized$x), max(hops_realized$x),
-                   length.out = breaks_axis), labels = function(x) round(exp(x),round__x_axis))}else{
-axis_x_dim <- scale_x_continuous(breaks = seq(min(hops_realized$x), max(hops_realized$x),
+axis_x_dim <- ggplot2::scale_x_continuous(breaks = seq(min(hops_realized$x), max(hops_realized$x),
+                   length.out = breaks_axis), labels = function(x) round(exp(x),round_x_axis))}else{
+axis_x_dim <-  ggplot2::scale_x_continuous(breaks = seq(min(hops_realized$x), max(hops_realized$x),
                    length.out = breaks_axis), labels = function(x) round(x,round_x_axis))}
 
 one_plot <- ggplot(hops_realized, aes(x, y, group=as.factor(j)))+
@@ -168,14 +170,14 @@ if(link_function == 'logit'){pred_grid$yhat    <- plogis(b0_theta+shift_b0+b1_th
 
 #display only exponent the notation on the axis
 if(exp_disp == F & exp_axis == T){
-  axis_x_dim <- scale_x_continuous(breaks = seq(min(pred_grid$x), max(pred_grid$x),
+  axis_x_dim <- ggplot2::scale_x_continuous(breaks = seq(min(pred_grid$x), max(pred_grid$x),
                                    length.out = breaks_axis), labels = function(x) round(exp(x),round_x_axis))
-  axis_y_dim <- scale_y_continuous(breaks = seq(min(pred_grid$y),  max(pred_grid$y),
+  axis_y_dim <- ggplot2::scale_y_continuous(breaks = seq(min(pred_grid$y),  max(pred_grid$y),
                                    length.out = breaks_axis), labels = function(y) round(exp(y), round_y_axis))}else{
-  axis_x_dim <- scale_x_continuous(breaks = seq(min(pred_grid$x),  max(pred_grid$x),
+  axis_x_dim <- ggplot2::scale_x_continuous(breaks = seq(min(pred_grid$x),  max(pred_grid$x),
                                    length.out = breaks_axis),
                                    labels = function(x) round(x,round_x_axis))
-  axis_y_dim <- scale_y_continuous(breaks = seq(min(pred_grid$y) ,max(pred_grid$y),
+  axis_y_dim <- ggplot2::scale_y_continuous(breaks = seq(min(pred_grid$y) ,max(pred_grid$y),
                                    length.out = breaks_axis),
                                    labels = function(y) round(y, round_y_axis))}
 

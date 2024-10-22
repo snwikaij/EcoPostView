@@ -80,29 +80,10 @@ rm(mod1)
 
 ```
 
-The meta-function returns a warnings that the MCMC-chains are not properly mixing. This can be an issue due to various reasons and assessed by looking at the 'raw' JAGS model output. I will not display the full output, but can be displayed wit the code below.
-```{r meta1 warning}
-#mod1$model$JAGS_model
-```
-We can see that for "mu[3]" the effective sample size is 610. Most of these issues can be resolved by thinning the chains or increasing the number of chains. In this case n_chain=6 solves the issue. Increasing the number of chains can be an issue if the number of available cores is limited as each chain is run on a separate core. Other options are to set "better informed" or "stronger" priors or combinations between them. Moreover, if the issue is not an issue of the estimate "mu" parameter in the raw JAGS output, the issue could be considered to be ignored. These choices are ultimately up to the user. An option to prevent warnings would be to set the warning level for Eff_warn lower i.e., Eff_warn = 500.
-```{r meta2}
-mod2 <-meta(estimate=example1$est,        
-            stderr=example1$se,            
-            parameter=example1$parameter,  
-            predictor=example1$predictor,  
-            link_function=example1$link,   
-            grouping=example1$group,       
-            Nsamp=example1$n,              
-            method=2,
-            n_chain=6)                   #Increasing the number of chains from 2 to 6   
-
-#remove model to keep the environment clean
-rm(mod2)
-
-```
+The meta-function can returns a warnings that the MCMC-chains are not properly mixing. This can be an issue due to various reasons and assessed by looking at the 'raw' JAGS model output (mod1$model$JAGS_model). This could show that a parameter of interested "mu[.]" Has a a large Rhat or small effective sample size. Most of these issues can be resolved by thinning the chains or increasing the number of chains or setting a "better informed" or "stronger" prior. Moreover, if the issue is not an issue of the estimated "mu" parameter, the issue could be chosen to be ignored. These choices are ultimately up to the user. An option to prevent warnings would be to set the warning level for Eff_warn lower i.e., Eff_warn = 500.
 
 ## 3.2 Setting priors
-A benefit of the the Bayesian approach is that we can included prior information. Thereby explicitly shifting the weight of the outcome to more plausible values of the pooled model parameter or less weight to less plausible values. To set only a single prior for each relation and parameter a specific structure is needed. By default the model parameters are set as Gaussian/normally distributed with a mean ($\mu$, prior_mu) of 0 and $se$ (prior_mu_se) of 0.5. The prior for the standard deviation is uniform where only the maximum value (prior_sigma_max) can be set, which at default is 5. As a strongly critical side note. The priors do not need to stay the same, because I "heuristically" like to work with the elasticity- or semi-elasticity coefficients. THIS IS NOT A NECESSITY. Hence, not thinking about your prior even if not a lot of information is available to make an very strong prior (but at least informed) is often not doing a Bayesian analysis at all. 
+A benefit of the the Bayesian approach is that we can included prior information. Thereby explicitly shifting the weight of the outcome to more plausible values of the pooled model parameter or less weight to less plausible values. To set only a single prior for each relation and parameter a specific structure is needed. By default the model parameters are set as Gaussian/normally distributed with a mean ($\mu$, prior_mu) of 0 and standard error ($se$, prior_mu_se) of 0.5. The prior for the standard deviation ($\sigma$) is uniform where only the maximum value (prior_sigma_max) can be set, which at default is 5. As a strongly critical side note. The priors do not need to stay the same, because I "heuristically" like to work with the elasticity- or semi-elasticity coefficients. THIS IS NOT A NECESSITY. Hence, not thinking about your prior even if not a lot of information is available to make an very strong prior (but at least informed) is often not doing a Bayesian analysis at all. 
 
 To get a nice table overview which can be adjusted an filled in with prior information the argument 'get_prior_only' can be set to 'TRUE'. This will return a dataframe, with a column **level** names, priors for the **mu** ($\mu$) and for the standard error ($se$). The values in this can be set manually and re-included as a vector. How to do this will be explained in more detail in section 3.3.
 
@@ -115,7 +96,6 @@ only_priors <- meta(estimate=example1$est,
                     grouping=example1$group,       
                     Nsamp=example1$n,            
                     method=2,
-                    n_chain=6,
                     get_prior_only=TRUE) #Only show the structure of the priors
 
 print(only_priors)
@@ -126,30 +106,31 @@ rm(only_priors)
 
 ## 3.3 Setting multiple priors for Bayesian Model Averaging
 
-A benefit of the the Bayesian approach is that we can included multiple priors to perform Bayesian Model Averaging (BMA;  Hoeting et al., 1999; Hinne et al., 2020). Thereby explicitly adding multiple possible scenarios that could have generated the observable data and aggregating this possibilities. To set multiple priors we need a similar dataset but also include prior weights. A simple solution to the prior weights to weight each prior as equally reasonable. In the example below there are three priors for each possible model. An the prior weights are set as 1/3.
-
-The results are summarized in a table describing Maximum A Priori values (MAP), the $\mu$, $se$ and the high density intervals at default (93.1%). Additionally the $I2$ heterogeneity is given.
+A benefit of the the Bayesian approach is that we can included multiple priors to perform Bayesian Model Averaging (BMA;  Hoeting et al., 1999; Hinne et al., 2020). Thereby explicitly adding multiple possible scenarios that could have generated the observable data and aggregating this possibilities. To set multiple priors we need a similar dataset but also include prior weights. A simple solution to the prior weights to weight each prior as equally reasonable. In the example below there are three priors for each possible model. An the prior weights are set as 1/3. Hence each column vector in example2 gets the weight 1/3. The priors have been set differently and a broader prior for the intercept that seems reasonable.
 
 ``` {r meta3 BMA}
 data("example2")
 print(example2)
 
-mod3 <- meta(estimate=example1$est,        
+mod2 <- meta(estimate=example1$est,        
                     stderr=example1$se,            
                     parameter=example1$parameter,  
                     predictor=example1$predictor,  
                     link_function=example1$link,   
                     grouping=example1$group,
-                    prior_mu=example2[c(2,4,6)],          #Prior for the mean
-                    prior_mu_se=example2[c(3,5,7)],       #Prior for the standard error of the mean
-                    prior_weights=c(1/3, 1/3, 1/3),       #Prior weights
+                    prior_mu=example2[c(2,4,6)],          #prior for the mean
+                    prior_mu_se=example2[c(3,5,7)],       #prior for the standard error of the mean
+                    prior_weights=c(1/3, 1/3, 1/3),       #prior weights
                     Nsamp=example1$n,            
                     method=2,
-                    n_chain=6)
+                    n_thin=10,                            #thinning the chains
+                    n_chain=4)                            #changing the number of chains from 2 to 4
 
 #Display the summarized results
-mod3$Summary
+mod2$Summary
 ```
+The results of the meta-analys are summarized in a table describing Maximum A Priori values (MAP), the $\mu$, $se$ and the high density intervals at default (90%). Additionally the $I2$ heterogeneity is given.
+
 This is the most difficult part where the data needs to be gathered and extracted, (G)LMs need to be fitted, priors need to formulated and the whole model needs to be optimized to get a stable results. The display of the results requires less time.
 
 # 4. Display
@@ -158,8 +139,9 @@ This is the most difficult part where the data needs to be gathered and extracte
 To display the posterior results one could display the results with a point and interval range. However, this interval displaying a strong boundary on a continues set of possibilities does not completely capture  the idea of the posterior probability distribution. Another option would be to display the Posterior Density Distribution (PDD) combined with the point and interval estimate. Hence, the PDD displays the possible values of the prior information where the pooled estimated might have originated from $P(\beta_{\text{pooled}} \mid \text{meta-data}, \text{ prior information})$ it is the inverse of the likelihood which informs us of the values of the meta-data given we elected a particular pooled estimate $P(\text{meta-data}\mid\beta_{\text{pooled}}  )$. This can be  performed with the pdplot function.
 
 ``` {r pdplot, fig.width=8, fig.height=4, echo=FALSE}
-pdd <- pdplot(mod3, 
-              label_size=4) #setting the label size larger
+pdd <- pdplot(mod2, 
+              label_size=4,      #setting the label size larger
+              point_size=2)      #large point
 
 #for the models with the log-link
 print(pdd$posterior_density$log)             
@@ -173,6 +155,40 @@ print(pdd$summary)
 ```
 for larger datasets with multiple groups and predictor variables the order of the PDDs can be changed by using the arguments "order_predictor" and "order_group" needing a character string with the names of the desired order.
 
+## 4.2 hop-function
+Hypothetical Outcome Plots are a useful method to visualize the possibilities the expected value could take on given a change in the predictor variable. These are so called HOPs (Kale et al. 2019). The hops lines are a simulation of possibilities from the posterior. Note that the function works under the idea of log transformed variables. This means that xlim (the limits of the figures) as given below are exp(3)=20 and exp(8)=2980 for conductivity. The y-axis is on the response scale. I hop soon to make it possible to use an argument that makes it possible to set the xlim on the raw. Below an example of the outcomes of the response of invertebrate taxonomic richness along  the conductivity gradient. 
+```{r HOPs log salinity fig1, fig.width=6, fig.height=4, echo=FALSE}
+log_sal1 <- hop(mod2,                                   #object from the meta function
+    group="Invertebrates",                             #select group to out of Invertebrates and Fish
+    predictor = "Salinity",                            #select group to out of Salinity and Oxygen
+    xlab= expression(Ln(Conductivity ~ µS ~ cm^-1)),   #give x-axis a name
+    link_function = "log",                             #which link function out of log and logit
+    ylab="Invertebrate taxonomic richness",            #give y-axis a name
+    xlim=c(3, 8),                                      #give y-axis a name
+    ylim=c(0, 25),                                     #set  limits y-axis
+    hop_lwd = 0.3)                                     #set width of the hop lines
+    
+print(log_sal1)
+```
+It is also possible to scale to display the exponentiate values on the x-axis using the argument
+"exp_axis".
+```{r HOPs log salinity fig2, fig.width=6, fig.height=4, echo=FALSE}
+log_sal2 <- hop(mod2,                                   
+    group="Invertebrates",                             
+    predictor = "Salinity",                            
+    xlab= expression(Ln(Conductivity ~ µS ~ cm^-1)),   
+    link_function = "log",                            
+    ylab="Invertebrate taxonomic richness",            
+    xlim=c(3, 8),                                      
+    ylim=c(0, 25),                                     
+    hop_lwd = 0.3,                                    
+    exp_axis = T,                                     #exponentiate the x-axis notations
+    round_x_axis = 0)                                 #round the notation to full integers                                 
+print(log_sal2)
+```
+
+## 4.3 Parital Dependency Plots (hop-function)
+
 # References
 
 Cramer, J. S. 1991. The Logit Model: An Introduction for Economists. London: Edward Arnold.
@@ -180,6 +196,8 @@ Cramer, J. S. 1991. The Logit Model: An Introduction for Economists. London: Edw
 Hinne, Max, Quentin F. Gronau, Don Van Den Bergh, and Eric-Jan Wagenmakers. 2020. “A Conceptual Introduction to Bayesian Model Averaging.” Advances in Methods and Practices in Psychological Science 3(2):200–215. doi: 10.1177/2515245919898657.
 
 Hoeting, Jennifer A., David Madigan, Adrian E. Raftery, and Chris T. Volinsky. 1999. “Bayesian Model Averaging: A Tutorial.” Statistical Science 14(4):382–417. doi: 10.1214/ss/1009212519.
+
+Kale, Alex, Francis Nguyen, Matthew Kay, and Jessica Hullman. 2019. “Hypothetical Outcome Plots Help Untrained Observers Judge Trends in Ambiguous Data.” IEEE Transactions on Visualization and Computer Graphics 25(1): 892–902. doi: 10.1109/TVCG.2018.2864909.
 
 Maier, Maximilian, František Bartoš, and Eric-Jan Wagenmakers. 2023. “Robust Bayesian Meta-Analysis: Addressing Publication Bias with Model-Averaging.” Psychological Methods 28(1): 107–22. doi: 10.1037/met0000405.
 

@@ -197,6 +197,7 @@ log_sal3 <- hop(mod2,
     xlab= expression(Conductivity ~ µS ~ cm^-1),             #give x-axis a name
     ylab= expression(Oxygen ~ mg ~ L^-1),                    #give x-axis a name
     gradient_title = "MAP Invertebrate \ntaxonomic richness",#give the gradient a name
+    pdp_resolution = 100,                                    #set resolution of the grid
     link_function = "log",
     exp_axis = T, 
     round_x_axis = 0,

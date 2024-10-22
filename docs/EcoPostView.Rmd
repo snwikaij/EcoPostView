@@ -23,7 +23,7 @@ knitr::opts_chunk$set(
 
 Ecological data is scattered around literature in different formats and very noisy. It is often 'case-study' specific and not representative for the totality if conditions encountered. However, as ecologist you are not interested in case specific situations, but making probability statements on general patterns, visualizing and predicting with them.
 
-If working with meta-data and uncovering patterns from literature, making predictions and probability statements are your goal, this R-package can help make your life easier. The goal of this package is for you combine the benefits of multiple fitted Linear and Generalized Linear Models ((G)LMs), using the flexibility and strength of Bayesian Meta-analysis to generalize to a pooled (G)LM. For the differences strengths and weaknesses of both classical (Frequent-ism) or Bayesian approach see https://snwikaij.shinyapps.io/shiny/.
+If working with meta-data and uncovering patterns from literature, making predictions and probability statements are your goal, this R-package can help make your life easier. The goal of this package is for you combine the benefits of multiple fitted Linear and Generalized Linear Models ((G)LMs), using the flexibility and strength of Bayesian Meta-analysis to generalize to a pooled (G)LM. For the differences differences, strengths and weaknesses of both the classical (Frequent-ism) or Bayesian approach see https://snwikaij.shinyapps.io/shiny/.
 
 The information you are interested in is available from figures, tables, data sets or combinations between them. In simple words, we need a data set on which we can fit a (G)LM (see Kaijser et al, ...). This, however, will show that most data is very noisy, perhaps biased and the heterogeneity amount studies is large. This is an issue for a focus on error-control and causality statements. Both need very clearly a controlled environment with a well setup experimental conditions and exclusion of confounding variables. Hence, error-control and causality start a-priori (Fisher 1949, Pearl 2009, Mayo 2018). Of course this makes or information still useful to make probability statements or using the information to a-priori setup an study focused on error-control or causality study. However, the focus lies here on making posterior probability statements, visualization and prediction possible this information.
 
@@ -140,20 +140,28 @@ mod3 <- meta(estimate=example1$est,
                     predictor=example1$predictor,  
                     link_function=example1$link,   
                     grouping=example1$group,
-                    prior_mu = example2[c(2,4,6)],          #Prior for the mean
-                    prior_mu_se = example2[c(3,5,7)],       #Prior for the standard error of the mean
-                    prior_weights = c(1/3, 1/3, 1/3),       #Prior weights
+                    prior_mu=example2[c(2,4,6)],          #Prior for the mean
+                    prior_mu_se=example2[c(3,5,7)],       #Prior for the standard error of the mean
+                    prior_weights=c(1/3, 1/3, 1/3),       #Prior weights
                     Nsamp=example1$n,            
                     method=2,
-                    n_chain = 6)
+                    n_chain=6)
 
 #Display the summarized results
 mod3$Summary
-
-#remove data frame of priors to keep environment clean
-rm(mod3)
 ```
 This is the most difficult part where the data needs to be gathered and extracted, (G)LMs need to be fitted, priors need to formulated and the whole model needs to be optimized to get a stable results. The display of the results requires less time.
+
+# 4. Display
+
+## 4.1 pdplot-function
+To display the posterior results one could display the results with a point and interval range. However, this interval displaying a strong boundary on a continues set of possibilities does not completely capture  the idea of the posterior probability distribution. Another option would be to display the Posterior Density Distribution (PDD) combined with the point and interval estimate. Hence, the PDD displays the possible values of the prior information where the pooled estimated might have originated from $P(\beta_{\text{pooled}} \mid \text{meta-data}, \text{ prior information})$ it is the inverse of the likelihood which informs us of the values of the meta-data given we elected a particular pooled estimate $P(\text{meta-data}\mid\beta_{\text{pooled}}  )$. This can be  performed with the pdplot function.
+
+``` {r pdplot}
+pdplot(mod3)
+
+```
+for larger datasets with multiple groups and predictor variables the order of the PDDs can be changed by using the arguments "order_predictor" and "order_group" needing a character string with the names of the desired order.
 
 # References
 
@@ -163,7 +171,7 @@ Hinne, Max, Quentin F. Gronau, Don Van Den Bergh, and Eric-Jan Wagenmakers. 2020
 
 Hoeting, Jennifer A., David Madigan, Adrian E. Raftery, and Chris T. Volinsky. 1999. “Bayesian Model Averaging: A Tutorial.” Statistical Science 14(4):382–417. doi: 10.1214/ss/1009212519.
 
-Maier, Maximilian, František Bartoš, and Eric-Jan Wagenmakers. 2023. “Robust Bayesian Meta-Analysis: Addressing Publication Bias with Model-Averaging.” Psychological Methods 28(1): 107–22. doi:10.1037/met0000405.
+Maier, Maximilian, František Bartoš, and Eric-Jan Wagenmakers. 2023. “Robust Bayesian Meta-Analysis: Addressing Publication Bias with Model-Averaging.” Psychological Methods 28(1): 107–22. doi: 10.1037/met0000405.
 
 Moreno, Santiago G., Alex J. Sutton, Ae Ades, Tom D. Stanley, Keith R. Abrams, Jaime L. Peters, and Nicola J. Cooper. 2009. “Assessment of Regression-Based Methods to Adjust for Publication Bias through a Comprehensive Simulation Study.” BMC Medical Research Methodology 9(1):2. doi: 10.1186/1471-2288-9-2.
 

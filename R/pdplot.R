@@ -28,7 +28,7 @@
 #' @importFrom ggplot2 element_blank
 #' @importFrom ggplot2 element_text
 #' @importFrom ggplot2 element_line
-#' @importFrom ggplot2 unit
+#' @importFrom grid unit
 #'
 #' @export
 pdplot <- function(object, interval=0.9, display="b1",

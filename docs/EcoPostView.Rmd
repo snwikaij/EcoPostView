@@ -316,6 +316,8 @@ This part is still under construction.
 
 Cramer, J. S. 1991. The Logit Model: An Introduction for Economists. London: Edward Arnold.
 
+Fisher, R. A. (1949). The Design of Experiments (5th ed.). Oliver and Boyd.
+
 Hinne, Max, Quentin F. Gronau, Don Van Den Bergh, and Eric-Jan Wagenmakers. 2020. “A Conceptual Introduction to Bayesian Model Averaging.” Advances in Methods and Practices in Psychological Science 3(2):200–215. doi: 10.1177/2515245919898657.
 
 Hoeting, Jennifer A., David Madigan, Adrian E. Raftery, and Chris T. Volinsky. 1999. “Bayesian Model Averaging: A Tutorial.” Statistical Science 14(4):382–417. doi: 10.1214/ss/1009212519.
@@ -324,7 +326,11 @@ Kale, Alex, Francis Nguyen, Matthew Kay, and Jessica Hullman. 2019. “Hypotheti
 
 Maier, Maximilian, František Bartoš, and Eric-Jan Wagenmakers. 2023. “Robust Bayesian Meta-Analysis: Addressing Publication Bias with Model-Averaging.” Psychological Methods 28(1): 107–22. doi: 10.1037/met0000405.
 
+Mayo, D. G. (2018). Statistical Inference as Severe Testing: How to Get Beyond the Statistics Wars. Cambridge University Press.
+
 Moreno, Santiago G., Alex J. Sutton, Ae Ades, Tom D. Stanley, Keith R. Abrams, Jaime L. Peters, and Nicola J. Cooper. 2009. “Assessment of Regression-Based Methods to Adjust for Publication Bias through a Comprehensive Simulation Study.” BMC Medical Research Methodology 9(1):2. doi: 10.1186/1471-2288-9-2.
+
+Pearl, J. (2009). Causality. Cambridge university press.
 
 Peters, Jaime L., Alex J. Sutton, David R. Sones, Keith R. Abrams, and Lesley Rushton. 2006. “Comparison of Two Methods to Detect Publication Bias in Meta-Analysis.” JAMA 295(6):676. doi: 10.1001/jama.295.6.676.
 

@@ -21,11 +21,11 @@ knitr::opts_chunk$set(
 
 # 1. Introduction
 
-Ecological data is scattered around literature in different formats and very noisy. It is often 'case-study' specific and not representative for the totality if conditions encountered. However, as ecologist you are not interested in case specific situations, but making probability statements on general patterns, visualizing and predicting with them.
+Ecological data is scattered around literature in different formats and very noisy. It is often 'case-study' specific and not representative for the totality if conditions encountered. However, as ecologist we are not interested in case specific situations, but making probability statements on general effects, visualizing and predicting with them.
 
-If working with meta-data and uncovering patterns from literature, making predictions and probability statements are your goal, this R-package can help make your life easier. The goal of this package is for you combine the benefits of multiple fitted Linear and Generalized Linear Models ((G)LMs), using the flexibility and strength of Bayesian Meta-analysis to generalize to a pooled (G)LM. For the differences differences, strengths and weaknesses of both the classical (Frequent-ism) or Bayesian approach see https://snwikaij.shinyapps.io/shiny/.
+If working with meta-data and uncovering effects from literature, making probability statements and predictions are the goal, this R-package can help make your life easier. The goal of this package is to combine the benefits of multiple fitted Linear and Generalized Linear Models ((G)LMs), using the flexibility and strength of Bayesian Meta-analysis to generalized the effects to one pooled (G)LM. This meta-analytically derived (G)LM can be visualized and used to predict.
 
-The information you are interested in is available from figures, tables, data sets or combinations between them. In simple words, we need a data set on which we can fit a (G)LM (see Kaijser et al, ...). This, however, will show that most data is very noisy, perhaps biased and the heterogeneity amount studies is large. This is an issue for a focus on error-control and causality statements. Both need very clearly a controlled environment with a well setup experimental conditions and exclusion of confounding variables. Hence, error-control and causality start a-priori (Fisher 1949, Pearl 2009, Mayo 2018). Of course this makes or information still useful to make probability statements or using the information to a-priori setup an study focused on error-control or causality study. However, the focus lies here on making posterior probability statements, visualization and prediction possible this information.
+A large amount of information is available from figures, tables, data sets or combinations between them. In simple words, multiple datasets are needed on which we can fit a (G)LM (see Kaijser et al, ...). This, however, will show that most data is very noisy, perhaps biased and the heterogeneity among different studies is large. This is an issue if we focus on error-control and causality statements. Both error-control and causality need controlled environment with a well setup experimental conditions and exclusion of confounding variables. Hence, error-control and causality start a-priori (Fisher 1949, Pearl 2009, Mayo 2018). For an explanation on the topic of error-control connected to the classical (Frequentism) approach see https://snwikaij.shinyapps.io/shiny/. Yet, while error-control a posterior is not possible anymore, this makes the information still useful. It can be used to make probability statements or to design a study a-priori, which is focused on error-control or causality. The focus lies here on making posterior probability statements, visualization and prediction from all information available from literature. Hence, the goal is to generalize ecological effects from literature, displaying its patterns and predict with it.
 
 To start usgin the R-package both JAGS and devtools need to be installed. JAGS can be installed from https://sourceforge.net/projects/mcmc-jags/ and devtools can be install in R. For the most recent version of the EcoPostView it can be installed from GitHub. Of course, if nicely asked, any problems or possible improvements can be directed to me.
 
@@ -41,23 +41,25 @@ library(EcoPostView)
 
 ## 2.1 (Generalized) Linear Models (G)LMs and extracting data
 
-To obtain data from the (G)LMs we need to fit models. This data can be obtained from figures (e.g., using WebPlotDigitizer), tables, data sets or combinations (See Kaijser et al. ...). What is needed to combine these models are the so called estimations of the model parameters. These are more commonly known as the intercept or slope. The intercept (*b0* or *β0*) and slope (*b1* or *β1*) can be used to predict: *link(response variable) = b0 + b1 · predictor variable*. In a GLM the response variable is linked to to the linear component with a link-function often notated as *g(..)*. The 'identity' link function applies no link function. This indicate that the mean (expected value notated as *E(y)* or *(E(y|x))*) is directly related to the linear component. However, in a GLM with, log- or logit-link it is easier to talk about log-linear relation 
-$$log(E(y \mid x)) = \beta_0 + \beta_1 \cdot x$$
+To obtain data from the (G)LMs we need to fit models. This data can be obtained from figures (e.g., using WebPlotDigitizer), tables, data sets or combinations between them (See Kaijser et al. ...). The effects we are talking of are not really effects but model parameters.  These are more commonly known as the intercept or slope. The intercept (*b0* or *β0*) and slope (*b1* or *β1*) can be used to predict: *response variable = b0 + b1 · predictor variable*. By knowing *b0* and *b1* we can give the model a single or multiple values for *x* and make a prediction. In a GLM the response variable is linked to to the linear component with a link-function often notated as *g(..)*. The 'identity' link function applies no link function. This indicate that the mean (expected value notated as *E(y)* or *(E(y|x))*) is directly related to the linear component.
+$$g(E(y \mid x)) = \beta_0 + \beta_1 \cdot x$$ 
+However, in a GLM with, log- or logit-link it is easier to talk about log-linear relation 
+$$log(E(y \mid x)) = \beta_0 + \beta_1 \cdot x$$ 
 or logit-linear relation
 $$logit(E(y \mid x)) = \beta_0 + \beta_1 \cdot x$$
-The slope is not a true slope anymore because there is not straight line anymore between the response and predictor variable. Therefore the term coefficient or regression coefficient refers to the model parameter (*β*). When fitting a model it is convenient to note the source (e.g., DOI), the type of predictor variable (e.g., conductivity), group of the response type (e.g., benthic-invertebrates), link-function and if the model parameters is the intercept *b0* or a regression coefficient *b1*. If multiple predictor variables are fitted in a model all regression coefficients as notated as *b1* to distinguish it from the intercept *b0*.
+The slope in a GLM not a true slope anymore because there is not straight line anymore that links the response and predictor variable. Therefore the term coefficient or regression coefficient refers to the model parameter (*β*). When fitting a model it is convenient to note the source (e.g., DOI), the type of predictor variable (e.g., conductivity), group of the response type (e.g., benthic-invertebrates), link-function and if the model parameters is the intercept *b0* or a regression coefficient *b1*. If multiple predictor variables are fitted in a model all regression coefficients as notated as *b1* to distinguish it from the intercept *b0*.
 
 Heuristically, I prefer working often working with elasticity- or semi-elasticity coefficients (Woolridge, 2001). But there are enough reasons not to do so and is dependent on the question and many other factors. The elasticity coefficient expresses the percentage change of $y$ (response) as relative to $x$ (predictor variable). Thus, 0.2 is 0.2% change in $y$ given 1% in $x$. Hence, for a log-linear model $log(E(y \mid x)) = \beta_0 + \beta_1 \cdot log(x)$
 and thus $\beta_1 = \frac{\log(y)}{\log(x)}$. For the semi-elasticity coefficient (i.e., logit-linear) this only accounts partially and values closer 0 are better interpret able because $logit(E(y \mid x)) = \beta_0 + \beta_1 \cdot log(x)$ and thus $\beta_1 = \frac{logit(y)}{\log(x)}$. This expressed the  change in the log-odds per 1% elasticity (Cramer 1991; Woolridge, 2001). This makes it possible to coarsely compare among different models and still keep the interpretation of to the units needed for prediction. Hence, we can still predict with the model and interpret the expected change of $y$ given an increase in $1·log(x)$, because the units of $x$ are retain under the $log$.
 
-I will keep these 'unofficial expression', due to the reference in the R-package to *b0* and *b1* while a proper notation would of course be more complex expressed as: 
+Keep these 'unofficial expressions' in mind, due to the reference in the R-package to *b0* and *b1* while a proper notation would of course be more formally expressed as: 
 $$g(E(y \mid x_{ij})) = \sum_{j=1}^{v} \beta_j \cdot x_{ij}$$
 Where $x_{ij}$ refers to the $j$ the predictor variable (e.g., salinity is $j$=1 and light is $j$=2) and $i$ is the $i$-th observation. Here, $v$ represents the number of predictors.
 
 ## 2.2. Bayes Theorem
 
-Since this R-package is mostly using Bayesian inference an introduction to Bayes Theorem might be of interested. While it is not necessary need for the utilization of the R-package. If this is not of interest one could skip this part. Perhaps it is more to formulate my own 'idea' of it. Informally Bayes Theorem would be notated $\text{Posterior}\, \text{probability} = \frac{\text{Likelihood} \cdot \text{Prior}}{\text{Evidence}}$. More formally Bayes theorem is often notated with A and B where P indicates probability and "|" given or conditional on.$P(A \mid B) = \frac{P(B \mid A) \cdot P(A)}{P(B)}$. However, to connect it to models $A=\beta$ and $B=Data$. Where $\beta$ denotes the model parameter and $Data$ the available data.
-The derivation of Bayes' theorem relies on the ex changeability of probabilities, while classically `A` and `B` are used for reference to the text where `A = \beta` and `B = Data`.
+Since this R-package is mostly using Bayesian inference an introduction to Bayes Theorem might be of interested. While it is not necessary need for the utilization of the R-package. If this is not of interest one could skip this part. Perhaps it is more to formulate my own "idea" of it. Informally Bayes Theorem would be notated $\text{Posterior}\, \text{probability} = \frac{\text{Likelihood} \cdot \text{Prior}}{\text{Evidence}}$. More formally Bayes theorem is often notated with A and B where P indicates probability and '|' given or conditional on.$P(A \mid B) = \frac{P(B \mid A) \cdot P(A)}{P(B)}$. However, to connect it to models $A=\beta$ and $B=Data$. Where $\beta$ denotes the model parameter and $Data$ the available data.
+The derivation of Bayes theorem relies on the exchangeability of probabilities, while classically 'A' and 'B' are used for reference to the text where A = $\beta$ and B = $Data$.
 
 **Premise 1)**
 $$
@@ -94,13 +96,13 @@ $$
 P(\beta | Data) = \frac{P(Data | \beta) \cdot P(\beta)}{P(Data)}
 $$
 
-The issue is that here the subjectivity of the prior and the function "$f$" of the probability distribution are not that transparent in my honest opinion. where a function is nothing more than a 'rule' that maps $x$ to $y$ and so $y=f(x)$. Hence, probability is a mapping function, mapping an expectation of $x$ to $y$. The probability can be any function (although some might disagree). In this case the prior probability is a function of both the $Data$ and prior information ($Info$). 
+The issue is that here the subjectivity of the prior and the function '$f$' of the probability distribution are not that transparent in my honest opinion. where a function is nothing more than a 'rule' that maps $x$ to $y$ and so $y=f(x)$. Hence, probability is a mapping function, mapping an expectation of $x$ to $y$. The probability can be any function (although some might disagree). In this case the prior probability is a function of both the $Data$ and prior information ($Info$). 
 $$
 f(\beta \mid Data, Info) = 
 \frac{f(Data \mid \beta) \cdot f(\beta \mid Info)}
 {\int f(Data \mid \beta) \cdot f(\beta \mid Info)}
 $$
-Therefore, the posterior nothing more than a function that describes the probability $y$ as a function of $\beta$ conditional on $Data$ and $Info$ ($y=f(\beta \mid Data, Info)$). This cannot be solely conditional on the $Data$ as the $Data$ is not uncertain our information/believe is uncertain about a none existing object $\beta$ (unless Platonism is true). Hence, even if we were wrong or correct about $f(\beta \mid Data, Info)$ nothing would change in reality at all. Hence, uncertainty has nothing to do with reality at all. It becomes now clear that only our own error/information is to be optimized as contrary to frequentism where this error is that of the long-run. It is unfortunately difficult in a world where mistakes are not allowed and 'excellence' is the goal that each study has to portray. Hence, models are only useful if their current errors and failures in forecasting future phenomena are openly displayed, allowing us to optimize our understanding of predictive uncertainty until it becomes *acceptable*.
+Therefore, the posterior nothing more than a function that describes the probability $y$ as a function of $\beta$ conditional on $Data$ and $Info$ ($y=f(\beta \mid Data, Info)$). This cannot be solely conditional on the $Data$ as the $Data$ is not uncertain our information/believe is uncertain about a none existing object $\beta$ (unless Platonism is true). Hence, even if we were wrong or correct about $f(\beta \mid Data, Info)$ nothing would change in reality at all. Hence, uncertainty has nothing to do with reality at all. It becomes now clear that only our own error/information is to be optimized as contrary to frequentism where this error is that of the long-run. It is unfortunately difficult in a world where mistakes are not allowed and "excellence" is the goal that each study has to portray. Hence, models are only useful if their current errors and failures in forecasting future phenomena are openly displayed, allowing us to optimize our understanding of predictive uncertainty until it becomes *acceptable*.
 
 Bayesian Model averaging allows multiple ($k$) functions to be utilized in the prior. Hence, multiple possible scenarios that could have been responsible for $\beta$ can be introduced as below.
 $$
@@ -113,20 +115,23 @@ $$
 f(\beta_{poolded} \mid Meta-data,Info) = \frac{f(Meta-data \mid \{\beta_{i}, ..., \beta_{n}\}) \cdot f_k(\beta_{pooled} \mid Info)}{\int \left( \sum_{k=1}^{k} f(Meta-data \mid \{\beta_{i}, ..., \beta_{n}\}) \cdot f_k(\beta_{pooled} \mid Info) \right)}
 $$
 
+# 3. The meta-function
+
+## 3.1 Data
+The data provide for the R-function needs a the classical structure such as the 'effect-size', which in this case is the model parameter as the  elasticity- and semi-elasticity coefficient. Accompanying of course the standard error. The example in R below shows the structure of the data frame.
+
 ```{r data}
 data(example1)
 head(example1)
 
 ```
-In the example above the column **est** (estimate) indicates the model parameters and the column **se** the (standard error of the estimate). The column **group** can be an organism group or specific species (or anything you wish to group by), the column **predictor** the specific predictor variable, the parameter whether the estimate is the intercept (*b0*) or a regression coefficient (*b1*) and the column **link*** contains the link function. An additional and recommended option is to include the sample size **n** for adjusting for 'small-sample-effect' (Peters et al., 2006; Moreno et al., 2009).
+In the example above the column **est** (estimate) indicates the model parameters and the column **se** the (standard error of the estimate). The column **group** can be an organism group or specific species/taxon (or anything you wish to group by), the column **predictor** the specific predictor variable, the parameter whether the estimate is the intercept (*b0*) or a regression coefficient (*b1*) and the column **link**contains the link function. An additional and recommended option is to include the sample size **n** for adjusting for 'small-sample-effects' (Peters et al., 2006; Moreno et al., 2009).
 
-# 3. The meta-function
-
-## 3.1 Basic function
+## 3.1 Basic model structure
 
 The meta function can include a random effect, by setting the argument RE=TRUE (default is TRUE). The  structure is then 
 $$\{\beta_{i}, ..., \beta_{n}\}= \beta_{\text{pooled}} + u_i$$
-It has the option of placing a single or multiple random effect as a vector or matrix using the argument "random" the structure then becomes then 
+It has the option of placing a single or multiple random effect as a vector or matrix using the argument 'random' the structure then becomes then 
 $$\{\beta_{i}, ..., \beta_{n}\} = \beta_{\text{pooled}} + u_i +r_i$$
 for a single random effect. It can adjust for the relation between the $se$ and model parameters using the inverse of the standard error $1/se$ (method=1, Stanley and Doucouliagos, 2014). The structure is then 
 $$\{\beta_{i}, ..., \beta_{n}\} = \beta_{\text{pooled}} + u_i + \alpha_{i} \cdot \left(\frac{1}{se}\right)$$ 
@@ -149,13 +154,13 @@ rm(mod1)
 
 ```
 
-The meta-function can returns a warnings that the MCMC-chains are not properly mixing. This can be an issue due to various reasons and assessed by looking at the 'raw' JAGS model output (`mod1$model$JAGS_model`). This could show that a parameter of interested "mu[.]" Has a a large Rhat or small effective sample size. Most of these issues can be resolved by thinning the chains or increasing the number of chains or setting a "better informed" or "stronger" prior. Moreover, if the issue is not an issue of the estimated "mu" parameter, the issue could be chosen to be ignored. These choices are ultimately up to the user. An option to prevent warnings would be to set the warning level for Eff_warn lower i.e., Eff_warn = 500.
+The meta-function can returns a warnings that the MCMC-chains are not properly mixing. This can be an issue due to various reasons and assessed by looking at the 'raw' JAGS model output (`mod1$model$JAGS_model`). This could show that a parameter of interested 'mu[.]' Has a a large Rhat or small effective sample size. Most of these issues can be resolved by thinning the chains, increasing the number of chains or setting a better informed priors. Moreover, if the issue is not an issue of the estimated 'mu' parameter, it could be decided to ignore it. These choices are ultimately up to the user. An option to prevent warnings would be to set the warning level for Eff_warn lower i.e., Eff_warn = 500.
 
 ## 3.2 Setting priors
 
 A benefit of the the Bayesian approach is that we can included prior information. Thereby explicitly shifting the weight of the outcome to more plausible values of the pooled model parameter or less weight to less plausible values. To set only a single prior for each relation and parameter a specific structure is needed. By default the model parameters are set as Gaussian/normally distributed with a mean ($\mu$, prior_mu) of 0 and standard error ($se$, prior_mu_se) of 0.5. The prior for the standard deviation ($\sigma$) is uniform where only the maximum value (prior_sigma_max) can be set, which at default is 5. As a strongly critical side note. The priors do not need to stay the same, because I "heuristically" like to work with the elasticity- or semi-elasticity coefficients. THIS IS NOT A NECESSITY. Hence, not thinking about your prior even if not a lot of information is available to make an very strong prior (but at least informed) is often not doing a Bayesian analysis at all. 
 
-To get a nice table overview which can be adjusted an filled in with prior information the argument 'get_prior_only' can be set to 'TRUE'. This will return a dataframe, with a column **level** names, priors for the **mu** ($\mu$) and for the standard error ($se$). The values in this can be set manually and re-included as a vector. How to do this will be explained in more detail in section 3.3.
+To get a nice table overview which can be adjusted an filled in with prior information the argument 'get_prior_only' can be set to 'TRUE'. This will return a dataframe, with a column **level**, priors for the **mu** ($\mu$) and for the standard error ($se$). The values in this data frame can be set manually and re-included. How to do this will be explained in more detail in section 3.3.
 
 ``` {r meta2 example priors}
 only_priors <- meta(estimate=example1$est,        
@@ -176,7 +181,7 @@ rm(only_priors)
 
 ## 3.3 Setting multiple priors for Bayesian Model Averaging
 
-A benefit of the the Bayesian approach is that we can included multiple priors to perform Bayesian Model Averaging (BMA;  Hoeting et al., 1999; Hinne et al., 2020). Thereby explicitly adding multiple possible scenarios that could have generated the observable data and aggregating this possibilities. To set multiple priors we need a similar dataset but also include prior weights. A simple solution to the prior weights to weight each prior as equally reasonable. In the example below there are three priors for each possible model. An the prior weights are set as 1/3. Hence each column vector in example2 gets the weight 1/3. The priors have been set differently and a broader prior for the intercept that seems reasonable.
+A benefit of the the Bayesian approach is that we can included multiple ($k$) priors to perform Bayesian Model Averaging (BMA;  Hoeting et al., 1999; Hinne et al., 2020). Thereby explicitly adding multiple possible scenarios that could have generated the observable data and averaging over these possibilities. To set multiple priors we need a similar dataset as shown above, but also include prior weights. These prior weights could be given any weight so that in total it adds up to 1 (100%). In the example below there are three priors for each possible model each set as 1/3. Hence each column vector in example2 gets the weight 1/3. The priors have been set differently and a broader prior for the intercept that seems reasonable.
 
 ``` {r meta3 BMA}
 data("example2")
@@ -199,7 +204,7 @@ mod2 <- meta(estimate=example1$est,
 #Display the summarized results
 mod2$Summary
 ```
-The results of the meta-analys are summarized in a table describing Maximum A Priori values (MAP), the $\mu$, $se$ and the high density intervals at default (90%). Additionally the $I2$ heterogeneity is given.
+The results of the meta-analysis are summarized in a table describing Maximum A Priori values (MAP), the $\mu$, $se$ and the high density intervals at default (90%). Additionally the $I2$ heterogeneity is given.
 
 This is the most difficult part where the data needs to be gathered and extracted, (G)LMs need to be fitted, priors need to formulated and the whole model needs to be optimized to get a stable results. The display of the results requires less time.
 
@@ -207,7 +212,7 @@ This is the most difficult part where the data needs to be gathered and extracte
 
 ## 4.1 pdplot-function
 
-To display the posterior results one could display the results with a point and interval range. However, this interval displaying a strong boundary on a continues set of possibilities does not completely capture  the idea of the posterior probability distribution. Another option would be to display the Posterior Density Distribution (PDD) combined with the point and interval estimate. Hence, the PDD displays the possible values of the prior information where the pooled estimated might have originated from $P(\beta_{\text{pooled}} \mid \text{meta-data}, \text{ prior information})$ it is the inverse of the likelihood which informs us of the values of the meta-data given we elected a particular pooled estimate $P(\text{meta-data}\mid\beta_{\text{pooled}}  )$. This can be  performed with the pdplot function.
+To display the posterior results one could display the results with a point and interval range. However, this interval displaying a strong boundary on a continues set of possibilities does not completely capture  the idea of the posterior probability distribution. Another option would be to display the Posterior Density Distribution (PDD) combined with the point and interval estimate. Hence, the PDD displays the possible values of the prior information where the pooled estimated might have originated from $f(\beta_{\text{pooled}} \mid Meta-data, Info)$ it is the inverse of the likelihood which informs us of the values of the meta-data given we selected a particular pooled estimate $f(Meta-data \mid \{\beta_{i}, ..., \beta_{n}\})$. This can be  performed with the pdplot function.
 
 ```{r pdplot}
 pdd <- pdplot(mod2, 
@@ -236,7 +241,7 @@ and a summary belonging to the figures
 print(pdd$summary)
 ```
 
-For larger datasets with multiple groups and predictor variables the order of the PDDs can be changed by using the arguments "order_predictor" and "order_group" needing a character string with the names of the desired order.
+For larger datasets with multiple groups and predictor variables the order of the PDDs can be changed by using the arguments 'order_predictor' and 'order_group"' needing a character string with the names of the desired order.
 
 ## 4.2 hop-function
 
@@ -254,12 +259,12 @@ log_sal1 <- hop(mod2,                                  #object from the meta fun
     hop_lwd = 0.3)                                     #set width of the hop lines
 ```
 
-```{r fig log_sal1, fig.width=7, fig.height=4, echo=FALSE}
+```{r fig log_sal1, fig.width=7.1, fig.height=4, echo=FALSE}
 print(log_sal1)
 ```
 
 It is also possible to scale to display the exponentiate values on the x-axis using the argument
-"exp_axis". The observant reader might notice the taxonomic richness is ~15 under lower conductivity. This is correct, because the majority of the literature publish does not focus on species richnes, it often focuses on order or family richness.
+'exp_axis'. The observant reader might notice the taxonomic richness is ~15 under lower conductivity. This is correct, because the majority of the literature publish does not focus on species richness, it often focuses on order or family richness.
 
 ```{r HOPs log salinity fig2}
 log_sal2 <- hop(mod2,                                   
@@ -275,7 +280,7 @@ log_sal2 <- hop(mod2,
     round_x_axis = 0)                                 #round the notation to full integers        
 ```
 
-```{r fig log_sal2, fig.width=7, fig.height=4, echo=FALSE}
+```{r fig log_sal2, fig.width=7.1, fig.height=4, echo=FALSE}
 print(log_sal2)
 ```
 
@@ -286,21 +291,26 @@ There are multiple predictors is the dataset. Therefore it possible to display t
 ```{r HOPs log salinity fig3}
 log_sal3 <- hop(mod2,                                              
     group="Invertebrates",                            
-    predictor = c("Salinity", "Oxygen"),                     #select both Salinity and Oxygen
-    xlab= expression(Conductivity ~ µS ~ cm^-1),             #give x-axis a name
+    predictor = c("Sediment", "Oxygen"),                     #select both Sediment and Oxygen
+    xlab= "Fine sediment fraction",                          #give x-axis a name
     ylab= expression(Oxygen ~ mg ~ L^-1),                    #give x-axis a name
     gradient_title = "MAP Invertebrate \ntaxonomic richness",#give the gradient a name
     pdp_resolution = 100,                                    #set resolution of the grid
     link_function = "log",
     exp_axis = T, 
-    round_x_axis = 0,
-    xlim=c(3, 8),                                      
-    ylim=c(1.3, 2.8)) 
+    round_x_axis = 2,
+    round_y_axis = 0,
+    xlim=c(-4.61, -0.92),
+    ylim=c(1.61, 2.89)) 
 ```
 
-```{r fig log_sal3, fig.width=7, fig.height=4, echo=FALSE}
+```{r fig log_sal3, fig.width=7.1, fig.height=4, echo=FALSE}
 print(log_sal3)
 ```
+
+# 5. Prediction
+
+This part is still under construction.
 
 # References
 

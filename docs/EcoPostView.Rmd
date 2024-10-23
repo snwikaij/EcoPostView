@@ -37,7 +37,9 @@ library(devtools)
 library(EcoPostView)
 ```
 
-# 2. Obtaining data and fitting (G)LMs
+# 2. Data and models
+
+## 2.1 (Generalized) Linear Models (G)LMs and extracting data
 
 To obtain data from the (G)LMs we need to fit models. This data can be obtained from figures (e.g., using WebPlotDigitizer), tables, data sets or combinations (See Kaijser et al. ...). What is needed to combine these models are the so called estimations of the model parameters. These are more commonly known as the intercept or slope. The intercept (*b0* or *β0*) and slope (*b1* or *β1*) can be used to predict: *link(response variable) = b0 + b1 · predictor variable*. In a GLM the response variable is linked to to the linear component with a link-function often notated as *g(..)*. The 'identity' link function applies no link function. This indicate that the mean (expected value notated as *E(y)* or *(E(y|x))*) is directly related to the linear component. However, in a GLM with, log- or logit-link it is easier to talk about log-linear relation 
 $$log(E(y \mid x)) = \beta_0 + \beta_1 \cdot x$$
@@ -50,7 +52,66 @@ and thus $\beta_1 = \frac{\log(y)}{\log(x)}$. For the semi-elasticity coefficien
 
 I will keep these 'unofficial expression', due to the reference in the R-package to *b0* and *b1* while a proper notation would of course be more complex expressed as: 
 $$g(E(y \mid x_{ij})) = \sum_{j=1}^{v} \beta_j \cdot x_{ij}$$
-Where $x_{ij}$ refers to the $j$ the predictor variable (e.g., salinity is $j$=1 and light is $j$=2) and $i$ is the $i$-th observation. Here, $v$ represents the number of predictors. I will reduce the text to the basics.
+Where $x_{ij}$ refers to the $j$ the predictor variable (e.g., salinity is $j$=1 and light is $j$=2) and $i$ is the $i$-th observation. Here, $v$ represents the number of predictors.
+
+## 2.2. Bayes Theorem
+
+Since this R-package is mostly using Bayesian inference an introduction to Bayes Theorem might be of interested. While it is not necessary need for the utilization of the R-package. If this is not of interest one could skip this part. Perhaps it is more to formulate my own 'idea' of it. Informally Bayes Theorem would be notated $\text{Posterior}\, \text{probability} = \frac{\text{Likelihood} \cdot \text{Prior}}{\text{Evidence}}$. More formally Bayes theorem is often notated with A and B where P indicates probability and "|" given or conditional on.$P(A \mid B) = \frac{P(B \mid A) \cdot P(A)}{P(B)}$. However, to connect it to models $A=\beta$ and $B=Data$. Where $\beta$ denotes the model parameter and $Data$ the available data.
+The derivation of Bayes' theorem relies on the ex changeability of probabilities, while classically `A` and `B` are used for reference to the text where `A = \beta` and `B = Data`.
+
+**Premise 1)**
+$$
+P(\beta | \text{Data}) = \frac{P(\beta \cap \text{Data})}{P(\text{Data})}
+$$
+similarly
+$$
+P(\text{Data} | \beta) = \frac{P(\text{Data} \cap \beta)}{P(\beta)}
+$$
+**Premise 2)**
+Also, the joint probability is expressed as a set-theoretic relationship indicating that element of both sets is the same.
+$$
+z = \{x : x \in \beta \cap Data : x \in Data \cap \beta\}
+$$
+thus
+$$
+P(\beta \cap Data) = P(Data \cap \beta)
+$$
+**Premise 3)**
+Thus:
+$$
+P(\beta | Data) \cdot P(\beta) = P(\beta \cap Data)
+$$
+and
+$$
+P(Data | \beta) \cdot P(Data) = P(Data \cap \beta)
+$$
+**Conclusion)**
+Therefore:
+$$
+P(\beta | Data) \cdot P(\beta) = P(Data | \beta) \cdot P(Data)
+$$
+$$
+P(\beta | Data) = \frac{P(Data | \beta) \cdot P(\beta)}{P(Data)}
+$$
+
+The issue is that here the subjectivity of the prior and the function "$f$" of the probability distribution are not that transparent in my honest opinion. where a function is nothing more than a 'rule' that maps $x$ to $y$ and so $y=f(x)$. Hence, probability is a mapping function, mapping an expectation of $x$ to $y$. The probability can be any function (although some might disagree). In this case the prior probability is a function of both the $Data$ and prior information ($Info$). 
+$$
+f(\beta \mid Data, Info) = 
+\frac{f(Data \mid \beta) \cdot f(\beta \mid Info)}
+{\int f(Data \mid \beta) \cdot f(\beta \mid Info)}
+$$
+Therefore, the posterior nothing more than a function that describes the probability $y$ as a function of $\beta$ conditional on $Data$ and $Info$ ($y=f(\beta \mid Data, Info)$). This cannot be solely conditional on the $Data$ as the $Data$ is not uncertain our information/believe is uncertain about a none existing object $\beta$ (unless Platonism is true). Hence, even if we were wrong or correct about $f(\beta \mid Data, Info)$ nothing would change in reality at all. Hence, uncertainty has nothing to do with reality at all. It becomes now clear that only our own error/information is to be optimized as contrary to frequentism where this error is that of the long-run. It is unfortunately difficult in a world where mistakes are not allowed and 'excellence' is the goal that each study has to portray. Hence, models are only useful if their current errors and failures in forecasting future phenomena are openly displayed, allowing us to optimize our understanding of predictive uncertainty until it becomes *acceptable*.
+
+Bayesian Model averaging allows multiple ($k$) functions to be utilized in the prior. Hence, multiple possible scenarios that could have been responsible for $\beta$ can be introduced as below.
+$$
+f(\beta \mid Data,Info) = \frac{f(Data \mid \beta) \cdot f_k(\beta \mid Info)}{\int \left( \sum_{k=1}^{k} f(Data \mid \beta) \cdot f_k(\beta \mid Info) \right)}
+$$
+Now it should be clear that each $\beta$ contained within $g(E(y \mid x_{ij})) = \sum_{j=1}^{v} \beta_j \cdot x_{ij}$ is being restricted by the prior models. While in frequentism it is unrestricted and 'complete indifference' towards the  possibility of $\beta$. 
+
+In a meta-analysis we do not talk about $\beta$ but about a set of estimates $\beta=\{\beta_{i}, ..., \beta_{n}\}$ meaning that $f(Meta-data\mid\{\beta_{i}, ..., \beta_{n}\})$. Hereby the flexibility allows that these estimates are either likelihood estimates ($\hat{\beta}$) or  posterior estimates ($\beta$). and we end up with an expression that should capture the inference to an underlying pooled model parameter.
+$$
+f(\beta_{poolded} \mid Meta-data,Info) = \frac{f(Meta-data \mid \{\beta_{i}, ..., \beta_{n}\}) \cdot f_k(\beta_{pooled} \mid Info)}{\int \left( \sum_{k=1}^{k} f(Meta-data \mid \{\beta_{i}, ..., \beta_{n}\}) \cdot f_k(\beta_{pooled} \mid Info) \right)}
+$$
 
 ```{r data}
 data(example1)
@@ -63,7 +124,15 @@ In the example above the column **est** (estimate) indicates the model parameter
 
 ## 3.1 Basic function
 
-The meta function can include a random effect, by setting the argument RE=TRUE (default is TRUE). The  structure is then $\beta= \beta_{\text{pooled}} + u_i$. It has the option of placing a single or multiple random effect as a vector or matrix using the argument "random" the structure then becomes then $\beta = \beta_{\text{pooled}} + u_i +r_i$ for a single random effect. It can adjust for the relation between the $se$ and model parameters using the inverse of the standard error $1/se$ (method=1, Stanley and Doucouliagos, 2014). The structure is then $\beta = \beta_{\text{pooled}} + u_i + \alpha \cdot \left(\frac{1}{se}\right)$ or inverse of the sample size $1/n$ (method=2, the latter option is performed below) with the structure $\beta = \beta_{\text{pooled}} + u_i + \alpha \cdot \left(\frac{1}{n}\right)$. Of course if bias is considered minimal and neglect able non can be performed (method=1). I still would like to include a third 4th option to utilize Robust Bayesian Model Averaging (RoBMA: Maier et al. 2023). But this sometimes adjust extremely when including $1/se$ and therefore I left this option open for now.
+The meta function can include a random effect, by setting the argument RE=TRUE (default is TRUE). The  structure is then 
+$$\{\beta_{i}, ..., \beta_{n}\}= \beta_{\text{pooled}} + u_i$$
+It has the option of placing a single or multiple random effect as a vector or matrix using the argument "random" the structure then becomes then 
+$$\{\beta_{i}, ..., \beta_{n}\} = \beta_{\text{pooled}} + u_i +r_i$$
+for a single random effect. It can adjust for the relation between the $se$ and model parameters using the inverse of the standard error $1/se$ (method=1, Stanley and Doucouliagos, 2014). The structure is then 
+$$\{\beta_{i}, ..., \beta_{n}\} = \beta_{\text{pooled}} + u_i + \alpha_{i} \cdot \left(\frac{1}{se}\right)$$ 
+or inverse of the sample size $1/n$ (method=2, the latter option is performed below) with the structure 
+$$\{\beta_{i}, ..., \beta_{n}\} = \beta_{\text{pooled}} + u_i + \alpha_{i} \cdot \left(\frac{1}{n}\right)$$ 
+Of course if bias is considered minimal and neglect able non can be performed (method=1). I still would like to include a third 4th option to utilize Robust Bayesian Model Averaging (RoBMA: Maier et al. 2023). But this sometimes adjust extremely when including $1/se$ and therefore I left this option open for now.
 
 ```{r meta1}
 mod1 <- meta(estimate=example1$est,         #Model estimate
@@ -80,9 +149,10 @@ rm(mod1)
 
 ```
 
-The meta-function can returns a warnings that the MCMC-chains are not properly mixing. This can be an issue due to various reasons and assessed by looking at the 'raw' JAGS model output (mod1$model$JAGS_model). This could show that a parameter of interested "mu[.]" Has a a large Rhat or small effective sample size. Most of these issues can be resolved by thinning the chains or increasing the number of chains or setting a "better informed" or "stronger" prior. Moreover, if the issue is not an issue of the estimated "mu" parameter, the issue could be chosen to be ignored. These choices are ultimately up to the user. An option to prevent warnings would be to set the warning level for Eff_warn lower i.e., Eff_warn = 500.
+The meta-function can returns a warnings that the MCMC-chains are not properly mixing. This can be an issue due to various reasons and assessed by looking at the 'raw' JAGS model output (`mod1$model$JAGS_model`). This could show that a parameter of interested "mu[.]" Has a a large Rhat or small effective sample size. Most of these issues can be resolved by thinning the chains or increasing the number of chains or setting a "better informed" or "stronger" prior. Moreover, if the issue is not an issue of the estimated "mu" parameter, the issue could be chosen to be ignored. These choices are ultimately up to the user. An option to prevent warnings would be to set the warning level for Eff_warn lower i.e., Eff_warn = 500.
 
 ## 3.2 Setting priors
+
 A benefit of the the Bayesian approach is that we can included prior information. Thereby explicitly shifting the weight of the outcome to more plausible values of the pooled model parameter or less weight to less plausible values. To set only a single prior for each relation and parameter a specific structure is needed. By default the model parameters are set as Gaussian/normally distributed with a mean ($\mu$, prior_mu) of 0 and standard error ($se$, prior_mu_se) of 0.5. The prior for the standard deviation ($\sigma$) is uniform where only the maximum value (prior_sigma_max) can be set, which at default is 5. As a strongly critical side note. The priors do not need to stay the same, because I "heuristically" like to work with the elasticity- or semi-elasticity coefficients. THIS IS NOT A NECESSITY. Hence, not thinking about your prior even if not a lot of information is available to make an very strong prior (but at least informed) is often not doing a Bayesian analysis at all. 
 
 To get a nice table overview which can be adjusted an filled in with prior information the argument 'get_prior_only' can be set to 'TRUE'. This will return a dataframe, with a column **level** names, priors for the **mu** ($\mu$) and for the standard error ($se$). The values in this can be set manually and re-included as a vector. How to do this will be explained in more detail in section 3.3.
@@ -136,28 +206,43 @@ This is the most difficult part where the data needs to be gathered and extracte
 # 4. Display
 
 ## 4.1 pdplot-function
+
 To display the posterior results one could display the results with a point and interval range. However, this interval displaying a strong boundary on a continues set of possibilities does not completely capture  the idea of the posterior probability distribution. Another option would be to display the Posterior Density Distribution (PDD) combined with the point and interval estimate. Hence, the PDD displays the possible values of the prior information where the pooled estimated might have originated from $P(\beta_{\text{pooled}} \mid \text{meta-data}, \text{ prior information})$ it is the inverse of the likelihood which informs us of the values of the meta-data given we elected a particular pooled estimate $P(\text{meta-data}\mid\beta_{\text{pooled}}  )$. This can be  performed with the pdplot function.
 
-``` {r pdplot, fig.width=8, fig.height=4, echo=FALSE}
+```{r pdplot}
 pdd <- pdplot(mod2, 
               label_size=4,      #setting the label size larger
               point_size=2)      #large point
+```
 
+The object contains the figures generated for both the log
+
+```{r pddplot log, fig.width=8, fig.height=4, echo=FALSE}
 #for the models with the log-link
 print(pdd$posterior_density$log)             
+```
 
+and logit functions
+
+```{r pddplot logit, fig.width=8, fig.height=4, echo=FALSE}
 #for the models with the logit-link
 print(pdd$posterior_density$logit)
+```
 
+and a summary belonging to the figures
+
+```{r summary figures}
 #summary belonging to the figures
 print(pdd$summary)
-
 ```
-for larger datasets with multiple groups and predictor variables the order of the PDDs can be changed by using the arguments "order_predictor" and "order_group" needing a character string with the names of the desired order.
+
+For larger datasets with multiple groups and predictor variables the order of the PDDs can be changed by using the arguments "order_predictor" and "order_group" needing a character string with the names of the desired order.
 
 ## 4.2 hop-function
+
 Hypothetical Outcome Plots are a useful method to visualize the possibilities the expected value could take on given a change in the predictor variable. These are so called HOPs (Kale et al. 2019). The hops lines are a simulation of possibilities from the posterior. Note that the function works under the idea of log transformed variables. This means that xlim (the limits of the figures) as given below are exp(3)=20 and exp(8)=2980 for conductivity. The y-axis is on the response scale. I hop soon to make it possible to use an argument that makes it possible to set the xlim on the raw. Below an example of the outcomes of the response of invertebrate taxonomic richness along  the conductivity gradient. 
-```{r HOPs log salinity fig1, fig.width=6, fig.height=4, echo=FALSE}
+
+```{r HOPs log salinity fig1}
 log_sal1 <- hop(mod2,                                  #object from the meta function
     group="Invertebrates",                             #select group to out of Invertebrates and Fish
     predictor = "Salinity",                            #select group to out of Salinity and Oxygen
@@ -167,12 +252,16 @@ log_sal1 <- hop(mod2,                                  #object from the meta fun
     xlim=c(3, 8),                                      #give y-axis a name
     ylim=c(0, 25),                                     #set  limits y-axis
     hop_lwd = 0.3)                                     #set width of the hop lines
-    
+```
+
+```{r fig log_sal1, fig.width=7, fig.height=4, echo=FALSE}
 print(log_sal1)
 ```
+
 It is also possible to scale to display the exponentiate values on the x-axis using the argument
 "exp_axis". The observant reader might notice the taxonomic richness is ~15 under lower conductivity. This is correct, because the majority of the literature publish does not focus on species richnes, it often focuses on order or family richness.
-```{r HOPs log salinity fig2, fig.width=6, fig.height=4, echo=FALSE}
+
+```{r HOPs log salinity fig2}
 log_sal2 <- hop(mod2,                                   
     group="Invertebrates",                             
     predictor = "Salinity",                            
@@ -183,14 +272,18 @@ log_sal2 <- hop(mod2,
     ylim=c(0, 25),                                     
     hop_lwd = 0.3,                                    
     exp_axis = T,                                     #exponentiate the x-axis notations
-    round_x_axis = 0)                                 #round the notation to full integers                                 
+    round_x_axis = 0)                                 #round the notation to full integers        
+```
+
+```{r fig log_sal2, fig.width=7, fig.height=4, echo=FALSE}
 print(log_sal2)
 ```
 
 ## 4.3 Partial Dependency Plots (hop-function)
+
 There are multiple predictors is the dataset. Therefore it possible to display the MAP predicted value given a change in one of the two predictors. This can be performed by display in Partial Dependency Plots.
 
-```{r HOPs log salinity fig3, fig.width=6, fig.height=4, echo=FALSE}
+```{r HOPs log salinity fig3}
 log_sal3 <- hop(mod2,                                              
     group="Invertebrates",                            
     predictor = c("Salinity", "Oxygen"),                     #select both Salinity and Oxygen
@@ -203,10 +296,11 @@ log_sal3 <- hop(mod2,
     round_x_axis = 0,
     xlim=c(3, 8),                                      
     ylim=c(1.3, 2.8)) 
-
-print(log_sal3)
 ```
 
+```{r fig log_sal3, fig.width=7, fig.height=4, echo=FALSE}
+print(log_sal3)
+```
 
 # References
 

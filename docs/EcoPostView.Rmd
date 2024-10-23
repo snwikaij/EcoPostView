@@ -25,17 +25,58 @@ Ecological data is scattered around literature in different formats and very noi
 
 If working with meta-data and uncovering effects from literature, making probability statements and predictions are the goal, this R-package can help make your life easier. The goal of this package is to combine the benefits of multiple fitted Linear and Generalized Linear Models ((G)LMs), using the flexibility and strength of Bayesian Meta-analysis to generalized the effects to one pooled (G)LM. This meta-analytically derived (G)LM can be visualized and used to predict.
 
-A large amount of information is available from figures, tables, data sets or combinations between them. In simple words, multiple datasets are needed on which we can fit a (G)LM (see Kaijser et al, ...). This, however, will show that most data is very noisy, perhaps biased and the heterogeneity among different studies is large. This is an issue if we focus on error-control and causality statements. Both error-control and causality need controlled environment with a well setup experimental conditions and exclusion of confounding variables. Hence, error-control and causality start a-priori (Fisher 1949, Pearl 2009, Mayo 2018). For an explanation on the topic of error-control connected to the classical (Frequentism) approach see https://snwikaij.shinyapps.io/shiny/. Yet, while error-control a posterior is not possible anymore, this makes the information still useful. It can be used to make probability statements or to design a study a-priori, which is focused on error-control or causality. The focus lies here on making posterior probability statements, visualization and prediction from all information available from literature. Hence, the goal is to generalize ecological effects from literature, displaying its patterns and predict with it.
-
-To start usgin the R-package both JAGS and devtools need to be installed. JAGS can be installed from https://sourceforge.net/projects/mcmc-jags/ and devtools can be install in R. For the most recent version of the EcoPostView it can be installed from GitHub. Of course, if nicely asked, any problems or possible improvements can be directed to me.
-
-```{r setup}
-#install.packages("devtools")
-library(devtools)
-
-#install.github("snwikaij/EcoPostView")
+```{r intro-plot,  fig.width=7.1, fig.height=4, echo = FALSE, results = "hide"}
 library(EcoPostView)
+library(ggplot2)
+library(cowplot)
+data("example1")
+
+
+mod_intro <- meta(estimate=example1$est,         
+                  stderr=example1$se,            
+                  parameter=example1$parameter,  
+                  predictor=example1$predictor,  
+                  link_function=example1$link,   
+                  grouping=example1$group,       
+                  Nsamp=example1$n,
+                  n_chain=6,
+                  n_thin=10,
+                  method=2)
+
+pl1 <- hop(mod_intro ,                                              
+           group = "Invertebrates",                            
+           predictor = c("Salinity", "Sediment"),                   
+           xlab = expression(Conductivity ~ µS ~ cm^-1),                          
+           ylab = "Fine sediment fraction",                   
+           pdp_resolution = 100,                                   
+           link_function = "logit",
+           exp_disp = T, 
+           round_x_axis = 0,
+           round_y_axis = 2,
+           xlim=c(2.99, 6.215), 
+           ylim=c(-4.61, -0.92))
+pl1 <- pl1+ggplot2::theme(legend.position = "none")
+
+pl2 <- hop(mod_intro ,                                              
+           group = "Invertebrates",                            
+           predictor = c("Salinity", "Sediment"),                   
+           xlab = expression(Conductivity ~ µS ~ cm^-1),                          
+           ylab = "Fine sediment fraction",                   
+           gradient_title = "Evenness \naquatic \ninvertebrates",
+           pdp_resolution = 100,                                   
+           link_function = "logit",
+           exp_axis = T, 
+           round_x_axis = 0,
+           round_y_axis = 2,
+           xlim=c(2.99, 6.215), 
+           ylim=c(-4.61, -0.92))
+pl2 <- pl2+ggplot2::theme(axis.title.y = element_blank())
+
+intro_plot <- cowplot::plot_grid(pl1, pl2, rel_widths = c(0.43, 0.57))
+print(intro_plot)
+rm(mod_intro)
 ```
+A large amount of information is available from figures, tables, data sets or combinations between them. In simple words, multiple datasets are needed on which we can fit a (G)LM (see Kaijser et al, ...). This, however, will show that most data is very noisy, perhaps biased and the heterogeneity among different studies is large. This is an issue if we focus on error-control and causality statements. Both error-control and causality need controlled environment with a well setup experimental conditions and exclusion of confounding variables. Hence, error-control and causality start a-priori (Fisher 1949, Pearl 2009, Mayo 2018). For an explanation on the topic of error-control connected to the classical (Frequentism) approach see https://snwikaij.shinyapps.io/shiny/. Yet, while error-control a posterior is not possible anymore, this makes the information still useful. It can be used to make probability statements or to design a study a-priori, which is focused on error-control or causality. The focus lies here on making posterior probability statements, visualization and prediction from all information available from literature. Hence, the goal is to generalize ecological effects from literature, displaying its patterns and predict with it.
 
 # 2. Data and models
 
@@ -118,6 +159,16 @@ $$
 # 3. The meta-function
 
 ## 3.1 Data
+To start using the R-package both JAGS and devtools need to be installed. JAGS can be installed from https://sourceforge.net/projects/mcmc-jags/ and devtools can be install in R. For the most recent version of the EcoPostView it can be installed from GitHub. Of course, if nicely asked, any problems or possible improvements can be directed to me.
+
+```{r setup}
+#install.packages("devtools")
+library(devtools)
+
+#install.github("snwikaij/EcoPostView")
+library(EcoPostView)
+```
+
 The data provide for the R-function needs a the classical structure such as the 'effect-size', which in this case is the model parameter as the  elasticity- and semi-elasticity coefficient. Accompanying of course the standard error. The example in R below shows the structure of the data frame.
 
 ```{r data}

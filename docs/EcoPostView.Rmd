@@ -23,7 +23,7 @@ knitr::opts_chunk$set(
 
 Ecological data is scattered around literature in different formats and very noisy. It is often 'case-study' specific and not representative for the totality if conditions encountered. However, as ecologist we are not interested in case specific situations, but making probability statements on general effects, visualizing and predicting with them.
 
-If working with meta-data and uncovering effects from literature, making probability statements and predictions are the goal, this R-package can help make your life easier. The goal of this package is to combine the benefits of multiple fitted Linear and Generalized Linear Models ((G)LMs), using the flexibility and strength of Bayesian meta-analysis to generalized the effects to one pooled (G)LM. This meta-analytically derived (G)LM can be visualized (see the figures below) and used to predict on new data.
+If working with meta-data and uncovering effects from literature, making probability statements and predictions are the goal, this R-package can help make your life easier. The goal of this package is to combine the benefits of multiple fitted Linear and Generalized Linear Models ((G)LMs), using the flexibility and strength of Bayesian meta-analysis to generalized the effects to one pooled (G)LM. This meta-analytically derived (G)LM can be visualized (see the Fig. 1 below) and used to predict on new data.
 
 ```{r intro-plot,  fig.width=7.1, fig.height=4, echo=F}
 library(EcoPostView)
@@ -84,12 +84,12 @@ A large amount of information is available from figures, tables, data sets or co
 
 ## 2.1 (Generalized) Linear Models (G)LMs and extracting data
 
-To use this package data is needed and on this data (G)LMs we need to fitted. This (meta-)data can be obtained from figures (e.g., using WebPlotDigitizer), tables, data sets or combinations between them (See Kaijser et al. ...). The effects we are talking of are not really effects but model parameters. These parameters are more commonly known as the intercept or slope. The intercept (*b0* or *β0*) and slope (*b1* or *β1*) can be used to predict: *response variable = b0 + b1 · predictor variable*. By knowing *b0* and *b1* we can give the model a single or multiple new values for *x* and make a prediction. In a GLM the response variable is linked to to the linear component with a link-function often notated as *g(..)*. The 'identity' link function applies no link function. This indicates that the mean (expected value of *y* notated as *E(y)* or *(E(y|x))*) is directly related to the linear component.
-$$g(E(y \mid x)) = \beta_0 + \beta_1 \cdot x$$ 
+To use this package data is needed and on this data (G)LMs we need to fitted. This (meta-)data can be obtained from figures (e.g., using WebPlotDigitizer), tables, data sets or combinations between them (See Kaijser et al. ...). The effects we are talking of are not really effects but model parameters. These parameters are more commonly known as the intercept or slope. The intercept (*b0* or *β0*) and slope (*b1* or *β1*) can be used to predict: *response variable = b0 + b1 · predictor variable*. By knowing *b0* and *b1* we can give the model a single or multiple new observations (*i*) values for *x* and make a prediction. In a GLM the response variable is linked to to the linear component with a link-function often notated as *g(..)*. The 'identity' link function applies no link function. This indicates that the mean (expected value of *y* notated as *E(y)* or *(E(y|x))*) is directly related to the linear component.
+$$g(E(y_{i} \mid x_{i})) = \beta_0 + \beta_1 \cdot x_{i}$$ 
 However, in a GLM with, log- or logit-link it is easier to talk about log-linear relation 
-$$log(E(y \mid x)) = \beta_0 + \beta_1 \cdot x$$ 
+$$log(E(y_{i} \mid x_{i})) = \beta_0 + \beta_1 \cdot x_{i}$$ 
 or logit-linear relation
-$$logit(E(y \mid x)) = \beta_0 + \beta_1 \cdot x$$
+$$logit(E(y_{i} \mid x_{i})) = \beta_0 + \beta_1 \cdot x_{i}$$
 The slope in a GLM not a true slope anymore because there is not straight line anymore that links the response (*y*) and predictor variable (*x*). Therefore the term coefficient or regression coefficient refers to the model parameter ($\beta$). 
 
 Heuristically, I prefer working often working with elasticity- or semi-elasticity coefficients (Woolridge, 2001). In this example I also use the elasticity- or semi-elasticity coefficients. But, there are enough reasons not to do so and is dependent on the question, data and many other factors. 
@@ -98,8 +98,8 @@ The elasticity coefficient expresses the percentage change of $y$ (response) as 
 and thus $\beta_1 = \frac{\log(y)}{\log(x)}$. For the semi-elasticity coefficient (i.e., logit-linear) this only accounts partially and values closer 0 are better interpret able because $logit(E(y \mid x)) = \beta_0 + \beta_1 \cdot log(x)$ and thus $\beta_1 = \frac{logit(y)}{\log(x)}$. This expressed the  change in the log-odds per 1% elasticity (Cramer 1991; Woolridge, 2001). This makes it possible to coarsely compare among different models and still keep the interpretation of to the units needed for prediction. Hence, we can still predict with the model and interpret the expected change of $y$ given an increase in $1·log(x)$, because the units of $x$ are retain under the $log$.
 
 Keep these 'unofficial expressions' in mind, due to the reference in the R-package to *b0* and *b1* while a proper notation would of course be more formally expressed as: 
-$$g(E(y \mid x_{ij})) = \sum_{j=1}^{v} \beta_j \cdot x_{ij}$$
-Where $x_{ij}$ refers to the $j$ the predictor variable (e.g., salinity is $j$=1 and light is $j$=2) and $i$ is the $i$-th observation. Here, $v$ represents the number of predictors.
+$$g(E(y_{i} \mid x_{ij})) = \sum_{j=1}^{j} \beta_j \cdot x_{ij}$$
+Where $x_{ij}$ refers to the $j$ the predictor variable (e.g., salinity is $j$=1 and light is $j$=2) and $i$ is the $i$-th observation.
 
 ## 2.2. Bayes Theorem
 
@@ -147,7 +147,9 @@ f(\beta \mid Data, Info) =
 \frac{f(Data \mid \beta) \cdot f(\beta \mid Info)}
 {\int f(Data \mid \beta) \cdot f(\beta \mid Info)}
 $$
-Therefore, the posterior nothing more than a function that describes the probability $y$ as a function of $\beta$ conditional on $Data$ and $Info$ ($y=f(\beta \mid Data, Info)$). This cannot be solely conditional on the $Data$ as the $Data$ is not uncertain our information/believe is uncertain about a none existing object $\beta$ (unless Platonism is true). Hence, even if we were wrong or correct about $f(\beta \mid Data, Info)$ nothing would change in reality at all. Hence, uncertainty has nothing to do with reality at all. It becomes now clear that only our own error/information is to be optimized as contrary to frequentism where this error is that of the long-run. Hence, the frequentist cannot say something about the prior (hypothesis), it cannot reject hypothesis (which seem to mean that it is false) and it cannot state something about the probability of the parameter (effect) or observations "by chance alone". The strength of the frequentism lies in its objectivity and solidarity (in the long-run), which is, however, not used.
+This expression is sometimes simplified to
+$$f(\beta \mid Data, Info) = f(Data \mid \beta) \propto f(\beta \mid Info)$$
+Where the $\propto$ symbol indicates 'proportional to' highlighting the idea of exchangeability. Therefore, the posterior nothing more than a function that describes the probability $y$ as a function of $\beta$ conditional on $Data$ and $Info$ ($y=f(\beta \mid Data, Info)$). This cannot be solely conditional on the $Data$ as the $Data$ is not uncertain our information/believe is uncertain about a none existing object $\beta$ (unless Platonism is true). Hence, even if we were wrong or correct about $f(\beta \mid Data, Info)$ nothing would change in reality at all. Hence, uncertainty has nothing to do with reality at all. It becomes now clear that only our own error/information is to be optimized as contrary to frequentism where this error is that of the long-run. Hence, the frequentist cannot say something about the prior (hypothesis), it cannot reject hypothesis (which seem to mean that it is false) and it cannot state something about the probability of the parameter (effect) or observations "by chance alone". The strength of the frequentism lies in its objectivity and solidarity (in the long-run), which is, however, not used.
 Unfortunately the later is difficult in a world where mistakes are not allowed and "excellence" is the goal that each study has to portray (not a repeated long-run of studies). Hence, models are only useful if their current errors and failures in forecasting future phenomena are openly displayed, allowing us to optimize our understanding of predictive uncertainty until it becomes *acceptable*.
 
 Bayesian Model averaging has the advantages that it allows multiple ($k$) functions to be utilized as prior. Hence, multiple possible scenarios that could have been responsible for $\beta$ can be introduced as below.
@@ -161,10 +163,26 @@ $$
 f(\beta_{poolded} \mid Meta-data,Info) = \frac{f(Meta-data \mid \{\beta_{i}, ..., \beta_{n}\}) \cdot f_k(\beta_{pooled} \mid Info)}{\int \left( \sum_{k=1}^{k} f(Meta-data \mid \{\beta_{i}, ..., \beta_{n}\}) \cdot f_k(\beta_{pooled} \mid Info) \right)}
 $$
 
+## 2.3 (G)LMs and Bayes Theorem 
+
+Perhaps seeing a (G)LM or Bayes Theorem does not immediately lead to the understanding of how this connects. In simplicity Bayes Theorem is used to find the posterior value of the model parameters. In this example $\beta_{0}$ and $\beta_{1}$.
+$$
+\begin{align*}
+&g(E(y_{i} \mid x_{i})) \hspace{20cm} \\
+&=  \\
+&f(\beta_{0} \mid Data, Info) \sim f(Data \mid \beta_{0}) \propto f(\beta_{0} \mid Info) \\ 
+&+ \\
+&f(\beta_{1} \mid Data, Info) \sim f(Data \mid \beta_{1}) \propto f(\beta_{1} \mid Info) \\
+&\cdot \\
+&x_{i} 
+&\end{align*}
+$$
+Hence, each parameter has its likelihood and prior to optimize between. More complex hierarchical models can be created where $\beta$ can be conditional on other parameters and even $x$ can be modeled scholastically. For now this suffices. 
+
 # 3. The meta-function
 
 ## 3.1 Data
-To start using the R-package both JAGS and devtools need to be installed. JAGS can be installed from https://sourceforge.net/projects/mcmc-jags/ and devtools can be install in R. For the most recent version of the EcoPostView it can be installed from GitHub. Of course, if nicely asked, any problems or possible improvements can be directed to me.
+To start using this R-package both JAGS and devtools need to be installed. JAGS can be installed from https://sourceforge.net/projects/mcmc-jags/ and devtools can be install in R. For the most recent version of the EcoPostView it can be installed from GitHub. Of course, any problems, questions or possible improvements can be directed to me.
 
 ```{r setup}
 #install.packages("devtools")

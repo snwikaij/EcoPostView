@@ -6,9 +6,10 @@ output:
     toc: true      # Enable table of contents
     toc_depth: 2   # Define the depth of the table of contents
 vignette: >
+  %\VignetteEncoding{UTF-8}
   %\VignetteIndexEntry{"EcoPostView: Ecological Posterior View"}
   %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
+runtime: shiny
 ---
 
 ```{r, include = FALSE,}
@@ -25,7 +26,7 @@ Ecological data is scattered around literature in different formats and very noi
 
 If working with meta-data and uncovering effects from literature, making probability statements and predictions are the goal, this R-package can help make your life easier. The goal of this package is to combine the benefits of multiple fitted Linear and Generalized Linear Models ((G)LMs), using the flexibility and strength of Bayesian meta-analysis to generalized the effects to one pooled (G)LM. This meta-analytically derived (G)LM can be visualized (see the figures below) and used to predict on new data.
 
-```{r intro-plot,  fig.width=7.1, fig.height=4, echo = FALSE, results = "hide"}
+```{r intro-plot,  fig.width=7.1, fig.height=4, echo=F}
 library(EcoPostView)
 library(ggplot2)
 library(cowplot)
@@ -76,6 +77,8 @@ intro_plot <- cowplot::plot_grid(pl1, pl2, rel_widths = c(0.43, 0.57))
 print(intro_plot)
 rm(mod_intro)
 ```
+*Figure 1: Expected evenness of aquatic invertebrates as function of conductivity and fine sediment fraction with a river reach. Left figure display the relation on the response scale while the right figure displays it on the log scale, which gives a better view.*
+
 A large amount of information is available from figures, tables, data sets or combinations between them. In simple words, multiple datasets are needed on which (G)LMs can be fitted (see Kaijser et al, ...). This, however, will show that most data is very noisy, perhaps biased and the heterogeneity among different studies is large. This is an issue if we focus on error-control and causality statements. Both error-control and causality need controlled environment with a well setup experimental conditions and exclusion or modeling of confounding variables. Hence, error-control and causality start a-priori (Fisher 1949, Pearl 2009, Mayo 2018). For an explanation on the topic of error-control connected to the classical (Frequentism) approach see https://snwikaij.shinyapps.io/shiny/. Yet, while error-control a posterior is not possible anymore, this makes the information still useful. It can be used to make probability statements or used to setup a new experiment, focused on error-control or causality. This packages focuses on making posterior probability statements, visualization and prediction from information available from literature. Hence, the goal is to generalize ecological effects from literature, displaying its patterns and predict with it.
 
 # 2. Data and models
@@ -145,7 +148,140 @@ f(\beta \mid Data, Info) =
 \frac{f(Data \mid \beta) \cdot f(\beta \mid Info)}
 {\int f(Data \mid \beta) \cdot f(\beta \mid Info)}
 $$
-Therefore, the posterior nothing more than a function that describes the probability $y$ as a function of $\beta$ conditional on $Data$ and $Info$ ($y=f(\beta \mid Data, Info)$). This cannot be solely conditional on the $Data$ as the $Data$ is not uncertain our information/believe is uncertain about a none existing object $\beta$ (unless Platonism is true). Hence, even if we were wrong or correct about $f(\beta \mid Data, Info)$ nothing would change in reality at all. Hence, uncertainty has nothing to do with reality at all. It becomes now clear that only our own error/information is to be optimized as contrary to frequentism where this error is that of the long-run. It is unfortunately difficult in a world where mistakes are not allowed and "excellence" is the goal that each study has to portray. Hence, models are only useful if their current errors and failures in forecasting future phenomena are openly displayed, allowing us to optimize our understanding of predictive uncertainty until it becomes *acceptable*.
+Therefore, the posterior nothing more than a function that describes the probability $y$ as a function of $\beta$ conditional on $Data$ and $Info$ ($y=f(\beta \mid Data, Info)$). This cannot be solely conditional on the $Data$ as the $Data$ is not uncertain our information/believe is uncertain about a none existing object $\beta$ (unless Platonism is true). Hence, even if we were wrong or correct about $f(\beta \mid Data, Info)$ nothing would change in reality at all. Hence, uncertainty has nothing to do with reality at all. It becomes now clear that only our own error/information is to be optimized as contrary to frequentism where this error is that of the long-run. Hence, the frequentist cannot say something about the prior (hypothesis), it cannot reject hypothesis (which seem to mean that it is false) and it cannot state something about the probability of the parameter (effect) or observations "by chance alone". The strength of the frequentism lies in its objectivity and solidarity (in the long-run) which is however not used.
+Unfortunately the later is difficult in a world where mistakes are not allowed and "excellence" is the goal that each study has to portray (not a repeated long-run of studies). Hence, models are only useful if their current errors and failures in forecasting future phenomena are openly displayed, allowing us to optimize our understanding of predictive uncertainty until it becomes *acceptable*.
+
+Below a simplified example of how the choice of the prior influences the output of the posterior. In this example the prior mean, standard error and skew can be adjusted. Similar, the mean and the standard error of the likelihood can be adjusted. Based on these adjustments the posterior is shaped.
+
+```{r, shiny, echo=FALSE, message=FALSE, warning=FALSE}
+
+library(shiny)
+suppressWarnings({library(VGAM)})
+
+
+ui <- fluidPage(
+  tags$style(type = "text/css", "
+    .container-fluid {
+      width: 95% !important; 
+      max-width: 100% !important;  
+      padding: 0;  
+      height: 800px !important; 
+    }
+    #shiny-app {
+      margin-left: 0;  
+      margin-right: 0;  
+      height: 800px;
+    }
+    .slider {
+      width: 90% !important;  
+    }
+    .plot-output {
+      height: 600px !important;  
+      width: 100% !important;    
+    }
+    .slider-container {
+      margin-bottom: 10px;  
+    }
+  "),
+  
+  mainPanel(
+    width = 12, 
+    fluidRow(
+      column(6, 
+        div(class = "slider-container", 
+          sliderInput(inputId = "slider_prior_mu",
+                      label = "Prior mean",
+                      min = -3, max = 3, value = 0, step = 0.01)),
+      ),
+      column(6,
+        div(class = "slider-container", 
+          sliderInput(inputId = "slider_prior_se",
+                      label = "Prior standard error",
+                      min = 0.01, max = 2, value = 1, step = 0.01))
+      )
+    ),
+    fluidRow(
+      column(6, 
+        div(class = "slider-container", 
+          sliderInput(inputId = "slider_prior_skew",
+                      label = "Prior skew",
+                      min = -3, max = 3, value = 0, step = 0.01))
+      ),
+      column(6,
+        div(class = "slider-container", 
+          sliderInput(inputId = "slider_like_mu",
+                      label = "Likelihood mean (data)",
+                      min = -2, max = 2, value = 0, step = 0.01))
+      )
+    ),
+    fluidRow(
+      column(6, 
+        div(class = "slider-container", 
+          sliderInput(inputId = "slider_like_se",
+                      label = "Likelihood standard error (data)",
+                      min = 0.01, max = 2, value = 0.5, step = 0.01))
+      )
+    ),
+    fluidRow(
+      column(12,
+        plotOutput("Bayes_example", height = "600px", width = "100%")
+      )
+    )
+  )
+)
+
+server <- function(input, output) {
+  
+  output$Bayes_example <- renderPlot({
+    
+    xgrid      <- seq(-5, 5, 0.01)
+    prior      <- VGAM::dskewnorm(xgrid, location = input$slider_prior_mu,
+                                  scale = input$slider_prior_se,
+                                  shape = input$slider_prior_skew)
+    
+    likelihood <- dnorm(xgrid, input$slider_like_mu, input$slider_like_se)
+    posterior  <- likelihood * prior / max(likelihood * prior)
+
+    prior_samp      <- sample(xgrid, 3000, T, prob = prior)
+    like_samp       <- sample(xgrid, 3000, T, prob = likelihood)
+    post_samp       <- sample(xgrid, 3000, T, prob = posterior)
+    
+    text_prior      <- paste0("Prior mean=f(β|Info)=", round(mean(prior_samp), 2),
+                               " (5%=", round(quantile(prior_samp, .05), 2),
+                               ", 95%=", round(quantile(prior_samp, .95), 2), ")")
+    
+    text_like       <- paste0("Likelihood mean=f(Data|β)=", round(mean(like_samp), 2),
+                               " (5%=", round(quantile(like_samp, .05), 2),
+                               ", 95%=", round(quantile(like_samp, .95), 2), ")")
+    
+    text_post       <- paste0("Posterior mean=f(β|Data, Info)=", round(mean(post_samp), 2),
+                               " (5%=", round(quantile(post_samp, .05), 2),
+                               ", 95%=", round(quantile(post_samp, .95), 2), ")")
+
+    display <- data.frame(term = rep(c(text_prior, text_like, text_post), each = length(xgrid)),
+                          x = c(xgrid, xgrid, xgrid),
+                          y = c(prior, likelihood, posterior))
+
+    display$term <- factor(display$term, levels = c(text_prior, text_like, text_post))
+
+    ggplot(display, aes(x = x, y = y)) +
+      geom_line() + xlab("β") +
+      geom_vline(xintercept = 0, col = "tomato3", lty = 2) +
+      facet_wrap(. ~ term, ncol = 1, scales = "free_y") +
+      theme_classic() +
+      theme(plot.title = element_text(hjust = 0.5, size = 18),
+            strip.text.x = element_text(size = 16),
+            legend.position = "none",
+            axis.title.x = element_blank(),
+            axis.title.y = element_blank(),
+            axis.ticks.y = element_blank(),
+            axis.text.x = element_text(size = 14),
+            axis.text.y = element_blank())
+  })
+}
+
+shinyApp(ui = ui, server = server)
+```
 
 Bayesian Model averaging allows multiple ($k$) functions to be utilized in the prior. Hence, multiple possible scenarios that could have been responsible for $\beta$ can be introduced as below.
 $$
@@ -178,9 +314,9 @@ data(example1)
 head(example1)
 
 ```
-In the example above the column **est** (estimate) indicates the estimated model parameters and the column **se** the standard error of the estimate. The column **group** can be an organism group or specific species/taxon (or anything you wish to group by), the column **predictor** the specific predictor variable, the parameter whether the estimate is the intercept (*b0*) or a regression coefficient (*b1*) and the column **link**contains the link function. An additional and recommended option is to include the sample size **n** for adjusting for 'small-sample-effects' (Peters et al., 2006; Moreno et al., 2009).
+In the example above the column **est** (estimate) indicates the estimated model parameters and the column **se** the standard error of the estimate. The column **group** can be an organism group or specific species/taxon (or anything you wish to group by), the column **predictor** the specific predictor variable, the parameter whether the estimate is the intercept (*b0*) or a regression coefficient (*b1*) and the column **link** contains the link function. An additional and recommended option is to include the sample size **n** for adjusting for 'small-sample-effects' (Peters et al., 2006; Moreno et al., 2009).
 
-## 3.1 Basic model structure
+## 3.2 Basic model structure
 
 The meta function can include a random effect, by setting the argument RE=TRUE (default is TRUE). The  structure is then 
 $$\{\beta_{i}, ..., \beta_{n}\}= \beta_{\text{pooled}} + u_i$$
@@ -209,7 +345,7 @@ rm(mod1)
 
 The meta-function can return a warning that the MCMC-chains are not properly mixing. This can be an issue due to various reasons. Where this warning originates from can be assessed by looking at the 'raw' JAGS model output (`mod1$model$JAGS_model`). This could show that a parameter of interested 'mu[.]' Has a a large Rhat or small effective sample size. Most of these issues can be resolved by thinning the chains, increasing the number of chains or setting more informed or stronger priors. Moreover, if the issue is not an issue of the estimated 'mu' parameter, it could be decided to ignore it. These choices are ultimately up to the user. An option to prevent warnings would be to set the warning level for Eff_warn lower i.e., Eff_warn = 500.
 
-## 3.2 Setting priors
+## 3.3 Setting priors
 
 A benefit of the the Bayesian approach is that we can included prior information. Thereby explicitly shifting the weight of the outcome to more plausible values of the pooled model parameter. To set only a single prior for each relation and parameter a specific structure is needed. By default the model parameters are set as Gaussian/normally distributed with a mean ($\mu$, prior_mu) of 0 and standard error ($se$, prior_mu_se) of 0.5. The prior distribution is at the moment restricted to the normal distribution. The prior for the standard deviation ($\sigma$) is uniform where only the maximum value (prior_sigma_max) can be set, which at default is 5. 
 
@@ -234,7 +370,7 @@ print(only_priors)
 rm(only_priors)
 ```
 
-## 3.3 Setting multiple priors for Bayesian Model Averaging
+## 3.4 Setting multiple priors for Bayesian Model Averaging
 
 A benefit of the the Bayesian approach is that we can included multiple ($k$) priors to perform Bayesian Model Averaging (BMA;  Hoeting et al., 1999; Hinne et al., 2020). Thereby explicitly adding multiple possible scenarios that could have generated the observable data and averaging over these plausible explanation. To set multiple priors we need a similar dataset as shown above, but also include prior weights.These prior weights determine how heavy we think this prior model is reasonable. These prior weights could be given any number between 0 (0%) and 1 (100%) so that it preferably adds up to 100%. In the example below there are three priors for each possible model each set as 1/3 (0.33 is also possible). Hence each column vector in example2 is weighted 1/3. The different priors have been set differently, and a broader prior for the intercept is reasonable.
 
@@ -298,9 +434,9 @@ print(pdd$summary)
 
 For larger datasets with multiple groups and predictor variables the order of the PDDs can be changed by using the arguments 'order_predictor' and 'order_group"' needing a character string with the names of the desired order.
 
-## 4.2 hop-function
+## 4.2 hop-function (Hypothetical Outcome Plots)
 
-Hypothetical Outcome Plots are a useful method to visualize the possibilities the expected value could take on given a change in the predictor variable. These are so called HOPs (Kale et al. 2019). The hops lines are a simulation of possibilities from the posterior. Note that the function works under the idea of log transformed variables. This means that xlim (the limits of the figures) as given below are exp(3)=20 and exp(8)=2980 for conductivity. The y-axis is on the response scale. I hop soon to make it possible to use an argument that makes it possible to set the xlim on the raw. Below an example of the outcomes of the response of invertebrate taxonomic richness along  the conductivity gradient. 
+Hypothetical Outcome Plots (HOPs) are a powerful method to visualize the possibilities the expected value could take on given a change in the predictor variable (Kale et al. 2019). The HOPs lines are a simulation of possibilities from the posterior. Note that the function works under the idea of log transformed variables. This means that xlim (the limits of the figures) as given below are exp(3)=20 and exp(8)=2980 for conductivity. The y-axis is on the response scale. I hop soon to make it possible to use an argument that makes it possible to set the xlim on the raw. Below an example of the outcomes of the response of invertebrate taxonomic richness along  the conductivity gradient. 
 
 ```{r HOPs log salinity fig1}
 log_sal1 <- hop(mod2,                                  #object from the meta function
@@ -339,7 +475,7 @@ log_sal2 <- hop(mod2,
 print(log_sal2)
 ```
 
-## 4.3 Partial Dependency Plots (hop-function)
+## 4.3 hop function (and Partial Dependency Plots)
 
 There are multiple predictors is the dataset. Therefore it possible to display the MAP predicted value given a change in one of the two predictors. This can be performed by display in Partial Dependency Plots.
 
@@ -348,8 +484,8 @@ log_sal3 <- hop(mod2,
     group="Invertebrates",                            
     predictor = c("Sediment", "Oxygen"),                     #select both Sediment and Oxygen
     xlab= "Fine sediment fraction",                          #give x-axis a name
-    ylab= expression(Oxygen ~ mg ~ L^-1),                    #give x-axis a name
-    gradient_title = "MAP Invertebrate \ntaxonomic richness",#give the gradient a name
+    ylab= expression(Oxygen ~ mg ~ L^-1),                    #give y-axis a name
+    gradient_title = "MAP Invertebrate \ntaxonomic richness",#give the y-axis gradient a name
     pdp_resolution = 100,                                    #set resolution of the grid
     link_function = "log",
     exp_axis = T, 

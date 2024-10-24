@@ -118,5 +118,5 @@ if(!is.null(object$model$Data$Nsamp)){
   total <- list(bias_se=plot_2_1,
                 bias_se_group=plot_2_2,
                 bias_se_predictor=plot_2_3)}
-return(total)}
+return(invisible(total))}
 

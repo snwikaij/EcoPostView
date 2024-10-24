@@ -1,32 +1,31 @@
 #' Bayesian meta analysis function
 #'
-#' @param estimate Parameter b0 or b1 estimated from a LM or GLM.
-#' @param stderr Standard error belonging to b0 and b1.
-#' @param parameter A category (name) either b0 or b1.
-#' @param predictor  A predictor name (e.g., salinity) as multiple predictors can be handled.
-#' @param link_function The link function of the LM or GLM currently only 'identity', 'logit' and 'log' are supported and will only be used in the hop function.
-#' @param grouping A category (name) for the group as multiple groups can be handled.
-#' @param random An argument that needs to be a vector or  matrix of factors of the same number of rows as the estimate.
-#' @param method Indicates which adjustment performed 0 (='none'), 1 (='egger') or 2 (='peters').
-#' @param RE An argument indicating if RE or FE should be used (default RE=TRUE).
-#' @param Nsamp A vector with the number of samples for each estimate (only used when method = 2).
+#' @param estimate Parameter b0 or b1 estimated from a LM or GLM
+#' @param stderr Standard error belonging to b0 and b1
+#' @param parameter A category (name) either b0 or b1
+#' @param predictor  A predictor name (e.g., salinity) as multiple predictors can be handled
+#' @param link_function The link function of the LM or GLM currently only 'identity', 'logit' and 'log' are supported and will only be used in the hop function
+#' @param grouping A category (name) for the group as multiple groups can be handled
+#' @param random An argument that needs to be a vector or  matrix of factors of the same number of rows as the estimate
+#' @param method Indicates which adjustment performed 0 (='none'), 1 (='egger') or 2 (='peters')
+#' @param RE An argument indicating if RE or FE should be used (default RE=TRUE)
+#' @param Nsamp A vector with the number of samples for each estimate (only used when method = 2)
 #' @param mu_predv Means of the predictor variables used
-#' @param prior_mu Prior for the se which can be vector (Bayesian meta-analysis) or matrix (Bayesian meta-analysis with model averaging).
-#' @param prior_mu_se Prior for the se which can be vector or matrix.
-#' @param prior_sigma_max Prior for sigma is and is a uniform prior starting at 0 restricted and given value (default=5) not used when RE=FALSE.
-#' @param prior_weights Prior weights when Bayesian model averaging is applied.
-#' @param interval Credibility intervals for the summary (default=0.9).
-#' @param get_prior_only If it is unclear how many levels and how to formulate multiple priors for each level this argument will only return a data frame of priors so that formulating priors for levels is easier.
-#' @param n_chain Number of chains.
-#' @param n_thin Thinning interval of the chains.
-#' @param n_seed Seed.
-#' @param n_iter Number of iterations.
+#' @param prior_mu Prior for the se which can be vector (Bayesian meta-analysis) or matrix (Bayesian meta-analysis with model averaging)
+#' @param prior_mu_se Prior for the se which can be vector or matrix
+#' @param prior_sigma_max Prior for sigma is and is a uniform prior starting at 0 restricted and given value (default=5) not used when RE=FALSE
+#' @param prior_weights Prior weights when Bayesian model averaging is applied
+#' @param interval Credibility intervals for the summary (default=0.9)
+#' @param get_prior_only If it is unclear how many levels and how to formulate multiple priors for each level this argument will only return a data frame of priors so that formulating priors for levels is easier
+#' @param n_chain Number of chains
+#' @param n_thin Thinning interval of the chains
+#' @param n_seed Seed
+#' @param n_iter Number of iterations
 #' @param n_burnin Burn-in period
-#' @param Rhat_warn Warning level for Rhat.
-#' @param Eff_warn Warning level for Effective sample size.
+#' @param Rhat_warn Warning level for Rhat
+#' @param Eff_warn Warning level for Effective sample size
+#' @param print_summary If TRUE it prints a summary
 #'
-#' @return
-#' Returns a summary, all chains per level and a list of all model specifications
 #'
 #' @description
 #' Full Bayesian meta-analytic method using Bayesian Model Averaging, with random-effect (RE), fixed-effect (FE) in combination
@@ -102,7 +101,8 @@ meta <- function(estimate, stderr, parameter, predictor,
                 n_iter=10000,
                 n_burnin=1000,
                 Rhat_warn = 1.01,
-                Eff_warn = 1000){
+                Eff_warn = 1000,
+                print_summary=FALSE){
 
   #Combine input to generate levels
   level <- paste(parameter, predictor, link_function, grouping, sep = "_")
@@ -559,7 +559,10 @@ meta <- function(estimate, stderr, parameter, predictor,
                                          if(mod_data$npw>1){
                                            mcmc_podd       <- extract_chain(model$BUGSoutput$sims.list$d, mod_data)}else{mcmc_podd <- NULL}
 
-                                         return(list(Summary=basic_summary,
+                                         if(print_summary==T){
+                                         print(basic_summary)}
+
+                                         return(invisible(list(Summary=basic_summary,
                                                      Estimates=split(mcmc_mu, mcmc_mu$parameter),
                                                      Chains_mu=mcmc_mu,
                                                      Chains_I2=mcmc_I2,
@@ -572,5 +575,5 @@ meta <- function(estimate, stderr, parameter, predictor,
                                                      model=list(Prior_weight=mod_data$pw, JAGS_model=model,
                                                                 Data=mod_data, Priors=data.frame(Levels=levels(mod_data$level),
                                                                                                  Prior_mu=mod_data$Pm,
-                                                                                                 Prior_se=mod_data$Pe))))}}
+                                                                                                 Prior_se=mod_data$Pe)))))}}
 

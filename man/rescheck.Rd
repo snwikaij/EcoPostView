@@ -8,9 +8,8 @@ rescheck(
   object,
   order_predictor = NULL,
   order_group = NULL,
-  interval = 0.931,
-  xlimit = 0.9931,
-  ylimit = c(0.0345, 0.9655),
+  xlimit = 0.9999,
+  ylimit = c(0.025, 0.975),
   b0_out = T
 )
 }
@@ -20,8 +19,6 @@ rescheck(
 \item{order_predictor}{The order of the predictors}
 
 \item{order_group}{The order of the groups}
-
-\item{interval}{the interval for the descriptors}
 
 \item{xlimit}{the upper quantile limit of 1/se or 1/n}
 

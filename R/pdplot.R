@@ -182,5 +182,5 @@ pl1 <- cowplot::plot_grid(groupnameplots, densplots, rel_widths = c(left_label, 
 pl2 <- cowplot::plot_grid(prednameplots, pl1, xtitle, rel_heights = c(top_label, 1-(top_label+0.03), 0.03), ncol = 1)
 dens_list[[i]] <- cowplot::plot_grid(pl2, ytitle, rel_widths = c(0.9, 0.03))}
 
-return(list(posterior_density=dens_list, summary=round(est_df[,-ncol(est_df)],4)))}
+return(invisible(list(posterior_density=dens_list, summary=round(est_df[,-ncol(est_df)],4))))}
 

@@ -20,7 +20,7 @@ meta(
   prior_mu_se = 0.5,
   prior_sigma_max = 5,
   prior_weights = 1,
-  interval = 0.931,
+  interval = 0.9,
   get_prior_only = FALSE,
   n_chain = 2,
   n_thin = 1,
@@ -32,56 +32,55 @@ meta(
 )
 }
 \arguments{
-\item{estimate}{Parameter b0 or b1 estimated from a LM or GLM.}
+\item{estimate}{Parameter b0 or b1 estimated from a LM or GLM}
 
-\item{stderr}{Standard error belonging to b0 and b1.}
+\item{stderr}{Standard error belonging to b0 and b1}
 
-\item{parameter}{A category (name) either b0 or b1.}
+\item{parameter}{A category (name) either b0 or b1}
 
-\item{predictor}{A predictor name (e.g., salinity) as multiple predictors can be handled.}
+\item{predictor}{A predictor name (e.g., salinity) as multiple predictors can be handled}
 
-\item{link_function}{The link function of the LM or GLM currently only 'identity', 'logit' and 'log' are supported and will only be used in the hop function.}
+\item{link_function}{The link function of the LM or GLM currently only 'identity', 'logit' and 'log' are supported and will only be used in the hop function}
 
-\item{grouping}{A category (name) for the group as multiple groups can be handled.}
+\item{grouping}{A category (name) for the group as multiple groups can be handled}
 
-\item{random}{An argument that needs to be a vector or  matrix of factors of the same number of rows as the estimate.}
+\item{random}{An argument that needs to be a vector or  matrix of factors of the same number of rows as the estimate}
 
-\item{method}{Indicates which adjustment performed 0 (='none'), 1 (='egger') or 2 (='peters').}
+\item{method}{Indicates which adjustment performed 0 (='none'), 1 (='egger') or 2 (='peters')}
 
-\item{RE}{An argument indicating if RE or FE should be used (default RE=TRUE).}
+\item{RE}{An argument indicating if RE or FE should be used (default RE=TRUE)}
 
-\item{Nsamp}{A vector with the number of samples for each estimate (only used when method = 2).}
+\item{Nsamp}{A vector with the number of samples for each estimate (only used when method = 2)}
 
 \item{mu_predv}{Means of the predictor variables used}
 
-\item{prior_mu}{Prior for the se which can be vector (Bayesian meta-analysis) or matrix (Bayesian meta-analysis with model averaging).}
+\item{prior_mu}{Prior for the se which can be vector (Bayesian meta-analysis) or matrix (Bayesian meta-analysis with model averaging)}
 
-\item{prior_mu_se}{Prior for the se which can be vector or matrix.}
+\item{prior_mu_se}{Prior for the se which can be vector or matrix}
 
-\item{prior_sigma_max}{Prior for sigma is and is a uniform prior starting at 0 restricted and given value (default=5) not used when RE=FALSE.}
+\item{prior_sigma_max}{Prior for sigma is and is a uniform prior starting at 0 restricted and given value (default=5) not used when RE=FALSE}
 
-\item{prior_weights}{Prior weights when Bayesian model averaging is applied.}
+\item{prior_weights}{Prior weights when Bayesian model averaging is applied}
 
-\item{interval}{Credibility intervals for the summary (default=0.9).}
+\item{interval}{Credibility intervals for the summary (default=0.9)}
 
-\item{get_prior_only}{If it is unclear how many levels and how to formulate multiple priors for each level this argument will only return a data frame of priors so that formulating priors for levels is easier.}
+\item{get_prior_only}{If it is unclear how many levels and how to formulate multiple priors for each level this argument will only return a data frame of priors so that formulating priors for levels is easier}
 
-\item{n_chain}{Number of chains.}
+\item{n_chain}{Number of chains}
 
-\item{n_thin}{Thinning interval of the chains.}
+\item{n_thin}{Thinning interval of the chains}
 
-\item{n_seed}{Seed.}
+\item{n_seed}{Seed}
 
-\item{n_iter}{Number of iterations.}
+\item{n_iter}{Number of iterations}
 
 \item{n_burnin}{Burn-in period}
 
-\item{Rhat_warn}{Warning level for Rhat.}
+\item{Rhat_warn}{Warning level for Rhat}
 
-\item{Eff_warn}{Warning level for Effective sample size.}
-}
-\value{
-Returns a summary, all chains per level and a list of all model specifications
+\item{Eff_warn}{Warning level for Effective sample size}
+
+\item{print_summary}{If TRUE it prints a summary}
 }
 \description{
 Full Bayesian meta-analytic method using Bayesian Model Averaging, with random-effect (RE), fixed-effect (FE) in combination

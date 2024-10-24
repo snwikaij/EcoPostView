@@ -196,5 +196,5 @@ one_plot <- ggplot(pred_grid, aes(x = x, y = y, fill = yhat)) +
     axis.title.x = element_text(size = xlabsize),
     axis.title.y = element_text(size = ylabsize))}else{stop("Only max two predictor variables are currently supported")}
 
-return(one_plot)}
+return(invisible(one_plot))}
 

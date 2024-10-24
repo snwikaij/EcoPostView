@@ -3,13 +3,12 @@ title: "EcoPostView: Ecological Posterior View"
 author: Willem (Wim) Kaijser
 output: 
   rmarkdown::html_vignette:
-    toc: true      # Enable table of contents
-    toc_depth: 2   # Define the depth of the table of contents
+    toc: true      
+    toc_depth: 2
 vignette: >
   %\VignetteEncoding{UTF-8}
   %\VignetteIndexEntry{"EcoPostView: Ecological Posterior View"}
   %\VignetteEngine{knitr::rmarkdown}
-runtime: shiny
 ---
 
 ```{r, include = FALSE,}
@@ -148,142 +147,10 @@ f(\beta \mid Data, Info) =
 \frac{f(Data \mid \beta) \cdot f(\beta \mid Info)}
 {\int f(Data \mid \beta) \cdot f(\beta \mid Info)}
 $$
-Therefore, the posterior nothing more than a function that describes the probability $y$ as a function of $\beta$ conditional on $Data$ and $Info$ ($y=f(\beta \mid Data, Info)$). This cannot be solely conditional on the $Data$ as the $Data$ is not uncertain our information/believe is uncertain about a none existing object $\beta$ (unless Platonism is true). Hence, even if we were wrong or correct about $f(\beta \mid Data, Info)$ nothing would change in reality at all. Hence, uncertainty has nothing to do with reality at all. It becomes now clear that only our own error/information is to be optimized as contrary to frequentism where this error is that of the long-run. Hence, the frequentist cannot say something about the prior (hypothesis), it cannot reject hypothesis (which seem to mean that it is false) and it cannot state something about the probability of the parameter (effect) or observations "by chance alone". The strength of the frequentism lies in its objectivity and solidarity (in the long-run) which is however not used.
+Therefore, the posterior nothing more than a function that describes the probability $y$ as a function of $\beta$ conditional on $Data$ and $Info$ ($y=f(\beta \mid Data, Info)$). This cannot be solely conditional on the $Data$ as the $Data$ is not uncertain our information/believe is uncertain about a none existing object $\beta$ (unless Platonism is true). Hence, even if we were wrong or correct about $f(\beta \mid Data, Info)$ nothing would change in reality at all. Hence, uncertainty has nothing to do with reality at all. It becomes now clear that only our own error/information is to be optimized as contrary to frequentism where this error is that of the long-run. Hence, the frequentist cannot say something about the prior (hypothesis), it cannot reject hypothesis (which seem to mean that it is false) and it cannot state something about the probability of the parameter (effect) or observations "by chance alone". The strength of the frequentism lies in its objectivity and solidarity (in the long-run), which is, however, not used.
 Unfortunately the later is difficult in a world where mistakes are not allowed and "excellence" is the goal that each study has to portray (not a repeated long-run of studies). Hence, models are only useful if their current errors and failures in forecasting future phenomena are openly displayed, allowing us to optimize our understanding of predictive uncertainty until it becomes *acceptable*.
 
-Below a simplified example of how the choice of the prior influences the output of the posterior. In this example the prior mean, standard error and skew can be adjusted. Similar, the mean and the standard error of the likelihood can be adjusted. Based on these adjustments the posterior is shaped.
-
-```{r, shiny, echo=FALSE, message=FALSE, warning=FALSE}
-
-library(shiny)
-suppressWarnings({library(VGAM)})
-
-
-ui <- fluidPage(
-  tags$style(type = "text/css", "
-    .container-fluid {
-      width: 95% !important; 
-      max-width: 100% !important;  
-      padding: 0;  
-      height: 800px !important; 
-    }
-    #shiny-app {
-      margin-left: 0;  
-      margin-right: 0;  
-      height: 800px;
-    }
-    .slider {
-      width: 90% !important;  
-    }
-    .plot-output {
-      height: 600px !important;  
-      width: 100% !important;    
-    }
-    .slider-container {
-      margin-bottom: 10px;  
-    }
-  "),
-  
-  mainPanel(
-    width = 12, 
-    fluidRow(
-      column(6, 
-        div(class = "slider-container", 
-          sliderInput(inputId = "slider_prior_mu",
-                      label = "Prior mean",
-                      min = -3, max = 3, value = 0, step = 0.01)),
-      ),
-      column(6,
-        div(class = "slider-container", 
-          sliderInput(inputId = "slider_prior_se",
-                      label = "Prior standard error",
-                      min = 0.01, max = 2, value = 1, step = 0.01))
-      )
-    ),
-    fluidRow(
-      column(6, 
-        div(class = "slider-container", 
-          sliderInput(inputId = "slider_prior_skew",
-                      label = "Prior skew",
-                      min = -3, max = 3, value = 0, step = 0.01))
-      ),
-      column(6,
-        div(class = "slider-container", 
-          sliderInput(inputId = "slider_like_mu",
-                      label = "Likelihood mean (data)",
-                      min = -2, max = 2, value = 0, step = 0.01))
-      )
-    ),
-    fluidRow(
-      column(6, 
-        div(class = "slider-container", 
-          sliderInput(inputId = "slider_like_se",
-                      label = "Likelihood standard error (data)",
-                      min = 0.01, max = 2, value = 0.5, step = 0.01))
-      )
-    ),
-    fluidRow(
-      column(12,
-        plotOutput("Bayes_example", height = "600px", width = "100%")
-      )
-    )
-  )
-)
-
-server <- function(input, output) {
-  
-  output$Bayes_example <- renderPlot({
-    
-    xgrid      <- seq(-5, 5, 0.01)
-    prior      <- VGAM::dskewnorm(xgrid, location = input$slider_prior_mu,
-                                  scale = input$slider_prior_se,
-                                  shape = input$slider_prior_skew)
-    
-    likelihood <- dnorm(xgrid, input$slider_like_mu, input$slider_like_se)
-    posterior  <- likelihood * prior / max(likelihood * prior)
-
-    prior_samp      <- sample(xgrid, 3000, T, prob = prior)
-    like_samp       <- sample(xgrid, 3000, T, prob = likelihood)
-    post_samp       <- sample(xgrid, 3000, T, prob = posterior)
-    
-    text_prior      <- paste0("Prior mean=f(β|Info)=", round(mean(prior_samp), 2),
-                               " (5%=", round(quantile(prior_samp, .05), 2),
-                               ", 95%=", round(quantile(prior_samp, .95), 2), ")")
-    
-    text_like       <- paste0("Likelihood mean=f(Data|β)=", round(mean(like_samp), 2),
-                               " (5%=", round(quantile(like_samp, .05), 2),
-                               ", 95%=", round(quantile(like_samp, .95), 2), ")")
-    
-    text_post       <- paste0("Posterior mean=f(β|Data, Info)=", round(mean(post_samp), 2),
-                               " (5%=", round(quantile(post_samp, .05), 2),
-                               ", 95%=", round(quantile(post_samp, .95), 2), ")")
-
-    display <- data.frame(term = rep(c(text_prior, text_like, text_post), each = length(xgrid)),
-                          x = c(xgrid, xgrid, xgrid),
-                          y = c(prior, likelihood, posterior))
-
-    display$term <- factor(display$term, levels = c(text_prior, text_like, text_post))
-
-    ggplot(display, aes(x = x, y = y)) +
-      geom_line() + xlab("β") +
-      geom_vline(xintercept = 0, col = "tomato3", lty = 2) +
-      facet_wrap(. ~ term, ncol = 1, scales = "free_y") +
-      theme_classic() +
-      theme(plot.title = element_text(hjust = 0.5, size = 18),
-            strip.text.x = element_text(size = 16),
-            legend.position = "none",
-            axis.title.x = element_blank(),
-            axis.title.y = element_blank(),
-            axis.ticks.y = element_blank(),
-            axis.text.x = element_text(size = 14),
-            axis.text.y = element_blank())
-  })
-}
-
-shinyApp(ui = ui, server = server)
-```
-
-Bayesian Model averaging allows multiple ($k$) functions to be utilized in the prior. Hence, multiple possible scenarios that could have been responsible for $\beta$ can be introduced as below.
+Bayesian Model averaging has the advantages that it allows multiple ($k$) functions to be utilized as prior. Hence, multiple possible scenarios that could have been responsible for $\beta$ can be introduced as below.
 $$
 f(\beta \mid Data,Info) = \frac{f(Data \mid \beta) \cdot f_k(\beta \mid Info)}{\int \left( \sum_{k=1}^{k} f(Data \mid \beta) \cdot f_k(\beta \mid Info) \right)}
 $$

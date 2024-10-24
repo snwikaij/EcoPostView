@@ -282,7 +282,26 @@ mod2$Summary
 ```
 The results of the meta-analysis are summarized in a table describing Maximum A Priori values (MAP), the $\mu$, $se$ and the high density intervals at default (90%). Additionally the $I2$ heterogeneity is given.
 
-This is the most difficult part where the data needs to be gathered and extracted, (G)LMs need to be fitted, priors need to formulated and the whole model needs to be optimized to get a stable results. To display or predict with the models requires less time.
+## 3.5 rescheck-function and bias
+
+After analyzing the the meta-data also a check for bias should be performed. This can be via various methods. I believe this this should be a sensitivity analysis using various methods: Display of the z-distribution, Egger's test, Peters tests and/or funnel plots. Hence, there is always bias, but in the data you have it might be small.
+
+A simple option is to visually asses the relation of the residuals relative to $1/se$ and if sample sizes is provided in the data $1/n$. If a clear diagonal pattern is visual this means that there is a strong relation of the $\beta$ to $se$ which can indicate the selection of only larger effects with broader intervals, p-hacking or noise in the data. A relation with $n$ often occurs when small sample sizes an noise result in so called 'small-study-effects'. There are different ways to asses the residuals relation relative to $1/se$ or $1/n$: in total, per group or per predictor. 
+
+```{r, residual check}
+res_mod2 <- rescheck(mod2)
+```
+Below the residuals per group in relation to $1/se$
+```{r, residuals group, fig.width=7.1, fig.height=4, warning=FALSE, echo=FALSE}
+print(res_mod2$bias_se_group)
+```
+and the residuals per predictor in relation to $1/se$
+```{r, residuals predictor, fig.width=7.1, fig.height=4, warning=FALSE, echo=FALSE}
+print(res_mod2$bias_se_predictor)
+```
+The dotted red line should more-or-less-ish overlay the solid blue line having an intercept and slope of 0. Small sample sizes can strongly influence the slope of this line. When bias is present then a different correction method can be selected or stronger priors can set to reduce this.
+
+This was the most difficult part where the data needs to be gathered and extracted, (G)LMs need to be fitted, priors need to formulated, bias needs to be assessed and the whole model needs to be optimized to get a stable results. To display or predict with the models requires less time.
 
 # 4. Display
 
@@ -335,7 +354,7 @@ log_sal1 <- hop(mod2,                                  #object from the meta fun
     hop_lwd = 0.3)                                     #set width of the hop lines
 ```
 
-```{r fig log_sal1, fig.width=7.1, fig.height=4, echo=FALSE}
+```{r fig log_sal1, fig.width=7.1, fig.height=4,  warning=FALSE, echo=FALSE}
 print(log_sal1)
 ```
 
@@ -356,7 +375,7 @@ log_sal2 <- hop(mod2,
     round_x_axis = 0)                                 #round the notation to full integers        
 ```
 
-```{r fig log_sal2, fig.width=7.1, fig.height=4, echo=FALSE}
+```{r fig log_sal2, fig.width=7.1, fig.height=4,  warning=FALSE, echo=FALSE}
 print(log_sal2)
 ```
 
@@ -380,7 +399,7 @@ log_sal3 <- hop(mod2,
     ylim=c(1.61, 2.89)) 
 ```
 
-```{r fig log_sal3, fig.width=7.1, fig.height=4, echo=FALSE}
+```{r fig log_sal3, fig.width=7.1, fig.height=4,  warning=FALSE, echo=FALSE}
 print(log_sal3)
 ```
 

@@ -25,7 +25,6 @@
 #' @param Eff_warn Warning level for Effective sample size
 #' @param print_summary If TRUE it prints a summary
 #'
-#'
 #' @description
 #' Full Bayesian meta-analytic method using Bayesian Model Averaging, with random-effect (RE), fixed-effect (FE) in combination
 #' with Egger adjustment using inverse of the standard error (1/SE) (Moreno et al., 2009; Stanley  and Doucouliagos, 2013) or Peters adjustment (Moreno et al., 2009) using
@@ -587,7 +586,7 @@ meta <- function(estimate, stderr, parameter, predictor,
                                                      Residuals=mcmc_mu_resid,
                                                      x_hat=x_hat,
                                                      N_level=table(mod_data$level),
-                                                     model=list(Prior_weight=mod_data$pw, JAGS_model=model,
+                                                     model=list(JAGS_model=model,
                                                                 Data=mod_data, Priors=data.frame(Levels=levels(mod_data$level),
                                                                                                  Prior_mu=mod_data$Pm,
                                                                                                  Prior_se=mod_data$Pe)))))}}

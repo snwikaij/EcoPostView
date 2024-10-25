@@ -19,7 +19,6 @@ meta(
   prior_mu = 0,
   prior_mu_se = 0.5,
   prior_sigma_max = 5,
-  prior_weights = 1,
   interval = 0.9,
   get_prior_only = FALSE,
   n_chain = 2,
@@ -28,7 +27,8 @@ meta(
   n_iter = 10000,
   n_burnin = 1000,
   Rhat_warn = 1.01,
-  Eff_warn = 1000
+  Eff_warn = 1000,
+  print_summary = FALSE
 )
 }
 \arguments{
@@ -59,8 +59,6 @@ meta(
 \item{prior_mu_se}{Prior for the se which can be vector or matrix}
 
 \item{prior_sigma_max}{Prior for sigma is and is a uniform prior starting at 0 restricted and given value (default=5) not used when RE=FALSE}
-
-\item{prior_weights}{Prior weights when Bayesian model averaging is applied}
 
 \item{interval}{Credibility intervals for the summary (default=0.9)}
 

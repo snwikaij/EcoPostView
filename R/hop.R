@@ -59,6 +59,22 @@ if(exp_disp == T & exp_axis==T){stop("Exponentiating and scaling the axis are no
 #maximum a posterior value
 maxpost <- function(x){d <- density(x); d$x[which.max(d$y)]}
 
+if(!is.null(object$xhat)){
+#Select constants for marginal predictions
+bc_df <- object$Estimates$b1[object$Estimates$b1$group == group & object$Estimates$b1$link == link_function,]
+bc_df <- bc_df[!bc_df$predictor %in% predictor,]
+
+#Return the map of each parameter not displayed
+bc    <- aggregate(data=bc_df, estimate~predictor, maxpost)
+bc_mu <- setNames(cbind.data.frame(do.call(rbind, strsplit(as.character(object$x_hat$level),split="_")), object$x_hat$mu_predv),
+                  c("parameter", "predictor", "link", "group", "mu"))
+
+bc_mu       <- bc_mu[bc_mu$group == group & bc_mu$link == link_function,][-c(1,3:4)]
+df_constant <- merge(bc, bc_mu, by="predictor")[-1]
+
+#Calculate the constant
+constant   <- sum(apply(df_constant, 1, prod))}else{constant <- 1}
+
 if(length(predictor)==1){
 #generate warning for limits
 if(all(xlimit == c(-5, 10))){warning("xlimit is in default, check if this is appropriate.")}
@@ -85,24 +101,24 @@ hops_df  <- data.frame(b0=b0_df$estimate, b1=b1_df$estimate)
 hops_df  <- hops_df[sample(1:nrow(hops_df), nr_hops, F),]
 
 #one hop line
-oneHOP <- function(b0, b1, x, link, j){
+oneHOP <- function(b0, b1, constant, x, link, j){
 
-  if(link == "identity"){h <- cbind(j, x, y=b0+b1*x)}
-  if(link == "log"){h <- cbind(j,  x, y=exp(b0+b1*x))}
-  if(link == "logit"){h <- cbind(j, x, y=plogis(b0+b1*x))}
+  if(link == "identity"){h <- cbind(j, x, y=b0+b1*x+constant)}
+  if(link == "log"){h <- cbind(j,  x, y=exp(b0+b1*x+constant))}
+  if(link == "logit"){h <- cbind(j, x, y=plogis(b0+b1*x+constant))}
 
   return(h)}
 
 #generate hop lines
 hop_lines <- vector("list", nr_hops)
-for(i in 1:nr_hops){hop_lines[[i]] <- oneHOP(hops_df$b0[i]+shift_b0, hops_df$b1[i], xl, link_function, i)}
+for(i in 1:nr_hops){hop_lines[[i]] <- oneHOP(hops_df$b0[i]+shift_b0, hops_df$b1[i], constant, xl, link_function, i)}
 
 #all hop lines in data frame format
 hops_realized   <- as.data.frame(do.call(rbind, hop_lines))
 hops_realized$j <- as.factor(hops_realized$j)
 
 #the expected value
-expected <-as.data.frame(oneHOP(maxpost(b0_df$estimate)+shift_b0, maxpost(b1_df$estimate), xl, link_function, 1))
+expected <-as.data.frame(oneHOP(maxpost(b0_df$estimate)+shift_b0, maxpost(b1_df$estimate), constant, xl, link_function, 1))
 
 #set limits for hops
 if(is.null(ylimit)){
@@ -155,9 +171,9 @@ if(exp_disp == F){
 pred_grid <- expand.grid(x=seq(xlimit[1], xlimit[2], length.out=pdp_resolution),
                          y=seq(ylimit[1], ylimit[2], length.out=pdp_resolution))
 
-if(link_function == 'identity'){pred_grid$yhat <- (b0_theta+shift_b0+b1_theta_x*pred_grid$x+b1_theta_y*pred_grid$y)}
-if(link_function == 'log'){pred_grid$yhat      <- exp(b0_theta+shift_b0+b1_theta_x*pred_grid$x+b1_theta_y*pred_grid$y)}
-if(link_function == 'logit'){pred_grid$yhat    <- plogis(b0_theta+shift_b0+b1_theta_x*pred_grid$x+b1_theta_y*pred_grid$y)}}
+if(link_function == 'identity'){pred_grid$yhat <- (b0_theta+shift_b0+b1_theta_x*pred_grid$x+b1_theta_y*pred_grid$y+constant)}
+if(link_function == 'log'){pred_grid$yhat      <- exp(b0_theta+shift_b0+b1_theta_x*pred_grid$x+b1_theta_y*pred_grid$y+constant)}
+if(link_function == 'logit'){pred_grid$yhat    <- plogis(b0_theta+shift_b0+b1_theta_x*pred_grid$x+b1_theta_y*pred_grid$y+constant)}}
 
 #create grid on exp scale
 if(exp_disp == T & exp_axis == F){

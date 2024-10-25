@@ -14,7 +14,6 @@
 #' @param prior_mu Prior for the se which can be vector (Bayesian meta-analysis) or matrix (Bayesian meta-analysis with model averaging)
 #' @param prior_mu_se Prior for the se which can be vector or matrix
 #' @param prior_sigma_max Prior for sigma is and is a uniform prior starting at 0 restricted and given value (default=5) not used when RE=FALSE
-#' @param prior_weights Prior weights when Bayesian model averaging is applied
 #' @param interval Credibility intervals for the summary (default=0.9)
 #' @param get_prior_only If it is unclear how many levels and how to formulate multiple priors for each level this argument will only return a data frame of priors so that formulating priors for levels is easier
 #' @param n_chain Number of chains
@@ -92,7 +91,6 @@ meta <- function(estimate, stderr, parameter, predictor,
                 prior_mu=0,
                 prior_mu_se=0.5,
                 prior_sigma_max=5,
-                prior_weights=1,
                 interval=0.9,
                 get_prior_only = FALSE,
                 n_chain = 2,
@@ -110,6 +108,13 @@ meta <- function(estimate, stderr, parameter, predictor,
   #Unique number of levels
   Ll <- length(unique(level))
 
+  #If multiple priors and weights are given asses the number
+  if(is.null(nrow(prior_mu)) && length(prior_mu) == 1 &&
+     is.null(nrow(prior_mu_se)) && length(prior_mu_se) == 1){
+    npw <- 1}else if(is.data.frame(prior_mu) && is.data.frame(prior_mu_se) &&
+                     ncol(prior_mu) == ncol(prior_mu_se)){npw <- ncol(prior_mu)
+    }else{stop(paste0("The the priors are not nummeric or the priors for prior_mu and prior_mu_se are not of the same dimensions."))}
+
   #If prior mu is given appoint to data
   if(is.numeric(prior_mu) && nrow(prior_mu) == 1 | is.numeric(prior_mu) && is.null(nrow(prior_mu))){
     prior_mu        <- rep(prior_mu, Ll)
@@ -121,14 +126,6 @@ meta <- function(estimate, stderr, parameter, predictor,
     prior_mu_se     <- rep(prior_mu_se, Ll)
   }else if(
     nrow(prior_mu_se) != Ll){stop(paste0("The length of the priors for se (n=", length(prior_mu_se),") is not the same as the length of unique levels (n=", Ll, ")."))}
-
-  #If multiple priors and weights are given asses the number
-  if(is.data.frame(prior_mu) && is.data.frame(prior_mu_se) &&
-     any(apply(prior_mu,2,is.numeric)) && any(apply(prior_mu,2,is.numeric))  &&
-     length(prior_weights) == ncol(prior_mu) && length(prior_weights) == ncol(prior_mu_se)){
-    npw <- length(prior_weights)}else if(!is.data.frame(prior_mu) && !is.data.frame(prior_mu_se) &&
-                                         is.numeric(prior_mu) && length(prior_weights) == 1 && is.numeric(prior_mu_se) && length(prior_weights) == 1){
-      npw <- length(prior_weights)}else{stop(paste0("The length of the prior model weights (n=",length(prior_weights),") is not the same as the length of the different model priors provided."))}
 
   #a random effect data frame
   if(!is.null(random) && is.data.frame(random)){
@@ -156,8 +153,8 @@ meta <- function(estimate, stderr, parameter, predictor,
                    Pm=prior_mu,
                    Pe=prior_mu_se,
                    Ps=prior_sigma_max,
-                   pw=prior_weights,
                    npw=npw,
+                   alpha_pw=rep(1, npw),
                    random=random,
                    R=RL,
                    method=method)
@@ -185,6 +182,9 @@ meta <- function(estimate, stderr, parameter, predictor,
 
                                             sigma  ~ dunif(0, Ps)
 
+                                            ##Stochastic behavior for the weights
+                                            pw[1:npw] ~ ddirch(alpha_pw[1:npw])
+
                                             ##priors
                                             for(j in 1:L){
                                               beta_adjust[j]~ dnorm(0, 1/0.5^2)
@@ -192,8 +192,8 @@ meta <- function(estimate, stderr, parameter, predictor,
 
                                               for(k in 1:npw){
                                                 mu_M[j,k]    ~ dnorm(Pm[j,k], 1/Pe[j,k]^2)}
-                                              d[j]         ~ dcat(pw[1:npw])
-                                              mu[j]        <- inprod(mu_M[j, 1:npw], d[j] == 1:npw)}
+                                                d[j]         ~ dcat(pw[1:npw])
+                                                mu[j]        <- inprod(mu_M[j, 1:npw], d[j] == 1:npw)}
 
                                             #I2 per level
                                             for(l in 1:L){
@@ -213,6 +213,9 @@ meta <- function(estimate, stderr, parameter, predictor,
                                               resid <- est-mu2
 
                                               sigma  ~ dunif(0, Ps)
+
+                                              ##Stochastic behavior for the weights
+                                              pw[1:npw] ~ ddirch(alpha_pw[1:npw])
 
                                               ##priors
                                               for(j in 1:L){
@@ -243,6 +246,9 @@ meta <- function(estimate, stderr, parameter, predictor,
                                               resid <- est-mu2
 
                                               sigma  ~ dunif(0, Ps)
+
+                                              ##Stochastic behavior for the weights
+                                              pw[1:npw] ~ ddirch(alpha_pw[1:npw])
 
                                               ##priors
                                               for(j in 1:L){
@@ -354,6 +360,9 @@ meta <- function(estimate, stderr, parameter, predictor,
 
                                              resid <- est-mu1
 
+                                             ##Stochastic behavior for the weights
+                                             pw[1:npw] ~ ddirch(alpha_pw[1:npw])
+
                                              ##priors
                                              for(j in 1:L){
                                                beta_adjust[j]   ~ dnorm(0, 1/0.5^2)
@@ -375,6 +384,9 @@ meta <- function(estimate, stderr, parameter, predictor,
                                                    tau1[i] <- 1/(se[i]^2)}
 
                                                  resid <- est-mu1
+
+                                                 ##Stochastic behavior for the weights
+                                                 pw[1:npw] ~ ddirch(alpha_pw[1:npw])
 
                                                  ##priors
                                                  for(j in 1:L){
@@ -398,6 +410,9 @@ meta <- function(estimate, stderr, parameter, predictor,
                                                    tau1[i] <- 1/(se[i]^2)}
 
                                                  resid <- est-mu1
+
+                                                 ##Stochastic behavior for the weights
+                                                 pw[1:npw] ~ ddirch(alpha_pw[1:npw])
 
                                                  ##priors
                                                  for(j in 1:L){

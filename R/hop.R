@@ -125,8 +125,8 @@ axis_x_dim <-  ggplot2::scale_x_continuous(breaks = seq(min(hops_realized$x), ma
 
 one_plot <- ggplot(hops_realized, aes(x, y, group=as.factor(j)))+
        ylim(miny, maxy)+xlab_text+ylab_text+
-       geom_line(lwd=hop_lwd, alpha=hop_alpha, col=hop_col)+
-       geom_line(data=expected, aes(x, y), lwd=expected_lwd, inherit.aes = F)+
+       geom_line(lwd=hop_lwd, alpha=hop_alpha, col=hop_col, na.rm = T)+
+       geom_line(data=expected, aes(x, y), lwd=expected_lwd, inherit.aes = F, na.rm = T)+
        theme_classic()+axis_x_dim+
        theme(legend.position = "none",
              axis.text.x = element_text(size=xtextsize),

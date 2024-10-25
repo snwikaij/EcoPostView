@@ -75,7 +75,7 @@ intro_plot <- cowplot::plot_grid(pl1, pl2, rel_widths = c(0.43, 0.57))
 print(intro_plot)
 rm(mod_intro)
 ```
-*Figure 1: Expected evenness of aquatic invertebrates as function of conductivity and fine sediment fraction with a river reach. Left figure display the relation on the response scale while the right figure displays it on the log scale, which gives a better view.*
+*Figure 1: Expected evenness of aquatic invertebrates as a function of conductivity and fine sediment fraction within a river reach. The left panel shows the relationship on the response scale, while the right panel presents it on the log scale for improved visualization.*
 
 A large amount of information is available from figures, tables, data sets or combinations between them. In simple words, multiple datasets are needed on which (G)LMs can be fitted (see Kaijser et al, ...). This, however, will show that most data is very noisy, perhaps biased and the heterogeneity among different studies is large. This is an issue if we focus on error-control and causality statements. Both error-control and causality need controlled environment with a well setup experimental conditions and exclusion or modeling of confounding variables. Hence, error-control and causality start a-priori (Fisher 1949, Pearl 2009, Mayo 2018). For an explanation on the topic of error-control connected to the classical (Frequentism) approach see https://snwikaij.shinyapps.io/shiny/. Yet, while error-control a posterior is not possible anymore, this makes the information still useful. It can be used to make probability statements or used to setup a new experiment, focused on error-control or causality. This packages focuses on making posterior probability statements, visualization and prediction from information available from literature. Hence, the goal is to generalize ecological effects from literature, displaying its patterns and predict with it.
 
@@ -256,7 +256,11 @@ rm(only_priors)
 
 ## 3.4 Setting multiple priors for Bayesian Model Averaging
 
-A benefit of the the Bayesian approach is that we can included multiple ($k$) priors to perform Bayesian Model Averaging (BMA;  Hoeting et al., 1999; Hinne et al., 2020). Thereby explicitly adding multiple possible scenarios that could have generated the observable data and averaging over these plausible explanation. To set multiple priors we need a similar dataset as shown above, but also include prior weights.These prior weights determine how heavy we think this prior model is reasonable. These prior weights could be given any number between 0 (0%) and 1 (100%) so that it preferably adds up to 100%. In the example below there are three priors for each possible model each set as 1/3 (0.33 is also possible). Hence each column vector in example2 is weighted 1/3. The different priors have been set differently, and a broader prior for the intercept is reasonable.
+A benefit of the the Bayesian approach is that we can included multiple ($k$) priors to perform Bayesian Model Averaging (BMA;  Hoeting et al., 1999; Hinne et al., 2020). Thereby explicitly adding multiple possible scenarios that could have generated the observable data and averaging over these plausible explanation. To set multiple priors we need a similar dataset as shown above.
+
+Often prior weights are added, which indicate how heavy a prior weighs in the model. These prior weights could any number between 0 (0%) and 1 (100%) so that it preferably adds up to 100%. To avoid the already increasing complex model on could set these to equal weights. For example, if there are three priors then each weighs 1/3. However to avoid fumbling around with this one could also decide that these prior weights are uncertain and treat them a stochastic by letting them arise from a Dirichlet distribution $weight \sim Dir(\alpha_i)$ where $\alpha_i=1$ if the number ($i$) of prior distributions is >1. Meaning the Dirichlet distribution is 'uniform'.
+
+In the example below the priors have varying values for the parameters $mu$ and $se$, and a broader prior $N(\mu=0, se=10)$ for the intercept is reasonable.
 
 ``` {r meta3 BMA}
 data("example2")
@@ -270,7 +274,6 @@ mod2 <- meta(estimate=example1$est,
                     grouping=example1$group,
                     prior_mu=example2[c(2,4,6)],          #prior for the mean
                     prior_mu_se=example2[c(3,5,7)],       #prior for the standard error of the mean
-                    prior_weights=c(1/3, 1/3, 1/3),       #prior weights
                     Nsamp=example1$n,            
                     method=2,
                     n_thin=10,                            #thinning the chains

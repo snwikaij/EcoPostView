@@ -114,7 +114,7 @@ $$
 P(\text{Data} | \beta) = \frac{P(\text{Data} \cap \beta)}{P(\beta)}
 $$
 **Premise 2)**
-Also, the joint probability is expressed as a set-theoretic relationship indicating that element of both sets is the same.
+Also, the joint probability, expressed as a set-theoretic relationship, indicates that element of both sets are the same.
 $$
 z = \{x : x \in \beta \cap Data : x \in Data \cap \beta\}
 $$
@@ -148,7 +148,8 @@ f(\beta \mid Data, Info) =
 $$
 This expression is sometimes simplified to
 $$f(\beta \mid Data, Info) = f(Data \mid \beta) \propto f(\beta \mid Info)$$
-Where the $\propto$ symbol indicates 'proportional to' highlighting the idea of exchangeability. Therefore, the posterior nothing more than a function that describes the probability $y$ as a function of $\beta$ conditional on $Data$ and $Info$ ($y=f(\beta \mid Data, Info)$). This cannot be solely conditional on the $Data$ as the $Data$ is not uncertain our information/believe is uncertain about a none existing object $\beta$ (unless Platonism is true). Hence, even if we were wrong or correct about $f(\beta \mid Data, Info)$ nothing would change in reality at all. Hence, uncertainty has nothing to do with reality at all. It becomes now clear that only our own error/information is to be optimized as contrary to frequentism where this error is that of the long-run. Hence, the frequentist cannot say something about the prior (hypothesis), it cannot reject hypothesis (which seem to mean that it is false) and it cannot state something about the probability of the parameter (effect) or observations "by chance alone". The strength of the frequentism lies in its objectivity and solidarity (in the long-run), which is, however, not used.
+Where the $\propto$ symbol indicates 'proportional to' highlighting the idea of exchangeability. Therefore, the posterior nothing more than a function that describes the probability $y$ as a function of $\beta$ conditional on $Data$ and $Info$ ($y=f(\beta \mid Data, Info)$). This cannot be solely conditional on the $Data$ as the $Data$ is not uncertain our information/believe is uncertain about a none existing object $\beta$ (unless Platonism is true). Hence, even if we were wrong or correct about $f(\beta \mid Data, Info)$ nothing would change in reality at all. Hence, uncertainty has nothing to do with reality at all. It becomes now clear that only our own error/information is to be optimized as contrary to frequentism where this error is that of the long-run. Hence, the frequentist cannot say something about the prior (hypothesis), it cannot reject hypothesis (which seem to mean that it is false) and it cannot state something about the probability of the parameter (effect) or observations "by chance alone". The strength of the frequentism lies in its objectivity and solidarity (in the long-run), which is, however, not used. 
+
 Unfortunately the later is difficult in a world where mistakes are not allowed and "excellence" is the goal that each study has to portray (not a repeated long-run of studies). Hence, models are only useful if their current errors and failures in forecasting future phenomena are openly displayed, allowing us to optimize our understanding of predictive uncertainty until it becomes *acceptable*.
 
 Bayesian Model averaging has the advantages that it allows multiple ($k$) functions to be utilized as prior. Hence, multiple possible scenarios that could have been responsible for $\beta$ can be introduced as below.
@@ -212,7 +213,7 @@ or inverse of the sample size $1/n$ (method=2, the latter option is performed be
 $$\{\beta_{i}, ..., \beta_{n}\} = \beta_{\text{pooled}} + u_i + \alpha_{i} \cdot \left(\frac{1}{n}\right)$$ 
 Of course if bias is considered neglect non can be performed (method=0). I still would like to include a third 4th option to utilize Robust Bayesian Model Averaging (RoBMA: Maier et al. 2023). But this sometimes adjust extremely when including $1/se$ and therefore I left this option open for now.
 
-An additional feature is the possibility to include the mean ($\hat{x}$) of the predictor gradient. This is later utilized in the display of the the results as Hypothetical Outcome Plots (HOPs) or in Partial Dependency plots (PDPs). This is optional but, advised because HOPs and PDPs are generate by given marginal predictions using one predictor variable holding all other predictor variables constant. If these values are not given the other variables are hold constant at 0. 
+An additional feature is the possibility to include the mean ($\hat{x}$) of the predictor gradient. This is later utilized in the display of the the results as Hypothetical Outcome Plots (HOPs) or in Partial Dependency plots (PDPs). This is optional but, advised because HOPs and PDPs are generate by given marginal predictions using one predictor variable holding all other predictor variables constant. If these values are not given the other variables are hold constant at the sum of the parameter estimations ($\sum_{j=1}^{j} \beta_j$). Note that the $log(\hat{x})$) is used, because the model were fit on log-transformed gradients to calculated the elasticity- or semi-elasticity coefficients. This is not exact, because the $\hat{x}(log(x))$ geometric mean is not the same as the same at the arithmetic mean $log(\hat{x})$. There are multiple options to handle this the simplest being directly deriving the $\hat{x}(log(x))$ from the data, but will address this later. This issues are however not so drastic in displaying the marginal changes.
 
 ```{r meta1}
 mod1 <- meta(estimate=example1$est,         #Model estimate
@@ -223,7 +224,7 @@ mod1 <- meta(estimate=example1$est,         #Model estimate
              grouping=example1$group,       #Group
              Nsamp=example1$n,              #Sample size (optional, for adjustment 2=Peters (1/n)),
              method=2,                      #Adjustment method (0=none, 1=Egger's (1/se), 2=Peters (1/n))
-             mu_predv=example1$mean)      #The mean of the predictor variables (optional but advised)
+             mu_predv=log(example1$mean))   #The log(mean) of the predictor variables (optional but advised)
 
 
 #remove model to keep the environment clean
@@ -250,7 +251,7 @@ only_priors <- meta(estimate=example1$est,
                     grouping=example1$group,       
                     Nsamp=example1$n,            
                     method=2,
-                    mu_predv=example1$mean,
+                    mu_predv=log(example1$mean),
                     get_prior_only=TRUE) #Only show the structure of the priors
 
 print(only_priors)
@@ -281,7 +282,7 @@ mod2 <- meta(estimate=example1$est,
                     prior_mu_se=example2[c(3,5,7)],       #prior for the standard error of the mean
                     Nsamp=example1$n,            
                     method=2,
-                    mu_predv=example1$mean,
+                    mu_predv=log(example1$mean),
                     n_thin=10,                            #thinning the chains
                     n_chain=4)                            #changing the number of chains from 2 to 4
 
@@ -366,7 +367,7 @@ log_sal1 <- hop(mod2,                                  #object from the meta fun
     link_function = "log",                             #which link function out of log and logit
     ylab="Invertebrate taxonomic richness",            #give y-axis a name
     xlim=c(3, 8),                                      #give y-axis a name
-    ylim=c(0, 25),                                     #set  limits y-axis
+    ylim=c(0, 50),                                     #set  limits y-axis
     hop_lwd = 0.3)                                     #set width of the hop lines
 ```
 
@@ -374,8 +375,7 @@ log_sal1 <- hop(mod2,                                  #object from the meta fun
 print(log_sal1)
 ```
 
-It is also possible to scale to display the exponentiate values on the x-axis using the argument
-'exp_axis'. The observant reader might notice the taxonomic richness is ~15 under lower conductivity. This is correct, because the majority of the literature publish does not focus on species richness, it often focuses on order or family richness.
+It is also possible to scale to display the exponentiate values on the x-axis using the argument 'exp_axis'. The observant reader might notice the taxonomic richness is ~20 under lower conductivity. This is correct, because the majority of the literature published does not focus on species richness, it often focuses on the richness of family or orders. There is a possibility to adjust this by using the 'shift_b0' argument which requires a single number that is added to the intercept.
 
 ```{r HOPs log salinity fig2}
 log_sal2 <- hop(mod2,                                   
@@ -385,7 +385,7 @@ log_sal2 <- hop(mod2,
     link_function = "log",                            
     ylab="Invertebrate taxonomic richness",            
     xlim=c(3, 8),                                      
-    ylim=c(0, 25),                                     
+    ylim=c(0, 50),                                     
     hop_lwd = 0.3,                                    
     exp_axis = T,                                     #exponentiate the x-axis notations
     round_x_axis = 0)                                 #round the notation to full integers        
@@ -412,7 +412,7 @@ log_sal3 <- hop(mod2,
     round_x_axis = 2,
     round_y_axis = 0,
     xlim=c(-4.61, -0.92),
-    ylim=c(1.61, 2.89)) 
+    ylim=c(1.61, 2.77)) 
 ```
 
 ```{r fig log_sal3, fig.width=7.1, fig.height=4,  warning=FALSE, echo=FALSE}

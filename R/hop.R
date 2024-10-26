@@ -59,7 +59,7 @@ if(exp_disp == T & exp_axis==T){stop("Exponentiating and scaling the axis are no
 #maximum a posterior value
 maxpost <- function(x){d <- density(x); d$x[which.max(d$y)]}
 
-if(!is.null(object$xhat)){
+if(!is.null(object$x_hat)){
 #Select constants for marginal predictions
 bc_df <- object$Estimates$b1[object$Estimates$b1$group == group & object$Estimates$b1$link == link_function,]
 bc_df <- bc_df[!bc_df$predictor %in% predictor,]
@@ -73,7 +73,14 @@ bc_mu       <- bc_mu[bc_mu$group == group & bc_mu$link == link_function,][-c(1,3
 df_constant <- merge(bc, bc_mu, by="predictor")[-1]
 
 #Calculate the constant
-constant   <- sum(apply(df_constant, 1, prod))}else{constant <- 1}
+constant   <- sum(apply(df_constant, 1, prod))}else{
+
+#Select constants for marginal predictions
+bc_df <- object$Estimates$b1[object$Estimates$b1$group == group & object$Estimates$b1$link == link_function,]
+bc_df <- bc_df[!bc_df$predictor %in% predictor,]
+
+#Return the sum of map of each parameter not displayed
+constant  <- sum(aggregate(data=bc_df, estimate~predictor, maxpost)[-1])}
 
 if(length(predictor)==1){
 #generate warning for limits

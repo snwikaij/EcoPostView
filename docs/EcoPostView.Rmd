@@ -23,7 +23,7 @@ knitr::opts_chunk$set(
 
 Ecological data is scattered around literature in different formats and very noisy. It is often 'case-study' specific and not representative for the totality if conditions encountered. However, as ecologist we are not interested in case specific situations, but making probability statements on general effects, visualizing and predicting with them.
 
-If working with meta-data and uncovering effects from literature, making probability statements and predictions are the goal, this R-package can help make your life easier. The goal of this package is to combine the benefits of multiple fitted Linear and Generalized Linear Models ((G)LMs), using the flexibility and strength of Bayesian meta-analysis to generalized the effects to one pooled (G)LM. This meta-analytically derived (G)LM can be visualized (see the Fig. 1 below) and used to predict on new data.
+If working with meta-data and uncovering effects from literature, making probability statements and predictions are of help in reaching a research goal, this R-package can help make your life easier. The goal of this package is to combine the benefits of multiple fitted Linear and Generalized Linear Models ((G)LMs), using the flexibility and strength of Bayesian meta-analysis to generalized the effects to one pooled (G)LM. This meta-analytically derived (G)LM can be visualized (see the Fig. 1 below) and used to predict on new data.
 
 ```{r intro-plot,  fig.width=7.1, fig.height=4, echo=F}
 library(EcoPostView)
@@ -77,33 +77,36 @@ rm(mod_intro)
 ```
 *Figure 1: Expected evenness of aquatic invertebrates as a function of conductivity and fine sediment fraction within a river reach. The left panel shows the relationship on the response scale, while the right panel presents it on the log scale for improved visualization.*
 
-A large amount of information is available from figures, tables, data sets or combinations between them. In simple words, multiple datasets are needed on which (G)LMs can be fitted (see Kaijser et al, ...). This, however, will show that most data is very noisy, perhaps biased and the heterogeneity among different studies is large. This is an issue if we focus on error-control and causality statements. Both error-control and causality need controlled environment with a well setup experimental conditions and exclusion or modeling of confounding variables. Hence, error-control and causality start a-priori (Fisher 1949, Pearl 2009, Mayo 2018). For an explanation on the topic of error-control connected to the classical (Frequentism) approach see https://snwikaij.shinyapps.io/shiny/. Yet, while error-control a posterior is not possible anymore, this makes the information still useful. It can be used to make probability statements or used to setup a new experiment, focused on error-control or causality. This packages focuses on making posterior probability statements, visualization and prediction from information available from literature. Hence, the goal is to generalize ecological effects from literature, displaying its patterns and predict with it.
+A large amount of information is available from figures, tables, data sets or combinations between them. However, these are hardly utilized in a consistent fashion. In simple words, multiple datasets are needed on which (G)LMs can be fitted (see Kaijser et al, ...). This, however, will show that most data is very noisy, perhaps biased and the heterogeneity among different studies is large. This is an issue if we focus on error-control and causality statements. Both error-control and causality need controlled environment with a well setup experimental conditions and exclusion or modeling of confounding variables. Hence, error-control and causality start a-priori (Fisher 1949, Pearl 2009, Mayo 2018, For an explanation on the topic of error-control connected to the classical (Frequentism) approach see https://snwikaij.shinyapps.io/shiny/). Yet, while error-control a posterior is not possible anymore, this makes the information still useful. It can be used to make probability statements or used to setup a new experiment, focused on error-control or causality. This packages focuses on making posterior probability statements, visualization and prediction from information available from literature. Hence, the goal is to generalize ecological effects from literature, displaying its patterns and predict with it.
 
 # 2. Data and models
 
 ## 2.1 (Generalized) Linear Models (G)LMs and extracting data
 
-To use this package data is needed and on this data (G)LMs we need to fitted. This (meta-)data can be obtained from figures (e.g., using WebPlotDigitizer), tables, data sets or combinations between them (See Kaijser et al. ...). The effects we are talking of are not really effects but model parameters. These parameters are more commonly known as the intercept or slope. The intercept (*b0* or *β0*) and slope (*b1* or *β1*) can be used to predict: *response variable = b0 + b1 · predictor variable*. By knowing *b0* and *b1* we can give the model a single or multiple new observations (*i*) values for *x* and make a prediction. In a GLM the response variable is linked to to the linear component with a link-function often notated as *g(..)*. The 'identity' link function applies no link function. This indicates that the mean (expected value of *y* notated as *E(y)* or *(E(y|x))*) is directly related to the linear component.
+To use this package data is needed and on this data (G)LMs we need to fitted. This (meta-)data can be obtained from figures (e.g., using WebPlotDigitizer), tables (i.e., extrected by converting pdf to Excel files), data sets and combinations between them (See Kaijser et al. ...). The effects we are talking of are not really 'effects' but model parameters. These parameters are more commonly known as the intercept or slope. The intercept (*b0* or *β0*) and slope (*b1* or *β1*) can be used to predict using the following equation: *response variable = b0 + b1 · predictor variable*. By knowing *b0* and *b1* we can give the model a single or multiple new values (*i*) for *x* and make a prediction. However, in a GLM the response variable is linked to to the linear component with a link-function often notated as *g(..)*. The 'identity' link function applies no link function. This indicates that the mean (expected value of *y* notated as *E(y)* or *(E(y|x))*) is directly related to the linear component.
 $$g(E(y_{i} \mid x_{i})) = \beta_0 + \beta_1 \cdot x_{i}$$ 
 However, in a GLM with, log- or logit-link it is easier to talk about log-linear relation 
 $$log(E(y_{i} \mid x_{i})) = \beta_0 + \beta_1 \cdot x_{i}$$ 
 or logit-linear relation
 $$logit(E(y_{i} \mid x_{i})) = \beta_0 + \beta_1 \cdot x_{i}$$
-The slope in a GLM not a true slope anymore because there is not straight line anymore that links the response (*y*) and predictor variable (*x*). Therefore the term coefficient or regression coefficient refers to the model parameter ($\beta$). 
+The slope in a GLM not a true slope anymore because there is not straight line anymore that links the response (*y*) and predictor variable (*x*). It is however still a linear model because the model parameters are still constructed  as the linear equation. Therefore the term coefficient or regression coefficient refers to the model parameter ($\beta$). 
 
-Heuristically, I prefer working often working with elasticity- or semi-elasticity coefficients (Woolridge, 2001). In this example I also use the elasticity- or semi-elasticity coefficients. But, there are enough reasons not to do so and is dependent on the question, data and many other factors. 
+Heuristically, I prefer working often working with elasticity- or semi-elasticity coefficients (Woolridge, 2001). In this example I use the elasticity- or semi-elasticity coefficients. But, there are enough reasons not to do so and is dependent on the question, data and many other factors. 
 
 The elasticity coefficient expresses the percentage change of $y$ (response) as relative to $x$ (predictor variable). Thus, 0.2 is 0.2% change in $y$ given 1% in $x$. Hence, for a log-linear model $log(E(y \mid x)) = \beta_0 + \beta_1 \cdot log(x)$
-and thus $\beta_1 = \frac{\log(y)}{\log(x)}$. For the semi-elasticity coefficient (i.e., logit-linear) this only accounts partially and values closer 0 are better interpret able because $logit(E(y \mid x)) = \beta_0 + \beta_1 \cdot log(x)$ and thus $\beta_1 = \frac{logit(y)}{\log(x)}$. This expressed the  change in the log-odds per 1% elasticity (Cramer 1991; Woolridge, 2001). This makes it possible to coarsely compare among different models and still keep the interpretation of to the units needed for prediction. Hence, we can still predict with the model and interpret the expected change of $y$ given an increase in $1·log(x)$, because the units of $x$ are retain under the $log$.
+and thus $\beta_1 = \frac{\log(y)}{\log(x)}$. For the semi-elasticity coefficient (i.e., logit-linear) this only accounts partially and values closer 0 are better interpret able because $logit(E(y \mid x)) = \beta_0 + \beta_1 \cdot log(x)$ and thus $\beta_1 = \frac{logit(y)}{\log(x)}$. This expressed the  change in the log-odds per 1% elasticity (Cramer 1991; Woolridge, 2001). This makes it possible to compare among different models and predictors and still keep the interpretation of to the units needed for prediction. Hence, we can still predict with the model and interpret the expected change of $y$ given an increase in $1·log(x)$, because the units of $x$ are retain under the $log$. This is not possible with so called 'standardized effect-sizes', which cannot be *meaningfully* be interpreted nor can be used to predict.
 
-Keep these 'unofficial expressions' in mind, due to the reference in the R-package to *b0* and *b1* while a proper notation would of course be more formally expressed as: 
+Keep these 'unofficial expressions' *b0* and *b1* in mind, due to the reference in the R-package to the expressions $\beta_0$ and $\beta_1$. The expression from the models above would be more properly  notated more formally expressed: 
 $$g(E(y_{i} \mid x_{ij})) = \sum_{j=1}^{j} \beta_j \cdot x_{ij}$$
-Where $x_{ij}$ refers to the $j$ the predictor variable (e.g., salinity is $j$=1 and light is $j$=2) and $i$ is the $i$-th observation.
+Where $x_{ij}$ refers to the $j$ the predictor variable (e.g., salinity is $j$=1 and light is $j$=2) and $i$ is the $i$-th observation. This expression will later be utilized in the explanation of the visualisation.
 
 ## 2.2. Bayes Theorem
 
-Since this R-package is mostly using Bayesian inference an introduction to Bayes Theorem might be of interested. While it is not necessary need for the utilization of the R-package. If this is not of interest one could skip this part. Perhaps it is more to formulate my own "idea" of it. Informally Bayes Theorem would be notated $\text{Posterior}\, \text{probability} = \frac{\text{Likelihood} \cdot \text{Prior}}{\text{Evidence}}$. More formally Bayes theorem is often notated with A and B where P indicates probability and '|' given or conditional on.$P(A \mid B) = \frac{P(B \mid A) \cdot P(A)}{P(B)}$. However, to connect it to models $A=\beta$ and $B=Data$. Where $\beta$ denotes the model parameter and $Data$ the available data.
-The derivation of Bayes theorem relies on the exchangeability of probabilities, while classically 'A' and 'B' are used for reference to the text where A = $\beta$ and B = $Data$.
+Since this R-package is mostly using Bayesian inference an introduction to Bayes Theorem might be of interested. While it is not necessary needed for the utilization of the R-package itself. If this is not of interest or it already familiar to you one could skip this part. Perhaps it is also more to formulate my own "idea" of it. 
+
+Informally Bayes Theorem would be notated $\text{Posterior}\, \text{probability} = \frac{\text{Likelihood} \cdot \text{Prior}}{\text{Evidence}}$. More formally Bayes theorem is often notated with A and B where P indicates probability and '|' given or conditional on.$P(A \mid B) = \frac{P(B \mid A) \cdot P(A)}{P(B)}$. However, to connect it to models $A=\beta$ and $B=Data$. Where $\beta$ denotes the model parameter and $Data$ the available data.
+
+The derivation of Bayes theorem relies on the exchangeability of probabilities, while classically 'A' and 'B' are used for reference to the later text where A = $\beta$ and B = $Data$. 
 
 **Premise 1)**
 $$
@@ -114,7 +117,7 @@ $$
 P(\text{Data} | \beta) = \frac{P(\text{Data} \cap \beta)}{P(\beta)}
 $$
 **Premise 2)**
-Also, the joint probability, expressed as a set-theoretic relationship, indicates that element of both sets are the same.
+Also, the joint probability, expressed as a set-theoretic relationship on $z$, indicates that element of both sets are the same.
 $$
 z = \{x : x \in \beta \cap Data : x \in Data \cap \beta\}
 $$
@@ -123,7 +126,7 @@ $$
 P(\beta \cap Data) = P(Data \cap \beta)
 $$
 **Premise 3)**
-Thus:
+In accordance with the previous
 $$
 P(\beta | Data) \cdot P(\beta) = P(\beta \cap Data)
 $$
@@ -132,7 +135,7 @@ $$
 P(Data | \beta) \cdot P(Data) = P(Data \cap \beta)
 $$
 **Conclusion)**
-Therefore:
+Therefore
 $$
 P(\beta | Data) \cdot P(\beta) = P(Data | \beta) \cdot P(Data)
 $$
@@ -140,19 +143,19 @@ $$
 P(\beta | Data) = \frac{P(Data | \beta) \cdot P(\beta)}{P(Data)}
 $$
 
-The issue is that here the subjectivity of the prior and the function '$f$' of the probability distribution are not that transparent in my honest opinion. where a function is nothing more than a 'rule' that maps $x$ to $y$ and so $y=f(x)$. Hence, probability is a mapping function, mapping an expectation of $x$ to $y$. The probability can be any function (although some might disagree). In this case the prior probability is a function of both the $Data$ and prior information ($Info$). 
+The issue is that here the subjectivity of the prior and the function '$f$' of the probability distribution are not that transparent in my honest opinion. Here a 'function' is nothing more than a 'rule' that maps $x$ to $y$ and so $y=f(x)$. Hence, probability is a mapping function, mapping an expectation of $x$ to $y$. The probability can be any function (although some might disagree). In this case the prior probability is a function of both the $Data$ and prior information ($Info$). For transparency the condition $Info$ is therefore introduced into the expression. 
 $$
 f(\beta \mid Data, Info) = 
 \frac{f(Data \mid \beta) \cdot f(\beta \mid Info)}
 {\int f(Data \mid \beta) \cdot f(\beta \mid Info)}
 $$
-This expression is sometimes simplified to
+The integral in the denominator is used to scale the posterior probability to one. This expression is sometimes simplified to
 $$f(\beta \mid Data, Info) = f(Data \mid \beta) \propto f(\beta \mid Info)$$
-Where the $\propto$ symbol indicates 'proportional to' highlighting the idea of exchangeability. Therefore, the posterior nothing more than a function that describes the probability $y$ as a function of $\beta$ conditional on $Data$ and $Info$ ($y=f(\beta \mid Data, Info)$). This cannot be solely conditional on the $Data$ as the $Data$ is not uncertain our information/believe is uncertain about a none existing object $\beta$ (unless Platonism is true). Hence, even if we were wrong or correct about $f(\beta \mid Data, Info)$ nothing would change in reality at all. Hence, uncertainty has nothing to do with reality at all. It becomes now clear that only our own error/information is to be optimized as contrary to frequentism where this error is that of the long-run. Hence, the frequentist cannot say something about the prior (hypothesis), it cannot reject hypothesis (which seem to mean that it is false) and it cannot state something about the probability of the parameter (effect) or observations "by chance alone". The strength of the frequentism lies in its objectivity and solidarity (in the long-run), which is, however, not used. 
+Where the $\propto$ symbol indicates 'proportional to' highlighting the idea of exchangeability. Therefore, the posterior is nothing more than a function that describes the probability $y$ as a function of $\beta$ conditional on $Data$ and $Info$ ($y=f(\beta \mid Data, Info)$). This cannot be solely conditional on the $Data$ as the $Data$ is not uncertain our information/believe is uncertain about a none existing object $\beta$ (unless Platonism is true). Hence, even if we were wrong or correct about $f(\beta \mid Data, Info)$ nothing would change in reality at all, because uncertainty has nothing to do with *reality* at all. It becomes now clear that only our own error/information is to be optimized as contrary to frequentism where this error is that of the long-run. Hence, the frequentist cannot say something about the prior (hypothesis), it cannot reject hypothesis (which seem to mean that it is false) and it cannot state something about the probability of the parameter (effect) or observations "by chance alone". The strength of the frequentism lies in its objectivity and solidarity (in the long-run), which is, however, not used. 
 
-Unfortunately the later is difficult in a world where mistakes are not allowed and "excellence" is the goal that each study has to portray (not a repeated long-run of studies). Hence, models are only useful if their current errors and failures in forecasting future phenomena are openly displayed, allowing us to optimize our understanding of predictive uncertainty until it becomes *acceptable*.
+Unfortunately the later is difficult in a world where mistakes are not allowed, "novelty" and "excellence" are the goal that each study. Therefore, every study has to portray the results as "true" (not a repeated long-run of studies, which is impossible if novelty is required). Hence, models are only useful if their current errors and failures in forecasting future phenomena are openly displayed, allowing us to optimize our understanding of predictive uncertainty until it becomes *acceptable*.
 
-Bayesian Model averaging has the advantages that it allows multiple ($k$) functions to be utilized as prior. Hence, multiple possible scenarios that could have been responsible for $\beta$ can be introduced as below.
+In the previous part a single prior model was used. Bayesian Model Averaging (BMA) has the advantages that it allows multiple ($k$) functions to be utilized as prior. Hence, multiple possible scenarios that could have been responsible for $\beta$ can be introduced as below.
 $$
 f(\beta \mid Data,Info) = \frac{f(Data \mid \beta) \cdot f_k(\beta \mid Info)}{\int \left( \sum_{k=1}^{k} f(Data \mid \beta) \cdot f_k(\beta \mid Info) \right)}
 $$

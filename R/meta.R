@@ -10,7 +10,6 @@
 #' @param method Indicates which adjustment performed 0 (='none'), 1 (='egger') or 2 (='peters')
 #' @param RE An argument indicating if RE or FE should be used (default RE=TRUE)
 #' @param Nsamp A vector with the number of samples for each estimate (only used when method = 2)
-#' @param mu_predv Means of the predictor variables used
 #' @param prior_mu Prior for the se which can be vector (Bayesian meta-analysis) or matrix (Bayesian meta-analysis with model averaging)
 #' @param prior_mu_se Prior for the se which can be vector or matrix
 #' @param prior_sigma_max Prior for sigma is and is a uniform prior starting at 0 restricted and given value (default=5) not used when RE=FALSE
@@ -86,7 +85,6 @@
 meta <- function(estimate, stderr, parameter, predictor,
                 link_function, grouping, random=NULL,
                 method=0, RE=TRUE, Nsamp=NULL,
-                mu_predv=NULL,
                 prior_mu=0,
                 prior_mu_se=0.5,
                 prior_sigma_max=5,
@@ -494,11 +492,6 @@ meta <- function(estimate, stderr, parameter, predictor,
                                          #Warning messages for bad mixing chains
                                          if(any(c(model$BUGSoutput$summary[-1,8]>Rhat_warn, model$BUGSoutput$summary[-1,9]<Eff_warn))){warning("The Rhat or/and effective sample size for some >",Rhat_warn," or/and <",Eff_warn,". Chains might not be mixing.")}
 
-                                         #Means of predictor variables
-                                         if(length(mod_data$level) == length(mu_predv)){
-                                         x_hat <- aggregate(data=data.frame(level=mod_data$level, mu_predv),
-                                                            mu_predv~level, function(x) mean(x, na.rm=T))}else{x_hat <- NULL}
-
                                          #Function to extract chains
                                          extract_chain <- function(chains, data){
 
@@ -584,7 +577,6 @@ meta <- function(estimate, stderr, parameter, predictor,
                                                      Chains_adjust=mcmc_adjust,
                                                      Chains_podd=mcmc_podd,
                                                      Residuals=mcmc_mu_resid,
-                                                     x_hat=x_hat,
                                                      N_level=table(mod_data$level),
                                                      model=list(JAGS_model=model,
                                                                 Data=mod_data, Priors=data.frame(Levels=levels(mod_data$level),

@@ -59,28 +59,12 @@ if(exp_disp == T & exp_axis==T){stop("Exponentiating and scaling the axis are no
 #maximum a posterior value
 maxpost <- function(x){d <- density(x); d$x[which.max(d$y)]}
 
-if(!is.null(object$x_hat)){
-#Select constants for marginal predictions
-bc_df <- object$Estimates$b1[object$Estimates$b1$group == group & object$Estimates$b1$link == link_function,]
-bc_df <- bc_df[!bc_df$predictor %in% predictor,]
-
-#Return the map of each parameter not displayed
-bc    <- aggregate(data=bc_df, estimate~predictor, maxpost)
-bc_mu <- setNames(cbind.data.frame(do.call(rbind, strsplit(as.character(object$x_hat$level),split="_")), object$x_hat$mu_predv),
-                  c("parameter", "predictor", "link", "group", "mu"))
-
-bc_mu       <- bc_mu[bc_mu$group == group & bc_mu$link == link_function,][-c(1,3:4)]
-df_constant <- merge(bc, bc_mu, by="predictor")[-1]
-
-#Calculate the constant
-constant   <- sum(apply(df_constant, 1, prod))}else{
-
 #Select constants for marginal predictions
 bc_df <- object$Estimates$b1[object$Estimates$b1$group == group & object$Estimates$b1$link == link_function,]
 bc_df <- bc_df[!bc_df$predictor %in% predictor,]
 
 #Return the sum of map of each parameter not displayed
-constant  <- sum(aggregate(data=bc_df, estimate~predictor, maxpost)[-1])}
+constant  <- sum(aggregate(data=bc_df, estimate~predictor, maxpost)[-1])
 
 if(length(predictor)==1){
 #generate warning for limits
@@ -104,7 +88,7 @@ if(nr_hops>minhop){
   warning(paste("nr_hop can not be larger than", minhop))
   nr_hops <- minhop}
 
-hops_df  <- data.frame(b0=b0_df$estimate, b1=b1_df$estimate)
+hops_df  <- data.frame(b0=b0_df$estimate, b1=b1_df$estimate, constant=constant)
 hops_df  <- hops_df[sample(1:nrow(hops_df), nr_hops, F),]
 
 #one hop line

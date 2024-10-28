@@ -216,8 +216,6 @@ or inverse of the sample size $1/n$ (method=2, the latter option is performed be
 $$\{\beta_{i}, ..., \beta_{n}\} = \beta_{\text{pooled}} + u_i + \alpha_{i} \cdot \left(\frac{1}{n}\right)$$ 
 Of course if bias is considered neglect non can be performed (method=0). I still would like to include a third 4th option to utilize Robust Bayesian Model Averaging (RoBMA: Maier et al. 2023). But this sometimes adjust extremely when including $1/se$ and therefore I left this option open for now.
 
-An additional feature is the possibility to include the mean ($\hat{x}$) of the predictor gradient. This is later utilized in the display of the the results as Hypothetical Outcome Plots (HOPs) or in Partial Dependency plots (PDPs). This is optional but, advised because HOPs and PDPs are generate by given marginal predictions using one predictor variable holding all other predictor variables constant. If these values are not given the other variables are hold constant at the sum of the parameter estimations ($\sum_{j=1}^{j} \beta_j$). Note that the $log(\hat{x})$) is used, because the model were fit on log-transformed gradients to calculated the elasticity- or semi-elasticity coefficients. This is not exact, because the $\hat{x}(log(x))$ geometric mean is not the same as the same at the arithmetic mean $log(\hat{x})$. There are multiple options to handle this the simplest being directly deriving the $\hat{x}(log(x))$ from the data, but will address this later. This issues are however not so drastic in displaying the marginal changes.
-
 ```{r meta1}
 mod1 <- meta(estimate=example1$est,         #Model estimate
              stderr=example1$se,            #Standard error of the model estimate
@@ -226,8 +224,7 @@ mod1 <- meta(estimate=example1$est,         #Model estimate
              link_function=example1$link,   #Link function
              grouping=example1$group,       #Group
              Nsamp=example1$n,              #Sample size (optional, for adjustment 2=Peters (1/n)),
-             method=2,                      #Adjustment method (0=none, 1=Egger's (1/se), 2=Peters (1/n))
-             mu_predv=log(example1$mean))   #The log(mean) of the predictor variables (optional but advised)
+             method=2)                      #Adjustment method (0=none, 1=Egger's (1/se), 2=Peters (1/n))
 
 
 #remove model to keep the environment clean
@@ -254,7 +251,6 @@ only_priors <- meta(estimate=example1$est,
                     grouping=example1$group,       
                     Nsamp=example1$n,            
                     method=2,
-                    mu_predv=log(example1$mean),
                     get_prior_only=TRUE) #Only show the structure of the priors
 
 print(only_priors)
@@ -285,7 +281,6 @@ mod2 <- meta(estimate=example1$est,
                     prior_mu_se=example2[c(3,5,7)],       #prior for the standard error of the mean
                     Nsamp=example1$n,            
                     method=2,
-                    mu_predv=log(example1$mean),
                     n_thin=10,                            #thinning the chains
                     n_chain=4)                            #changing the number of chains from 2 to 4
 
@@ -353,12 +348,12 @@ For larger datasets with multiple groups and predictor variables the order of th
 ## 4.2 hop-function (Hypothetical Outcome Plots)
 
 Hypothetical Outcome Plots (HOPs) are a powerful method to visualize the possibilities the expected value could take on given a change in the predictor variable (Kale et al. 2019).
-HOPs lines display the marginal change of the expected value given a change in the predictor variable holding all other variables constant. In the first code chunk of chapter 3.2. it was advised to include the mean $\hat{x}$ of each $j$ predictor gradient. Hence, now we have all ingredient to use the equation below to generate a hypothetical prediction.
+HOPs lines display the marginal change of the expected value given a change in the predictor variable holding all other variables constant.
 
 $$
 g(E(y_{i} \mid x_{ij)})) = \beta_{pooled,j=0,m} + \beta_{pooled,j=1,m} \cdot x_{i,j=1}+ \sum_{j=1}^{j} \beta_{pooled,j} \cdot \hat{x}_{j}
 $$
-This hypothetical prediction is generated using the posterior estimates $f(\beta_{pooled}|Data, Info)$. Hence, this parameter describes the influence on the response give one unit change in the predictor. To display this change a set of sequential values for $x_{i,j=1}$ can be generated as $x_{i,j=1}=\{i, ..., n\}$ realistic for the observed gradient. The function $f(\beta_{pooled,j}|Data, Info)$ contains most plausible values for $\beta_{pooled,j}$. By generating a value $m$ from this function $\beta_{pooled,j,m}\sim f(\beta_{pooled,j}|Data, Info)$ and repeating it $m$ times a bunch of hypothetical outcomes can be generated. To arrive at a representative display, all other estimated parameters are held constant at the sum of their product with $\hat{x}_{j}$. The HOPs lines are therefore simulation of (marginal) possibilities from the posterior. 
+This hypothetical prediction is generated using the posterior estimates $f(\beta_{pooled}|Data, Info)$. Hence, this parameter describes the influence on the response give one unit change in the predictor. To display this change a set of sequential values for $x_{i,j=1}$ can be generated as $x_{i,j=1}=\{i, ..., n\}$ realistic for the observed gradient. The function $f(\beta_{pooled,j}|Data, Info)$ contains most plausible values for $\beta_{pooled,j}$. By generating a value $m$ from this function $\beta_{pooled,j,m}\sim f(\beta_{pooled,j}|Data, Info)$ and repeating it $m$ times a bunch of hypothetical outcomes can be generated. To arrive at this display, all other estimated parameters are held constant at the sum the other estimates $\sum_{j=1}^{j} \beta_{pooled,j}$. The HOPs lines are therefore simulation of (marginal) possibilities from the posterior. 
 
 Note that the function works under the idea of log transformed variables. This means that argument xlim (the limits of the figures) as given below are exp(3)=20 and exp(8)=2980 for conductivity. The y-axis is on the response scale. I hope soon to make it possible to use an argument that makes it possible to set the xlim on the response scale. Below an example of the outcomes of the response of invertebrate taxonomic richness along  the conductivity gradient. 
 

@@ -15,10 +15,10 @@ meta(
   method = 0,
   RE = TRUE,
   Nsamp = NULL,
-  mu_predv = NULL,
   prior_mu = 0,
   prior_mu_se = 0.5,
   prior_sigma_max = 5,
+  hypothesis = F,
   interval = 0.9,
   get_prior_only = FALSE,
   n_chain = 2,
@@ -51,8 +51,6 @@ meta(
 \item{RE}{An argument indicating if RE or FE should be used (default RE=TRUE)}
 
 \item{Nsamp}{A vector with the number of samples for each estimate (only used when method = 2)}
-
-\item{mu_predv}{Means of the predictor variables used}
 
 \item{prior_mu}{Prior for the se which can be vector (Bayesian meta-analysis) or matrix (Bayesian meta-analysis with model averaging)}
 

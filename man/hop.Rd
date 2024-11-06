@@ -12,8 +12,9 @@ hop(
   nr_hops = 1500,
   hop_lwd = 1.2,
   hop_alpha = 0.05,
-  hop_col = "grey60",
+  hop_col = "dodgerblue1",
   expected_lwd = 0.8,
+  expected_col = "dodgerblue4",
   hop_resolution = 300,
   pdp_resolution = 30,
   exp_disp = F,
@@ -49,9 +50,11 @@ hop(
 
 \item{hop_alpha}{The transparency of the hop-lines}
 
-\item{hop_col}{The color of the hop-lines}
+\item{hop_col}{The color (or Colour for the grammar freak) of the hop-lines}
 
 \item{expected_lwd}{The line width of the hop-lines}
+
+\item{expected_col}{The color of the line describing the expected value}
 
 \item{hop_resolution}{The resolution of the hop lines}
 
@@ -83,7 +86,7 @@ hop(
 
 \item{ytextsize}{The size of the y-axis text}
 
-\item{gadient_col}{Color (or Colour for the grammar freak) for the gradient}
+\item{gadient_col}{The color of the line describing the gradient}
 
 \item{round_axis}{Round the number on the axis}
 }

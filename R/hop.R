@@ -7,15 +7,16 @@
 #' @param nr_hops The number of HOP-lines to be generated
 #' @param hop_lwd The line width of the hop-lines
 #' @param hop_alpha The transparency of the hop-lines
-#' @param hop_col The color of the hop-lines
+#' @param hop_col The color (or Colour for the grammar freak) of the hop-lines
 #' @param expected_lwd The line width of the hop-lines
+#' @param expected_col The color of the line describing the expected value
 #' @param hop_resolution The resolution of the hop lines
 #' @param pdp_resolution The resolution of the pdp grid
 #' @param exp_disp Exponentiation of the predictor gradient
 #' @param exp_axis Exponentiation the notation on the axis
 #' @param shift_b0 Shifting the intercept up or down by adding values
 #' @param gradient_title Title of the gradient in a pdp-plot
-#' @param gadient_col Color (or Colour for the grammar freak) for the gradient
+#' @param gadient_col The color of the line describing the gradient
 #' @param xlimit The limits of the x-axis
 #' @param ylimit The limits of the y-axis
 #' @param exp_axis Take the exponent of the axis number
@@ -41,10 +42,10 @@
 #'
 #' @export
 hop <- function(object, group=NULL, predictor=NULL, link_function=NULL,
-                nr_hops=1500, hop_lwd=1.2, hop_alpha=0.05, hop_col="grey60",
-                expected_lwd=0.8, hop_resolution=300, pdp_resolution=30,
-                exp_disp=F, exp_axis=F, shift_b0=0, gradient_title="MAP",
-                gradient_col=c("magenta", "yellow", "cyan"),
+                nr_hops=1500, hop_lwd=1.2, hop_alpha=0.05, hop_col="dodgerblue1",
+                expected_lwd=0.8, expected_col="dodgerblue4", hop_resolution=300,
+                pdp_resolution=30,exp_disp=F, exp_axis=F, shift_b0=0,
+                gradient_title="MAP", gradient_col=c("magenta", "yellow", "cyan"),
                 xlimit=c(-5, 10), ylimit=NULL, xlab=NULL, ylab=NULL,
                 round_x_axis=2, round_y_axis=2, breaks_axis=5,
                 xlabsize=8, ylabsize=8, xtextsize=10, ytextsize=10){
@@ -133,7 +134,7 @@ axis_x_dim <-  ggplot2::scale_x_continuous(breaks = seq(min(hops_realized$x), ma
 one_plot <- ggplot(hops_realized, aes(x, y, group=as.factor(j)))+
        ylim(miny, maxy)+xlab_text+ylab_text+
        geom_line(lwd=hop_lwd, alpha=hop_alpha, col=hop_col, na.rm = T)+
-       geom_line(data=expected, aes(x, y), lwd=expected_lwd, inherit.aes = F, na.rm = T)+
+       geom_line(data=expected, aes(x, y), lwd=expected_lwd, col=expected_col, inherit.aes = F, na.rm = T)+
        theme_classic()+axis_x_dim+
        theme(legend.position = "none",
              axis.text.x = element_text(size=xtextsize),

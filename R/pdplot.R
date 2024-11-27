@@ -12,7 +12,6 @@
 #' @param label_size Size of the labels in the plots
 #' @param line_width The line width
 #' @param point_size The size of the point
-#' @param error_bar Display point estimate and error bars
 #' @param err_bar_lwd The line width of the error bars
 #' @param xlab The x-label text
 #' @param ylab The y-label text
@@ -37,8 +36,7 @@ pdplot <- function(object, interval=0.9, display="b1",
                    order_predictor = NULL, order_group = NULL,
                    top_label=0.05, left_label=0.1,
                    title_size=3, est_display=F,  label_size=1.6,
-                   line_width=0.2, point_size=.5,
-                   error_bar=F, err_bar_lwd=0.2,
+                   line_width=0.2, point_size=.5,err_bar_lwd=0.2,
                    xlab="Parameter estimate",
                    ylab="Posterior density",
                    xylab_size=3, xtext_size=8){
@@ -49,9 +47,6 @@ if(display=="b1"){object1   <- object$Estimates$b1}else{stop("b0 not yet impleme
 #Sample size
 df_n                        <- setNames(as.data.frame(object$N_level), c("code", "n"))
 df_n$code                   <- as.character(df_n$code)
-
-#set interval
-#interval_level              <- 0.5+c(-1,1)*interval/2
 
 #Split the mcmc chains per group predictor and link
 split_mcmc       <- split(object1$estimate, paste(object1$group, object1$predictor, object1$link, sep="_"))
@@ -124,14 +119,11 @@ if(max(abs(range(split_mcmc[[i]])))>1){
       xbreaks <- scale_x_continuous(breaks = seq(-2,2,1))
 }else{xbreaks <- scale_x_continuous(breaks = seq(-1.5,1.5,.5))}
 
-if(error_bar==T){
-  err_bar <- geom_errorbarh(data=est_df[i,], aes(xmin=as.numeric(ll), xmax=as.numeric(ul),y=0),
-                 height=0, lwd=err_bar_lwd)+geom_point(data=est_df[i,], aes(x=as.numeric(map), y=0), inherit.aes = F, size=point_size)}else{err_bar <- NULL}
-
 pl <- ggplot(data.frame(x=split_mcmc[[i]]), aes(x=x))+
     geom_density(alpha=0.2, lwd=line_width)+
     geom_vline(xintercept = 0, lty=2, lwd=line_width, col="black")+
-    xbreaks+err_bar+
+    xbreaks+geom_point(data=est_df[i,], aes(x=as.numeric(map), y=0), inherit.aes = F, size=point_size)+
+     geom_errorbarh(data=est_df[i,], aes(xmin=as.numeric(ll), xmax=as.numeric(ul),y=0),height=0, lwd=err_bar_lwd)+
     theme_classic()+
     theme(axis.title = element_blank(),
           axis.text.y = element_blank(),

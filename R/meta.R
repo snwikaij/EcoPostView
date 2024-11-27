@@ -88,7 +88,6 @@ meta <- function(estimate, stderr, parameter, predictor,
                 prior_mu=0,
                 prior_mu_se=0.5,
                 prior_sigma_max=5,
-                hypothesis=F,
                 interval=0.9,
                 get_prior_only = FALSE,
                 n_chain = 2,
@@ -153,7 +152,6 @@ meta <- function(estimate, stderr, parameter, predictor,
                    Ps=prior_sigma_max,
                    npw=npw,
                    alpha_pw=rep(1, npw),
-                   H10=hypothesis,
                    random=random,
                    R=RL,
                    method=method)
@@ -561,7 +559,7 @@ meta <- function(estimate, stderr, parameter, predictor,
                                            colnames(basic_summary)[5:9] <- c("map", "mu", "se", "ll", "ul")}
 
                                          #Extract chains for peese or peters
-                                         if(method!="none"){
+                                         if(method!=0){
                                            mcmc_adjust        <- extract_chain(model$BUGSoutput$sims.list$beta_adjust, mod_data)}else{mcmc_adjust <- NULL}
 
                                          #Extract chains for posterior weights
@@ -570,6 +568,8 @@ meta <- function(estimate, stderr, parameter, predictor,
 
                                          if(print_summary==T){
                                          print(basic_summary)}
+
+                                         mod
 
                                          return(invisible(list(Summary=basic_summary,
                                                      Estimates=split(mcmc_mu, mcmc_mu$parameter),

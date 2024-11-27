@@ -21,7 +21,7 @@ rescheck <- function(object, order_predictor = NULL, order_group = NULL,
 levels <- setNames(do.call(rbind.data.frame, strsplit(as.character(object$model$Data$level), "_")), c("parameter", "predictor", "link_function", "group"))
 
 #If sample size is included
-if(!is.null(object$model$Data$Nsamp)){
+if(!sd(object$model$Data$Nsamp)==0){
   df_resid  <- data.frame(resid=object$Residuals, n=object$model$Data$Nsamp, se=object$model$Data$se, levels)}else{
   df_resid  <- data.frame(resid=object$Residuals, se=object$model$Data$se, levels)}
 
@@ -54,7 +54,7 @@ ylim_plot <- quantile(df_resid$resid, c(ylimit[1], ylimit[2]))
 xlim_plot <- c(0, quantile(df_resid$resid, xlimit))
 
 #If number of samples is used
-if(!is.null(object$model$Data$Nsamp)){
+if(!sd(object$model$Data$Nsamp)==0){
 
 #Plot interval bounds for sample size for all samples
 plot_1_1 <- ggplot(df_resid, aes(1/n, resid))+xlab("Inverse sample size (1/n)")+ylab("Posterior mean model residuals")+
@@ -111,7 +111,7 @@ plot_2_3 <- ggplot(df_resid, aes(1/se, resid))+xlab("Inverse standard error (1/s
   theme(plot.margin = unit(c(.1, .1, .1, .1), "mm"))
 
 #If sample size is included include all figs als with bias_n
-if(!is.null(object$model$Data$Nsamp)){
+if(!sd(object$model$Data$Nsamp)==0){
   total <- list(bias_n=plot_1_1, bias_se=plot_2_1,
                 bias_n_group=plot_1_2, bias_se_group=plot_2_2,
                 bias_n_predictor=plot_1_3, bias_se_predictor=plot_2_3)}else{

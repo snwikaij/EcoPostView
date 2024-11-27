@@ -18,7 +18,6 @@ meta(
   prior_mu = 0,
   prior_mu_se = 0.5,
   prior_sigma_max = 5,
-  hypothesis = F,
   interval = 0.9,
   get_prior_only = FALSE,
   n_chain = 2,

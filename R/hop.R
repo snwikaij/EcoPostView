@@ -16,7 +16,8 @@
 #' @param exp_axis Exponentiation the notation on the axis
 #' @param shift_b0 Shifting the intercept up or down by adding values
 #' @param gradient_title Title of the gradient in a pdp-plot
-#' @param gadient_col The color of the line describing the gradient
+#' @param legend_position The position of the legend on in the pdp-plot
+#' @param gradient_col The color of the line describing the gradient
 #' @param xlimit The limits of the x-axis
 #' @param ylimit The limits of the y-axis
 #' @param exp_axis Take the exponent of the axis number
@@ -45,7 +46,7 @@ hop <- function(object, group=NULL, predictor=NULL, link_function=NULL,
                 nr_hops=1500, hop_lwd=1.2, hop_alpha=0.05, hop_col="dodgerblue1",
                 expected_lwd=0.8, expected_col="dodgerblue4", hop_resolution=300,
                 pdp_resolution=30,exp_disp=F, exp_axis=F, shift_b0=0,
-                gradient_title="MAP", gradient_col=c("magenta", "yellow", "cyan"),
+                gradient_title="MAP", legend_position="right", gradient_col=c("magenta", "yellow", "cyan"),
                 xlimit=c(-5, 10), ylimit=NULL, xlab=NULL, ylab=NULL,
                 round_x_axis=2, round_y_axis=2, breaks_axis=5,
                 xlabsize=8, ylabsize=8, xtextsize=10, ytextsize=10){
@@ -198,7 +199,7 @@ one_plot <- ggplot(pred_grid, aes(x = x, y = y, fill = yhat)) +
   ggplot2::scale_fill_gradientn(colors = gradient_col) +
   theme_classic()+axis_x_dim+axis_y_dim+
   theme(
-    legend.position = "right",
+    legend.position = legend_position,
     axis.text.x = element_text(size = xtextsize),
     axis.text.y = element_text(size = ytextsize),
     axis.title.x = element_text(size = xlabsize),

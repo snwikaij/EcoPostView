@@ -21,6 +21,7 @@ hop(
   exp_axis = F,
   shift_b0 = 0,
   gradient_title = "MAP",
+  legend_position = "right",
   gradient_col = c("magenta", "yellow", "cyan"),
   xlimit = c(-5, 10),
   ylimit = NULL,
@@ -68,6 +69,10 @@ hop(
 
 \item{gradient_title}{Title of the gradient in a pdp-plot}
 
+\item{legend_position}{The position of the legend on in the pdp-plot}
+
+\item{gradient_col}{The color of the line describing the gradient}
+
 \item{xlimit}{The limits of the x-axis}
 
 \item{ylimit}{The limits of the y-axis}
@@ -85,8 +90,6 @@ hop(
 \item{xtextsize}{The size of the x-axis text}
 
 \item{ytextsize}{The size of the y-axis text}
-
-\item{gadient_col}{The color of the line describing the gradient}
 
 \item{round_axis}{Round the number on the axis}
 }

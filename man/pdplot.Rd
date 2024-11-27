@@ -17,7 +17,6 @@ pdplot(
   label_size = 1.6,
   line_width = 0.2,
   point_size = 0.5,
-  error_bar = F,
   err_bar_lwd = 0.2,
   xlab = "Parameter estimate",
   ylab = "Posterior density",
@@ -49,8 +48,6 @@ pdplot(
 \item{line_width}{The line width}
 
 \item{point_size}{The size of the point}
-
-\item{error_bar}{Display point estimate and error bars}
 
 \item{err_bar_lwd}{The line width of the error bars}
 

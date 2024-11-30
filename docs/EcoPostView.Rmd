@@ -25,7 +25,7 @@ Ecological data is scattered around literature in different formats and very noi
 
 If working with,numbers, stochastic process, meta-data, solidifying relations, making probability statements and predictions are what you like to do, this R-package can help make your life easier. The goal of this package is to combine the benefits of multiple fitted Linear and Generalized Linear Models ((G)LMs), using the flexibility and strength of Bayesian meta-analysis to generalized the effects to one pooled (G)LM. This meta-analytically derived (G)LM can be visualized (see the Fig. 1 below) and used to predict on new data.
 
-```{r intro-plot,  fig.width=7.1, fig.height=4, echo=F}
+```{r intro-plot,  fig.width=7.1, fig.height=4, echo=F, warning=FALSE}
 library(EcoPostView)
 library(ggplot2)
 library(cowplot)
@@ -212,11 +212,11 @@ The meta function can include a random effect, by setting the argument RE=TRUE (
 $$\{\beta_{i}, ..., \beta_{n}\}= \beta_{\text{pooled}} + u_i$$
 It has the option of placing a single or multiple random effect as a vector or matrix using the argument 'random' the structure then becomes then 
 $$\{\beta_{i}, ..., \beta_{n}\} = \beta_{\text{pooled}} + u_i +r_i$$
-for a single random effect. It can adjust for the relation between the $se$ and model parameters using the inverse of the standard error $1/se$ (method=1, Stanley and Doucouliagos, 2014). The structure is then 
-$$\{\beta_{i}, ..., \beta_{n}\} = \beta_{\text{pooled}} + u_i + \alpha_{i} \cdot \left(\frac{1}{se}\right)$$ 
+for a single random effect. It can adjust for the relation between the $se$ and model parameters using the the squared standard error $se^2$ (method=1, Stanley and Doucouliagos, 2014). The structure is then 
+$$\{\beta_{i}, ..., \beta_{n}\} = \beta_{\text{pooled}} + u_i + \alpha_{i} \cdot se^2$$ 
 or inverse of the sample size $1/n$ (method=2, the latter option is performed below) with the structure 
 $$\{\beta_{i}, ..., \beta_{n}\} = \beta_{\text{pooled}} + u_i + \alpha_{i} \cdot \left(\frac{1}{n}\right)$$ 
-Of course if bias is considered neglect non can be performed (method=0). I still would like to include a third 4th option to utilize Robust Bayesian Model Averaging (RoBMA: Maier et al. 2023). But this sometimes adjust extremely when including $1/se$ and therefore I left this option open for now.
+Of course if bias is considered neglect non can be performed (method=0). I still would like to include a third 4th option to utilize Robust Bayesian Model Averaging (RoBMA: Maier et al. 2023). But this sometimes adjust extremely when including $se^2$ and therefore I left this option open for now.
 
 ```{r meta1}
 mod1 <- meta(estimate=example1$est,         #Model estimate
@@ -311,6 +311,12 @@ print(res_mod2$bias_se_predictor)
 The dotted red line should more-or-less-ish overlay the solid blue line having an intercept and slope of 0. Small sample sizes can strongly influence the slope of this line. When bias is present then a different correction method can be selected or stronger priors can set to reduce this.
 
 This was the most difficult part where the data needs to be gathered and extracted, (G)LMs need to be fitted, priors need to formulated, bias needs to be assessed and the whole model needs to be optimized to get a stable results. To display or predict with the models requires less time.
+
+## 3.6 Standard meta-analysis
+
+Often a meta-analysis is performed over standardized-effect-sizes (SES). While I do not condone this practice in any way, I do not see the use of these as having much benefit for field ecology, applied ecology, generalizations or learning about the impacts of real world application of ecological relations (Baguley 2009; Tukey  1969). I am likely completely wrong in generalizing as I can find suitable conditions under which SES are useful. Therefore a short introduction to a simple meta-analysis also displaying how the Bias correction methods perform.
+
+This part is still under construction.
 
 # 4. Display
 
@@ -424,6 +430,7 @@ print(log_sal3)
 This part is still under construction.
 
 # References
+Baguley, Thom. 2009. “Standardized or Simple Effect Size: What Should Be Reported?” British Journal of Psychology 100(3): 603–17. doi: 10.1348/000712608X377117.
 
 Cramer, J. S. 1991. The Logit Model: An Introduction for Economists. London: Edward Arnold.
 
@@ -446,6 +453,8 @@ Pearl, J. (2009). Causality. Cambridge university press.
 Peters, Jaime L., Alex J. Sutton, David R. Sones, Keith R. Abrams, and Lesley Rushton. 2006. “Comparison of Two Methods to Detect Publication Bias in Meta-Analysis.” JAMA 295(6):676. doi: 10.1001/jama.295.6.676.
 
 Stanley, T. D., and Hristos Doucouliagos. 2014. “Meta-Regression Approximations to Reduce Publication Selection Bias.” Research Synthesis Methods 5(1):60–78. doi: 10.1002/jrsm.1095.
+
+Tukey, John W. 1969. “Analysing Data: Sanctification or Detective Work?” American Psychologist 24(2): 83–91. doi: 10.1037/h0027108.
 
 Woolridge, Jeffery M. 2001. Econometric Analysis of Cross Section and Panel Data. Cambridge, Massachusetts, London, England: The MIT press.
 

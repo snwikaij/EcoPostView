@@ -172,7 +172,7 @@ meta <- function(estimate, stderr, parameter, predictor,
                                             for (i in 1:N){
                                               est[i]  ~ dnorm(mu2[i], tau2[i])
                                               mu2[i]  ~ dnorm(mu1[i], tau1[level[i]])
-                                              mu1[i]  <- mu[level[i]] + ifelse(method==0, 0, ifelse(method==1, beta_adjust[level[i]]*(1/se[i]), beta_adjust[level[i]]*(1/Nsamp[i])))
+                                              mu1[i]  <- mu[level[i]] + ifelse(method==0, 0, ifelse(method==1, beta_adjust[level[i]]*se[i]^2, beta_adjust[level[i]]*Nsamp[i]^2))
                                               tau2[i] <- 1/(se[i]^2)}
 
                                             resid <- est-mu2
@@ -184,7 +184,7 @@ meta <- function(estimate, stderr, parameter, predictor,
 
                                             ##priors
                                             for(j in 1:L){
-                                              beta_adjust[j]~ dnorm(0, 1/0.5^2)
+                                              beta_adjust[j]~ dnorm(0, 1/10^2)
                                               tau1[j]      <- 1/sigma^2
 
                                               for(k in 1:npw){
@@ -203,7 +203,7 @@ meta <- function(estimate, stderr, parameter, predictor,
                                               for (i in 1:N){
                                                 est[i]  ~ dnorm(mu2[i], tau2[i])
                                                 mu2[i]  ~ dnorm(mu1[i], tau1[level[i]])
-                                                mu1[i]  <- mu[level[i]] + ifelse(method==0, 0, ifelse(method==1, beta_adjust[level[i]]*(1/se[i]), beta_adjust[level[i]]*(1/Nsamp[i]))) +
+                                                mu1[i]  <- mu[level[i]] + ifelse(method==0, 0, ifelse(method==1, beta_adjust[level[i]]*se[i]^2, beta_adjust[level[i]]*Nsamp[i]^2)) +
                                                            beta_random[level[i]]*random[i]
                                                 tau2[i] <- 1/(se[i]^2)}
 
@@ -217,7 +217,7 @@ meta <- function(estimate, stderr, parameter, predictor,
                                               ##priors
                                               for(j in 1:L){
                                                 beta_random[j] ~ dnorm(0, 1/0.5^2)
-                                                beta_adjust[j]  ~ dnorm(0, 1/0.5^2)
+                                                beta_adjust[j]  ~ dnorm(0, 1/10^2)
                                                 tau1[j]        <- 1/sigma^2
 
                                                 for(k in 1:npw){
@@ -236,7 +236,7 @@ meta <- function(estimate, stderr, parameter, predictor,
                                               for (i in 1:N){
                                                 est[i]  ~ dnorm(mu2[i], tau2[i])
                                                 mu2[i]  ~ dnorm(mu1[i], tau1[level[i]])
-                                                mu1[i]  <- mu[level[i]] +ifelse(method==0, 0, ifelse(method==1, beta_adjust[level[i]]*(1/se[i]), beta_adjust[level[i]]*(1/Nsamp[i])))+
+                                                mu1[i]  <- mu[level[i]] +ifelse(method==0, 0, ifelse(method==1, beta_adjust[level[i]]*se[i]^2, beta_adjust[level[i]]*Nsamp[i]^2))+
                                                   inprod(beta_random[level[i], ], random[i, ])
                                                 tau2[i] <- 1/(se[i]^2)}
 
@@ -251,7 +251,7 @@ meta <- function(estimate, stderr, parameter, predictor,
                                               for(j in 1:L){
                                                 for(r in 1:R){
                                                 beta_random[j, r]  ~ dnorm(0, 1/0.5^2)}
-                                                beta_adjust[j]      ~ dnorm(0, 1/0.5^2)
+                                                beta_adjust[j]      ~ dnorm(0, 1/10^2)
                                                 tau1[j]            <- 1/sigma^2
 
                                                 for(k in 1:npw){
@@ -272,7 +272,7 @@ meta <- function(estimate, stderr, parameter, predictor,
                                             for (i in 1:N){
                                               est[i]  ~ dnorm(mu2[i], tau2[i])
                                               mu2[i]  ~ dnorm(mu1[i], tau1[level[i]])
-                                              mu1[i]  <- mu[level[i]] + ifelse(method==0, 0, ifelse(method==1, beta_adjust[level[i]]*(1/se[i]), beta_adjust[level[i]]*(1/Nsamp[i])))
+                                              mu1[i]  <- mu[level[i]] + ifelse(method==0, 0, ifelse(method==1, beta_adjust[level[i]]*se[i]^2, beta_adjust[level[i]]*Nsamp[i]^2))
                                               tau2[i] <- 1/(se[i]^2)}
 
                                             resid <- est-mu2
@@ -281,7 +281,7 @@ meta <- function(estimate, stderr, parameter, predictor,
 
                                             ##priors
                                             for(j in 1:L){
-                                              beta_adjust[j]   ~ dnorm(0, 1/0.5^2)
+                                              beta_adjust[j]   ~ dnorm(0, 1/10^2)
                                               mu[j]           ~ dnorm(Pm[j], 1/Pe[j]^2)
                                               tau1[j]         <- 1/sigma^2}
 
@@ -296,7 +296,7 @@ meta <- function(estimate, stderr, parameter, predictor,
                                               for (i in 1:N){
                                                 est[i]  ~ dnorm(mu2[i], tau2[i])
                                                 mu2[i]  ~ dnorm(mu1[i], tau1[level[i]])
-                                                mu1[i]  <- mu[level[i]] + ifelse(method==0, 0, ifelse(method==1, beta_adjust[level[i]]*(1/se[i]), beta_adjust[level[i]]*(1/Nsamp[i])))+
+                                                mu1[i]  <- mu[level[i]] + ifelse(method==0, 0, ifelse(method==1, beta_adjust[level[i]]*se[i]^2, beta_adjust[level[i]]*Nsamp[i]^2))+
                                                            beta_random[level[i]]*random[i]
                                                 tau2[i] <- 1/(se[i]^2)}
 
@@ -307,7 +307,7 @@ meta <- function(estimate, stderr, parameter, predictor,
                                               ##priors
                                               for(j in 1:L){
                                                 beta_random[j]  ~ dnorm(0, 1/0.5^2)
-                                                beta_adjust[j]   ~ dnorm(0, 1/0.5^2)
+                                                beta_adjust[j]   ~ dnorm(0, 1/10^2)
                                                 mu[j]           ~ dnorm(Pm[j], 1/Pe[j]^2)
                                                 tau1[j]         <- 1/sigma^2}
 
@@ -322,8 +322,7 @@ meta <- function(estimate, stderr, parameter, predictor,
                                               for (i in 1:N){
                                                 est[i]  ~ dnorm(mu2[i], tau2[i])
                                                 mu2[i]  ~ dnorm(mu1[i], tau1[level[i]])
-                                                mu1[i]  <- mu[level[i]] +
-                                                  ifelse(method==0, 0, ifelse(method==1, beta_adjust[level[i]]*(1/se[i]), beta_adjust[level[i]]*(1/Nsamp[i])))+
+                                                mu1[i]  <- mu[level[i]] +ifelse(method==0, 0, ifelse(method==1, beta_adjust[level[i]]*se[i]^2, beta_adjust[level[i]]*Nsamp[i]^2))+
                                                   inprod(beta_random[level[i], ], random[i, ])
                                                 tau2[i] <- 1/(se[i]^2)}
 
@@ -335,7 +334,7 @@ meta <- function(estimate, stderr, parameter, predictor,
                                               for(j in 1:L){
                                                 for(r in 1:R){
                                                 beta_random[j, r]  ~ dnorm(0, 1/0.5^2)}
-                                                beta_adjust[j]      ~ dnorm(0, 1/0.5^2)
+                                                beta_adjust[j]      ~ dnorm(0, 1/10^2)
                                                 mu[j]              ~ dnorm(Pm[j], 1/Pe[j]^2)
                                                 tau1[j]            <- 1/sigma^2}
 
@@ -352,7 +351,7 @@ meta <- function(estimate, stderr, parameter, predictor,
                                              ##likelihood
                                              for (i in 1:N){
                                                est[i]  ~  dnorm(mu1[i], tau1[i])
-                                               mu1[i]  <- mu[level[i]] + ifelse(method==0, 0, ifelse(method==1, beta_adjust[level[i]]*(1/se[i]), beta_adjust[level[i]]*(1/Nsamp[i])))
+                                               mu1[i]  <- mu[level[i]] + ifelse(method==0, 0, ifelse(method==1, beta_adjust[level[i]]*se[i]^2, beta_adjust[level[i]]*Nsamp[i]^2))
                                                tau1[i] <- 1/(se[i]^2)}
 
                                              resid <- est-mu1
@@ -362,7 +361,7 @@ meta <- function(estimate, stderr, parameter, predictor,
 
                                              ##priors
                                              for(j in 1:L){
-                                               beta_adjust[j]   ~ dnorm(0, 1/0.5^2)
+                                               beta_adjust[j]   ~ dnorm(0, 1/10^2)
 
                                                for(k in 1:npw){
                                                  mu_M[j,k]       ~ dnorm(Pm[j,k], 1/Pe[j,k]^2)}
@@ -375,8 +374,7 @@ meta <- function(estimate, stderr, parameter, predictor,
                                                  ##likelihood
                                                  for (i in 1:N){
                                                    est[i]  ~  dnorm(mu1[i], tau1[i])
-                                                   mu1[i]  <- mu[level[i]]+
-                                                     ifelse(method==0, 0, ifelse(method==1, beta_adjust[level[i]]*(1/se[i]), beta_adjust[level[i]]*(1/Nsamp[i])))+
+                                                   mu1[i]  <- mu[level[i]]+ifelse(method==0, 0, ifelse(method==1, beta_adjust[level[i]]*se[i]^2, beta_adjust[level[i]]*Nsamp[i]^2))+
                                                               beta_random[level[i]]*random[i]
                                                    tau1[i] <- 1/(se[i]^2)}
 
@@ -388,7 +386,7 @@ meta <- function(estimate, stderr, parameter, predictor,
                                                  ##priors
                                                  for(j in 1:L){
                                                    beta_random[j]  ~ dnorm(0, 1/0.5^2)
-                                                   beta_adjust[j]   ~ dnorm(0, 1/0.5^2)
+                                                   beta_adjust[j]   ~ dnorm(0, 1/10^2)
 
                                                    for(k in 1:npw){
                                                      mu_M[j,k]       ~ dnorm(Pm[j,k], 1/Pe[j,k]^2)}
@@ -401,8 +399,7 @@ meta <- function(estimate, stderr, parameter, predictor,
                                                  ##likelihood
                                                  for (i in 1:N){
                                                    est[i]  ~  dnorm(mu1[i], tau1[i])
-                                                   mu1[i]  <- mu[level[i]]+
-                                                     ifelse(method==0, 0, ifelse(method==1, beta_adjust[level[i]]*(1/se[i]), beta_adjust[level[i]]*(1/Nsamp[i])))+
+                                                   mu1[i]  <- mu[level[i]]+ ifelse(method==0, 0, ifelse(method==1, beta_adjust[level[i]]*se[i]^2, beta_adjust[level[i]]*Nsamp[i]^2))+
                                                      inprod(beta_random[level[i], ], random[i, ])
                                                    tau1[i] <- 1/(se[i]^2)}
 
@@ -415,7 +412,7 @@ meta <- function(estimate, stderr, parameter, predictor,
                                                  for(j in 1:L){
                                                    for(r in 1:R){
                                                      beta_random[j, r]  ~ dnorm(0, 1/0.5^2)}
-                                                     beta_adjust[j]      ~ dnorm(0, 1/0.5^2)
+                                                     beta_adjust[j]      ~ dnorm(0, 1/10^2)
 
                                                    for(k in 1:npw){
                                                      mu_M[j,k]       ~ dnorm(Pm[j,k], 1/Pe[j,k]^2)}
@@ -430,14 +427,14 @@ meta <- function(estimate, stderr, parameter, predictor,
                                                  ##likelihood
                                                  for (i in 1:N){
                                                    est[i]  ~  dnorm(mu1[i], tau1[i])
-                                                   mu1[i]  <- mu[level[i]] + ifelse(method==0, 0, ifelse(method==1, beta_adjust[level[i]]*(1/se[i]), beta_adjust[level[i]]*(1/Nsamp[i])))
+                                                   mu1[i]  <- mu[level[i]] + ifelse(method==0, 0, ifelse(method==1, beta_adjust[level[i]]*se[i]^2, beta_adjust[level[i]]*Nsamp[i]^2))
                                                    tau1[i] <- 1/(se[i]^2)}
 
                                                  resid <- est-mu1
 
                                                  ##priors
                                                  for(j in 1:L){
-                                                   beta_adjust[j]   ~ dnorm(0, 1/0.5^2)
+                                                   beta_adjust[j]   ~ dnorm(0, 1/10^2)
                                                    mu[j]           ~ dnorm(Pm[j], 1/Pe[j]^2)}}}
                                              ##4.2 only 1 random
                                              else if(mod_data$R==1){
@@ -446,8 +443,7 @@ meta <- function(estimate, stderr, parameter, predictor,
                                                ##likelihood
                                                for (i in 1:N){
                                                  est[i]  ~  dnorm(mu1[i], tau1[i])
-                                                 mu1[i]  <- mu[level[i]] +
-                                                   ifelse(method==0, 0, ifelse(method==1, beta_adjust[level[i]]*(1/se[i]), beta_adjust[level[i]]*(1/Nsamp[i]))) +
+                                                 mu1[i]  <- mu[level[i]]+ifelse(method==0, 0, ifelse(method==1, beta_adjust[level[i]]*se[i]^2, beta_adjust[level[i]]*Nsamp[i]^2)) +
                                                             beta_random[level[i]]*random[i]
                                                  tau1[i] <- 1/(se[i]^2)}
 
@@ -456,7 +452,7 @@ meta <- function(estimate, stderr, parameter, predictor,
                                                ##priors
                                                for(j in 1:L){
                                                  beta_random[j]  ~ dnorm(0, 1/0.5^2)
-                                                 beta_adjust[j]   ~ dnorm(0, 1/0.5^2)
+                                                 beta_adjust[j]   ~ dnorm(0, 1/10^2)
                                                  mu[j]           ~ dnorm(Pm[j], 1/Pe[j]^2)}}}
                                              ##4.3 more than 1 random
                                              else{
@@ -465,8 +461,7 @@ meta <- function(estimate, stderr, parameter, predictor,
                                                  ##likelihood
                                                  for (i in 1:N){
                                                    est[i]  ~  dnorm(mu1[i], tau1[i])
-                                                   mu1[i]  <- mu[level[i]] +
-                                                     ifelse(method==0, 0, ifelse(method==1, beta_adjust[level[i]]*(1/se[i]), beta_adjust[level[i]]*(1/Nsamp[i]))) +
+                                                   mu1[i]  <- mu[level[i]]+ifelse(method==0, 0, ifelse(method==1, beta_adjust[level[i]]*se[i]^2, beta_adjust[level[i]]*Nsamp[i]^2)) +
                                                      inprod(beta_random[level[i], ], random[i, ])
                                                    tau1[i] <- 1/(se[i]^2)}
 
@@ -476,7 +471,7 @@ meta <- function(estimate, stderr, parameter, predictor,
                                                  for(j in 1:L){
                                                    for(r in 1:R){
                                                    beta_random[j, r]  ~ dnorm(0, 1/0.5^2)}
-                                                   beta_adjust[j]      ~ dnorm(0, 1/0.5^2)
+                                                   beta_adjust[j]      ~ dnorm(0, 1/10^2)
                                                    mu[j]              ~ dnorm(Pm[j], 1/Pe[j]^2)}}}}}
 
                                          #Run the model
@@ -568,8 +563,6 @@ meta <- function(estimate, stderr, parameter, predictor,
 
                                          if(print_summary==T){
                                          print(basic_summary)}
-
-                                         mod
 
                                          return(invisible(list(Summary=basic_summary,
                                                      Estimates=split(mcmc_mu, mcmc_mu$parameter),

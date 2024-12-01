@@ -212,7 +212,7 @@ The meta function can include a random effect, by setting the argument RE=TRUE (
 $$\{\beta_{i}, ..., \beta_{n}\}= \beta_{\text{pooled}} + u_i$$
 It has the option of placing a single or multiple random effect as a vector or matrix using the argument 'random' the structure then becomes then 
 $$\{\beta_{i}, ..., \beta_{n}\} = \beta_{\text{pooled}} + u_i +r_i$$
-for a single random effect. It can adjust for the relation between the $se$ and model parameters using the the squared standard error $se^2$ (method=1, Stanley and Doucouliagos, 2014). The structure is then 
+for a single random effect. It can adjust for the relation between the $se$ and model parameters using the the squared standard error $se^2$ often refered to as Precision-Effect Estimate with Standard Errors or short PEESE (method=1, Stanley and Doucouliagos, 2014). The structure is then 
 $$\{\beta_{i}, ..., \beta_{n}\} = \beta_{\text{pooled}} + u_i + \alpha_{i} \cdot se^2$$ 
 or inverse of the sample size $1/n$ (method=2, the latter option is performed below) with the structure 
 $$\{\beta_{i}, ..., \beta_{n}\} = \beta_{\text{pooled}} + u_i + \alpha_{i} \cdot \left(\frac{1}{n}\right)$$ 
@@ -314,9 +314,57 @@ This was the most difficult part where the data needs to be gathered and extract
 
 ## 3.6 Standard meta-analysis
 
-Often a meta-analysis is performed over standardized-effect-sizes (SES). While I do not condone this practice in any way, I do not see the use of these as having much benefit for field ecology, applied ecology, generalizations or learning about the impacts of real world application of ecological relations (Baguley 2009; Tukey  1969). I am likely completely wrong in generalizing as I can find suitable conditions under which SES are useful. Therefore a short introduction to a simple meta-analysis also displaying how the Bias correction methods perform.
+Often a meta-analysis is performed over standardized-effect-sizes (SES). While I do not condone this practice in any way, I do not see the use of these as having much benefit for field ecology, applied ecology, generalizations or learning about the impacts of real world application of ecological relations (Baguley 2009; Tukey  1969). I am likely completely wrong in generalizing as I can find suitable conditions under which SES are useful. Therefore a short introduction to a simple meta-analysis also displaying how the bias correction methods perform. I compare it with my standard favorite metafor package in R.
 
-This part is still under construction.
+```{r, bias adjustment and metafor}
+#First run and check standard output for metafor
+library(metafor)
+data("example3")
+
+#Run metafor
+standard_metafor <- metafor::rma(yi=example3$est, sei=example3$se)
+
+#Run EcoPostView
+standard_meta    <- meta(estimate=example3$est, stderr=example3$se)
+
+#Results metafor
+print(standard_metafor)
+
+#Results EcoPostView
+print(standard_meta$Summary)
+
+```
+
+Both the metafor and EcoPostView show similar means -0.22 and standard errors. Hence not informing priors is often meaningless. However, we can now also check the bias via the residuals.
+
+```{r plot metafor and EcoPostView, fig.width=8, fig.height=4}
+par(mfrow=c(1,2))
+plot(1/example3$se, resid(standard_metafor), 
+     xlab = "1/se", ylab="Residuals", main="metafor")
+abline(a=0, b=0, col="red", lty=2)
+
+plot(1/example3$se, standard_meta$Residuals, 
+     xlab = "1/se", ylab="Posterior mean residuals", main="EcoPostView")
+abline(a=0, b=0, col="red", lty=2)
+```
+
+Here we clearly see a diagonal pattern almost similar for both functions. The posterior means are however pulled closer (shrinkage) to the mean for estimates with weaker standard errors.
+
+```{r adjusting bias via Eggers approach, fig.width=8, fig.height=4}
+#Run EcoPostView (increased the chain thinning interval and number of iterations to improve mixing)
+adjusted_meta    <- meta(estimate=example3$est, stderr=example3$se, method = 1, 
+                         n_thin = 5, 
+                         n_iter = 30000)
+
+print(adjusted_meta$Summary)
+
+par(mfrow=c(1,1))
+plot(1/example3$se, adjusted_meta$Residuals, 
+     xlab = "1/se", ylab="Posterior mean residuals", main="EcoPostView")
+abline(a=0, b=0, col="red", lty=2)
+```
+
+In the method above the bias has been adjusted (not removed!). The pooled estimate is now much lower This means the relations between the standard error can be assessed by looking at the residuals. This is often performed with funnel plots but can as addition also be asses by simply checking the residuals. The adjustment should only be applied if patterns are extremely clear it can often lead to strong adjustments even if no clear bias is present. However, it is extremely effective if such biase is present in the data.
 
 # 4. Display
 

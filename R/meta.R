@@ -82,11 +82,11 @@
 #' @importFrom stats density
 #'
 #' @export
-meta <- function(estimate, stderr, parameter, predictor,
-                link_function, grouping, random=NULL,
+meta <- function(estimate, stderr, parameter=NULL, predictor=NULL,
+                link_function=NULL, grouping=NULL, random=NULL,
                 method=0, RE=TRUE, Nsamp=NULL,
                 prior_mu=0,
-                prior_mu_se=0.5,
+                prior_mu_se=10,
                 prior_sigma_max=5,
                 interval=0.9,
                 get_prior_only = FALSE,
@@ -98,6 +98,18 @@ meta <- function(estimate, stderr, parameter, predictor,
                 Rhat_warn = 1.01,
                 Eff_warn = 1000,
                 print_summary=FALSE){
+
+  #If parameter is not given set to b1
+  if(is.null(parameter)){parameter <- rep("b1", length(estimate))}
+
+  #If predictor is not given set to none specified
+  if(is.null(predictor)){predictor <- rep("none-specified", length(estimate))}
+
+  #If link function is not given set to identity
+  if(is.null(link_function)){link_function <- rep("identity", length(estimate))}
+
+  #If grouping is not given set to non-specified
+  if(is.null(grouping)){grouping <- rep("none-specified", length(estimate))}
 
   #Combine input to generate levels
   level <- paste(parameter, predictor, link_function, grouping, sep = "_")

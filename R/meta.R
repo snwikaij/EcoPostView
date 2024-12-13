@@ -573,8 +573,8 @@ meta <- function(estimate, stderr, parameter=NULL, predictor=NULL,
                                          if(mod_data$npw>1){
                                            mcmc_podd       <- extract_chain(model$BUGSoutput$sims.list$d, mod_data)}else{mcmc_podd <- NULL}
 
-                                         if(print_summary==T){
-                                         print(basic_summary)}
+                                         #Print summary
+                                         if(print_summary==T){print(basic_summary)}
 
                                          return(invisible(list(Summary=basic_summary,
                                                      Estimates=split(mcmc_mu, mcmc_mu$parameter),

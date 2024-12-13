@@ -11,7 +11,7 @@
 #' @param seed Set the seed
 #'
 #' @export
-abctoz <- function(z,
+abctoz <- function(p, operator=NULL,
                    nsim=50000,
                    prior_mu=c(0, 1),
                    prior_sd=c(1, 1),
@@ -22,8 +22,7 @@ abctoz <- function(z,
                    seed=123){
 
 #number of samples and prior array
-z                <- abs(z)
-nz               <- length(z)
+nz               <- length(p)
 
 priors           <- as.data.frame(array(NA, dim=c(nsim, 7)))
 colnames(priors) <- c("mu", "sd", "threshold", "cens", "n1", "n2", "dist")
@@ -37,12 +36,24 @@ priors[,6] <- nz-priors[,5]
 
 mod_dens <- function(x){d <- density(x); d$x[which.max(d$y)]}
 
-#parameters of the data
-data_mu  <- mean(z)
-data_mod <- mod_dens(z)
-data_sd  <- sd(z)
+#If no operator is given
+if(is.null(operator)){
+  z        <- qnorm(1 - p/2)
+  data_mu  <- mean(z)
+  data_mod <- mod_dens(z)
+  data_sd  <- sd(z)
+}else{
+    z_list <- vector("list", nsim)}
 
-#store simulations
+#p to z imputation function
+catp <- function(x, p) {
+  if (is.na(x)) {
+    return(qnorm(1 - p/2))
+  } else if (x == "<") { p <- runif(1, 0, p)
+  } else if (x == ">"){ p <- runif(1, p, 1)}
+  return(qnorm(1 - p/2))}
+
+#Store simulations
 sim_list     <- vector("list", nsim)
 
 #Create a distance function
@@ -53,12 +64,20 @@ sum(abs(c(mean(sim), mod_dens(sim), sd(sim))-c(data_mu, data_mod, data_sd)))/3}
 gc()
 
 #set seed
-set.seed(seed)
+#set.seed(seed)
 
 #ABC-rejection algorithm
 for(i in 1:nrow(priors)){
 
 if(print_progress == T) print(i)
+
+if(!is.null(operator)){
+z        <- mapply(catp, operator,  p)
+data_mu  <- mean(z)
+data_mod <- mod_dens(z)
+data_sd  <- sd(z)
+
+z_list[[i]] <- z}
 
 if(distribution=="z"){
 sim_list[[i]]         <- c(truncnorm::rtruncnorm(priors$n1[i], a=priors$threshold[i], b=Inf, mean=priors$mu[i], sd=priors$sd[i]),
@@ -69,4 +88,6 @@ sim_list[[i]]         <- c(truncdist::rtrunc(priors$n1[i], a=priors$threshold[i]
 
 priors[i,7]      <- dist_fun(sim_list[[i]])}
 
-return(list(iterations=priors, data=z, simulations=sim_list))}
+if(!is.null(operator)){zvals <- z_list}else{zvals <- z}
+
+return(list(iterations=priors, data=zvals, raw_data=qnorm(1 - p/2), simulations=sim_list))}

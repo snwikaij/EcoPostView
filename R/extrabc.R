@@ -43,18 +43,13 @@ extrabc <- function(obj, dist_threshold=0.3,
   posterior        <- priors[accepted,]
 
   #local linear correction function
-  loc_lm_cor <- function(par, dist, link="log"){
+  loc_lm_cor <- function(par, dist){
 
     dfloc <- data.frame(par=par, dist=dist)
 
-    if(link=="log"){
-      p_org   <- predict(mod1 <- glm(par~dist, data=dfloc, family = gaussian(link="log")), type = "response")
-      wt      <- 1/resid(lm(par~1, data=dfloc))^2
-      p_wt    <-  predict(mod2 <- glm(par~dist, data=dfloc, family = gaussian(link="log"), weights = wt), type = "response")}
-    else if(link=="identity"){
       p_org   <- predict(mod1 <- glm(par~dist, data=dfloc, family = gaussian(link="identity")), type = "response")
       wt      <- 1/resid(lm(par~1, data=dfloc))^2
-      p_wt    <-  predict(mod2 <- glm(par~dist, data=dfloc, family = gaussian(link="identity"), weights = wt), type = "response")}
+      p_wt    <-  predict(mod2 <- glm(par~dist, data=dfloc, family = gaussian(link="identity"), weights = wt), type = "response")
 
     adjust  <- dfloc$par+p_wt-p_org
 
@@ -83,16 +78,17 @@ extrabc <- function(obj, dist_threshold=0.3,
   sd_plot        <- sd_extracted$plot
 
   #cens
-  cens_extracted <- loc_lm_cor(posterior$cens, posterior$dist, link = "logit")
+  cens_extracted <- loc_lm_cor(posterior$cens, posterior$dist)
   cens_adj       <- cens_extracted$adjust
   cens_plot      <- cens_extracted$plot
 
   #create n_dens density lines
-  densline <- list()
+  densline <- vector("list", nrow(posterior))
 
+  if(!is.list(obj$data)){
   #Create a density curve for the data
   zdens <- data.frame(x=density(obj$data, bw=0.2)$x, y=density(obj$data, bw=0.2)$y)
-  zdens <- zdens[zdens$x>0,]
+  zdens <- zdens[zdens$x>0,]}else{mu_data_dens <- vector("list", nrow(posterior))}
 
   #vec for estimated values
   est_array <- array(NA, dim=c(nrow(posterior), 5))
@@ -103,13 +99,25 @@ extrabc <- function(obj, dist_threshold=0.3,
     sim_dens <- density(x, bw=0.1)
     dens_df  <- data.frame(i=i, x=sim_dens$x, y=sim_dens$y)
 
+    if(is.list(obj$data)){
+    zd        <- obj$data[[accepted[i]]]
+    sim_densz <- density(zd, bw=0.1)
+    densz_df  <- data.frame(i=i, x=sim_densz$x, y=sim_densz$y)
+
+    #set a length  for approximation of density curve
+    xlen     <- seq(0, 10, length.out=100)
+    data_val <- approx(densz_df$x, densz_df$y, xout = xlen)$y
+
+    mu_data_dens[[i]] <- cbind(xlen, approx(densz_df$x, densz_df$y, xout = xlen)$y)
+    }else{
+
     #set a length  for approximation of density curve
     xlen <- seq(max(c(min(zdens$x), min(dens_df$x))), min(c(max(zdens$x), max(dens_df$x))), length.out=100)
+    data_val <- approx(zdens$x, zdens$y, xout = xlen)$y}
 
-    data_val <- approx(zdens$x, zdens$y, xout = xlen)$y
     sim_val  <- approx(dens_df$x, dens_df$y, xout = xlen)$y
 
-    est_array[i,]   <- c(cor(data_val, sim_val)^2,
+    est_array[i,]   <- c(cor(data_val, sim_val, use = 'pairwise.complete.obs')^2,
                          mu_adj[i],
                          sd_adj[i],
                          cens_adj[i],
@@ -133,8 +141,9 @@ extrabc <- function(obj, dist_threshold=0.3,
   sd_max   <- sd(aggregate(data=densline, y~i, max)[,2])
 
   #Plot the histogram
-  plhist <- ggplot(data.frame(z=obj$data), aes(z))+xlim(0, 10)+
+  plhist <- ggplot(data.frame(z=obj$raw_data), aes(z))+xlim(0, 10)+
     xlab("z-value")+
+    geom_vline(xintercept = 1.96, lty=2, lwd=0.6)+
     geom_histogram(col="black", fill="grey70",
                    alpha=0.2, position="identity",
                    binwidth = 0.5,
@@ -146,7 +155,7 @@ extrabc <- function(obj, dist_threshold=0.3,
     scale_alpha(guide = 'none')
 
   #maximum value histogram
-  max_hist   <- max(ggplot_build(plhist)$data[[1]]$ymax)
+  max_hist   <- max(ggplot_build(plhist)$data[[2]]$ymax)
 
   #maximum range for histogram
   ymax_hist <- max_hist+max_hist*sd_max
@@ -158,13 +167,19 @@ extrabc <- function(obj, dist_threshold=0.3,
   plhist <- plhist+geom_line(data=densline, aes(x = x, y = y*adj_factor, group = as.factor(i)), alpha = alpha_dens, color = "grey30", inherit.aes = F)+
     ylim(0, ymax_hist)+annotate("text", x = xpos, y = ymax_hist/2, label = lab)
 
+  if(is.list(obj$data)){
+    zmu <- do.call(rbind, mu_data_dens)
+    zmu <- aggregate(data=zmu, zmu[,2]~zmu[,1], function(x) mean(x, na.rm=T))
+    zmu <- setNames(zmu, c("x", "y"))}else{zmu <- zdens}
+
   #Plot the histogram
   pldens <- ggplot(densline, aes(x, y, group = as.factor(i)))+xlim(0, 10)+
     xlab("z-value")+annotate("text", x = xpos, y = mean_max, label = lab)+
+    geom_vline(xintercept = 1.96, lty=2, lwd=0.6)+
     geom_line(data=densline, aes(x = x, y = y,
                                  group = as.factor(i)),
               alpha = alpha_dens, color = "grey80", inherit.aes = F)+
-    geom_line(data=zdens, aes(x, y))+
+    geom_line(data=zmu, aes(x, y))+
     xlab("z-value") +
     ylab("Density") +
     xlim(0, 10) +

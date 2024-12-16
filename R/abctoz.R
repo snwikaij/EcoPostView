@@ -1,93 +1,118 @@
 #' Aproximated Bayesian Computation to derive Z (ABC-to-z)
 #'
-#' @param z A numeric vector of z values
+#' @param p A numeric vector of p-values
+#' @param operator A vector that contains either <, > or NA (exact p-value)
 #' @param nsim Number of simulations
 #' @param prior_mu Prior values for mu(Z) following a truncated (0) normal distribution, which needs to notated c(mean, sd)
 #' @param prior_sd Prior values for sd(Z) following a gamma distribution, which needs to be notated c(shape, rate)
 #' @param prior_threshold Prior values for the threshold for 'significance'
 #' @param prior_cens Prior values for the fractions of censored samples following a beta distribution, which needs to be notated as c(alpha, beta)
-#' @param distribution Either shifted t-distribution or z-distribution
-#' @param print_progress Print the progress of simulations
+#' @param prior_uncens Prior values for the fractions of uncensored samples following a beta distribution, which needs to be notated as c(alpha, beta)
+#' @param prior_odds_cens The likelihood of the prior odds
+#' @param distribution Either z-distribution or shifted t-distribution with 1 df
+#' @param density_steps An argument that determines the number of steps of the density function to derive the fit of the simulated to the data
 #' @param seed Set the seed
 #'
 #' @export
 abctoz <- function(p, operator=NULL,
-                   nsim=50000,
-                   prior_mu=c(0, 1),
-                   prior_sd=c(1, 1),
+                   nsim=100000,
+                   prior_mu=c(1, 1),
+                   prior_sd=c(1, 2),
                    prior_threshold=c(1.96, 0.1),
-                   prior_cens=c(1, 2),
-                   distribution="t",
-                   print_progress=T,
-                   seed=123){
+                   prior_cens=c(3, 5),
+                   prior_uncens=c(1.25, 170),
+                   prior_odds_cens=0.5,
+                   distribution="z",
+                   density_steps=200,
+                   seed=1){
 
-#number of samples and prior array
-nz               <- length(p)
+  #number of samples and prior array
+  nz               <- length(p)
 
-priors           <- as.data.frame(array(NA, dim=c(nsim, 7)))
-colnames(priors) <- c("mu", "sd", "threshold", "cens", "n1", "n2", "dist")
+  #generate a data frame for the priors
+  priors           <- as.data.frame(array(NA, dim=c(nsim, 7)))
+  colnames(priors) <- c("mu", "sd", "threshold", "cens", "n1", "n2", "H0/H1")
 
-priors[,1] <- truncnorm::rtruncnorm(nsim, a = 0, b=Inf, mean=prior_mu[1], sd=prior_mu[2])
-priors[,2] <- rgamma(nsim, prior_sd[1], prior_sd[2])
-priors[,3] <- truncnorm::rtruncnorm(nsim, a = 0, b=Inf, mean=prior_threshold[1], sd=prior_threshold[2])
-priors[,4] <- rbeta(nsim, prior_cens[1], prior_cens[2])
-priors[,5] <- round(nz*priors[,4])
-priors[,6] <- nz-priors[,5]
+  #based on the prior odds generate priors for the censoring
+  selection <- rbinom(nsim, 1, prior_odds_cens)
+  prior_cens_values <- mapply(function(x) {
+    if(x == 1){
+      return(rbeta(1, prior_cens[1], prior_cens[2]))
+    }else{
+      return(rbeta(1, prior_uncens[1], prior_uncens[2]))}
+  }, selection)
 
-mod_dens <- function(x){d <- density(x); d$x[which.max(d$y)]}
+  #generate all priors and place in df
+  priors[,1] <- truncnorm::rtruncnorm(nsim, a = 0, b=Inf, mean=prior_mu[1], sd=prior_mu[2])
+  priors[,2] <- rgamma(nsim, prior_sd[1], prior_sd[2])
+  priors[,3] <- truncnorm::rtruncnorm(nsim, a = 0, b=Inf, mean=prior_threshold[1], sd=prior_threshold[2])
+  priors[,4] <- prior_cens_values
+  priors[,5] <- round(nz*priors[,4])
+  priors[,6] <- nz-priors[,5]
+  priors[,7] <- selection
 
-#If no operator is given
-if(is.null(operator)){
-  z        <- qnorm(1 - p/2)
-  data_mu  <- mean(z)
-  data_mod <- mod_dens(z)
-  data_sd  <- sd(z)
-}else{
+  #if no operator is given
+  if(is.null(operator)){
+    z        <- qnorm(1 - p/2)
+
+    #generate a density curve for the data
+    xlen   <- base::seq(0, max(z), length.out=density_steps)
+    dval   <- approx(density(z)$x, density(z)$y, xout = xlen)$y
+  }else{
     z_list <- vector("list", nsim)}
 
-#p to z imputation function
-catp <- function(x, p) {
-  if (is.na(x)) {
-    return(qnorm(1 - p/2))
-  } else if (x == "<") { p <- runif(1, 0, p)
-  } else if (x == ">"){ p <- runif(1, p, 1)}
-  return(qnorm(1 - p/2))}
+  #p to z imputation function
+  catp <- function(x, p) {
+    if (is.na(x)) {
+      return(qnorm(1 - p/2))
+    } else if (x == "<") { p <- runif(1, 0, p)
+    } else if (x == ">"){ p <- runif(1, p, 1)}
+    return(qnorm(1 - p/2))}
 
-#Store simulations
-sim_list     <- vector("list", nsim)
+  #store simulations
+  sim_list     <- vector("list", nsim)
 
-#Create a distance function
-dist_fun <- function(sim){
-sum(abs(c(mean(sim), mod_dens(sim), sd(sim))-c(data_mu, data_mod, data_sd)))/3}
+  #create some free space
+  gc()
 
-#create some free space (is it at all needed?)
-gc()
+  #set cores to use (minus one for safety)
+  n_cores <- detectCores() - 1
+  cl      <- makeCluster(n_cores)
+  registerDoParallel(cl)
 
-#set seed
-#set.seed(seed)
+  #set seed
+  set.seed(seed)
+  results <- foreach(i = 1:nsim, .packages = c("truncnorm", "truncdist")) %dopar% {
 
-#ABC-rejection algorithm
-for(i in 1:nrow(priors)){
+    #impute pvalues if half reported
+    if(!is.null(operator)){
+      z           <- mapply(catp, operator,  p)
+      xlen        <- base::seq(0, max(z), length.out=density_steps)
+      dval        <- approx(density(z)$x, density(z)$y, xout = xlen)$y
+      imputed_z   <- z}else{imputed_z <- NULL}
 
-if(print_progress == T) print(i)
+    #normal and t dist
+    if(distribution=="z"){
+      sim_vals         <- c(truncnorm::rtruncnorm(priors$n1[i], a=priors$threshold[i], b=Inf, mean=priors$mu[i], sd=priors$sd[i]),
+                            truncnorm::rtruncnorm(priors$n2[i], a=0, b=Inf, mean=priors$mu[i], sd=priors$sd[i]))}
+    else if(distribution=="t"){
+      sim_vals         <- c(truncdist::rtrunc(priors$n1[i], a=priors$threshold[i], b=Inf, df=3, spec="t")*sqrt(priors$sd[i]^2 * (3-2)/3)+priors$mu[i],
+                            truncdist::rtrunc(priors$n2[i], a=0, b=Inf, df=3, spec="t")*sqrt(priors$sd[i]^2 * (3-2)/3)+priors$mu[i])}
 
-if(!is.null(operator)){
-z        <- mapply(catp, operator,  p)
-data_mu  <- mean(z)
-data_mod <- mod_dens(z)
-data_sd  <- sd(z)
+    #fit density distribution
+    sim_density <- approx(density(sim_vals)$x, density(sim_vals)$y, xout = xlen)$y
+    n_dens      <- length(xlen)-sum(is.na(sim_density))
 
-z_list[[i]] <- z}
+    #calulcate distance
+    dsim        <- approx(density(sim_vals)$x, density(sim_vals)$y, xout = xlen)$y
+    dist        <- sum(abs(dval-dsim), na.rm = T)/n_dens
 
-if(distribution=="z"){
-sim_list[[i]]         <- c(truncnorm::rtruncnorm(priors$n1[i], a=priors$threshold[i], b=Inf, mean=priors$mu[i], sd=priors$sd[i]),
-                           truncnorm::rtruncnorm(priors$n2[i], a=0, b=Inf, mean=priors$mu[i], sd=priors$sd[i]))}
-else if(distribution=="t"){
-sim_list[[i]]         <- c(truncdist::rtrunc(priors$n1[i], a=priors$threshold[i], b=Inf, df=3, spec="t")*sqrt(priors$sd[i]^2 * (3-2)/3)+priors$mu[i],
-                           truncdist::rtrunc(priors$n2[i], a=0, b=Inf, df=3, spec="t")*sqrt(priors$sd[i]^2 * (3-2)/3)+priors$mu[i])}
+    list(simulations=sim_vals, distance=dist, imputed_z=imputed_z)}
 
-priors[i,7]      <- dist_fun(sim_list[[i]])}
+  sim_list           <- lapply(results, `[[`, "simulations")
+  simulations        <- lapply(results, `[[`, "imputed_z")
+  priors$distance    <- sapply(results, `[[`, "distance")
 
-if(!is.null(operator)){zvals <- z_list}else{zvals <- z}
+  if(!is.null(operator)){zvals <- simulations}else{zvals <- z}
 
-return(list(iterations=priors, data=zvals, raw_data=qnorm(1 - p/2), simulations=sim_list))}
+  return(invisible(list(iterations=priors, data=zvals, raw_data=qnorm(1 - p/2), simulations=sim_list)))}

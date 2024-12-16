@@ -5,6 +5,7 @@
 #' @param interval Interval level
 #' @param n_dens Number of density curves to generate
 #' @param xpos Values for position of text along x-axis
+#' @param ypos_lim A value in fraction of the maximum density that indicates limits of the y-axis
 #' @param alpha_dens Transparency of the density lines
 #'
 #' @importFrom stats predict
@@ -29,15 +30,15 @@
 #' @importFrom ggplot2 annotate
 #'
 #' @export
-extrabc <- function(obj, dist_threshold=0.3,
+extrabc <- function(obj, dist_threshold=0.02,
                     interval=0.9, n_dens=100,
-                    xpos=6, alpha_dens=0.3){
+                    xpos=6, ypos_lim=0.99, alpha_dens=0.3){
 
   #Extract the posterior by threshold distance
   priors           <- obj$iterations
 
   #Accepted simulations
-  accepted <- which(abs(priors$dist)<dist_threshold)
+  accepted <- which(abs(priors$distance)<dist_threshold)
 
   #Posterior accepted values
   posterior        <- priors[accepted,]
@@ -47,15 +48,15 @@ extrabc <- function(obj, dist_threshold=0.3,
 
     dfloc <- data.frame(par=par, dist=dist)
 
-      p_org   <- predict(mod1 <- glm(par~dist, data=dfloc, family = gaussian(link="identity")), type = "response")
-      wt      <- 1/resid(lm(par~1, data=dfloc))^2
-      p_wt    <-  predict(mod2 <- glm(par~dist, data=dfloc, family = gaussian(link="identity"), weights = wt), type = "response")
+    p_org   <- predict(mod1 <- glm(par~dist, data=dfloc, family = gaussian(link="identity")), type = "response")
+    wt      <- 1/resid(lm(par~1, data=dfloc))^2
+    p_wt    <-  predict(mod2 <- glm(par~dist, data=dfloc, family = gaussian(link="identity"), weights = wt), type = "response")
 
     adjust  <- dfloc$par+p_wt-p_org
 
     org_adj_plot <- rbind(
-    data.frame(type="Adjusted", x=dfloc$dist, y=adjust),
-    data.frame(type="Original", x=dfloc$dist, y=dfloc$par))
+      data.frame(type="Adjusted", x=dfloc$dist, y=adjust),
+      data.frame(type="Original", x=dfloc$dist, y=dfloc$par))
 
     l <- geom_smooth(method = "glm", formula="y~x", se=F, col='tomato2', lty=2, lwd=1.2)
 
@@ -68,17 +69,17 @@ extrabc <- function(obj, dist_threshold=0.3,
 
   #apply loc lm correction to mu, sd and censor
   #mu
-  mu_extracted   <- loc_lm_cor(posterior$mu, posterior$dist)
+  mu_extracted   <- loc_lm_cor(posterior$mu, posterior$distance)
   mu_adj         <- mu_extracted$adjust
   mu_plot        <- mu_extracted$plot
 
   #sd
-  sd_extracted   <- loc_lm_cor(posterior$sd, posterior$dist)
+  sd_extracted   <- loc_lm_cor(posterior$sd, posterior$distance)
   sd_adj         <- sd_extracted$adjust
   sd_plot        <- sd_extracted$plot
 
   #cens
-  cens_extracted <- loc_lm_cor(posterior$cens, posterior$dist)
+  cens_extracted <- loc_lm_cor(posterior$cens, posterior$distance)
   cens_adj       <- cens_extracted$adjust
   cens_plot      <- cens_extracted$plot
 
@@ -86,9 +87,9 @@ extrabc <- function(obj, dist_threshold=0.3,
   densline <- vector("list", nrow(posterior))
 
   if(!is.list(obj$data)){
-  #Create a density curve for the data
-  zdens <- data.frame(x=density(obj$data, bw=0.2)$x, y=density(obj$data, bw=0.2)$y)
-  zdens <- zdens[zdens$x>0,]}else{mu_data_dens <- vector("list", nrow(posterior))}
+    #Create a density curve for the data
+    zdens <- data.frame(x=density(obj$data, bw=0.2)$x, y=density(obj$data, bw=0.2)$y)
+    zdens <- zdens[zdens$x>0,]}else{mu_data_dens <- vector("list", nrow(posterior))}
 
   #vec for estimated values
   est_array <- array(NA, dim=c(nrow(posterior), 5))
@@ -100,20 +101,20 @@ extrabc <- function(obj, dist_threshold=0.3,
     dens_df  <- data.frame(i=i, x=sim_dens$x, y=sim_dens$y)
 
     if(is.list(obj$data)){
-    zd        <- obj$data[[accepted[i]]]
-    sim_densz <- density(zd, bw=0.1)
-    densz_df  <- data.frame(i=i, x=sim_densz$x, y=sim_densz$y)
+      zd        <- obj$data[[accepted[i]]]
+      sim_densz <- density(zd, bw=0.1)
+      densz_df  <- data.frame(i=i, x=sim_densz$x, y=sim_densz$y)
 
-    #set a length  for approximation of density curve
-    xlen     <- seq(0, 10, length.out=100)
-    data_val <- approx(densz_df$x, densz_df$y, xout = xlen)$y
+      #set a length  for approximation of density curve
+      xlen     <- seq(0, 10, length.out=100)
+      data_val <- approx(densz_df$x, densz_df$y, xout = xlen)$y
 
-    mu_data_dens[[i]] <- cbind(xlen, approx(densz_df$x, densz_df$y, xout = xlen)$y)
+      mu_data_dens[[i]] <- cbind(xlen, approx(densz_df$x, densz_df$y, xout = xlen)$y)
     }else{
 
-    #set a length  for approximation of density curve
-    xlen <- seq(max(c(min(zdens$x), min(dens_df$x))), min(c(max(zdens$x), max(dens_df$x))), length.out=100)
-    data_val <- approx(zdens$x, zdens$y, xout = xlen)$y}
+      #set a length  for approximation of density curve
+      xlen <- seq(max(c(min(zdens$x), min(dens_df$x))), min(c(max(zdens$x), max(dens_df$x))), length.out=100)
+      data_val <- approx(zdens$x, zdens$y, xout = xlen)$y}
 
     sim_val  <- approx(dens_df$x, dens_df$y, xout = xlen)$y
 
@@ -136,6 +137,7 @@ extrabc <- function(obj, dist_threshold=0.3,
   mu_stat <- round(colMeans(est_array, na.rm = T),2)
   se_stat <- round(apply(est_array, 2, function(x) sd(x, na.rm = T)),2)
   lab     <- paste0(c("R-squared=", "mean(Z)=", "sd(Z)=", "Censored=", "Threshold="), mu_stat, " (SE=", se_stat, ")\n", collapse = "")
+  lab     <- paste0(lab, "BF (Censord/Uncensored)=", round((table(posterior$`H0/H1`)[2]/table(posterior$`H0/H1`)[1])/(table(priors$`H0/H1`)[2]/table(priors$`H0/H1`)[1]),2))
 
   mean_max <- mean(aggregate(data=densline, y~i, max)[,2])
   sd_max   <- sd(aggregate(data=densline, y~i, max)[,2])
@@ -149,7 +151,7 @@ extrabc <- function(obj, dist_threshold=0.3,
                    binwidth = 0.5,
                    boundary = 0, closed = "left")+
     xlab("z-value") +
-    ylab("Density") +
+    ylab("Count") +
     xlim(0, 10) +
     theme_classic() +
     scale_alpha(guide = 'none')
@@ -172,9 +174,11 @@ extrabc <- function(obj, dist_threshold=0.3,
     zmu <- aggregate(data=zmu, zmu[,2]~zmu[,1], function(x) mean(x, na.rm=T))
     zmu <- setNames(zmu, c("x", "y"))}else{zmu <- zdens}
 
+  ylimit <- quantile(densline$y,ypos_lim)
+  ypos <- quantile(densline$y,.95)
   #Plot the histogram
   pldens <- ggplot(densline, aes(x, y, group = as.factor(i)))+xlim(0, 10)+
-    xlab("z-value")+annotate("text", x = xpos, y = mean_max, label = lab)+
+    xlab("z-value")+annotate("text", x = xpos, y = ypos, label = lab)+ylim(0,ylimit)+
     geom_vline(xintercept = 1.96, lty=2, lwd=0.6)+
     geom_line(data=densline, aes(x = x, y = y,
                                  group = as.factor(i)),

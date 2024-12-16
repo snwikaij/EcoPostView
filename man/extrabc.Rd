@@ -6,10 +6,11 @@
 \usage{
 extrabc(
   obj,
-  dist_threshold = 0.3,
+  dist_threshold = 0.02,
   interval = 0.9,
   n_dens = 100,
   xpos = 6,
+  ypos_lim = 0.99,
   alpha_dens = 0.3
 )
 }
@@ -23,6 +24,8 @@ extrabc(
 \item{n_dens}{Number of density curves to generate}
 
 \item{xpos}{Values for position of text along x-axis}
+
+\item{ypos_lim}{A value in fraction of the maximum density that indicates limits of the y-axis}
 
 \item{alpha_dens}{Transparency of the density lines}
 }

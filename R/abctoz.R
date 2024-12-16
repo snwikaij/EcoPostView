@@ -76,9 +76,9 @@ abctoz <- function(p, operator=NULL,
   gc()
 
   #set cores to use (minus one for safety)
-  n_cores <- detectCores() - 1
-  cl      <- makeCluster(n_cores)
-  registerDoParallel(cl)
+  n_cores <- parallel::detectCores() - 1
+  cl      <- parallel::makeCluster(n_cores)
+  doParallel::registerDoParallel(cl)
 
   #set seed
   set.seed(seed)

@@ -13,6 +13,12 @@
 #' @param density_steps An argument that determines the number of steps of the density function to derive the fit of the simulated to the data
 #' @param seed Set the seed
 #'
+#' @importFrom foreach foreach
+#' @importFrom foreach %dopar%
+#' @importFrom parallel detectCores
+#' @importFrom parallel makeCluster
+#' @importFrom doParallel registerDoParallel
+#'
 #' @export
 abctoz <- function(p, operator=NULL,
                    nsim=100000,
@@ -82,7 +88,7 @@ abctoz <- function(p, operator=NULL,
 
   #set seed
   set.seed(seed)
-  results <- foreach(i = 1:nsim, .packages = c("truncnorm", "truncdist")) %dopar% {
+  results <- foreach::foreach(i = 1:nsim, .packages = c("truncnorm", "truncdist")) %dopar% {
 
     #impute pvalues if half reported
     if(!is.null(operator)){

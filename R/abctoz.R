@@ -25,11 +25,11 @@ abctoz <- function(p, operator=NULL,
                    prior_mu=c(1, 1),
                    prior_sd=c(1, 2),
                    prior_threshold=c(1.96, 0.1),
-                   prior_cens=c(1, 2.5),
-                   prior_uncens=c(1.25, 170),
-                   prior_odds_cens=0.5,
+                   prior_cens=c(1, 1.5, 0.02, 1),
+                   prior_uncens=c(1, 1, 0, 0.02),
+                   prior_odds_cens=0.925,
                    distribution="z",
-                   density_steps=200,
+                   density_steps=100,
                    seed=1){
 
   #number of samples and prior array
@@ -43,9 +43,9 @@ abctoz <- function(p, operator=NULL,
   selection <- rbinom(nsim, 1, prior_odds_cens)
   prior_cens_values <- mapply(function(x) {
     if(x == 1){
-      return(rbeta(1, prior_cens[1], prior_cens[2]))
+      return(truncdist::rtrunc(1, shape1=prior_cens[1], shape2=prior_cens[2], a=prior_cens[3], b=prior_cens[4], spec="beta"))
     }else{
-      return(rbeta(1, prior_uncens[1], prior_uncens[2]))}
+      return(truncdist::rtrunc(1, shape1=prior_uncens[1], shape2=prior_uncens[2], a=prior_uncens[3], b=prior_uncens[4], spec="beta"))}
   }, selection)
 
   #generate all priors and place in df

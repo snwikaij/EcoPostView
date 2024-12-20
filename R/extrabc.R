@@ -28,17 +28,39 @@
 #' @importFrom ggplot2 ggplot_build
 #' @importFrom ggplot2 geom_line
 #' @importFrom ggplot2 annotate
+#' @importFrom ggplot2 scale_alpha
 #'
 #' @export
-extrabc <- function(obj, dist_threshold=0.02,
+extrabc <- function(obj, dist_threshold=NULL,
                     interval=0.9, n_dens=100,
                     xpos=6, ypos_lim=0.99, alpha_dens=0.3){
 
   #Extract the posterior by threshold distance
   priors           <- obj$iterations
 
+  seq_val <- seq(0.001, 0.05, 0.001)
+  seq_df  <- array(NA, dim=c(length(seq_val),2))
+
+  for(i in 1:nrow(seq_df)){
+    seq_set <- priors[priors$distance<seq_val[i],]
+    if(nrow(seq_set)==0){
+      acceptance <- 0}else{
+        acceptance <- nrow(seq_set)/nrow(priors)}
+  seq_df[i,]       <- c(seq_val[i],acceptance)}
+
+  seq_df           <- setNames(as.data.frame(seq_df), c("dist", "acc"))
+  seq_df           <- na.omit(seq_df)
+
   #Accepted simulations
-  accepted <- which(abs(priors$distance)<dist_threshold)
+  if(is.null(dist_threshold)){
+  dy  <- diff(seq_df$acc)/diff(seq_df$dist)
+  d2y <- diff(dy)/diff(seq_df$dist[-1])
+
+  max_curve      <- which.max(abs(d2y))
+  dist_threshold <- seq_df$dist[max_curve + 1]
+
+  accepted         <- which(abs(priors$distance)<dist_threshold)}else{
+  accepted         <- which(abs(priors$distance)<dist_threshold)}
 
   #Posterior accepted values
   posterior        <- priors[accepted,]
@@ -48,9 +70,9 @@ extrabc <- function(obj, dist_threshold=0.02,
 
     dfloc <- data.frame(par=par, dist=dist)
 
-    p_org   <- predict(mod1 <- glm(par~dist, data=dfloc, family = gaussian(link="identity")), type = "response")
+    p_org   <- predict(mod1 <- lm(par~dist, data=dfloc), type = "response")
     wt      <- 1/resid(lm(par~1, data=dfloc))^2
-    p_wt    <-  predict(mod2 <- glm(par~dist, data=dfloc, family = gaussian(link="identity"), weights = wt), type = "response")
+    p_wt    <- predict(mod2 <- lm(par~dist, data=dfloc, weights = wt), type = "response")
 
     adjust  <- dfloc$par+p_wt-p_org
 
@@ -137,7 +159,6 @@ extrabc <- function(obj, dist_threshold=0.02,
   mu_stat <- round(colMeans(est_array, na.rm = T),2)
   se_stat <- round(apply(est_array, 2, function(x) sd(x, na.rm = T)),2)
   lab     <- paste0(c("R-squared=", "mean(Z)=", "sd(Z)=", "Censored=", "Threshold="), mu_stat, " (SE=", se_stat, ")\n", collapse = "")
-  lab     <- paste0(lab, "BF (Censord/Uncensored)=", round((table(posterior$`H0/H1`)[2]/table(posterior$`H0/H1`)[1])/(table(priors$`H0/H1`)[2]/table(priors$`H0/H1`)[1]),2))
 
   mean_max <- mean(aggregate(data=densline, y~i, max)[,2])
   sd_max   <- sd(aggregate(data=densline, y~i, max)[,2])
@@ -152,7 +173,6 @@ extrabc <- function(obj, dist_threshold=0.02,
                    boundary = 0, closed = "left")+
     xlab("z-value") +
     ylab("Count") +
-    xlim(0, 10) +
     theme_classic() +
     scale_alpha(guide = 'none')
 
@@ -186,7 +206,6 @@ extrabc <- function(obj, dist_threshold=0.02,
     geom_line(data=zmu, aes(x, y))+
     xlab("z-value") +
     ylab("Density") +
-    xlim(0, 10) +
     theme_classic() +
     scale_alpha(guide = 'none')
 
@@ -205,8 +224,11 @@ extrabc <- function(obj, dist_threshold=0.02,
                  quantile(mu_adj, interval_level[2]),
                  quantile(sd_adj, interval_level[2])), 4))
 
-  return(list(summary=output,
+  print(dist_threshold)
+
+  return(invisible(list(summary=output,
+              distance=seq_df,
               density=pldens,
               hist=plhist,
               posterior=posterior,
-              check=list(mu_plot, sd_plot, cens_plot)))}
+              check=list(mu_plot, sd_plot, cens_plot))))}

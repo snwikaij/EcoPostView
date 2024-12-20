@@ -30,6 +30,7 @@ abctoz <- function(p, operator=NULL,
                    prior_odds_cens=0.925,
                    distribution="z",
                    density_steps=100,
+                   min_dens_steps=20,
                    seed=1){
 
   #number of samples and prior array
@@ -111,7 +112,7 @@ abctoz <- function(p, operator=NULL,
 
     #calulcate distance
     dsim        <- approx(density(sim_vals)$x, density(sim_vals)$y, xout = xlen)$y
-    dist        <- sum(abs(dval-dsim), na.rm = T)/n_dens
+    if(n_dens<20){dist <- Inf}else{dist <- sum(abs(dval-dsim), na.rm = T)/n_dens}
 
     list(simulations=sim_vals, distance=dist, imputed_z=imputed_z)}
 

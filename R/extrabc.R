@@ -212,6 +212,12 @@ extrabc <- function(obj, dist_threshold=NULL,
   #Use selected interval level
   interval_level              <- 0.5+c(-1,1)*interval/2
 
+  #summarize support
+  supstat <- round(c(setNames(table(posterior$`H0/H1`),c("Uncensored", "Censored")),
+                  setNames(table(posterior$`H0/H1`)[2]/table(posterior$`H0/H1`)[1],c("BayesFactor(H1/H0)")),
+                  setNames(plogis(log(table(posterior$`H0/H1`)[2]/table(posterior$`H0/H1`)[1])),c("Probability(H1/H0)")),
+                  tolerance=dist_threshold),2)
+
   #Generate a simple summary
   output <- data.frame(
     Statistic = c("c", "mu(z)", "sd(z)"),
@@ -224,7 +230,8 @@ extrabc <- function(obj, dist_threshold=NULL,
                  quantile(mu_adj, interval_level[2]),
                  quantile(sd_adj, interval_level[2])), 4))
 
-  print(dist_threshold)
+  print(list('Supportive statistics'=supstat,
+            'Summary statistics'=output))
 
   return(invisible(list(summary=output,
               distance=seq_df,

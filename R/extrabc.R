@@ -209,13 +209,19 @@ extrabc <- function(obj, dist_threshold=NULL,
     theme_classic() +
     scale_alpha(guide = 'none')
 
-  #Use selected interval level
+  #Use selected ETI interval level (I specifically choose ETI) due to its simplicity
+  #Also, I do not know how HDI behaves exactly with limited posterior samples
   interval_level              <- 0.5+c(-1,1)*interval/2
 
+  posth0h1 <- table(posterior$`H0/H1`)
+  if(!length(posth0h1) == 2){
+  if(names(posth0h1) == "0"){posth0h1 <- cbind("0"=posth0h1, "1"=0)}
+  if(names(posth0h1) == "1"){posth0h1 <- cbind("1"=0, "1"=posth0h1)}}
+
   #summarize support
-  supstat <- round(c(setNames(table(posterior$`H0/H1`),c("Uncensored", "Censored")),
-                  setNames(table(posterior$`H0/H1`)[2]/table(posterior$`H0/H1`)[1],c("BayesFactor(H1/H0)")),
-                  setNames(plogis(log(table(posterior$`H0/H1`)[2]/table(posterior$`H0/H1`)[1])),c("Probability(H1/H0)")),
+  supstat <- round(c(setNames(posth0h1,c("Uncensored", "Censored")),
+                  setNames(posth0h1[2]/posth0h1[1],c("BayesFactor(H1/H0)")),
+                  setNames(plogis(log(posth0h1[2]/posth0h1[1])),c("Probability(H1/H0)")),
                   tolerance=dist_threshold),2)
 
   #Generate a simple summary

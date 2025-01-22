@@ -12,11 +12,14 @@
 #' @param label_size Size of the labels in the plots
 #' @param line_width The line width
 #' @param point_size The size of the point
+#' @param scale_point_line Scale point and line as function of model parameter
 #' @param err_bar_lwd The line width of the error bars
 #' @param xlab The x-label text
 #' @param ylab The y-label text
 #' @param xylab_size Size of x and y label
 #' @param xtext_size Size of the x-axis text
+#' @param xrounds rounding of the values on the x-axis
+#' @param xbreaks Size of the breaks on the x-axis
 #'
 #' @importFrom stats setNames
 #' @importFrom ggplot2 theme_void
@@ -39,7 +42,8 @@ pdplot <- function(object, interval=0.9, display="b1",
                    line_width=0.2, point_size=.5,err_bar_lwd=0.2,
                    xlab="Parameter estimate",
                    ylab="Posterior density",
-                   xylab_size=3, xtext_size=8){
+                   xylab_size=3, xtext_size=6,
+                   xround=1, xbreaks=4){
 
 #Extract b1 or b0
 if(display=="b1"){object1   <- object$Estimates$b1}else{stop("b0 not yet implemented")}
@@ -86,6 +90,8 @@ if(!is.null(order_group)&&!is.null(order_group)){
 plot_list              <- list()
 est_df                 <- setNames(as.data.frame(array(NA, dim=c(nrow(names_mcmc), 6))), c("map", "mu", "se", "ll", "ul", "x"))
 
+max_point_size <- abs(max(quantile(object1$estimate,.01, .99)))
+
 for(i in 1:length(split_mcmc)){
 
   if(is.null(split_mcmc[[i]])){plot_list[[names_mcmc$code[i]]]<- ggplot()+theme_void()}else{
@@ -115,21 +121,28 @@ hdi_fun <- function(x, level){
 est_df[i,]              <- c(maxpost(split_mcmc[[i]]), mean(split_mcmc[[i]]),
                              sd(split_mcmc[[i]]), hdi_fun(split_mcmc[[i]], interval), x=0)
 
-if(max(abs(range(split_mcmc[[i]])))>1){
-      xbreaks <- scale_x_continuous(breaks = seq(-2,2,1))
-}else{xbreaks <- scale_x_continuous(breaks = seq(-1.5,1.5,.5))}
+auto_limx <- quantile(split_mcmc[[i]], c(.0001, .999))
+xbreak    <- round(seq(auto_limx[1], auto_limx[2], length.out=xbreaks),xround)
 
-pl <- ggplot(data.frame(x=split_mcmc[[i]]), aes(x=x))+
-    geom_density(alpha=0.2, lwd=line_width)+
-    geom_vline(xintercept = 0, lty=2, lwd=line_width, col="black")+
-    xbreaks+geom_point(data=est_df[i,], aes(x=as.numeric(map), y=0), inherit.aes = F, size=point_size)+
-     geom_errorbarh(data=est_df[i,], aes(xmin=as.numeric(ll), xmax=as.numeric(ul),y=0),height=0, lwd=err_bar_lwd)+
+sub_data <- split_mcmc[[i]]
+sub_data <- sub_data[sub_data >= auto_limx[1] & sub_data <= auto_limx[2]]
+
+dens_col <- ifelse(est_df[i,]$map<0,"tomato3","dodgerblue3")
+
+pl <- ggplot(data.frame(x=sub_data), aes(x=x))+
+    geom_density(alpha=0.2, lwd=line_width, col=dens_col)+
+    geom_vline(xintercept = 0, lty=2, lwd=.4, col="black")+
+    scale_x_continuous(breaks = xbreak,
+                       limits = c(auto_limx[1],  auto_limx[2]))+
+    geom_point(data=est_df[i,], aes(x=as.numeric(map), y=0), col=dens_col, inherit.aes = F, size=point_size)+
+    geom_errorbarh(data=est_df[i,], aes(xmin=as.numeric(ll), xmax=as.numeric(ul),y=0),
+                   col=dens_col, height=0, lwd=err_bar_lwd)+
     theme_classic()+
     theme(axis.title = element_blank(),
           axis.text.y = element_blank(),
           axis.ticks.y = element_blank(),
-          axis.text.x = element_text(size = xtext_size),
-          line = element_line(linewidth = line_width),
+          axis.text.x = element_text(size = xtext_size, colour = "black"),
+          line = element_line(linewidth = .4),
           plot.margin = unit(c(.1, .1, .1, .1), "mm"))
 
 xrange_pl<- ggplot_build(pl)$layout$panel_scales_x[[1]]$range$range

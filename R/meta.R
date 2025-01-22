@@ -99,6 +99,8 @@ meta <- function(estimate, stderr, parameter=NULL, predictor=NULL,
                 Eff_warn = 1000,
                 print_summary=FALSE){
 
+  argument.call <- match.call()
+
   #If parameter is not given set to b1
   if(is.null(parameter)){parameter <- rep("b1", length(estimate))}
 
@@ -196,7 +198,7 @@ meta <- function(estimate, stderr, parameter=NULL, predictor=NULL,
 
                                             ##priors
                                             for(j in 1:L){
-                                              beta_adjust[j]~ dnorm(0, 1/10^2)
+                                              beta_adjust[j]~ dnorm(0, 1/100^2)
                                               tau1[j]      <- 1/sigma^2
 
                                               for(k in 1:npw){
@@ -228,8 +230,8 @@ meta <- function(estimate, stderr, parameter=NULL, predictor=NULL,
 
                                               ##priors
                                               for(j in 1:L){
-                                                beta_random[j] ~ dnorm(0, 1/0.5^2)
-                                                beta_adjust[j]  ~ dnorm(0, 1/10^2)
+                                                beta_random[j] ~ dnorm(0, 1/100^2)
+                                                beta_adjust[j]  ~ dnorm(0, 1/100^2)
                                                 tau1[j]        <- 1/sigma^2
 
                                                 for(k in 1:npw){
@@ -262,8 +264,8 @@ meta <- function(estimate, stderr, parameter=NULL, predictor=NULL,
                                               ##priors
                                               for(j in 1:L){
                                                 for(r in 1:R){
-                                                beta_random[j, r]  ~ dnorm(0, 1/0.5^2)}
-                                                beta_adjust[j]      ~ dnorm(0, 1/10^2)
+                                                beta_random[j, r]  ~ dnorm(0, 1/100^2)}
+                                                beta_adjust[j]      ~ dnorm(0, 1/100^2)
                                                 tau1[j]            <- 1/sigma^2
 
                                                 for(k in 1:npw){
@@ -293,7 +295,7 @@ meta <- function(estimate, stderr, parameter=NULL, predictor=NULL,
 
                                             ##priors
                                             for(j in 1:L){
-                                              beta_adjust[j]   ~ dnorm(0, 1/10^2)
+                                              beta_adjust[j]   ~ dnorm(0, 1/100^2)
                                               mu[j]           ~ dnorm(Pm[j], 1/Pe[j]^2)
                                               tau1[j]         <- 1/sigma^2}
 
@@ -318,8 +320,8 @@ meta <- function(estimate, stderr, parameter=NULL, predictor=NULL,
 
                                               ##priors
                                               for(j in 1:L){
-                                                beta_random[j]  ~ dnorm(0, 1/0.5^2)
-                                                beta_adjust[j]   ~ dnorm(0, 1/10^2)
+                                                beta_random[j]  ~ dnorm(0, 1/100^2)
+                                                beta_adjust[j]   ~ dnorm(0, 1/100^2)
                                                 mu[j]           ~ dnorm(Pm[j], 1/Pe[j]^2)
                                                 tau1[j]         <- 1/sigma^2}
 
@@ -345,8 +347,8 @@ meta <- function(estimate, stderr, parameter=NULL, predictor=NULL,
                                               ##priors
                                               for(j in 1:L){
                                                 for(r in 1:R){
-                                                beta_random[j, r]  ~ dnorm(0, 1/0.5^2)}
-                                                beta_adjust[j]      ~ dnorm(0, 1/10^2)
+                                                beta_random[j, r]  ~ dnorm(0, 1/100^2)}
+                                                beta_adjust[j]      ~ dnorm(0, 1/100^2)
                                                 mu[j]              ~ dnorm(Pm[j], 1/Pe[j]^2)
                                                 tau1[j]            <- 1/sigma^2}
 
@@ -373,7 +375,7 @@ meta <- function(estimate, stderr, parameter=NULL, predictor=NULL,
 
                                              ##priors
                                              for(j in 1:L){
-                                               beta_adjust[j]   ~ dnorm(0, 1/10^2)
+                                               beta_adjust[j]   ~ dnorm(0, 1/100^2)
 
                                                for(k in 1:npw){
                                                  mu_M[j,k]       ~ dnorm(Pm[j,k], 1/Pe[j,k]^2)}
@@ -397,8 +399,8 @@ meta <- function(estimate, stderr, parameter=NULL, predictor=NULL,
 
                                                  ##priors
                                                  for(j in 1:L){
-                                                   beta_random[j]  ~ dnorm(0, 1/0.5^2)
-                                                   beta_adjust[j]   ~ dnorm(0, 1/10^2)
+                                                   beta_random[j]  ~ dnorm(0, 1/100^2)
+                                                   beta_adjust[j]   ~ dnorm(0, 1/100^2)
 
                                                    for(k in 1:npw){
                                                      mu_M[j,k]       ~ dnorm(Pm[j,k], 1/Pe[j,k]^2)}
@@ -423,8 +425,8 @@ meta <- function(estimate, stderr, parameter=NULL, predictor=NULL,
                                                  ##priors
                                                  for(j in 1:L){
                                                    for(r in 1:R){
-                                                     beta_random[j, r]  ~ dnorm(0, 1/0.5^2)}
-                                                     beta_adjust[j]      ~ dnorm(0, 1/10^2)
+                                                     beta_random[j, r]  ~ dnorm(0, 1/100^2)}
+                                                     beta_adjust[j]      ~ dnorm(0, 1/100^2)
 
                                                    for(k in 1:npw){
                                                      mu_M[j,k]       ~ dnorm(Pm[j,k], 1/Pe[j,k]^2)}
@@ -446,7 +448,7 @@ meta <- function(estimate, stderr, parameter=NULL, predictor=NULL,
 
                                                  ##priors
                                                  for(j in 1:L){
-                                                   beta_adjust[j]   ~ dnorm(0, 1/10^2)
+                                                   beta_adjust[j]   ~ dnorm(0, 1/100^2)
                                                    mu[j]           ~ dnorm(Pm[j], 1/Pe[j]^2)}}}
                                              ##4.2 only 1 random
                                              else if(mod_data$R==1){
@@ -463,8 +465,8 @@ meta <- function(estimate, stderr, parameter=NULL, predictor=NULL,
 
                                                ##priors
                                                for(j in 1:L){
-                                                 beta_random[j]  ~ dnorm(0, 1/0.5^2)
-                                                 beta_adjust[j]   ~ dnorm(0, 1/10^2)
+                                                 beta_random[j]  ~ dnorm(0, 1/100^2)
+                                                 beta_adjust[j]   ~ dnorm(0, 1/100^2)
                                                  mu[j]           ~ dnorm(Pm[j], 1/Pe[j]^2)}}}
                                              ##4.3 more than 1 random
                                              else{
@@ -482,8 +484,8 @@ meta <- function(estimate, stderr, parameter=NULL, predictor=NULL,
                                                  ##priors
                                                  for(j in 1:L){
                                                    for(r in 1:R){
-                                                   beta_random[j, r]  ~ dnorm(0, 1/0.5^2)}
-                                                   beta_adjust[j]      ~ dnorm(0, 1/10^2)
+                                                   beta_random[j, r]  ~ dnorm(0, 1/100^2)}
+                                                   beta_adjust[j]      ~ dnorm(0, 1/100^2)
                                                    mu[j]              ~ dnorm(Pm[j], 1/Pe[j]^2)}}}}}
 
                                          #Run the model
@@ -547,9 +549,17 @@ meta <- function(estimate, stderr, parameter=NULL, predictor=NULL,
                                                ul <- orddata[i+infomass-1]}}
 
                                            c(ll, ul)}
+
+                                         #Mode or MAP
                                          maxpost              <- function(x){d <- density(x); d$x[which.max(d$y)]}
-                                         basic_summary        <- aggregate(data=split_par$b1, estimate~., function(x) c(maxpost(x), mean(x), sd(x),
-                                                                                                                        hdi_fun(x, level = interval)))
+
+                                         #Generate summary table
+                                         basic_summary        <- aggregate(data=split_par$b1, estimate~., function(x) c(maxpost(x), mean(x), sd(x), hdi_fun(x, level = interval)))
+
+                                         #Derive number of studies via factors
+                                         b1_n          <- as.data.frame(table(mod_data$level))
+                                         b1_n          <- setNames(cbind(do.call(rbind.data.frame, strsplit(as.character(b1_n[,1]), "_")), b1_n[,2]), c("parameter", "predictor", "link", "group"))
+
                                          if(RE==T){
                                            mcmc_I2       <- extract_chain(model$BUGSoutput$sims.list$I2, mod_data)
                                            mcmc_I2_b1    <- mcmc_I2[mcmc_I2$parameter!="b0",]
@@ -557,13 +567,15 @@ meta <- function(estimate, stderr, parameter=NULL, predictor=NULL,
 
                                            i2_summary                    <- aggregate(data=mcmc_I2_b1, estimate~., mean)$estimate
                                            basic_summary                 <- cbind(basic_summary[c(1:4)], round(unlist(basic_summary$estimate),4), round(i2_summary, 4))
-                                           colnames(basic_summary)[5:10] <- c("map", "mu", "se", "ll", "ul", "I2")}
+                                           basic_summary                 <- merge(basic_summary, b1_n, by=c("parameter", "predictor", "link", "group"))
+                                           colnames(basic_summary)[5:11] <- c("map", "mu", "se", "ll", "ul", "I2", "n")}
                                          else{
                                            mcmc_I2 <- NULL
                                            mcmc_sigma <- NULL
 
                                            basic_summary                 <- cbind(basic_summary[c(1:4)], round(unlist(basic_summary$estimate),4))
-                                           colnames(basic_summary)[5:9] <- c("map", "mu", "se", "ll", "ul")}
+                                           basic_summary                 <- merge(basic_summary, b1_n, by=c("parameter", "predictor", "link", "group"))
+                                           colnames(basic_summary)[5:10] <- c("map", "mu", "se", "ll", "ul", "n")}
 
                                          #Extract chains for peese or peters
                                          if(method!=0){
@@ -574,7 +586,12 @@ meta <- function(estimate, stderr, parameter=NULL, predictor=NULL,
                                            mcmc_podd       <- extract_chain(model$BUGSoutput$sims.list$d, mod_data)}else{mcmc_podd <- NULL}
 
                                          #Print summary
-                                         if(print_summary==T){print(basic_summary)}
+                                         if(print_summary==T){
+                                           cat("Call:\n")
+                                           print(argument.call)
+                                           cat("\n")
+                                           cat("Summary:\n")
+                                           print(basic_summary)}
 
                                          return(invisible(list(Summary=basic_summary,
                                                      Estimates=split(mcmc_mu, mcmc_mu$parameter),

@@ -2,7 +2,7 @@
 % Please edit documentation in R/hop.R
 \name{hop}
 \alias{hop}
-\title{Hypothetical outcome plots}
+\title{Hypothetical Outcome Plots}
 \usage{
 hop(
   object,
@@ -94,5 +94,22 @@ hop(
 \item{round_axis}{Round the number on the axis}
 }
 \description{
-Hypothetical outcome plots
+The hop function creates hypothetical regression lines simulated from the posterior values of the meta-analysis. If both
+b0 and b1 are indicated in the parameter column in the meta-analysis this function will display these HOP-lines.
+}
+\examples{
+data("example1")
+
+mod <-meta(estimate=example1$est, stderr=example1$se, RE=F,
+          parameter=example1$parameter, predictor=example1$predictor,
+          link_function=example1$link, grouping=example1$group)
+
+fig2 <- hop(mod, link="logit", group="Invertebrates", predictor="Sediment",
+           xlimit =c(-4.6,0), ylimit = c(0.35, 0.7),
+           exp_axis = T,
+           ylab = "Eveness",
+           xlab = "Fine sediment (\%)")
+
+print(fig2)
+
 }

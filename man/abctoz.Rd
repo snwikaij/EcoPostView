@@ -11,11 +11,12 @@ abctoz(
   prior_mu = c(1, 1),
   prior_sd = c(1, 2),
   prior_threshold = c(1.96, 0.1),
-  prior_cens = c(3, 5),
-  prior_uncens = c(1.25, 170),
-  prior_odds_cens = 0.5,
+  prior_cens = c(1, 1.5, 0.02, 1),
+  prior_uncens = c(1, 1.5, 0, 0.02),
+  prior_odds_cens = 0.97,
   distribution = "z",
-  density_steps = 200,
+  density_steps = 100,
+  min_dens_steps = 20,
   seed = 1
 )
 }

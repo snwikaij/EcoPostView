@@ -6,7 +6,7 @@
 \usage{
 extrabc(
   obj,
-  dist_threshold = 0.02,
+  dist_threshold = NULL,
   interval = 0.9,
   n_dens = 100,
   xpos = 6,

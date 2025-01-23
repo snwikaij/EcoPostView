@@ -165,8 +165,17 @@ Now it should be clear that each $\beta$ contained within $g(E(y \mid x_{ij})) =
 
 In a meta-analysis we do not talk about $\beta$ but about a set of estimates $\beta=\{\beta_{i}, ..., \beta_{n}\}$ meaning that $f(Meta-data\mid\{\beta_{i}, ..., \beta_{n}\})$. Hereby the flexibility allows that these estimates are either likelihood estimates ($\hat{\beta}$) or  posterior estimates ($\beta$). and we end up with an expression that should capture the inference to an underlying pooled model parameter.
 $$
-f(\beta_{poolded} \mid Meta-data,Info) = \frac{f(Meta-data \mid \{\beta_{i}, ..., \beta_{n}\}) \cdot f_k(\beta_{pooled} \mid Info)}{\int \left( \sum_{k=1}^{k} f(Meta-data \mid \{\beta_{i}, ..., \beta_{n}\}) \cdot f_k(\beta_{pooled} \mid Info) \right)}
+f(\beta_{poolded} \mid Meta-data,Info) = \frac{f(Meta-data \mid \{\beta_{i}, ..., \beta_{n}\}) \cdot f_k(\beta_{pooled} \mid Info)}{\int \left( \sum_{k=1}^{m} f(Meta-data \mid \{\beta_{i}, ..., \beta_{n}\}) \cdot f_k(\beta_{pooled} \mid Info) \right)}
 $$
+For a simple mean and variance an analytical approach can be used to derive the posterior given the likelihood and prior via the following equations.
+$$\mu_{posterior} =\frac{\frac{\mu_{prior} }{\sigma_{prior}^2} + \frac{\hat{x}_{data} }{\sigma_{data}^2}}{
+\frac{1}{\sigma_{prior}^2} + \frac{1}{\sigma_{data}^2}}
+\\
+\sigma_{posterior}=\sqrt{\frac{1}{\frac{1}{\sigma_{prior}^2}+\frac{1}{\sigma_{data}^2}}}$$
+Another way to obtain the posterior mean would be via
+$$\mu_{posterior}=\frac{\frac{\mu_{prior}}{n}+\hat{x}_{data}*\frac{1}{\sigma_{prior}^2}}
+{\frac{1}{\sigma_{prior}^2}+\frac{1}{n}}$$
+As might be clear this is less computational heavy than MCMC methods. For more then two parameter such an analytical approach becomes more combersome. And, if conjugacy is not satisfied no closed form solution is available. In this regards, Laplacian approximation is also computational easy. Yet, the equation clearly formulate the idea what happens in Bayes theorem. 
 
 ## 2.3 (G)LMs and Bayes Theorem 
 
@@ -314,7 +323,26 @@ This was the most difficult part where the data needs to be gathered and extract
 
 ## 3.6 Standard meta-analysis
 
-Often a meta-analysis is performed over standardized-effect-sizes (SES). While I do not condone this practice in any way, I do not see the use of these as having much benefit for field ecology, applied ecology, generalizations or learning about the impacts of real world application of ecological relations (Baguley 2009; Tukey  1969). I am likely completely wrong in generalizing as I can find suitable conditions under which SES are useful. Therefore a short introduction to a simple meta-analysis also displaying how the bias correction methods perform. I compare it with my standard favorite metafor package in R.
+Often a meta-analysis is performed over standardized-effect-sizes (SES). While I do not condone this practice in any way, I do not see the use of always using this practice has much benefit for field ecology, applied ecology, generalizations or learning about the impacts of real world application of ecological relations (Baguley 2009; Tukey  1969). Therefore a short introduction meta-analysis and also displaying how the bias correction methods perform. I compare it with my standard favorite metafor package in R.
+
+A standard meta-analysis uses a measure of location (mean) and scale (precision) to estimate a pooled value based on all parameters. For a fixed meta-analysis the pooled parameter is derived via the following equation.
+$$\theta_{pooled} = \frac{\sum_{i=1}^{k}(\theta_i\cdot w_i)}{\sum_{k=1}^kw_i}$$
+$\theta_i$ is the extracted effect-size for a study $i$. The $w_i$ is the weight per study $i$ for allk $k$ studies, derived from the precision $1/se_i^2$ via the equation below.
+$$w_i = \frac{1}{se_i^2}$$
+The standard error for the pooled effect-size can then be derived via the formula given below.
+
+$$se(\theta_{pooled})=\frac{1}{\sqrt\sum_{i=1}^{k}(w_i)}$$
+For a random-effect meta-analysis the variance between studies is separately modeled. In the metafor package REML or (Restricted Maximum Likelihood) is used to estimate this between study variance. However it is also possible using the DerSimonian and Laird method.
+$$
+\tau^2=max(0, \frac{Q-(k-1)}{\sum_{i=1}^{k}\frac{1}{w_i}-\frac{\sum_{i=1}^{k}1/w_i^2}{\sum_{i=1}^{k}1/w_i}})\
+\\
+w^*_i=\frac{1}{(\frac{1}{w_i}+\tau^2)}
+\\
+\theta_{pooled} = \frac{\sum_{i=1}^{k}(\theta_i\cdot w^*_i)}{\sum_{i=1}^{k}(w^*_i)}
+\\
+se(\theta_{pooled})=\frac{1}{\sqrt(\sum_{i=1}^{k}w^*_i)}
+$$
+If we now go back to how we analytically derived the posterior we can devise a function that can analytically perform a fixed effect meta-analysis with ease. I have placed this in a function called 'abmeta'. In in simple cases it approximates the results of metafor and and the meta function inf EcoPostView relatively well. Of course the variance component slightly differs with that from metafor due to the different method of estimation.
 
 ```{r, bias adjustment and metafor}
 #First run and check standard output for metafor
@@ -405,23 +433,24 @@ For larger datasets with multiple groups and predictor variables the order of th
 
 Hypothetical Outcome Plots (HOPs) are a powerful method to visualize the possibilities the expected value could take on given a change in the predictor variable (Kale et al. 2019).
 HOPs lines display the marginal change of the expected value given a change in the predictor variable holding all other variables constant.
-
 $$
 g(E(y_{i} \mid x_{ij)})) = \beta_{pooled,j=0,m} + \beta_{pooled,j=1,m} \cdot x_{i,j=1}+ \sum_{j=1}^{j} \beta_{pooled,j} \cdot \hat{x}_{j}
 $$
-This hypothetical prediction is generated using the posterior estimates $f(\beta_{pooled}|Data, Info)$. Hence, this parameter describes the influence on the response give one unit change in the predictor. To display this change a set of sequential values for $x_{i,j=1}$ can be generated as $x_{i,j=1}=\{i, ..., n\}$ realistic for the observed gradient. The function $f(\beta_{pooled,j}|Data, Info)$ contains most plausible values for $\beta_{pooled,j}$. By generating a value $m$ from this function $\beta_{pooled,j,m}\sim f(\beta_{pooled,j}|Data, Info)$ and repeating it $m$ times a bunch of hypothetical outcomes can be generated. To arrive at this display, all other estimated parameters are held constant at the sum the other estimates $\sum_{j=1}^{j} \beta_{pooled,j}$. The HOPs lines are therefore simulation of (marginal) possibilities from the posterior. 
-
-Note that the function works under the idea of log transformed variables. This means that argument xlim (the limits of the figures) as given below are exp(3)=20 and exp(8)=2980 for conductivity. The y-axis is on the response scale. I hope soon to make it possible to use an argument that makes it possible to set the xlim on the response scale. Below an example of the outcomes of the response of invertebrate taxonomic richness along  the conductivity gradient. 
+This hypothetical prediction is generated using the posterior estimates $f(\beta_{pooled}|Data, Info)$. Hence, this parameter describes the influence on the response give one unit change in the predictor. To display this change a set of sequential values for $x_{i,j=1}$ can be generated as $x_{i,j=1}=\{i, ..., n\}$ realistic for the observed gradient. The function $f(\beta_{pooled,j}|Data, Info)$ contains most plausible values for $\beta_{pooled,j}$. By generating a value $m$ from this function $\beta_{pooled,j,m}\sim f(\beta_{pooled,j}|Data, Info)$ and repeating it $m$ times a bunch of hypothetical outcomes can be generated. To arrive at this display, all other estimated parameters are held constant at the sum the other estimates $\sum_{j=1}^{j} \beta_{pooled,j}$. The HOPs lines are therefore simulation of (marginal) possibilities from the posterior. There is a slight difference with classical hops because in the case of the meta-analysis $\hat{x}=1$. This still displays the marginal change of $y_i$ given $x_{i,j}$ but only under the conditions where all predictors are $\hat{x}_j=1$ 
+$$
+g(E(y_{i} \mid x_{ij)})) = \beta_{pooled,j=0,m} + \beta_{pooled,j=1,m} \cdot x_{i,j=1}+ \sum_{j=1}^{j} \beta_{pooled,j} \cdot 1
+$$
+Note that the function works under the idea of log transformed variables. This means that argument xlim (the limits of the figures) as given below are exp(-4.6)=0.01 and exp(0)=1 for the fraction of fine sediment. The y-axis is on the response scale. I hope soon to make it possible to use an argument that makes it possible to set the xlim on the response scale. Below an example of the outcomes of the response of invertebrate taxonomic richness along the gradient of fine sediment. 
 
 ```{r HOPs log salinity fig1}
 log_sal1 <- hop(mod2,                                  #object from the meta function
     group="Invertebrates",                             #select group to out of Invertebrates and Fish
-    predictor = "Salinity",                            #select group to out of Salinity and Oxygen
-    xlab= expression(Ln(Conductivity ~ µS ~ cm^-1)),   #give x-axis a name
+    predictor = "Sediment",                            #select group to out of Salinity and Oxygen
+    xlab= "Fine sediment (%)",                         #give x-axis a name
     link_function = "log",                             #which link function out of log and logit
     ylab="Invertebrate taxonomic richness",            #give y-axis a name
-    xlim=c(3, 8),                                      #give y-axis a name
-    ylim=c(0, 50),                                     #set  limits y-axis
+    xlim=c(-4.6, 0),                                   #give y-axis a name
+    ylim=c(0, 80),                                     #set  limits y-axis
     hop_lwd = 0.3)                                     #set width of the hop lines
 ```
 
@@ -429,20 +458,21 @@ log_sal1 <- hop(mod2,                                  #object from the meta fun
 print(log_sal1)
 ```
 
-It is also possible to scale to display the exponentiate values on the x-axis using the argument 'exp_axis'. The observant reader might notice the taxonomic richness is ~20 under lower conductivity. This is correct, because the majority of the literature published does not focus on species richness, it often focuses on the richness of family or orders. There is a possibility to adjust this by using the 'shift_b0' argument which requires a single number that is added to the intercept.
+It is also possible to scale to display the exponentiate values on the x-axis using the argument 'exp_axis'. Note that one might suggest the intercept is to high. This could be correct, because this is the average intercept over all studies keeping the other variables constant at 1. To change the position of the intercept the argument 'shift_b0' can be used. 
 
 ```{r HOPs log salinity fig2}
 log_sal2 <- hop(mod2,                                   
     group="Invertebrates",                             
-    predictor = "Salinity",                            
-    xlab= expression(Conductivity ~ µS ~ cm^-1),   
+    predictor = "Sediment",                            
+    xlab="Fine sediment (%)",   
     link_function = "log",                            
     ylab="Invertebrate taxonomic richness",            
-    xlim=c(3, 8),                                      
+    xlim=c(-4.6, 0),                                      
     ylim=c(0, 50),                                     
     hop_lwd = 0.3,                                    
     exp_axis = T,                                     #exponentiate the x-axis notations
-    round_x_axis = 0)                                 #round the notation to full integers        
+    round_x_axis = 2,                                 #round the notation to full integers 
+    shift_b0 = -1)                                    #shift the intercept by -1           
 ```
 
 ```{r fig log_sal2, fig.width=7.1, fig.height=4,  warning=FALSE, echo=FALSE}

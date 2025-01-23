@@ -2,7 +2,7 @@
 % Please edit documentation in R/pdplot.R
 \name{pdplot}
 \alias{pdplot}
-\title{Posterior density plots}
+\title{Posterior Density Plots}
 \usage{
 pdplot(
   object,
@@ -21,7 +21,9 @@ pdplot(
   xlab = "Parameter estimate",
   ylab = "Posterior density",
   xylab_size = 3,
-  xtext_size = 8
+  xtext_size = 6,
+  xround = 1,
+  xbreaks = 4
 )
 }
 \arguments{
@@ -58,7 +60,27 @@ pdplot(
 \item{xylab_size}{Size of x and y label}
 
 \item{xtext_size}{Size of the x-axis text}
+
+\item{xbreaks}{Size of the breaks on the x-axis}
+
+\item{scale_point_line}{Scale point and line as function of model parameter}
+
+\item{xrounds}{rounding of the values on the x-axis}
 }
 \description{
-Posterior density plots
+This function displays the posterior density distribution of the chains. Thereby displaying to possible values of the model
+parameters. The lower point indicates the Maximum APosterior Value (MAP), which is a 'fancy' way to say mode. The intervals indicate
+the High Density Interval levels and colours red and blue indicate a negative or positive direction of the MAP, respectively.
+}
+\examples{
+data("example1")
+
+mod <-meta(estimate=example1$est, stderr=example1$se, RE=F,
+          parameter=example1$parameter, predictor=example1$predictor,
+          link_function=example1$link, grouping=example1$group)
+
+fig1 <- pdplot(mod)
+
+print(fig1$posterior_density$logit)
+
 }

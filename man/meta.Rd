@@ -2,7 +2,7 @@
 % Please edit documentation in R/meta.R
 \name{meta}
 \alias{meta}
-\title{Bayesian meta analysis function}
+\title{Bayesian Meta-Analysis}
 \usage{
 meta(
   estimate,
@@ -51,7 +51,7 @@ meta(
 
 \item{Nsamp}{A vector with the number of samples for each estimate (only used when method = 2)}
 
-\item{prior_mu}{Prior for the se which can be vector (Bayesian meta-analysis) or matrix (Bayesian meta-analysis with model averaging)}
+\item{prior_mu}{Prior for the mean which can be vector (Bayesian meta-analysis) or matrix (Bayesian meta-analysis with model averaging)}
 
 \item{prior_mu_se}{Prior for the se which can be vector or matrix}
 

@@ -1,4 +1,4 @@
-#' Bayesian meta analysis function
+#' Bayesian Meta-Analysis
 #'
 #' @param estimate Parameter b0 or b1 estimated from a LM or GLM
 #' @param stderr Standard error belonging to b0 and b1
@@ -10,7 +10,7 @@
 #' @param method Indicates which adjustment performed 0 (='none'), 1 (='egger') or 2 (='peters')
 #' @param RE An argument indicating if RE or FE should be used (default RE=TRUE)
 #' @param Nsamp A vector with the number of samples for each estimate (only used when method = 2)
-#' @param prior_mu Prior for the se which can be vector (Bayesian meta-analysis) or matrix (Bayesian meta-analysis with model averaging)
+#' @param prior_mu Prior for the mean which can be vector (Bayesian meta-analysis) or matrix (Bayesian meta-analysis with model averaging)
 #' @param prior_mu_se Prior for the se which can be vector or matrix
 #' @param prior_sigma_max Prior for sigma is and is a uniform prior starting at 0 restricted and given value (default=5) not used when RE=FALSE
 #' @param interval Credibility intervals for the summary (default=0.9)

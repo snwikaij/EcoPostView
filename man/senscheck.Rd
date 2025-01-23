@@ -2,12 +2,14 @@
 % Please edit documentation in R/senscheck.R
 \name{senscheck}
 \alias{senscheck}
-\title{Title}
+\title{Sensitivity check}
 \usage{
 senscheck(
   mod1,
   mod0,
   interval = 0.9,
+  order_predictor = NULL,
+  order_group = NULL,
   xlab = "Log(P(M1|Data, Info)/P(M0|Data, Info))"
 )
 }
@@ -18,8 +20,12 @@ senscheck(
 
 \item{interval}{What credibility level to display}
 
+\item{order_predictor}{The order of the predictors}
+
+\item{order_group}{The order of the groups}
+
 \item{xlab}{The x-label text}
 }
 \description{
-Title
+Sensitivity check
 }

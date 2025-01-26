@@ -21,9 +21,9 @@ knitr::opts_chunk$set(
 
 # 1. Introduction
 
-Ecological data is scattered around literature in different formats. It is often 'case-study' specific and not representative for the totality if conditions encountered. Therefore, a lot of noise is introduced in the data. Furthermore, there exist no framework to generalize and combine large amounts data into an understandable and predictive models hampering ecological knowledge. Hence, as ecologist we are not interested in only case specific situations and explaining away after the event happens. We want our information to cumulatively add to a larger body of knowledge to use it.
+Ecological data is scattered around literature in different formats. It is often 'case-study' specific and not representative for the totality if conditions encountered. Therefore, a lot of noise is introduced in the data. Furthermore, there exist no framework to re-use, generalize and fuse large amounts data into an understandable and predictive models hampering ecological knowledge by wasting valuable information. Hence, as ecologist we are not interested in only case specific situations and explaining away after the event happens. We want our information to cumulatively add to a larger body of knowledge and apply it.
 
-Working with logic, meta-data and stochastic process can solidify our understanding of ecological relations. It can be used to make probability statements and predictions. This R-package can help make your life easier to do so. The goal of this package is to combine the benefits of multiple fitted Linear and Generalized Linear Models ((G)LMs), using the flexibility and strength of Bayesian meta-analysis to generalized the effects to one pooled (G)LM. This meta-analytically derived (G)LM can be visualized (see the Fig. 1 below) and used to predict on new data.
+Working with logic, meta-data and stochastic process can solidify our understanding of ecological relations. It can be used to make probability statements and predictions. This R-package can help make your life easier to do so. The goal of this package is to provide help to do so combine the benefits of multiple source of information. The current main function uses the information of multiple fitted Linear and Generalized Linear Models ((G)LMs) and the flexibility and strength of Bayesian methods to generalized the absolute effects of multiple (G)LMs to pool it in to one meta-analytic (G)LM. This meta-analytically derived (G)LM can be visualized (see the Fig. 1 below) and used to predict on new data. Hence, it is meant to get a reasonable generalization picture of ecological relation from using all possible sources of information. 
 
 ```{r intro-plot,  fig.width=7.1, fig.height=4, echo=F, warning=FALSE}
 library(EcoPostView)
@@ -77,13 +77,15 @@ rm(mod_intro)
 ```
 *Figure 1: Expected evenness of aquatic invertebrates as a function of conductivity and fine sediment fraction within a river reach. The left panel shows the relationship on the response scale, while the right panel presents it on the log scale for improved visualization.*
 
-The information needed for such a meta-analytic approach is available from figures, tables, data sets or combinations between them. However, these are hardly utilized in a consistent fashion. In simple words, multiple datasets are needed on which (G)LMs can be fitted (see Kaijser et al, ...). This, however, will show that most data is very noisy, perhaps biased and the heterogeneity among different studies is large. This is an issue if we focus on error-control and causality statements. Both error-control and causality need controlled environment with a well setup experimental conditions and exclusion or modeling of confounding variables. Hence, error-control and causality start a-priori (Fisher 1949, Pearl 2009, Mayo 2018, For an explanation on the topic of error-control connected to the classical (Frequentism) approach see https://snwikaij.shinyapps.io/shiny/). Yet, while error-control a posterior is not possible anymore, this makes the information still incredibly useful. It can be used to make probability statements, predictions and used to calculated the needed power to setup a new experiment where the focus lies on error-control or causality. This package focuses on making posterior probability statements, visualization and prediction from information. Hence, the goal is to generalize ecological effects from literature, displaying its patterns and predict with it.
+This package provides tools for ecological statistical modeling, largely using Bayesian approaches. While a basic understanding of R is sufficient to use the package, a detailed theoretical background is available in Section 6 at the end for those interested in exploring the concepts further. Please note that this is a continuously developing R-package, and updates or improvements may be made over time.
 
 # 2. Data and models
 
+The information needed for such a meta-analytic approach is available from figures, tables, data sets or combinations between them. However, these are hardly utilized in a consistent fashion. In simple words, multiple datasets are needed on which (G)LMs can be fitted (see Kaijser et al, ...). This, however, will show that most data is very noisy, perhaps biased and the heterogeneity among different studies is large. This is an issue if we focus on error-control and causality statements. Both error-control and causality need controlled environment with a well setup experimental conditions and exclusion or modeling of confounding variables. Yet, while error-control a posterior is not possible anymore, this makes the information still incredibly useful. It can be used to make probability statements, predictions and used to calculated the apriori needed power to setup a new experiment where the focus lies on error-control or causality. This package focuses on making posterior probability statements, visualization and prediction from information. Hence, the goal is to generalize ecological effects from literature, displaying its patterns and predict with it.
+
 ## 2.1 (Generalized) Linear Models (G)LMs and extracting data
 
-To use this package data is needed and on this data (G)LMs need to be fitted. This (meta-)data can be obtained from figures (e.g., using WebPlotDigitizer), tables (i.e., extrected by converting pdf to Excel files), data sets and combinations between them (See Kaijser et al. ...). The effects we are talking of are not really 'effects' but model parameters more commonly known as the intercept or slope. The intercept (*b0* or *β0*) and slope (*b1* or *β1*) can be used to predict using the following equation: *response variable = b0 + b1 · predictor variable*. Hence, this package starts with the underlying philosophy that if we choose to believe claims as 'an `effect` (*b1*) of the *predictor variable* was observed' then this should be clearly generalizable. For example the relation between chlorophyll-a and total phosphorus is generalizable. From here on I will use the term model 'parameter' instead of 'effect'. Hence, by gathering information on the parameters *b0* and *b1* we can give a pooled model a single or multiple new values (*i*) for *x*. By doing so we can understand the magnitude of the relation, variability of it and make a predictions. 
+To use this package data is needed and on this data (G)LMs need to be fitted. This (meta-)data can be obtained from figures (e.g., using WebPlotDigitizer), tables (i.e., extrected by converting pdf to Excel files), data sets and combinations between them (See Kaijser et al. ...). The effects we are talking of are not really 'effects' but model parameters more commonly known as the intercept or slope. The intercept (*b0* or *β0*) and slope (*b1* or *β1*) can be used to predict using the following equation: *response variable = b0 + b1 · predictor variable*. Hence, this package starts with the underlying philosophy that if we choose to believe claims as 'an effect' (*b1*) of the *predictor variable* was observed' then this should be clearly generalizable. For example the relation between chlorophyll-a and total phosphorus is generalizable. From here on I will use the term model 'parameter' instead of 'effect'. Hence, by gathering information on the parameters *b0* and *b1* we can give a pooled model a single or multiple new values (*i*) for *x*. By doing so we can understand the magnitude of the relation, variability of it and make a predictions. 
 
 In a GLM the response variable is linked to to the linear component with a link-function often notated as *g(...)*. The 'identity' link function applies no link function. This indicates that the mean (expected value of *y* notated as *E(y)* or *(E(y|x))*) is directly related to the linear component.
 $$g(E(y_{i} \mid x_{i})) = \beta_0 + \beta_1 \cdot x_{i}$$ 
@@ -102,100 +104,10 @@ Sometimes these 'unofficial expressions' for *b0* and *b1* are used, due to the 
 $$g(E(y_{i} \mid x_{ij})) = \sum_{j=1}^{j} \beta_j \cdot x_{ij}$$
 Where $x_{ij}$ refers to the $j$ the predictor variable (e.g., salinity is $j$=1 and light is $j$=2) and $i$ is the $i$-th observation. This expression will later be utilized in the explanation of the visualization.
 
-## 2.2. Bayes Theorem
-
-Since this R-package is mostly using Bayesian inference an introduction to Bayes Theorem might be of interested. While it is not necessary needed for the utilization of the R-package itself. If this is not of interest or you are already familiar with it you skip this part. Perhaps it is also more to formulate my own "idea" of it. 
-
-Informally Bayes Theorem would be notated $\text{Posterior}\, \text{probability} = \frac{\text{Likelihood} \cdot \text{Prior}}{\text{Evidence}}$. More formally Bayes theorem is often notated with A and B where P indicates probability and '|' given or conditional on.$P(A \mid B) = \frac{P(B \mid A) \cdot P(A)}{P(B)}$. However, to connect it to models $A=\beta$ and $B=Data$. Where $\beta$ denotes the model parameter and $Data$ the available data.
-
-The derivation of Bayes theorem relies on the exchangeability of probabilities, while classically 'A' and 'B' are used for reference to the later text where A = $\beta$ and B = $Data$. 
-
-**Premise 1)**
-$$
-P(\beta | \text{Data}) = \frac{P(\beta \cap \text{Data})}{P(\text{Data})}
-$$
-similarly
-$$
-P(\text{Data} | \beta) = \frac{P(\text{Data} \cap \beta)}{P(\beta)}
-$$
-**Premise 2)**
-Also, the joint probability, expressed as a set-theoretic relationship on $z$, indicates that element of both sets are the same.
-$$
-z = \{x : x \in \beta \cap Data : x \in Data \cap \beta\}
-$$
-thus
-$$
-P(\beta \cap Data) = P(Data \cap \beta)
-$$
-**Premise 3)**
-In accordance with the previous
-$$
-P(\beta | Data) \cdot P(\beta) = P(\beta \cap Data)
-$$
-and
-$$
-P(Data | \beta) \cdot P(Data) = P(Data \cap \beta)
-$$
-**Conclusion)**
-Therefore
-$$
-P(\beta | Data) \cdot P(\beta) = P(Data | \beta) \cdot P(Data)
-$$
-$$
-P(\beta | Data) = \frac{P(Data | \beta) \cdot P(\beta)}{P(Data)}
-$$
-
-The issue is that here the subjectivity of the prior and the function '$f$' of the probability distribution are not that transparent in my honest opinion. Here a 'function' is nothing more than a 'rule' that maps $x$ to $y$ and so $y=f(x)$. Hence, probability is a mapping function, mapping an expectation of $x$ to $y$. The probability can be any function (although some might disagree). In this case the prior probability is a function of both the $Data$ and prior information ($Info$). For transparency the condition $Info$ is therefore introduced into the expression. 
-$$
-f(\beta \mid Data, Info) = 
-\frac{f(Data \mid \beta) \cdot f(\beta \mid Info)}
-{\int f(Data \mid \beta) \cdot f(\beta \mid Info)}
-$$
-The integral in the denominator is used to scale the posterior probability to one. This expression is sometimes simplified to
-$$f(\beta \mid Data, Info) = f(Data \mid \beta) \propto f(\beta \mid Info)$$
-Where the $\propto$ symbol indicates 'proportional to' highlighting the idea of exchangeability. Therefore, the posterior is nothing more than a function that describes the probability $y$ as a function of $\beta$ conditional on $Data$ and $Info$ ($y=f(\beta \mid Data, Info)$). This cannot be solely conditional on the $Data$ as the $Data$ is not uncertain our information/believe is uncertain about a none existing object $\beta$ (unless Platonism is true). Hence, even if we were wrong or correct about $f(\beta \mid Data, Info)$ nothing would change in reality at all, because uncertainty has nothing to do with *reality* at all. It becomes now clear that only our own error/information is to be optimized as contrary to frequentism where this error is that of the long-run. Hence, the frequentist cannot say something about the prior (hypothesis), it cannot reject hypothesis (which seem to mean that it is false) and it cannot state something about the probability of the parameter (effect) or observations "by chance alone". The strength of the frequentism lies in its objectivity and solidarity (in the long-run), which is, however, not used. 
-
-Unfortunately the later is difficult in a world where mistakes are not allowed, "novelty" and "excellence" are the goal that each study. Therefore, every study has to portray the results as "true" (not a repeated long-run of studies, which is impossible if novelty is required). Hence, models are only useful if their current errors and failures in forecasting future phenomena are openly displayed, allowing us to optimize our understanding of predictive uncertainty until it becomes *acceptable*.
-
-In the previous part a single prior model was used. Bayesian Model Averaging (BMA) has the advantages that it allows multiple ($k$) functions to be utilized as prior. Hence, multiple possible scenarios that could have been responsible for $\beta$ can be introduced as below.
-$$
-f(\beta \mid Data,Info) = \frac{f(Data \mid \beta) \cdot f_k(\beta \mid Info)}{\int \left( \sum_{k=1}^{k} f(Data \mid \beta) \cdot f_k(\beta \mid Info) \right)}
-$$
-Now it should be clear that each $\beta$ contained within $g(E(y \mid x_{ij})) = \sum_{j=1}^{v} \beta_j \cdot x_{ij}$ is being restricted by the prior models. While in frequentism it is unrestricted and 'complete indifference' towards the  possibility of $\beta$. 
-
-In a meta-analysis we do not talk about $\beta$ but about a set of estimates $\beta=\{\beta_{i}, ..., \beta_{n}\}$ meaning that $f(Meta-data\mid\{\beta_{i}, ..., \beta_{n}\})$. Hereby the flexibility allows that these estimates are either likelihood estimates ($\hat{\beta}$) or  posterior estimates ($\beta$). and we end up with an expression that should capture the inference to an underlying pooled model parameter.
-$$
-f(\beta_{poolded} \mid Meta-data,Info) = \frac{f(Meta-data \mid \{\beta_{i}, ..., \beta_{n}\}) \cdot f_k(\beta_{pooled} \mid Info)}{\int \left( \sum_{k=1}^{m} f(Meta-data \mid \{\beta_{i}, ..., \beta_{n}\}) \cdot f_k(\beta_{pooled} \mid Info) \right)}
-$$
-For a simple mean and variance an analytical approach can be used to derive the posterior given the likelihood and prior via the following equations.
-$$\mu_{posterior} =\frac{\frac{\mu_{prior} }{\sigma_{prior}^2} + \frac{\hat{x}_{data} }{\sigma_{data}^2}}{
-\frac{1}{\sigma_{prior}^2} + \frac{1}{\sigma_{data}^2}}
-\\
-\sigma_{posterior}=\sqrt{\frac{1}{\frac{1}{\sigma_{prior}^2}+\frac{1}{\sigma_{data}^2}}}$$
-Another way to obtain the posterior mean would be via
-$$\mu_{posterior}=\frac{\frac{\mu_{prior}}{n}+\hat{x}_{data}*\frac{1}{\sigma_{prior}^2}}
-{\frac{1}{\sigma_{prior}^2}+\frac{1}{n}}$$
-As might be clear this is less computational heavy than MCMC methods. For more then two parameter such an analytical approach becomes more combersome. And, if conjugacy is not satisfied no closed form solution is available. In this regards, Laplacian approximation is also computational easy. Yet, the equation clearly formulate the idea what happens in Bayes theorem. 
-
-## 2.3 (G)LMs and Bayes Theorem 
-
-Perhaps seeing a (G)LM or Bayes Theorem does not immediately lead to the understanding of how this connects. In simplicity Bayes Theorem is used to find the posterior value of the model parameters. In this example $\beta_{0}$ and $\beta_{1}$.
-$$
-\begin{align*}
-&g(E(y_{i} \mid x_{i})) \hspace{20cm} \\
-&=  \\
-&f(\beta_{0} \mid Data, Info) \sim f(Data \mid \beta_{0}) \propto f(\beta_{0} \mid Info) \\ 
-&+ \\
-&f(\beta_{1} \mid Data, Info) \sim f(Data \mid \beta_{1}) \propto f(\beta_{1} \mid Info) \\
-&\cdot \\
-&x_{i} 
-&\end{align*}
-$$
-Hence, each parameter has its likelihood and prior to optimize between. More complex hierarchical models can be created where $\beta$ can be conditional on other parameters and even $x$ can be modeled scholastically. For now this suffices. 
-
 # 3. The meta-function
 
 ## 3.1 Data
+
 To start using this R-package both JAGS and devtools need to be installed. JAGS can be installed from https://sourceforge.net/projects/mcmc-jags/ and devtools can be install in R. For the most recent version of the EcoPostView it can be installed from GitHub. Of course, any problems, questions or possible improvements can be directed to me.
 
 ```{r setup}
@@ -215,7 +127,7 @@ head(example1)
 ```
 In the example above the column **est** (estimate) indicates the estimated model parameters and the column **se** the standard error of the estimate. The column **group** can be an organism group or specific species/taxon (or anything you wish to group by), the column **predictor** the specific predictor variable, the parameter whether the estimate is the intercept (*b0*) or a regression coefficient (*b1*) and the column **link** contains the link function. An additional and recommended option is to include the sample size **n** for adjusting for 'small-sample-effects' (Peters et al., 2006; Moreno et al., 2009).
 
-## 3.2 Basic model structure
+## 3.2 Basic model structure for meta-analysis
 
 The meta function can include a random effect, by setting the argument RE=TRUE (default is TRUE). The  structure is then 
 $$\{\beta_{i}, ..., \beta_{n}\}= \beta_{\text{pooled}} + u_i$$
@@ -245,104 +157,9 @@ rm(mod1)
 
 The meta-function can return a warning that the MCMC-chains are not properly mixing. This can be an issue due to various reasons. Where this warning originates from can be assessed by looking at the 'raw' JAGS model output (`mod1$model$JAGS_model`). This could show that a parameter of interested 'mu[.]' Has a a large Rhat or small effective sample size. Most of these issues can be resolved by thinning the chains, increasing the number of chains or setting more informed or stronger priors. Moreover, if the issue is not an issue of the estimated 'mu' parameter, it could be decided to ignore it. These choices are ultimately up to the user. An option to prevent warnings would be to set the warning level for Eff_warn lower i.e., Eff_warn = 500.
 
-## 3.3 Setting priors
-
-A benefit of the the Bayesian approach is that we can included prior information. Thereby explicitly shifting the weight of the outcome to more plausible values of the pooled model parameter. To set only a single prior for each relation and parameter a specific structure is needed. By default the model parameters are set as Gaussian/normally distributed with a mean ($\mu$, prior_mu) of 0 and standard error ($se$, prior_mu_se) of 0.5. The prior distribution is at the moment restricted to the normal distribution. The prior for the standard deviation ($\sigma$) is uniform where only the maximum value (prior_sigma_max) can be set, which at default is 5. 
-
-As a strongly critical side note. The priors do not need to stay the same, because I "heuristically" like to work with the elasticity- or semi-elasticity coefficients. THIS IS NOT A NECESSITY! Hence, not thinking about your prior - even if not a lot of information is available, but at least inform it - is often not doing a Bayesian analysis at all. 
-
-To get a nice table overview of the structure need for the priors can be obtained by setting the 'get_prior_only' to 'TRUE'. This will return a dataframe, with a column **level**, priors for the **mu** ($\mu$) and for the standard error ($se$). The numbers can adjusted to the specific topic based on prior information available. How to included this dataframe will be explained in more detail in section 3.3.
-
-``` {r meta2 example priors}
-only_priors <- meta(estimate=example1$est,        
-                    stderr=example1$se,            
-                    parameter=example1$parameter,  
-                    predictor=example1$predictor,  
-                    link_function=example1$link,   
-                    grouping=example1$group,       
-                    Nsamp=example1$n,            
-                    method=2,
-                    get_prior_only=TRUE) #Only show the structure of the priors
-
-print(only_priors)
-
-#remove data frame of priors to keep environment clean
-rm(only_priors)
-```
-
-## 3.4 Setting multiple priors for Bayesian Model Averaging
-
-A benefit of the the Bayesian approach is that we can included multiple ($k$) priors to perform Bayesian Model Averaging (BMA;  Hoeting et al., 1999; Hinne et al., 2020). Thereby explicitly adding multiple possible scenarios that could have generated the observable data and averaging over these plausible explanation. To set multiple priors we need a similar dataset as shown above.
-
-Often prior weights are added, which indicate how heavy a prior weighs in the model. These prior weights could any number between 0 (0%) and 1 (100%) so that it preferably adds up to 100%. To avoid the already increasing complex model on could set these to equal weights. For example, if there are three priors then each weighs 1/3. However to avoid fumbling around with this one could also decide that these prior weights are uncertain and treat them a stochastic by letting them arise from a Dirichlet distribution $weight \sim Dir(\alpha_i)$ where $\alpha_i=1$ if the number ($i$) of prior distributions is >1. Meaning the Dirichlet distribution is 'uniform'.
-
-In the example below the priors have varying values for the parameters $mu$ and $se$, and a broader prior $N(\mu=0, se=10)$ for the intercept is reasonable.
-
-``` {r meta3 BMA}
-data("example2")
-print(example2)
-
-mod2 <- meta(estimate=example1$est,        
-                    stderr=example1$se,            
-                    parameter=example1$parameter,  
-                    predictor=example1$predictor,  
-                    link_function=example1$link,   
-                    grouping=example1$group,
-                    prior_mu=example2[c(2,4,6)],          #prior for the mean
-                    prior_mu_se=example2[c(3,5,7)],       #prior for the standard error of the mean
-                    Nsamp=example1$n,            
-                    method=2,
-                    n_thin=10,                            #thinning the chains
-                    n_chain=4)                            #changing the number of chains from 2 to 4
-
-#Display the summarized results
-mod2$Summary
-```
-The results of the meta-analysis are summarized in a table describing Maximum A Priori values (MAP), the $\mu$, $se$ and the high density intervals at default (90%). Additionally the $I2$ heterogeneity is given.
-
-## 3.5 rescheck-function and bias
-
-After analyzing the the meta-data also a check for bias should be performed. This can be via various methods. I believe this this should be a sensitivity analysis using various methods: Display of the z-distribution, Egger's test, Peters tests and/or funnel plots. Hence, there is always bias, but in the data you have it might be small.
-
-A simple option is to visually asses the relation of the residuals relative to $1/se$ and if sample sizes is provided in the data $1/n$. If a clear diagonal pattern is visual this means that there is a strong relation of the $\beta$ to $se$ which can indicate the selection of only larger effects with broader intervals, p-hacking or noise in the data. A relation with $n$ often occurs when small sample sizes an noise result in so called 'small-study-effects'. There are different ways to asses the residuals relation relative to $1/se$ or $1/n$: in total, per group or per predictor. 
-
-```{r, residual check}
-res_mod2 <- rescheck(mod2)
-```
-Below the residuals per group in relation to $1/se$
-```{r, residuals group, fig.width=7.1, fig.height=4, warning=FALSE, echo=FALSE}
-print(res_mod2$bias_se_group)
-```
-and the residuals per predictor in relation to $1/se$
-```{r, residuals predictor, fig.width=7.1, fig.height=4, warning=FALSE, echo=FALSE}
-print(res_mod2$bias_se_predictor)
-```
-The dotted red line should more-or-less-ish overlay the solid blue line having an intercept and slope of 0. Small sample sizes can strongly influence the slope of this line. When bias is present then a different correction method can be selected or stronger priors can set to reduce this.
-
-This was the most difficult part where the data needs to be gathered and extracted, (G)LMs need to be fitted, priors need to formulated, bias needs to be assessed and the whole model needs to be optimized to get a stable results. To display or predict with the models requires less time.
-
-## 3.6 Standard meta-analysis
+## 3.3 Standard meta-analysis
 
 Often a meta-analysis is performed over standardized-effect-sizes (SES). While I do not condone this practice in any way, I do not see the use of always using this practice has much benefit for field ecology, applied ecology, generalizations or learning about the impacts of real world application of ecological relations (Baguley 2009; Tukey  1969). Therefore a short introduction meta-analysis and also displaying how the bias correction methods perform. I compare it with my standard favorite metafor package in R.
-
-A standard meta-analysis uses a measure of location (mean) and scale (precision) to estimate a pooled value based on all parameters. For a fixed meta-analysis the pooled parameter is derived via the following equation.
-$$\theta_{pooled} = \frac{\sum_{i=1}^{k}(\theta_i\cdot w_i)}{\sum_{k=1}^kw_i}$$
-$\theta_i$ is the extracted effect-size for a study $i$. The $w_i$ is the weight per study $i$ for allk $k$ studies, derived from the precision $1/se_i^2$ via the equation below.
-$$w_i = \frac{1}{se_i^2}$$
-The standard error for the pooled effect-size can then be derived via the formula given below.
-
-$$se(\theta_{pooled})=\frac{1}{\sqrt\sum_{i=1}^{k}(w_i)}$$
-For a random-effect meta-analysis the variance between studies is separately modeled. In the metafor package REML or (Restricted Maximum Likelihood) is used to estimate this between study variance. However it is also possible using the DerSimonian and Laird method.
-$$
-\tau^2=max(0, \frac{Q-(k-1)}{\sum_{i=1}^{k}\frac{1}{w_i}-\frac{\sum_{i=1}^{k}1/w_i^2}{\sum_{i=1}^{k}1/w_i}})\
-\\
-w^*_i=\frac{1}{(\frac{1}{w_i}+\tau^2)}
-\\
-\theta_{pooled} = \frac{\sum_{i=1}^{k}(\theta_i\cdot w^*_i)}{\sum_{i=1}^{k}(w^*_i)}
-\\
-se(\theta_{pooled})=\frac{1}{\sqrt(\sum_{i=1}^{k}w^*_i)}
-$$
-If we now go back to how we analytically derived the posterior we can devise a function that can analytically perform a fixed effect meta-analysis with ease. I have placed this in a function called 'abmeta'. In in simple cases it approximates the results of metafor and and the meta function inf EcoPostView relatively well. Of course the variance component slightly differs with that from metafor due to the different method of estimation.
 
 ```{r, bias adjustment and metafor}
 #First run and check standard output for metafor
@@ -392,7 +209,83 @@ plot(1/example3$se, adjusted_meta$Residuals,
 abline(a=0, b=0, col="red", lty=2)
 ```
 
-In the method above the bias has been adjusted (not removed!). The pooled estimate is now much lower This means the relations between the standard error can be assessed by looking at the residuals. This is often performed with funnel plots but can as addition also be asses by simply checking the residuals. The adjustment should only be applied if patterns are extremely clear it can often lead to strong adjustments even if no clear bias is present. However, it is extremely effective if such biase is present in the data.
+In the method above the bias has been adjusted (not removed!). The pooled estimate is now much lower This means the relations between the standard error can be assessed by looking at the residuals. This is often performed with funnel plots but can as addition also be asses by simply checking the residuals. The adjustment should only be applied if patterns are extremely clear it can often lead to strong adjustments even if no clear bias is present. However, it is extremely effective if such bias is present in the data. In the future I hope to add multiple methods to assess the strength of the bias.
+
+## 3.4 Setting priors
+
+A benefit of the the Bayesian approach is that we can included prior information. Thereby explicitly shifting the weight of the outcome to more plausible values of the pooled model parameter. To set only a single prior for each relation and parameter a specific structure is needed. By default the model parameters are set as Gaussian/normally distributed with a mean ($\mu$, prior_mu) of 0 and standard error ($se$, prior_mu_se) of 0.5. The prior distribution is at the moment restricted to the normal distribution. The prior for the standard deviation ($\sigma$) is uniform where only the maximum value (prior_sigma_max) can be set, which at default is 5. 
+
+As explained in section 2.1 I heuristically like to work with the elasticity- or semi-elasticity coefficient. However, THIS IS NOT A NECESSITY! an therefore means priors change depending on what you like to use and known. Hence, not thinking about your prior - even if not a lot of information is available, but at least inform it - is often not doing a Bayesian analysis at all. 
+
+That being said you can choose an prior values for the mean and standard deviation. To get a nice table overview of the structure need for the priors can be obtained by setting the 'get_prior_only' to 'TRUE'. This will return a dataframe, with a column **level**, priors for the **mu** ($\mu$) and for the standard error ($se$). The numbers can adjusted to the specific topic based on prior information available. How to included this dataframe will be explained in more detail in section 3.5.
+
+``` {r meta2 example priors}
+only_priors <- meta(estimate=example1$est,        
+                    stderr=example1$se,            
+                    parameter=example1$parameter,  
+                    predictor=example1$predictor,  
+                    link_function=example1$link,   
+                    grouping=example1$group,       
+                    Nsamp=example1$n,            
+                    method=2,
+                    get_prior_only=TRUE) #Only show the structure of the priors
+
+print(only_priors)
+
+#remove data frame of priors to keep environment clean
+rm(only_priors)
+```
+
+## 3.5 Setting multiple priors for Bayesian Model Averaging
+
+A benefit of the the Bayesian approach is that we can included multiple ($k$) priors to perform Bayesian Model Averaging (BMA;  Hoeting et al., 1999; Hinne et al., 2020). Thereby explicitly adding multiple possible scenarios that could have generated the observable data and averaging over these plausible explanation. To set multiple priors we need a similar dataset as shown above.
+
+Often prior weights are added, which indicate how heavy a prior weighs in the model. These prior weights could any number between 0 (0%) and 1 (100%) so that it preferably adds up to 100%. To avoid the already increasing complex model on could set these to equal weights. For example, if there are three priors then each weighs 1/3. However to avoid fumbling around with this one could also decide that these prior weights are uncertain and treat them a stochastic by letting them arise from a Dirichlet distribution $weight \sim Dir(\alpha_i)$ where $\alpha_i=1$ if the number ($i$) of prior distributions is >1. Meaning the Dirichlet distribution is 'uniform'.
+
+In the example below the priors have varying values for the parameters $mu$ and $se$, and a broader prior $N(\mu=0, se=10)$ for the intercept is reasonable.
+
+``` {r meta3 BMA}
+data("example2")
+print(example2)
+
+mod2 <- meta(estimate=example1$est,        
+                    stderr=example1$se,            
+                    parameter=example1$parameter,  
+                    predictor=example1$predictor,  
+                    link_function=example1$link,   
+                    grouping=example1$group,
+                    prior_mu=example2[c(2,4,6)],          #prior for the mean
+                    prior_mu_se=example2[c(3,5,7)],       #prior for the standard error of the mean
+                    Nsamp=example1$n,            
+                    method=2,
+                    n_thin=10,                            #thinning the chains
+                    n_chain=4)                            #changing the number of chains from 2 to 4
+
+#Display the summarized results
+mod2$Summary
+```
+The results of the meta-analysis are summarized in a table describing Maximum A Priori values (MAP), the $\mu$, $se$ and the high density intervals at default (90%). Additionally the $I2$ heterogeneity is given.
+
+## 3.6 rescheck-function and bias
+
+After analyzing the the meta-data also a check for bias should be performed. This can be via various methods. I believe this this should be a sensitivity analysis using various methods: Display of the z-distribution, Egger's test, Peters tests and/or funnel plots. Hence, there is always bias, but in the data you have it might be small.
+
+A simple option is to visually asses the relation of the residuals relative to $1/se$ and if sample sizes is provided in the data $1/n$. If a clear diagonal pattern is visual this means that there is a strong relation of the $\beta$ to $se$ which can indicate the selection of only larger effects with broader intervals, p-hacking or noise in the data. A relation with $n$ often occurs when small sample sizes an noise result in so called 'small-study-effects'. There are different ways to asses the residuals relation relative to $1/se$ or $1/n$: in total, per group or per predictor. 
+
+```{r, residual check}
+res_mod2 <- rescheck(mod2)
+```
+Below the residuals per group in relation to $1/se$
+```{r, residuals group, fig.width=7.1, fig.height=4, warning=FALSE, echo=FALSE}
+print(res_mod2$bias_se_group)
+```
+and the residuals per predictor in relation to $1/se$
+```{r, residuals predictor, fig.width=7.1, fig.height=4, warning=FALSE, echo=FALSE}
+print(res_mod2$bias_se_predictor)
+```
+The dotted red line should more-or-less-ish overlay the solid blue line having an intercept and slope of 0. Small sample sizes can strongly influence the slope of this line. When bias is present then a different correction method can be selected or stronger priors can set to reduce this.
+
+This was the most difficult part where the data needs to be gathered and extracted, (G)LMs need to be fitted, priors need to formulated, bias needs to be assessed and the whole model needs to be optimized to get a stable results. To display or predict with the models requires less time.
 
 # 4. Display
 
@@ -507,12 +400,148 @@ print(log_sal3)
 
 This part is still under construction.
 
+# 6. Theory and background
+
+In most cases the theory and background is often not provided in many cookbooks, but makes it impossible to interpreted, criticize our results. This section introduces some theory. However, if you are already familiar with it or find it too technical, feel free to skip it. Since this R-package primarily uses Bayesian inference, an introduction to Bayes Theorem and methods used may be of interest. While it is not necessary needed for the utilization of the R-package itself.
+
+## 6.1. Classical statistics and estimation
+
+All statistics focuses on estimating the parameter of interest $\theta$ which in most (G)LMs is denoted as the parameter $\mu$ or $\beta$. For consistency I will use the parameter of interest $\mu$. The population parameter of interest $\mu$ is fixed and unknown. To investigate potential values for $\mu$ we take measurements/samples. The observed measurements or samples ($x$) are realizations of an unknown random variable $X$, where both x and X represents sets $x = \{x_i, \dots, x_n \mid x \in \mathbb{R}\}$ and $X = \{X_i, \dots, X_N \mid X \in \mathbb{R}\}$. Here, $x$ is a realization and $X$ denotes the random variable. It is then assumed that $x$ is originating as randomly identically and independent distributed random variable (iid) from X as in $x\sim X$ or $x \stackrel{\text{iid}}{\sim} N(\mu, \sigma^2)$. Since we do not have $X$ but only a set of realizations we need an estimator for it which it the sample mean $\hat{x}(x)$. Hence, the mean of the random variable $X$ would be $\mu(X)=\frac{X_i,\cdots,X_N}{N}$ and if x are indeed iid $\hat{x}(x)=\frac{x_i,\cdots,x_n}{n}$ would be an estimator for $\mu$. Therefore, the sample mean has certain properties $\mathbb{E}[\hat{x}]$ and $Var(\hat{x})=\frac{\sigma^2}{n}$. Then the weak law of large numbers suggest that the probability of deviation from the population parameter decreases when sample size $n$ increases $\lim_{n\to\infty} P\left(|\hat{X}_n-\mu|\geq \epsilon\right)=0$. This means that according to the central limit theorem $Z_n=\frac{\hat{x}-mu}{\sigma/\sqrt(n)}$ converges to the standard normal under $mu=0$. The probability of observing $Z$ under a long-run of repetitions $P(-1.96\lesssim Z \lesssim 1.96)=0.95$. Similair, the probability of the intervals of $\overline{x}$ to cover $\mu$ in a long-run of repeated experiments at 95% is $1  - c = P(\overline{x} > \mu - 1.96 \cdot \frac{\sigma}{\sqrt{n}}) ~and~  P(\overline{x} < \mu - 1.96 \cdot \frac{\sigma}{\sqrt{n}})$. I visually explain this in this shiny app https://snwikaij.shinyapps.io/shiny/. Furthermore, it is clear that statistics does do nothing with causality in the first place and the focus on error-control and causality starts by satisfying theoretical conditions needed the arrive at believes in these concepts. Hence, error-control and causality start a-priori (Fisher 1949, Pearl 2009, Mayo 2018). Yet, such a focus and framework would, for example be extremely useful if objectivity over repetitions are the goal and favorable. While classical statistics focuses on fixed but unknown parameters, error-control and objectivity of information, Bayesian methods extend this perspective by introducing prior information and viewing parameters as random variables. This shift opens the door to more flexible and informative inference, as explained in the next section.
+
+## 6.2 Bayes Theorem and probablistic estimation
+
+Informally Bayes Theorem would be notated $\text{Posterior}\, \text{probability} = \frac{\text{Likelihood} \cdot \text{Prior}}{\text{Evidence}}$. More formally Bayes theorem is often notated with A and B where P indicates probability and '|' given or conditional on. $P(A|B) = \frac{P(B|A) \cdot P(A)}{P(B)}$.Other expression such as $P(\theta|Data, Info) = \frac{P(Data|\theta) \cdot P(\theta|info)}{P(Data)}$ are to highlight that the posterior describes the information of that conditional on the prior `info` that is given in there.
+
+The derivation of Bayes theorem relies on the exchangeability of probabilities, while classically 'A' and 'B' are used.
+
+**Premise 1)**
+$$
+P(\beta | \text{Data}) = \frac{P(\beta \cap \text{Data})}{P(\text{Data})}
+$$
+similarly
+$$
+P(\text{Data} | \beta) = \frac{P(\text{Data} \cap \beta)}{P(\beta)}
+$$
+**Premise 2)**
+Also, the joint probability, expressed as a set-theoretic relationship on $z$, indicates that element of both sets are the same.
+$$
+z = \{x : x \in A \cap B : x \in B \cap A\}
+$$
+thus
+$$
+P(A \cap B) = P(B \cap A)
+$$
+**Premise 3)**
+In accordance with the previous
+$$
+P(A| B) \cdot P(A) = P(A \cap B)
+$$
+and
+$$
+P(B | A) \cdot P(B) = P(B \cap A)
+$$
+**Conclusion)**
+Therefore
+$$
+P(A | B) \cdot P(A) = P(B | A) \cdot P(B)
+$$
+$$
+P(A|B) = \frac{P(B|A) \cdot P(A)}{P(B)}
+$$
+As introduced, in statistics and estimation is about finding out the value for $\theta$ which is assumed be $\mu$. Where in the frequentist framework this is considered fixed and unknown, this is in the Bayesian framework considered to be random `and approximately` known. Of course also in the Bayesian framework samples $x$ are taken. Assume that we already know something about $\mu$ then it is possible to restrict to exclude unreasonable values or for the information we have on $\mu$ to more acceptable values.
+$$
+P(\mu|Data) = \frac{P(Data|\mu) \cdot P(\mu)}{P(Data)}
+$$
+For a simple mean and variance an analytical approach can be used to derive the posterior given the likelihood and prior via the following equations.
+
+$$\mu_{posterior} =\frac{\frac{\mu_{prior} }{\sigma_{prior}^2} + \frac{\hat{x}_{data} }{\sigma_{data}^2}}{
+\frac{1}{\sigma_{prior}^2} + \frac{1}{\sigma_{data}^2}}
+\\
+\sigma_{posterior}=\sqrt{\frac{1}{\frac{1}{\sigma_{prior}^2}+\frac{1}{\sigma_{data}^2}}}$$
+Another way to obtain the posterior mean would be via
+$$\mu_{posterior}=\frac{\frac{\mu_{prior}}{n}+\hat{x}_{data}*\frac{1}{\sigma_{prior}^2}}
+{\frac{1}{\sigma_{prior}^2}+\frac{1}{n}}$$
+
+As might be clear this is less computational heavy than MCMC methods. For more then two parameter such an analytical approach becomes more combersome. And, if conjugacy is not satisfied no closed form solution is available. In this regards, Laplacian approximation is also computational easy. Yet, the equation clearly formulate the idea what happens in Bayes theorem. A simple example below highlights how this this can be useful.
+
+## 6.3 Salinity example
+
+For example, we want to know the probable relation between insects and salinity over a whole gradient from 0 till 5000 $\mu S \cdot cm ^{-1}$. To do so we generate a simple log-linear model $log(insect ~ diversity)=\beta_1*conductivity~+~\beta_0$. We know that insect diversity declines with an increasing salinity therefore we could exclude  positive values and shift the weight to more negative values. In the frequentist framework this is not performed and there is worked under the principle of indifference. This means all values are apriori equally likely. This is from an consistent error-control perspective preferred, but from a probabilistic perspective unreasonable. Hence, it would be beneficial to leverage this information into the model.
+$$
+P(\beta|Data, info) = \frac{P(Data|\beta) \cdot P(\beta|info)}{P(Data)}
+$$
+Under different context we can leverage more information over the likelihood using Bayesian Model Averagin (BMA) that does not use a single prior, but multiple priors.
+
+## 6.4 Introduction to Bayesian Model Averaging (BMA)
+
+Instead of $P$ the function '$f$' are used this to highlight that the probability is a mapping function. A mapping function being a 'rule' that maps $x$ to $y$ and so $y=f(x)$.
+$$
+f(\beta \mid Data, Info) = 
+\frac{f(Data \mid \beta) \cdot f(\beta \mid Info)}
+{\int f(Data \mid \beta) \cdot f(\beta \mid Info)}
+$$
+The integral in the denominator is used to scale the posterior probability to one. This expression is sometimes simplified to
+$$f(\beta \mid Data, Info) = f(Data \mid \beta) \propto f(\beta \mid Info)$$
+Where the $\propto$ symbol indicates 'proportional to' highlighting the idea of exchangeability. Therefore, the posterior is nothing more than a function that describes the probability $y$ as a function of $\beta$ conditional on $Data$ and $Info$ ($y=f(\beta \mid Data, Info)$). This cannot be solely conditional on the $Data$ as the $Data$ is not uncertain our information/believe is uncertain about a none existing object $\beta$ (unless Platonism is true). 
+
+In the previous part a single prior model was used. Bayesian Model Averaging (BMA) has the advantages that it allows multiple ($k$) functions to be utilized as prior. I specifically choose the use of $f$ so multiple priors as $f_k$ in the equation below can be seen nothing more as multiple functions (or models). This in my opinion makes it easier to see that there is only optimized between multiple functions. It sound weird to say to optimize between probabilities.
+Hence, multiple possible scenarios that could have been responsible for $\beta$ can be introduced as below.
+$$
+f(\beta \mid Data,Info) = \frac{f(Data \mid \beta) \cdot f_k(\beta \mid Info)}{\int \left( \sum_{k=1}^{k} f(Data \mid \beta) \cdot f_k(\beta \mid Info) \right)}
+$$
+Now it should be clear that each $\beta$ contained within $g(E(y \mid x_{ij})) = \sum_{j=1}^{v} \beta_j \cdot x_{ij}$ is being restricted by the prior models. While in frequentism it is unrestricted and 'complete indifference' towards the  possibility of $\beta$. All these methods can be used in a meta-analysis.
+
+## 6.5 Meta-analysis
+
+A standard meta-analysis uses a measure of location (mean) and scale (precision) to estimate a pooled value based on all parameters. For a fixed meta-analysis the pooled parameter is derived via the following equation.
+$$\theta_{pooled} = \frac{\sum_{i=1}^{k}(\theta_i\cdot w_i)}{\sum_{k=1}^kw_i}$$
+$\theta_i$ is the extracted effect-size for a study $i$. The $w_i$ is the weight per study $i$ for allk $k$ studies, derived from the precision $1/se_i^2$ via the equation below.
+$$w_i = \frac{1}{se_i^2}$$
+The standard error for the pooled effect-size can then be derived via the formula given below.
+
+$$se(\theta_{pooled})=\frac{1}{\sqrt\sum_{i=1}^{k}(w_i)}$$
+For a random-effect meta-analysis the variance between studies is separately modeled. In the metafor package REML or (Restricted Maximum Likelihood) is used to estimate this between study variance. However it is also possible using the DerSimonian and Laird method.
+$$
+\tau^2=max(0, \frac{Q-(k-1)}{\sum_{i=1}^{k}\frac{1}{w_i}-\frac{\sum_{i=1}^{k}1/w_i^2}{\sum_{i=1}^{k}1/w_i}})\
+\\
+w^*_i=\frac{1}{(\frac{1}{w_i}+\tau^2)}
+\\
+\theta_{pooled} = \frac{\sum_{i=1}^{k}(\theta_i\cdot w^*_i)}{\sum_{i=1}^{k}(w^*_i)}
+\\
+se(\theta_{pooled})=\frac{1}{\sqrt(\sum_{i=1}^{k}w^*_i)}
+$$
+If we now go back to how we analytically derived the posterior we can devise a function that can analytically perform a fixed effect meta-analysis with ease. I have placed this in a function called 'abmeta'. In in simple cases it approximates the results of metafor and and the meta function inf EcoPostView relatively well. Of course the variance component slightly differs with that from metafor due to the different method of estimation.
+
+## 6.6 BMA and meta-analysis
+
+In a meta-analysis we do not talk about $\beta$ but about a set of estimates $\beta=\{\beta_{i}, ..., \beta_{n}\}$ meaning that $f(Meta-data\mid\{\beta_{i}, ..., \beta_{n}\})$. Hereby the flexibility allows that these estimates are either likelihood estimates ($\hat{\beta}$) or  posterior estimates ($\beta$). and we end up with an expression that should capture the inference to an underlying pooled model parameter.
+$$
+f(\beta_{poolded} \mid Meta-data,Info) = \frac{f(Meta-data \mid \{\beta_{i}, ..., \beta_{n}\}) \cdot f_k(\beta_{pooled} \mid Info)}{\int \left( \sum_{k=1}^{m} f(Meta-data \mid \{\beta_{i}, ..., \beta_{n}\}) \cdot f_k(\beta_{pooled} \mid Info) \right)}
+$$
+
+## 6.7 A short reflection on uncertainty
+
+I do not believe statistics reflects uncertainty about events; rather, it reflects the information in the data under a particular model or the uncertainty about our belief in a parameter ($\theta, \beta, \mu$, etc.). The later concept is often vague and confusing because, if one assumes the parameter does not exist independently of the mind, then what exactly is uncertain - our belief? The claim to 'objective probability' is already compromised by the assumption that the parameter is objective. However, if the parameter does not exist outside the mind, the meaning of 'objective' in this context becomes questionable.
+
+When people refer to objectivity, they often mean that the data itself is the most 'objective' part of the process. However, if some conditions are not met, such as (1) the data is not randomly sampled from a population of interest, (2) the model is not pre-selected in advance, (3) a sufficiently large sample size is not chosen based on the model, and (4) confounding variables are present, then even the data cannot be considered truly objective unless these limitations are explicitly acknowledged. Moreover, model selection procedures further contaminate the objectivity of the data, meaning that the estimated model parameters no longer fully reflect the objectivity of the data which is often implied in our conclusions (Gelman and Loken, 2013; Tong, 2019).
+
+In Bayesian updating, the prior reflects the extent to which we want to sacrifice over the objectivity of the likelihood by using information which cannot be formalized into the likelihood. This is captured by the relationship $f(\theta \mid Data, Info) = f(Data \mid \theta) \propto f(\theta \mid Info)$
+
+The posterior, therefore, is merely the weighted combination of the prior and likelihood. It represents the relationship (e.g., $0.25$ as $0.5 \cdot 0.5$) between the prior and the likelihood. There is no invalidity in a logical argument such as:(Premise 1.) All unicorns are orange. (Premise 2.) I have a unicorn. (Conclusion) Therefore, my unicorn is orange.
+
+While this argument may be unsound — because unicorns do not exist — the reasoning itself is not flawed. The issue lies with the premises, not the structure of the argument. Hence, Uncertainty does not exist in the 'real' world; it resides solely in our minds. We cannot be 'wrong' or 'correct' about $f(\beta \mid \text{Data, Info})$ because it does not exist as a tangible entity. Even if it did, its existence would have no impact on reality because uncertainty is unrelated to the way reality operates. In the real world, events either occur or they do not. If my unicorn does not exist, I will never see it, and it was never orange in the first place.
+
+We should also avoid treating models as a definitive representation of reality. Models are tools that convey information and serve as pragmatic instruments. The the model itself is not the result, the strength of the results relies on the argument, and how well the premises within the argument are clarified and supported by the model.
+
 # References
+
 Baguley, Thom. 2009. “Standardized or Simple Effect Size: What Should Be Reported?” British Journal of Psychology 100(3): 603–17. doi: 10.1348/000712608X377117.
 
 Cramer, J. S. 1991. The Logit Model: An Introduction for Economists. London: Edward Arnold.
 
 Fisher, R. A. (1949). The Design of Experiments (5th ed.). Oliver and Boyd.
+
+Gelman, Andrew, and Eric Loken. 2013. “The Garden of Forking Paths: Why Multiple Comparisons Can Be a Problem, Even When There Is No ‘FIshing Expedition’ or ‘p-Hacking’ and the Research Hypothesis Was Posited Ahead of Time.” 348(3): 1–17. doi: 10.1007/978-3-658-12153-2_7.
 
 Hinne, Max, Quentin F. Gronau, Don Van Den Bergh, and Eric-Jan Wagenmakers. 2020. “A Conceptual Introduction to Bayesian Model Averaging.” Advances in Methods and Practices in Psychological Science 3(2):200–215. doi: 10.1177/2515245919898657.
 
@@ -533,6 +562,8 @@ Peters, Jaime L., Alex J. Sutton, David R. Sones, Keith R. Abrams, and Lesley Ru
 Stanley, T. D., and Hristos Doucouliagos. 2014. “Meta-Regression Approximations to Reduce Publication Selection Bias.” Research Synthesis Methods 5(1):60–78. doi: 10.1002/jrsm.1095.
 
 Tukey, John W. 1969. “Analysing Data: Sanctification or Detective Work?” American Psychologist 24(2): 83–91. doi: 10.1037/h0027108.
+
+Tong, Christopher. 2019. “Statistical Inference Enables Bad Science; Statistical Thinking Enables Good Science.” The American Statistician 73(sup1): 246–61. doi: 10.1080/00031305.2018.1518264.
 
 Woolridge, Jeffery M. 2001. Econometric Analysis of Cross Section and Panel Data. Cambridge, Massachusetts, London, England: The MIT press.
 

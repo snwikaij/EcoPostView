@@ -412,15 +412,14 @@ All statistics focuses on estimating the parameter of interest $\theta$ which in
 
 Informally Bayes Theorem would be notated $\text{Posterior}\, \text{probability} = \frac{\text{Likelihood} \cdot \text{Prior}}{\text{Evidence}}$. More formally Bayes theorem is often notated with A and B where P indicates probability and '|' given or conditional on. $P(A|B) = \frac{P(B|A) \cdot P(A)}{P(B)}$.Other expression such as $P(\theta|Data, Info) = \frac{P(Data|\theta) \cdot P(\theta|info)}{P(Data)}$ are to highlight that the posterior describes the information of that conditional on the prior `info` that is given in there.
 
-The derivation of Bayes theorem relies on the exchangeability of probabilities, while classically 'A' and 'B' are used.
-
+The derivation of Bayes theorem relies on the axioms probability theory.
 **Premise 1)**
 $$
-P(\beta | \text{Data}) = \frac{P(\beta \cap \text{Data})}{P(\text{Data})}
+P(A | B) = \frac{P(A \cap B)}{P(B)}
 $$
 similarly
 $$
-P(\text{Data} | \beta) = \frac{P(\text{Data} \cap \beta)}{P(\beta)}
+P(B |A) = \frac{P(B \cap A)}{P(B)}
 $$
 **Premise 2)**
 Also, the joint probability, expressed as a set-theoretic relationship on $z$, indicates that element of both sets are the same.
@@ -519,7 +518,73 @@ $$
 f(\beta_{poolded} \mid Meta-data,Info) = \frac{f(Meta-data \mid \{\beta_{i}, ..., \beta_{n}\}) \cdot f_k(\beta_{pooled} \mid Info)}{\int \left( \sum_{k=1}^{m} f(Meta-data \mid \{\beta_{i}, ..., \beta_{n}\}) \cdot f_k(\beta_{pooled} \mid Info) \right)}
 $$
 
-## 6.7 A short reflection on uncertainty
+## 6.7 Sequential updating
+
+Bayesian sequential updating refers to the practice of re-using the derived posterior of a previous model as the prior for the new model. For this the assumption of conditional independence between the the datasets is assumed. The parameter of interest is $\theta$ based on a dataset $Data_1$ and we derive the posterior. 
+$$P(\theta|Data_1) = \frac{P(Data_1|\theta) \cdot P(\theta)}{P(Data_1)}$$
+The next would be 
+$$P(\theta|Data_1, Data_2) = \frac{P(Data_2|\theta) \cdot P(\theta|Data_1)}{P(Data_2)}$$ 
+till $$P(\theta|Data_n) = \frac{P(Data_n|\theta) \cdot P(\theta|Data_1,\cdots,Data_{n-1})}{P(Data_n)}$$
+
+For example, we would like to know what $\mu$ from a population of interest. Our example population has $\mu=0.5$, $sigma=5$ and each study would have an error of $\alpha = 40\%$ when when we assume $\alpha=5\%$ (meaning that our heterogeneity is larger than expected). Our first prior starts with $N(0, 5)$ after which the posterior of previous is sequentially re-used visually represented in Fig. 2a below. Where more studies increase the precision of the estimated posterior. 
+
+If the focus lies on objectivity and the error control over the different studies and assume iid then the curve between studies would follow that of Fig. 2b below. 
+
+In a less formal way is the Bayesian framework more focused on transfer of information an precision. On the other hand the frequentist framework is more interested in objectivity, consistency and error among studies.
+
+```{r sequential updating,  fig.width=7.1, fig.height=4, echo=F, warning=FALSE}
+postvals <- function(mu_data, sigma_data, mu_prior, sigma_prior){
+  
+  post_mu <- (mu_prior / sigma_prior^2 + mu_data /sigma_data^2) / (1 / sigma_prior^2 + 1 / sigma_data^2)
+  post_sigma <- sqrt(1/(1 / sigma_prior^2 + 1 / sigma_data^2))
+  
+  c(mu=post_mu, sigma=post_sigma)}
+
+nsim <- 100
+cint <- 0.05
+errint <- 0.4
+theta  <- 0.5
+postset <- array(NA, dim=c(nsim, 5))
+freqset <- array(NA, dim=c(nsim, 5))
+
+z_adj <- abs(qnorm(errint/2))/abs(qnorm(cint/2))
+
+set.seed(3)
+for(i in 1:nrow(postset)){
+xsamp <- rnorm(25, theta, 5)
+if(i==1){
+post  <- postvals(mean(xsamp), sd(xsamp)/sqrt(length(xsamp)), 0, 5)
+}else{
+post  <- postvals(mean(xsamp), sd(xsamp)/sqrt(length(xsamp)), post[1], post[2])}
+postset[i,] <- c(i, post, post[1]-post[2]*abs(qnorm(cint/2))*z_adj, post[1]+post[2]*abs(qnorm(cint/2))*z_adj)
+
+fse <- sd(xsamp)/sqrt(length(xsamp))
+freqset[i,] <- c(i, mean(xsamp), fse,  mean(xsamp)-fse*abs(qnorm(cint/2))*z_adj,  mean(xsamp)+fse*abs(qnorm(cint/2))*z_adj)}
+
+postset <- setNames(as.data.frame(postset), c("iter", "mu", "se", "ll", "ul"))
+
+p1 <- ggplot(postset, aes(iter, mu))+
+  geom_line()+ylab("µ")+xlab("Study")+
+  geom_hline(yintercept = 0.5, col="tomato3", lty=2, lwd=0.2)+
+  geom_ribbon(aes(ymin = ll, ymax = ul), fill = "grey70", alpha=0.2)+
+  theme_classic()
+
+freqset <- setNames(as.data.frame(freqset), c("iter", "mu", "se", "ll", "ul"))
+
+p2 <- ggplot(freqset, aes(iter, mu))+
+  geom_line()+ylab("")+xlab("Study")+
+  geom_hline(yintercept = 0.5, col="tomato3", lty=2, lwd=0.2)+
+  geom_ribbon(aes(ymin = ll, ymax = ul), fill = "grey70", alpha=0.2)+
+  theme_classic()
+
+sequpdate <- cowplot::plot_grid(p1, p2, ncol=2)
+print(sequpdate)
+rm(sequpdate)
+```
+*Figure 2: Sequential updating with credibility intervals on the left panel and a long-run of means with confidence intervals on the right The left panel.*
+
+
+## 6.8 A short reflection on uncertainty
 
 I do not believe statistics reflects uncertainty about events; rather, it reflects the information in the data under a particular model or the uncertainty about our belief in a parameter ($\theta, \beta, \mu$, etc.). The later concept is often vague and confusing because, if one assumes the parameter does not exist independently of the mind, then what exactly is uncertain - our belief? The claim to 'objective probability' is already compromised by the assumption that the parameter is objective. However, if the parameter does not exist outside the mind, the meaning of 'objective' in this context becomes questionable.
 

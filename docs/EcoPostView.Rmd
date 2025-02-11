@@ -509,7 +509,7 @@ w^*_i=\frac{1}{(\frac{1}{w_i}+\tau^2)}
 \\
 se(\theta_{pooled})=\frac{1}{\sqrt(\sum_{i=1}^{k}w^*_i)}
 $$
-If we now go back to how we analytically derived the posterior we can devise a function that can analytically perform a fixed effect meta-analysis with ease. I have placed this in a function called 'abmeta'. In in simple cases it approximates the results of metafor and and the meta function inf EcoPostView relatively well. Of course the variance component slightly differs with that from metafor due to the different method of estimation.
+If we now go back to how we analytically derived the posterior we can devise a function that can analytically perform a fixed effect meta-analysis with ease. I have placed this in a function called 'abmeta'. In in simple cases it approximates the results of metafor and the meta function inf EcoPostView relatively well. Of course the variance component slightly differs with that from metafor and the 'meta' function due to the different method of estimation.
 
 ## 6.6 BMA and meta-analysis
 

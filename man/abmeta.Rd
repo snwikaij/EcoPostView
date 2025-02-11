@@ -2,23 +2,36 @@
 % Please edit documentation in R/abmeta.R
 \name{abmeta}
 \alias{abmeta}
-\title{Analytical Bayesian Meta Analysis}
+\title{Analytical approximate Bayesian Meta Analysis}
 \usage{
-abmeta(estimate, stderr, mu_prior = 0, se_prior = 1, interval = 0.9, RE = T)
+abmeta(
+  estimate,
+  stderr,
+  prior_mu,
+  prior_se,
+  prior_weights = NULL,
+  interval = 0.9,
+  RE = T
+)
 }
 \arguments{
 \item{estimate}{A vector containing the effect-size}
 
 \item{stderr}{A vector containing the standard error}
 
-\item{mu_prior}{Prior for the mean}
+\item{prior_mu}{Prior for the mean}
 
-\item{se_prior}{Prior for the se}
+\item{prior_se}{Prior for the se}
 
 \item{interval}{Credibility intervals for the summary (default=0.9)}
 
 \item{RE}{An argument indicating if RE or FE should be used (default RE=TRUE)}
+
+\item{prior}{weights for prior odds (default=1/number of priors)}
 }
 \description{
-Analytical Bayesian meta-analysis with random-effect (RE) or fixed-effect (FE).
+Analytical Bayesian meta-analysis with random-effect (RE) or fixed-effect (FE). For the estimation for
+tau^2 the DSL DerSimonian and Laird (1986). This approach is easy yet slightly underestimates the 'true'
+variance (O Bai et al. 2016). That being said the between study variance is therefore treated as having an
+improper uniform prior, which simplifies most calculations.
 }

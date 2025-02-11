@@ -15,7 +15,7 @@
 #' improper uniform prior, which simplifies most calculations.
 #'
 #' @export
-abmeta <- function(estimate, stderr, prior_mu, prior_se, prior_weights=NULL, interval=0.9, RE=T) {
+abmeta <- function(estimate, stderr, prior_mu=0, prior_se=1000, prior_weights=NULL, interval=0.9, RE=T) {
 
   #Give warning if estimate length is 1
   if(length(estimate) == 1){RE <- F; warning("Number of estimates is 1 then RE is automatically set to FALSE.")}

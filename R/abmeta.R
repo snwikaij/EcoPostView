@@ -15,10 +15,11 @@
 #' improper uniform prior, which simplifies most calculations.
 #'
 #' @export
-abmeta <- function(estimate, stderr, prior_mu=0, prior_se=1000, prior_weights=NULL, interval=0.9, RE=T) {
+abmeta <- function(estimate, stderr, prior_mu=0, prior_se=1000, prior_weights=NULL,
+                   interval=0.9, RE=T, warnings=F) {
 
   #Give warning if estimate length is 1
-  if(length(estimate) == 1){RE <- F; warning("Number of estimates is 1 then RE is automatically set to FALSE.")}
+  if(length(estimate) == 1){RE <- F;   if(warnings==T){warning("Number of estimates is 1 then RE is automatically set to FALSE.")}}
 
   #Stop if estimate an se are not of the same length
   if(length(estimate) != length(stderr)){stop("Vector of estimates is not of the same length as the vector of standard errors.")}

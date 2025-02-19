@@ -63,7 +63,7 @@ abmeta <- function(estimate, stderr, prior_mu=0, prior_se=1000, prior_weights=NU
 
     #Use tau2 for new posteriors
     posteriors <- sapply(1:length(prior_mu), function(k) {
-      postvals(estimate, sqrt(stderr^2+tau2), prior_mu[k], prior_se[k])})
+    postvals(estimate, sqrt(stderr^2+tau2), prior_mu[k], prior_se[k])})
 
     #Extract posterior
     post_mu <- posteriors["mu", ]

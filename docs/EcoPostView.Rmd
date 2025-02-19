@@ -458,8 +458,8 @@ $$\mu_{posterior} =\frac{\frac{\mu_{prior} }{\sigma_{prior}^2} + \frac{\hat{x}_{
 \\
 \sigma_{posterior}=\sqrt{\frac{1}{\frac{1}{\sigma_{prior}^2}+\frac{1}{\sigma_{data}^2}}}$$
 Another way to obtain the posterior mean would be via
-$$\mu_{posterior}=\frac{\frac{\mu_{prior}}{n}+\hat{x}_{data}*\frac{1}{\sigma_{prior}^2}}
-{\frac{1}{\sigma_{prior}^2}+\frac{1}{n}}$$
+$$\mu_{posterior}=\frac{\frac{\mu_{prior}}{\sigma_{prior}^2}+\hat{x}_{data}*\frac{n}{\sigma_{data}^2}}
+{\frac{1}{\sigma_{prior}^2}+\frac{n}{\sigma_{data}^2}}$$
 
 As might be clear this is less computational heavy than MCMC methods. For more then two parameter such an analytical approach becomes more combersome. And, if conjugacy is not satisfied no closed form solution is available. In this regards, Laplacian approximation is also computational easy. Yet, the equation clearly formulate the idea what happens in Bayes theorem. A simple example below highlights how this this can be useful.
 

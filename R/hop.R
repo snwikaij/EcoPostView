@@ -82,7 +82,10 @@ maxpost <- function(x){d <- density(x); d$x[which.max(d$y)]}
 
 #Select constants for marginal predictions
 bc_df <- object$Estimates$b1[object$Estimates$b1$group == group & object$Estimates$b1$link == link_function,]
-bc_df <- bc_df[!bc_df$predictor %in% predictor,]
+
+#If only one or no predictor is present
+if(!length(unique(bc_df$predictor))<=1){
+bc_df <- bc_df[!bc_df$predictor %in% predictor,]}
 
 #Return the sum of map of each parameter not displayed
 constant  <- sum(aggregate(data=bc_df, estimate~predictor, maxpost)[-1])

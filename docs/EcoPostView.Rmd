@@ -11,7 +11,7 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
 ---
 
-```{r, include = FALSE,}
+```{r, include = FALSE}
 options(rmarkdown.html_vignette.check_title = FALSE)
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -148,11 +148,6 @@ mod1 <- meta(estimate=example1$est,         #Model estimate
              grouping=example1$group,       #Group
              Nsamp=example1$n,              #Sample size (optional, for adjustment 2=Peters (1/n)),
              method=2)                      #Adjustment method (0=none, 1=Egger's (1/se), 2=Peters (1/n))
-
-
-#remove model to keep the environment clean
-rm(mod1)
-
 ```
 
 The meta-function can return a warning that the MCMC-chains are not properly mixing. This can be an issue due to various reasons. Where this warning originates from can be assessed by looking at the 'raw' JAGS model output (`mod1$model$JAGS_model`). This could show that a parameter of interested 'mu[.]' Has a a large Rhat or small effective sample size. Most of these issues can be resolved by thinning the chains, increasing the number of chains or setting more informed or stronger priors. Moreover, if the issue is not an issue of the estimated 'mu' parameter, it could be decided to ignore it. These choices are ultimately up to the user. An option to prevent warnings would be to set the warning level for Eff_warn lower i.e., Eff_warn = 500.
@@ -193,9 +188,18 @@ plot(1/example3$se, standard_meta$Residuals,
 abline(a=0, b=0, col="red", lty=2)
 ```
 
-Here we clearly see a diagonal pattern almost similar for both functions. The posterior means are however pulled closer (shrinkage) to the mean for estimates with weaker standard errors.
+Here we clearly see a diagonal pattern almost similar for both functions. The posterior means are however pulled closer (shrinkage) to the mean for estimates with weaker standard errors. This bias can also be asses using the rescheck function from EcoPostView.
 
-```{r adjusting bias via Eggers approach, fig.width=7.8, fig.height=4}
+```{r plot rescheck function, fig.width=7.8, warning=FALSE, fig.height=4}
+#Use the residual check function within EcoPostView
+res_bias <- rescheck(standard_meta)
+
+print(res_bias$bias_se)
+```
+
+This bias is very obviously caused by leaving out or selecting 'significant' results. Often by manually dropping 'non-significant' variables, forward-backward AIC, BIC selection methods to find the 'best' model (Gelman and Loken, 2013). This leading to large overestimation of the parameter ('effect-size'). This bias can be corrected using method 1 of Stanley and Doucouliagos (2014).
+
+```{r adjusting bias via Eggers approach, fig.width=7.8, fig.height=4, warning=FALSE}
 #Run EcoPostView (increased the chain thinning interval and number of iterations to improve mixing)
 adjusted_meta    <- meta(estimate=example3$est, stderr=example3$se, method = 1, 
                          n_thin = 5, 
@@ -203,10 +207,8 @@ adjusted_meta    <- meta(estimate=example3$est, stderr=example3$se, method = 1,
 
 print(adjusted_meta$Summary)
 
-par(mfrow=c(1,1))
-plot(1/example3$se, adjusted_meta$Residuals, 
-     xlab = "1/se", ylab="Posterior mean residuals", main="EcoPostView")
-abline(a=0, b=0, col="red", lty=2)
+res_bias2 <- rescheck(adjusted_meta)
+print(res_bias2$bias_se)
 ```
 
 In the method above the bias has been adjusted (not removed!). The pooled estimate is now much lower This means the relations between the standard error can be assessed by looking at the residuals. This is often performed with funnel plots but can as addition also be asses by simply checking the residuals. The adjustment should only be applied if patterns are extremely clear it can often lead to strong adjustments even if no clear bias is present. However, it is extremely effective if such bias is present in the data. In the future I hope to add multiple methods to assess the strength of the bias.
@@ -231,9 +233,6 @@ only_priors <- meta(estimate=example1$est,
                     get_prior_only=TRUE) #Only show the structure of the priors
 
 print(only_priors)
-
-#remove data frame of priors to keep environment clean
-rm(only_priors)
 ```
 
 ## 3.5 Setting multiple priors for Bayesian Model Averaging
@@ -266,24 +265,70 @@ mod2$Summary
 ```
 The results of the meta-analysis are summarized in a table describing Maximum A Priori values (MAP), the $\mu$, $se$ and the high density intervals at default (90%). Additionally the $I2$ heterogeneity is given.
 
+The prior for the between study variance known as $\tau^2$ is set as uniform with ranging from 0 till 5 by default. This has as an advantage that it will be result in wider intervals and be conservative for smaller sample sizes. A disadvantage is that it will be conservative. It can under particular conditions be very beneficial while under other conditions where more precision is required be a downside. To give the user the option the argument 'prior_var_fam' can be set to 'exp' (exponential distribution) instead of 'unif' (uniform distribution). Under 'unif' the maximum value of the uniform distribution is set as Uniform(0, prior_study_var) and when set to 'exp' the mean of the exponential distribution is used as Exponential(1/prior_study_var). In general cases with a large number of predictors and response as in Kaijser et al. ... I would advice the uniform prior if no convergence issues arise. If a more specific topic is choose like one or two predictors and one response and smaller datasets <10 observations the exponential distribution (e.q., with a mean of 1000) might suite well. These advice are heuristic in that they can be supported by personal experience and examples but are not to be taken for granted. Best is to try it out and perform a sensitivity analaysis (check).
+
 ## 3.6 rescheck-function and bias
 
 After analyzing the the meta-data also a check for bias should be performed. This can be via various methods. I believe this this should be a sensitivity analysis using various methods: Display of the z-distribution, Egger's test, Peters tests and/or funnel plots. Hence, there is always bias, but in the data you have it might be small.
 
-A simple option is to visually asses the relation of the residuals relative to $1/se$ and if sample sizes is provided in the data $1/n$. If a clear diagonal pattern is visual this means that there is a strong relation of the $\beta$ to $se$ which can indicate the selection of only larger effects with broader intervals, p-hacking or noise in the data. A relation with $n$ often occurs when small sample sizes an noise result in so called 'small-study-effects'. There are different ways to asses the residuals relation relative to $1/se$ or $1/n$: in total, per group or per predictor. 
+A simple option is to visually asses the relation of the residuals relative to $1/se$ and if sample sizes is provided in the data $1/n$. If a clear diagonal pattern is visual this means that there is a strong relation of the $\beta$ to $se$ which can indicate the selection of only larger effects with broader intervals, p-hacking or noise in the data. A relation with $n$ often occurs when small sample sizes an noise result in so called 'small-study-effects'. There are different ways to asses the residuals relation relative to $1/se$ or $1/n$: in total, per group or per predictor. Below the residuals per group in relation to $1/se$.
 
-```{r, residual check}
+```{r, residual check, fig.width=7.1, fig.height=4, warning=FALSE}
 res_mod2 <- rescheck(mod2)
-```
-Below the residuals per group in relation to $1/se$
-```{r, residuals group, fig.width=7.1, fig.height=4, warning=FALSE, echo=FALSE}
+
 print(res_mod2$bias_se_group)
 ```
-and the residuals per predictor in relation to $1/se$
-```{r, residuals predictor, fig.width=7.1, fig.height=4, warning=FALSE, echo=FALSE}
+And the residuals per predictor in relation to $1/se$.
+```{r, residuals predictor, fig.width=7.1, fig.height=4, warning=FALSE}
 print(res_mod2$bias_se_predictor)
 ```
 The dotted red line should more-or-less-ish overlay the solid blue line having an intercept and slope of 0. Small sample sizes can strongly influence the slope of this line. When bias is present then a different correction method can be selected or stronger priors can set to reduce this.
+
+## 3.7 senscheck-function and prior sensitivity
+
+Sensitivity checks can make up an important part of assessing the results. For simpler an more informing models it might not be necessary. Hence, we simply cannot assume the same results would be obtained in the next study under any circumstances. Strong conclusions based on intervals covering or not covering 0 are therefore rather arbitrary. Observing the posterior distribution with estimate and its error and a reasonable visualization of the patterns the estimates uncover with its variance is sufficient. Especially the nature of ecological data being extremely noise and exploratory. This means that also the posterior of each study can be drastically different. Nonetheless, it can be helpful to asses the sensitivity as a form of reality check.
+
+The sensitivity check asses the shift between a model with full prior implementations (mod1) versus another model (mod0). This is simply performed by dividing the posterior of $Log(P(Mod1|Data, Info)/P(Mod0|Data, Info))$ assuming all model hyper parameters are held constant except for the priors. This means we calculate the posterior odds ratio between two models. Another possibility is to asses how much the prior information of mod1 versus mod0 adds to a positive or negative shifts away from 0. This means we check $Log(P(Mod1>0|Data, Info)/P(Mod0>0|Data, Info))$ which is transformed back to a percentage between 0 and 1. Where 0.5 no change of the prior density compared to 0, and 0 a completely negative and 1 completely positive. I am not the biggest fan of this way of assessing sensitivity, as this again treats the posterior as a form of dichotomous hypothesis test. It is available but I left it out of the examples below.
+
+In the previous example mod2 was created, here treated as mod1. We can create a model with hardly any prior information (mod0) setting the $\mu$ of all priors to 0 and prior for the $se$ to 100.
+
+```{r, sensitivity check, fig.width=7.1, fig.height=4, warning=FALSE}
+#Create a model with minimal prior information
+mod0 <- meta(estimate=example1$est,        
+                    stderr=example1$se,            
+                    parameter=example1$parameter,  
+                    predictor=example1$predictor,  
+                    link_function=example1$link,   
+                    grouping=example1$group,
+                    prior_mu=0,                           #prior for the mean
+                    prior_mu_se=100,                      #prior for the standard error of the mean
+                    Nsamp=example1$n,            
+                    method=2,
+                    n_thin=10,
+                    n_chain=4)
+
+#Perform the sensitivity check
+sens_check <- senscheck(mod2, mod0)
+
+#Plot the posterior odds
+print(sens_check$posterior_odds)
+
+```
+
+The vertical black line indicates the value at which no difference between between mod1 and mod0 would be observed as $0=Log(P(Mod1|Data, Info)/P(Mod0|Data, Info))$ The most obvious results jump out where fish and oxygen for log-linear model and for salinity and sediment for the logit-linear models the priors pull the posterior to more negative values. It is possible to asses the strength by taking the inverse logit of the MAP $logit^{-1}(MAP)$ expressing it as the shift in the probability caused by the prior. Where smaller then 0.5 indicates negative shift, bigger than 0.5 a positive shift and 0.5 none.
+
+```{r, sensitivity quantif, warning=FALSE}
+#Select only predictor and link function
+inv_df <- sens_check$table[c(3:4)]
+
+#Calculate the probability
+inv_df$prob <-plogis(sens_check$table$mu[sens_check$table$group=="Fish"])
+
+#Print the table
+print(inv_df)
+```
+
+The table shows for sediment and logit in relation to fish, the posterior shift from mod0 to mod1 is influenced by 0.5-0.38=0.12 or 12%. Hence, our prior information provides some information that the relation between fine sediment and lotic fish species is negative that is not coming from the data alone. This is not a 'negative' thing, but what we do in reality. It shows that our prior information is often more 'directed' and meta-data that can be obtained from literature.
 
 This was the most difficult part where the data needs to be gathered and extracted, (G)LMs need to be fitted, priors need to formulated, bias needs to be assessed and the whole model needs to be optimized to get a stable results. To display or predict with the models requires less time.
 
@@ -301,19 +346,19 @@ pdd <- pdplot(mod2,
 
 The object contains the figures generated for both the log
 
-```{r pddplot log, fig.width=8, fig.height=4, echo=FALSE}
-#for the models with the log-link
+```{r pddplot log, fig.width=8, fig.height=4}
+#For the models with the log-link
 print(pdd$posterior_density$log)             
 ```
 
-and logit functions
+and logit functions.
 
-```{r pddplot logit, fig.width=8, fig.height=4, echo=FALSE}
-#for the models with the logit-link
+```{r pddplot logit, fig.width=8, fig.height=4}
+#For the models with the logit-link
 print(pdd$posterior_density$logit)
 ```
 
-and a summary belonging to the figures
+And, a summary belonging to the figures.
 
 ```{r summary figures}
 #summary belonging to the figures
@@ -335,25 +380,24 @@ g(E(y_{i} \mid x_{ij)})) = \beta_{pooled,j=0,m} + \beta_{pooled,j=1,m} \cdot x_{
 $$
 Note that the function works under the idea of log transformed variables. This means that argument xlim (the limits of the figures) as given below are exp(-4.6)=0.01 and exp(0)=1 for the fraction of fine sediment. The y-axis is on the response scale. I hope soon to make it possible to use an argument that makes it possible to set the xlim on the response scale. Below an example of the outcomes of the response of invertebrate taxonomic richness along the gradient of fine sediment. 
 
-```{r HOPs log salinity fig1}
-log_sal1 <- hop(mod2,                                  #object from the meta function
-    group="Invertebrates",                             #select group to out of Invertebrates and Fish
-    predictor = "Sediment",                            #select group to out of Salinity and Oxygen
-    xlab= "Fine sediment (%)",                         #give x-axis a name
-    link_function = "log",                             #which link function out of log and logit
-    ylab="Invertebrate taxonomic richness",            #give y-axis a name
-    xlim=c(-4.6, 0),                                   #give y-axis a name
-    ylim=c(0, 80),                                     #set  limits y-axis
-    hop_lwd = 0.3)                                     #set width of the hop lines
-```
+```{r HOPs log salinity fig1, fig.width=7.1, fig.height=4,  warning=FALSE}
+log_sal1 <- hop(mod2,                                  #Object from the meta function
+    group="Invertebrates",                             #Select group to out of Invertebrates and Fish
+    predictor = "Sediment",                            #Select group to out of Salinity and Oxygen
+    xlab= "Fine sediment (%)",                         #Give x-axis a name
+    link_function = "log",                             #Which link function out of log and logit
+    ylab="Invertebrate taxonomic richness",            #Give y-axis a name
+    xlim=c(-4.6, 0),                                   #Give y-axis a name
+    ylim=c(0, 80),                                     #Set  limits y-axis
+    hop_lwd = 0.3)                                     #Set width of the hop lines
 
-```{r fig log_sal1, fig.width=7.1, fig.height=4,  warning=FALSE, echo=FALSE}
+#Display the HOPs
 print(log_sal1)
 ```
 
 It is also possible to scale to display the exponentiate values on the x-axis using the argument 'exp_axis'. Note that one might suggest the intercept is to high. This could be correct, because this is the average intercept over all studies keeping the other variables constant at 1. To change the position of the intercept the argument 'shift_b0' can be used. 
 
-```{r HOPs log salinity fig2}
+```{r HOPs log salinity fig2, fig.width=7.1, fig.height=4,  warning=FALSE,}
 log_sal2 <- hop(mod2,                                   
     group="Invertebrates",                             
     predictor = "Sediment",                            
@@ -363,12 +407,11 @@ log_sal2 <- hop(mod2,
     xlim=c(-4.6, 0),                                      
     ylim=c(0, 50),                                     
     hop_lwd = 0.3,                                    
-    exp_axis = T,                                     #exponentiate the x-axis notations
-    round_x_axis = 2,                                 #round the notation to full integers 
-    shift_b0 = -1)                                    #shift the intercept by -1           
-```
+    exp_axis = T,                                     #Exponentiate the x-axis notations
+    round_x_axis = 2,                                 #Round the notation to full integers 
+    shift_b0 = -1)                                    #Shift the intercept by -1     
 
-```{r fig log_sal2, fig.width=7.1, fig.height=4,  warning=FALSE, echo=FALSE}
+#Display the HOPs
 print(log_sal2)
 ```
 
@@ -376,23 +419,22 @@ print(log_sal2)
 
 There are multiple predictors is the dataset. Therefore it possible to display the MAP predicted value given a change in one of the two predictors. This can be performed by display in Partial Dependency Plots.
 
-```{r HOPs log salinity fig3}
+```{r HOPs log salinity fig3, fig.width=7.1, fig.height=4,  warning=FALSE,}
 log_sal3 <- hop(mod2,                                              
     group="Invertebrates",                            
-    predictor = c("Sediment", "Oxygen"),                     #select both Sediment and Oxygen
-    xlab= "Fine sediment fraction",                          #give x-axis a name
-    ylab= expression(Oxygen ~ mg ~ L^-1),                    #give y-axis a name
-    gradient_title = "MAP Invertebrate \ntaxonomic richness",#give the y-axis gradient a name
-    pdp_resolution = 100,                                    #set resolution of the grid
+    predictor = c("Sediment", "Oxygen"),                     #Select both Sediment and Oxygen
+    xlab= "Fine sediment fraction",                          #Give x-axis a name
+    ylab= expression(Oxygen ~ mg ~ L^-1),                    #Give y-axis a name
+    gradient_title = "MAP Invertebrate \ntaxonomic richness",#Give the y-axis gradient a name
+    pdp_resolution = 100,                                    #Set resolution of the grid
     link_function = "log",
     exp_axis = T, 
     round_x_axis = 2,
     round_y_axis = 0,
     xlim=c(-4.61, -0.92),
     ylim=c(1.61, 2.77)) 
-```
 
-```{r fig log_sal3, fig.width=7.1, fig.height=4,  warning=FALSE, echo=FALSE}
+#Display the PDP
 print(log_sal3)
 ```
 
@@ -447,7 +489,7 @@ $$
 $$
 P(A|B) = \frac{P(B|A) \cdot P(A)}{P(B)}
 $$
-As introduced, in statistics and estimation is about finding out the value for $\theta$ which is assumed be $\mu$. Where in the frequentist framework this is considered fixed and unknown, this is in the Bayesian framework considered to be random `and approximately` known. Of course also in the Bayesian framework samples $x$ are taken. Assume that we already know something about $\mu$ then it is possible to restrict to exclude unreasonable values or for the information we have on $\mu$ to more acceptable values.
+As introduced, in statistics and estimation is about finding out the value for $\theta$ which is assumed be $\mu$. Where in the frequentist framework this is considered fixed and unknown, this is in the Bayesian framework considered to be random 'and approximately' known. Of course also in the Bayesian framework samples $x$ are taken. Assume that we already know something about $\mu$ then it is possible to restrict to exclude unreasonable values or for the information we have on $\mu$ to more acceptable values.
 $$
 P(\mu|Data) = \frac{P(Data|\mu) \cdot P(\mu)}{P(Data)}
 $$
@@ -469,7 +511,7 @@ For example, we want to know the probable relation between insects and salinity 
 $$
 P(\beta|Data, info) = \frac{P(Data|\beta) \cdot P(\beta|info)}{P(Data)}
 $$
-Under different context we can leverage more information over the likelihood using Bayesian Model Averagin (BMA) that does not use a single prior, but multiple priors.
+Under different context we can leverage more information over the likelihood using Bayesian Model Averaging (BMA) that does not use a single prior, but multiple priors.
 
 ## 6.4 Introduction to Bayesian Model Averaging (BMA)
 
@@ -526,7 +568,7 @@ The next would be
 $$P(\theta|Data_1, Data_2) = \frac{P(Data_2|\theta) \cdot P(\theta|Data_1)}{P(Data_2)}$$ 
 till $$P(\theta|Data_n) = \frac{P(Data_n|\theta) \cdot P(\theta|Data_1,\cdots,Data_{n-1})}{P(Data_n)}$$
 
-For example, we would like to know what $\mu$ from a population of interest. Our example population has $\mu=0.5$, $sigma=5$ and each study would have an error of $\alpha = 40\%$ when when we assume $\alpha=5\%$ (meaning that our heterogeneity is larger than expected). Our first prior starts with $N(0, 5)$ after which the posterior of previous is sequentially re-used visually represented in Fig. 2a below. Where more studies increase the precision of the estimated posterior. 
+For example, we would like to know what $\mu$ from a population of interest. Our example population has $\mu=0.5$, $\sigma=5$ and each study would have an error of $\alpha = 40\%$ when when we assume $\alpha=5\%$ (meaning that our heterogeneity is larger than expected). Our first prior starts with $N(0, 5)$ after which the posterior of previous is sequentially re-used visually represented in Fig. 2a below. Where more studies increase the precision of the estimated posterior. 
 
 If the focus lies on objectivity and the error control over the different studies and assume iid then the curve between studies would follow that of Fig. 2b below. 
 

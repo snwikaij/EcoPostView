@@ -8,7 +8,7 @@ rescheck(
   object,
   order_predictor = NULL,
   order_group = NULL,
-  xlimit = 0.9999,
+  xlimit = 0.975,
   ylimit = c(0.025, 0.975),
   b0_out = T
 )
@@ -24,7 +24,7 @@ rescheck(
 
 \item{ylimit}{The quantile limits residuals displayed in the figures}
 
-\item{b0_out}{Display the intercept in the residuals, by default False}
+\item{b0_out}{Display the intercept in the residuals, by default True and not displayed.}
 }
 \description{
 This function can be used to asses the bias of the model output. It is a visual ('eye balling') check

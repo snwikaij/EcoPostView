@@ -12,7 +12,8 @@
 #' @param Nsamp A vector with the number of samples for each estimate (only used when method = 2)
 #' @param prior_mu Prior for the mean which can be vector (Bayesian meta-analysis) or matrix (Bayesian meta-analysis with model averaging)
 #' @param prior_mu_se Prior for the se which can be vector or matrix
-#' @param prior_sigma_max Prior for sigma is and is a uniform prior starting at 0 restricted and given value (default=5) not used when RE=FALSE
+#' @param prior_study_var Prior for the between study variance if RE=T. If the argument prior_fam_var indicates the family is 'unif' then a uniform prior is used between 0 and the maximum value indicated by prior_study_var (default=abs(max(estimate-mean(estimate)))*2) meaning Uniform(0, prior_study_var). If prior_fam_var is 'exp' the the mean of the exponential distribution is indicated bye prior_study_var. This means if the mean is 1000 this a rate=1/1000 in Exponential(1/1000).
+#' @param prior_fam_var The distribution family used for the prior of the between study variance. Uniform = 'unif' and Exponential = 'exp' (default='unif').With smaller sample sizes the intervals can become very broad with might be beneficial if one wants to be conservative. However, it can be a disadvantage is that the variability of the parameter gets overly broad.
 #' @param interval Credibility intervals for the summary (default=0.9)
 #' @param get_prior_only If it is unclear how many levels and how to formulate multiple priors for each level this argument will only return a data frame of priors so that formulating priors for levels is easier
 #' @param n_chain Number of chains
@@ -87,7 +88,8 @@ meta <- function(estimate, stderr, parameter=NULL, predictor=NULL,
                 method=0, RE=TRUE, Nsamp=NULL,
                 prior_mu=0,
                 prior_mu_se=10,
-                prior_sigma_max=5,
+                prior_study_var=NULL,
+                prior_fam_var="unif",
                 interval=0.9,
                 get_prior_only = FALSE,
                 n_chain = 2,
@@ -138,7 +140,7 @@ meta <- function(estimate, stderr, parameter=NULL, predictor=NULL,
   }else if(
     nrow(prior_mu_se) != Ll){stop(paste0("The length of the priors for se (n=", length(prior_mu_se),") is not the same as the length of unique levels (n=", Ll, ")."))}
 
-  #a random effect data frame
+  #A random effect data frame
   if(!is.null(random) && is.data.frame(random)){
     if(nrow(random)!=length(estimate)){stop("Random  effect  needs to be a data frame or matrix with
                                            factors of same length as the estimates")}}
@@ -147,12 +149,21 @@ meta <- function(estimate, stderr, parameter=NULL, predictor=NULL,
   RL <- 1; random <- as.factor(random)}else{
   RL <- ncol(random); random[] <- lapply(random, as.factor); random  <- do.call(cbind, random)}
 
+  #Set correction method for bias
   if(all(method != c(0, 1, 2))){
     stop("method needs to be either 0 (='none'), 1 (='egger'), 2 (='peters')")}
   if(method == 2){
     if(is.null(Nsamp) | length(Nsamp) != length(estimate)){stop("If method is 'peters' then length of Nsamp needs to be of the same length as
                                              the estimates")}
     Nsamp[is.na(Nsamp)] <- 1}else{Nsamp <- rep(1, length(estimate))}
+
+  #Set the type of prior for between study variance 1 (='unif'), 2 (='exp')
+  if(RE==T){
+  if(prior_fam_var=="unif"){prior_fam_var <- 1
+   if(is.null(prior_study_var)){prior_study_var <- max(abs(estimate-mean(estimate)))*2}
+  }else if(prior_fam_var=="exp"){prior_fam_var <- 2
+   if(is.null(prior_study_var)){prior_study_var <- 1000}
+  }else{stop("Not a correct family choosen for between study variance")}}
 
   #Place all given data in a list
   mod_data <- list(est=as.numeric(estimate),
@@ -163,11 +174,12 @@ meta <- function(estimate, stderr, parameter=NULL, predictor=NULL,
                    Nsamp=Nsamp,
                    Pm=prior_mu,
                    Pe=prior_mu_se,
-                   Ps=prior_sigma_max,
+                   Ps=prior_study_var,
                    npw=npw,
                    alpha_pw=rep(1, npw),
                    random=random,
                    R=RL,
+                   prV=prior_fam_var,
                    method=method)
 
   #If only the prior is needed return
@@ -192,6 +204,7 @@ meta <- function(estimate, stderr, parameter=NULL, predictor=NULL,
                                             resid <- est-mu2
 
                                             sigma  ~ dunif(0, Ps)
+                                            rate   ~ dexp(1/Ps)
 
                                             ##Stochastic behavior for the weights
                                             pw[1:npw] ~ ddirch(alpha_pw[1:npw])
@@ -199,7 +212,7 @@ meta <- function(estimate, stderr, parameter=NULL, predictor=NULL,
                                             ##priors
                                             for(j in 1:L){
                                               beta_adjust[j]~ dnorm(0, 1/100^2)
-                                              tau1[j]      <- 1/sigma^2
+                                              tau1[j]      <- (equals(prV, 1)*(1/sigma^2))+(equals(prV, 2)*rate)
 
                                               for(k in 1:npw){
                                                 mu_M[j,k]    ~ dnorm(Pm[j,k], 1/Pe[j,k]^2)}
@@ -224,6 +237,7 @@ meta <- function(estimate, stderr, parameter=NULL, predictor=NULL,
                                               resid <- est-mu2
 
                                               sigma  ~ dunif(0, Ps)
+                                              rate   ~ dunif(1/Ps)
 
                                               ##Stochastic behavior for the weights
                                               pw[1:npw] ~ ddirch(alpha_pw[1:npw])
@@ -231,8 +245,8 @@ meta <- function(estimate, stderr, parameter=NULL, predictor=NULL,
                                               ##priors
                                               for(j in 1:L){
                                                 beta_random[j] ~ dnorm(0, 1/100^2)
-                                                beta_adjust[j]  ~ dnorm(0, 1/100^2)
-                                                tau1[j]        <- 1/sigma^2
+                                                beta_adjust[j] ~ dnorm(0, 1/100^2)
+                                                tau1[j]        <- (equals(prV, 1)*(1/sigma^2))+(equals(prV, 2)*rate)
 
                                                 for(k in 1:npw){
                                                   mu_M[j,k]    ~ dnorm(Pm[j,k], 1/Pe[j,k]^2)}
@@ -257,6 +271,7 @@ meta <- function(estimate, stderr, parameter=NULL, predictor=NULL,
                                               resid <- est-mu2
 
                                               sigma  ~ dunif(0, Ps)
+                                              rate   ~ dexp(1/Ps)
 
                                               ##Stochastic behavior for the weights
                                               pw[1:npw] ~ ddirch(alpha_pw[1:npw])
@@ -265,8 +280,8 @@ meta <- function(estimate, stderr, parameter=NULL, predictor=NULL,
                                               for(j in 1:L){
                                                 for(r in 1:R){
                                                 beta_random[j, r]  ~ dnorm(0, 1/100^2)}
-                                                beta_adjust[j]      ~ dnorm(0, 1/100^2)
-                                                tau1[j]            <- 1/sigma^2
+                                                beta_adjust[j]     ~ dnorm(0, 1/100^2)
+                                                tau1[j]            <- (equals(prV, 1)*(1/sigma^2))+(equals(prV, 2)*rate)
 
                                                 for(k in 1:npw){
                                                   mu_M[j,k]    ~ dnorm(Pm[j,k], 1/Pe[j,k]^2)}
@@ -292,12 +307,13 @@ meta <- function(estimate, stderr, parameter=NULL, predictor=NULL,
                                             resid <- est-mu2
 
                                             sigma  ~ dunif(0, Ps)
+                                            rate   ~ dexp(1/Ps)
 
                                             ##priors
                                             for(j in 1:L){
                                               beta_adjust[j]   ~ dnorm(0, 1/100^2)
                                               mu[j]           ~ dnorm(Pm[j], 1/Pe[j]^2)
-                                              tau1[j]         <- 1/sigma^2}
+                                              tau1[j]         <- (equals(prV, 1)*(1/sigma^2))+(equals(prV, 2)*rate)}
 
                                             #I2 per level
                                             for(l in 1:L){
@@ -317,13 +333,14 @@ meta <- function(estimate, stderr, parameter=NULL, predictor=NULL,
                                               resid <- est-mu2
 
                                               sigma  ~ dunif(0, Ps)
+                                              rate   ~ dexp(1/Ps)
 
                                               ##priors
                                               for(j in 1:L){
                                                 beta_random[j]  ~ dnorm(0, 1/100^2)
-                                                beta_adjust[j]   ~ dnorm(0, 1/100^2)
+                                                beta_adjust[j]  ~ dnorm(0, 1/100^2)
                                                 mu[j]           ~ dnorm(Pm[j], 1/Pe[j]^2)
-                                                tau1[j]         <- 1/sigma^2}
+                                                tau1[j]         <- (equals(prV, 1)*(1/sigma^2))+(equals(prV, 2)*rate)}
 
                                               #I2 per level
                                               for(l in 1:L){
@@ -343,14 +360,15 @@ meta <- function(estimate, stderr, parameter=NULL, predictor=NULL,
                                               resid <- est-mu2
 
                                               sigma  ~ dunif(0, Ps)
+                                              rate   ~ dexp(1/Ps)
 
                                               ##priors
                                               for(j in 1:L){
                                                 for(r in 1:R){
                                                 beta_random[j, r]  ~ dnorm(0, 1/100^2)}
-                                                beta_adjust[j]      ~ dnorm(0, 1/100^2)
+                                                beta_adjust[j]     ~ dnorm(0, 1/100^2)
                                                 mu[j]              ~ dnorm(Pm[j], 1/Pe[j]^2)
-                                                tau1[j]            <- 1/sigma^2}
+                                                tau1[j]            <- (equals(prV, 1)*(1/sigma^2))+(equals(prV, 2)*rate)}
 
                                               #I2 per level
                                               for(l in 1:L){
@@ -491,7 +509,7 @@ meta <- function(estimate, stderr, parameter=NULL, predictor=NULL,
                                          #Run the model
                                          model <- R2jags::jags.parallel(data = mod_data,
                                                                 model.file = meta_analysis,
-                                                                parameters.to.save =  c("mu", "d", "I2", "sigma", "beta_random", "beta_adjust", "resid"),
+                                                                parameters.to.save =  c("mu", "d", "I2", "sigma", "rate", "beta_random", "beta_adjust", "resid"),
                                                                 n.chains = n_chain,
                                                                 n.thin = n_thin,
                                                                 jags.seed = n_seed,

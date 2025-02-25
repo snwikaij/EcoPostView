@@ -56,11 +56,13 @@ pos_df <- data.frame(code=rownames(pos_df), post=pos_df[,1])
 sens_analysis <- merge(sens_analysis, pos_df)
 split_odds    <- split(sens_analysis, sens_analysis$parameter)
 
-if(!is.null(order_predictor) && length(unique(split_odds$b1$predictor)) == length(order_predictor)){
-split_odds$b1$predictor <- factor(split_odds$b1$predictor, levels = order_predictor)}else{stop("No vector of names or vector is not of the same length as the number of predictors in the model.")}
+if(!is.null(order_predictor)){
+if(length(unique(split_odds$b1$predictor)) == length(order_predictor)){
+split_odds$b1$predictor <- factor(split_odds$b1$predictor, levels = order_predictor)}else{stop("Number of predictor names to order by is not of the same length as the number of predictors in the model.")}}
 
+if(!is.null(order_group)){
 if(!is.null(order_group) && length(unique(split_odds$b1$group)) == length(order_group)){
-  split_odds$b1$group <- factor(split_odds$b1$group, levels = rev(order_group))}else{stop("No vector of names or vector is not of the same length as the number of groups in the model.")}
+  split_odds$b1$group <- factor(split_odds$b1$group, levels = rev(order_group))}else{stop("Number of group names to order by is not of the same length as the number of groups in the model.")}}
 
 pl1 <- ggplot(split_odds$b1, aes(x=group, y=map, col=link))+
   coord_flip()+

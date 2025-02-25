@@ -17,7 +17,8 @@ meta(
   Nsamp = NULL,
   prior_mu = 0,
   prior_mu_se = 10,
-  prior_sigma_max = 5,
+  prior_study_var = NULL,
+  prior_fam_var = "unif",
   interval = 0.9,
   get_prior_only = FALSE,
   n_chain = 2,
@@ -55,7 +56,9 @@ meta(
 
 \item{prior_mu_se}{Prior for the se which can be vector or matrix}
 
-\item{prior_sigma_max}{Prior for sigma is and is a uniform prior starting at 0 restricted and given value (default=5) not used when RE=FALSE}
+\item{prior_study_var}{Prior for the between study variance if RE=T. If the argument prior_fam_var indicates the family is 'unif' then a uniform prior is used between 0 and the maximum value indicated by prior_study_var (default=abs(max(estimate-mean(estimate)))*2) meaning Uniform(0, prior_study_var). If prior_fam_var is 'exp' the the mean of the exponential distribution is indicated bye prior_study_var. This means if the mean is 1000 this a rate=1/1000 in Exponential(1/1000).}
+
+\item{prior_fam_var}{The distribution family used for the prior of the between study variance. Uniform = 'unif' and Exponential = 'exp' (default='unif').With smaller sample sizes the intervals can become very broad with might be beneficial if one wants to be conservative. However, it can be a disadvantage is that the variability of the parameter gets overly broad.}
 
 \item{interval}{Credibility intervals for the summary (default=0.9)}
 

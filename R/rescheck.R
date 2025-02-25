@@ -5,7 +5,7 @@
 #' @param order_group The order of the groups
 #' @param xlimit the upper quantile limit of 1/se or 1/n
 #' @param ylimit The quantile limits residuals displayed in the figures
-#' @param b0_out Display the intercept in the residuals, by default False
+#' @param b0_out Display the intercept in the residuals, by default True and not displayed.
 #'
 #' @description
 #' This function can be used to asses the bias of the model output. It is a visual ('eye balling') check
@@ -15,7 +15,7 @@
 #'
 #' @export
 rescheck <- function(object, order_predictor = NULL, order_group = NULL,
-                     xlimit=0.9999, ylimit=c(0.025, 0.975), b0_out=T){
+                     xlimit=0.975, ylimit=c(0.025, 0.975), b0_out=T){
 
 #extract levels
 levels <- setNames(do.call(rbind.data.frame, strsplit(as.character(object$model$Data$level), "_")), c("parameter", "predictor", "link_function", "group"))
@@ -51,7 +51,7 @@ if(!is.null(order_group)&&!is.null(order_group)){
 
 #Set limits for the base  plots
 ylim_plot <- quantile(df_resid$resid, c(ylimit[1], ylimit[2]))
-xlim_plot <- c(0, quantile(df_resid$resid, xlimit))
+xlim_plot <- quantile(1/df_resid$se, c(0, xlimit))
 
 #If number of samples is used
 if(!sd(object$model$Data$Nsamp)==0){
@@ -86,7 +86,7 @@ plot_1_3 <- ggplot(df_resid, aes(1/n, resid))+xlab("Inverse sample size (1/n)")+
 
 plot_2_1 <- ggplot(df_resid, aes(1/se, resid))+xlab("Inverse standard error (1/se)")+ylab("Posterior mean model residuals")+
   geom_point(alpha=0.3, col="grey20")+
-  xlim(0, xlim_plot[2])+ylim(ylim_plot[1], ylim_plot[2])+
+  xlim(xlim_plot[1], xlim_plot[2])+ylim(ylim_plot[1], ylim_plot[2])+
   geom_hline(yintercept = 0, lty=1, lwd=1.2,col="dodgerblue2")+
   geom_smooth(method = "lm", formula = 'y~x', se=F, col="tomato3", lty=2, lwd=1.2)+
   theme_classic()+
@@ -94,7 +94,7 @@ plot_2_1 <- ggplot(df_resid, aes(1/se, resid))+xlab("Inverse standard error (1/s
 
 plot_2_2 <- ggplot(df_resid, aes(1/se, resid))+xlab("Inverse standard error (1/se)")+ylab("Posterior mean model residuals")+
   geom_point(alpha=0.3, col="grey20")+
-  xlim(0, xlim_plot[2])+ylim(ylim_plot[1], ylim_plot[2])+
+  xlim(xlim_plot[1], xlim_plot[2])+ylim(ylim_plot[1], ylim_plot[2])+
   geom_hline(yintercept = 0, lty=1, lwd=1.2,col="dodgerblue2")+
   geom_smooth(method = "lm", formula = 'y~x', se=F, col="tomato3", lty=2, lwd=1.2)+
   facet_wrap(.~group)+
@@ -103,7 +103,7 @@ plot_2_2 <- ggplot(df_resid, aes(1/se, resid))+xlab("Inverse standard error (1/s
 
 plot_2_3 <- ggplot(df_resid, aes(1/se, resid))+xlab("Inverse standard error (1/se)")+ylab("Posterior mean model residuals")+
   geom_point(alpha=0.3, col="grey20")+
-  xlim(0, xlim_plot[2])+ylim(ylim_plot[1], ylim_plot[2])+
+  xlim(xlim_plot[1], xlim_plot[2])+ylim(ylim_plot[1], ylim_plot[2])+
   geom_hline(yintercept = 0, lty=1, lwd=1.2,col="dodgerblue2")+
   geom_smooth(method = "lm", formula = 'y~x', se=F, col="tomato3", lty=2, lwd=1.2)+
   facet_wrap(.~predictor)+

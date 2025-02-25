@@ -3,7 +3,7 @@
 #' @param estimate A vector containing the effect-size
 #' @param stderr A vector containing the standard error
 #' @param prior_mu Prior for the mean
-#' @param prior_se Prior for the se
+#' @param prior_mu_se Prior for the se
 #' @param prior weights for prior odds (default=1/number of priors)
 #' @param interval Credibility intervals for the summary (default=0.9)
 #' @param RE An argument indicating if RE or FE should be used (default RE=TRUE)
@@ -15,7 +15,7 @@
 #' improper uniform prior, which simplifies most calculations.
 #'
 #' @export
-abmeta <- function(estimate, stderr, prior_mu=0, prior_se=1000, prior_weights=NULL,
+abmeta <- function(estimate, stderr, prior_mu=0, prior_mu_se=1000, prior_weights=NULL,
                    interval=0.9, RE=T, warnings=F) {
 
   #Give warning if estimate length is 1
@@ -25,7 +25,8 @@ abmeta <- function(estimate, stderr, prior_mu=0, prior_se=1000, prior_weights=NU
   if(length(estimate) != length(stderr)){stop("Vector of estimates is not of the same length as the vector of standard errors.")}
 
   #If length weights is not length of priors then set to average
-  if(length(prior_mu) && !is.null(prior_weights) != length(prior_weights)){ if(is.null(prior_weights)){prior_weights <- rep(1/length(prior_mu), length(prior_mu))}}
+  if(length(prior_mu) && !is.null(prior_weights) != length(prior_weights)){
+    if(is.null(prior_weights)) {prior_weights <- rep(1/length(prior_mu), length(prior_mu))}}
 
   if(is.null(prior_weights)){prior_weights <- rep(1/length(prior_mu), length(prior_mu))}
 
@@ -41,7 +42,7 @@ abmeta <- function(estimate, stderr, prior_mu=0, prior_se=1000, prior_weights=NU
 
   #Loop over all priors
   posteriors <- sapply(1:length(prior_mu), function(k){
-    postvals(estimate, stderr, prior_mu[k], prior_se[k])})
+    postvals(estimate, stderr, prior_mu[k], prior_mu_se[k])})
 
   #Extract posterior
   post_mu    <- posteriors["mu", ]
@@ -63,7 +64,7 @@ abmeta <- function(estimate, stderr, prior_mu=0, prior_se=1000, prior_weights=NU
 
     #Use tau2 for new posteriors
     posteriors <- sapply(1:length(prior_mu), function(k) {
-    postvals(estimate, sqrt(stderr^2+tau2), prior_mu[k], prior_se[k])})
+    postvals(estimate, sqrt(stderr^2+tau2), prior_mu[k], prior_mu_se[k])})
 
     #Extract posterior
     post_mu <- posteriors["mu", ]

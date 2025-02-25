@@ -7,11 +7,12 @@
 abmeta(
   estimate,
   stderr,
-  prior_mu,
-  prior_se,
+  prior_mu = 0,
+  prior_mu_se = 1000,
   prior_weights = NULL,
   interval = 0.9,
-  RE = T
+  RE = T,
+  warnings = F
 )
 }
 \arguments{
@@ -21,7 +22,7 @@ abmeta(
 
 \item{prior_mu}{Prior for the mean}
 
-\item{prior_se}{Prior for the se}
+\item{prior_mu_se}{Prior for the se}
 
 \item{interval}{Credibility intervals for the summary (default=0.9)}
 

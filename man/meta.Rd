@@ -18,7 +18,7 @@ meta(
   prior_mu = 0,
   prior_mu_se = 10,
   prior_study_var = NULL,
-  prior_fam_var = "unif",
+  prior_fam_var = "unif1",
   interval = 0.9,
   get_prior_only = FALSE,
   n_chain = 2,
@@ -56,9 +56,14 @@ meta(
 
 \item{prior_mu_se}{Prior for the se which can be vector or matrix}
 
-\item{prior_study_var}{Prior for the between study variance if RE=T. If the argument prior_fam_var indicates the family is 'unif' then a uniform prior is used between 0 and the maximum value indicated by prior_study_var (default=abs(max(estimate-mean(estimate)))*2) meaning Uniform(0, prior_study_var). If prior_fam_var is 'exp' the the mean of the exponential distribution is indicated bye prior_study_var. This means if the mean is 1000 this a rate=1/1000 in Exponential(1/1000).}
+\item{prior_study_var}{Prior for the between study variance if RE=T. If the argument prior_fam_var indicates the family is 'unif1' or 'unif2', then a uniform prior is used between 0 and the maximum value indicated by prior_study_var (default=abs(max(estimate-mean(estimate)))*2) meaning Uniform(0, prior_study_var).
+If prior_fam_var is 'exp' the the rate indicated bye prior_study_var. This is by default 0.001 meaning Exponential(prior_study_var).}
 
-\item{prior_fam_var}{The distribution family used for the prior of the between study variance. Uniform = 'unif' and Exponential = 'exp' (default='unif').With smaller sample sizes the intervals can become very broad with might be beneficial if one wants to be conservative. However, it can be a disadvantage is that the variability of the parameter gets overly broad.}
+\item{prior_fam_var}{The distribution family used for the prior of the between study variance. Uniform1 = 'unif1' this uses the uniform distribution as a 'scaling parameter over all studies'. This can be beneficial is one does not want to make
+assumptions about the between study variance and a large number of levels is present with sometimes small sample sizes. The between study variance is then estimated as the overall between study variance, but not for each level individual.
+Uniform2 = 'unif2' estimates the between study variance for each individual level. This is useful when one no assumptions wants to make over the between study variance and a large number of studies is present for each level.
+The Exponential = 'exp' estimates the between study variance for each individual level based on the exponential distribution (default='unif1').This is beneficial if only a small number of levels and samples are present. With unif1 or unif2 the intervals can become
+very broad with might be beneficial if one wants to be conservative. However, it can be a disadvantage because that the variability of the parameter gets overly broad (default = 'unif1')}
 
 \item{interval}{Credibility intervals for the summary (default=0.9)}
 

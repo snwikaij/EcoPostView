@@ -12,8 +12,13 @@
 #' @param Nsamp A vector with the number of samples for each estimate (only used when method = 2)
 #' @param prior_mu Prior for the mean which can be vector (Bayesian meta-analysis) or matrix (Bayesian meta-analysis with model averaging)
 #' @param prior_mu_se Prior for the se which can be vector or matrix
-#' @param prior_study_var Prior for the between study variance if RE=T. If the argument prior_fam_var indicates the family is 'unif' then a uniform prior is used between 0 and the maximum value indicated by prior_study_var (default=abs(max(estimate-mean(estimate)))*2) meaning Uniform(0, prior_study_var). If prior_fam_var is 'exp' the the mean of the exponential distribution is indicated bye prior_study_var. This means if the mean is 1000 this a rate=1/1000 in Exponential(1/1000).
-#' @param prior_fam_var The distribution family used for the prior of the between study variance. Uniform = 'unif' and Exponential = 'exp' (default='unif').With smaller sample sizes the intervals can become very broad with might be beneficial if one wants to be conservative. However, it can be a disadvantage is that the variability of the parameter gets overly broad.
+#' @param prior_study_var Prior for the between study variance if RE=T. If the argument prior_fam_var indicates the family is 'unif1' or 'unif2', then a uniform prior is used between 0 and the maximum value indicated by prior_study_var (default=abs(max(estimate-mean(estimate)))*2) meaning Uniform(0, prior_study_var).
+#' If prior_fam_var is 'exp' the the rate indicated bye prior_study_var. This is by default 0.001 meaning Exponential(prior_study_var).
+#' @param prior_fam_var The distribution family used for the prior of the between study variance. Uniform1 = 'unif1' this uses the uniform distribution as a 'scaling parameter over all studies'. This can be beneficial is one does not want to make
+#' assumptions about the between study variance and a large number of levels is present with sometimes small sample sizes. The between study variance is then estimated as the overall between study variance, but not for each level individual.
+#' Uniform2 = 'unif2' estimates the between study variance for each individual level. This is useful when one no assumptions wants to make over the between study variance and a large number of studies is present for each level.
+#' The Exponential = 'exp' estimates the between study variance for each individual level based on the exponential distribution (default='unif1').This is beneficial if only a small number of levels and samples are present. With unif1 or unif2 the intervals can become
+#' very broad with might be beneficial if one wants to be conservative. However, it can be a disadvantage because that the variability of the parameter gets overly broad (default = 'unif1')
 #' @param interval Credibility intervals for the summary (default=0.9)
 #' @param get_prior_only If it is unclear how many levels and how to formulate multiple priors for each level this argument will only return a data frame of priors so that formulating priors for levels is easier
 #' @param n_chain Number of chains
@@ -56,8 +61,17 @@
 #' provided.
 #'
 #'@note
-#'If Nsamp (NA) this is replaced by 1 since 1/N where N=1 is 1=1/1. If parameters b0 or b1 or link functions are not given still a meta analysis is performed. One
-#'still needs to fill in the columns.
+#'Which prior variance 'family' needs to be selected on the between study variance is still unclear to me.
+#'I am not sure if there is an approximate optimal answer but would like to have one. It is possible to get unreasonable answers
+#'due to the extremely large or small variance among studies and variability in sample sizes when using 'unif2' or 'exp'.
+#'However extremely wide intervals across all levels are also possible when using 'unif1'. This means then that smaller pattern will not
+#'come out very clear.
+#'
+#'The 'unif1' could prevents over fitting to small-group variances for smaller sample sizes. Therefore it a conservative
+#'but stable approximate answer seems preferable at first glance. Consequently repetition could be performed in an second study
+#'with a less conservative hierarchical structure where 'unif2' and 'exp' could be utilized.
+#'
+#'If Nsamp (NA) this is replaced by 1 since 1/N where N=1 is 1=1/1.
 #'
 #'@examples
 #'data("example1")
@@ -89,7 +103,7 @@ meta <- function(estimate, stderr, parameter=NULL, predictor=NULL,
                 prior_mu=0,
                 prior_mu_se=10,
                 prior_study_var=NULL,
-                prior_fam_var="unif",
+                prior_fam_var="unif1",
                 interval=0.9,
                 get_prior_only = FALSE,
                 n_chain = 2,
@@ -157,13 +171,15 @@ meta <- function(estimate, stderr, parameter=NULL, predictor=NULL,
                                              the estimates")}
     Nsamp[is.na(Nsamp)] <- 1}else{Nsamp <- rep(1, length(estimate))}
 
-  #Set the type of prior for between study variance 1 (='unif'), 2 (='exp')
+  #Set the type of prior for between study variance 1 (='unif1'), 2 (='unif2'), 2 (='exp')
   if(RE==T){
-  if(prior_fam_var=="unif"){prior_fam_var <- 1
+  if(prior_fam_var=="unif1"){prior_fam_var <- c(1, 0, 0)
    if(is.null(prior_study_var)){prior_study_var <- max(abs(estimate-mean(estimate)))*2}
-  }else if(prior_fam_var=="exp"){prior_fam_var <- 2
-   if(is.null(prior_study_var)){prior_study_var <- 1000}
-  }else{stop("Not a correct family choosen for between study variance")}}
+  }else if(prior_fam_var=="unif2"){prior_fam_var <- c(0, 1, 0)
+    if(is.null(prior_study_var)){prior_study_var <- max(abs(estimate-mean(estimate)))*2}
+  }else if(prior_fam_var=="exp"){prior_fam_var <- c(0, 0, 1)
+   if(is.null(prior_study_var)){prior_study_var <- 0.001}
+  }else{stop("Not a correct family choosen for between study variance: 'unif1', 'unif2' or 'exp'")}}
 
   #Place all given data in a list
   mod_data <- list(est=as.numeric(estimate),
@@ -203,16 +219,21 @@ meta <- function(estimate, stderr, parameter=NULL, predictor=NULL,
 
                                             resid <- est-mu2
 
-                                            sigma  ~ dunif(0, Ps)
-                                            rate   ~ dexp(1/Ps)
-
                                             ##Stochastic behavior for the weights
                                             pw[1:npw] ~ ddirch(alpha_pw[1:npw])
+
+                                            #variance as scaling factor over al studies
+                                            sigma1       ~ dunif(0, Ps)
 
                                             ##priors
                                             for(j in 1:L){
                                               beta_adjust[j]~ dnorm(0, 1/100^2)
-                                              tau1[j]      <- (equals(prV, 1)*(1/sigma^2))+(equals(prV, 2)*rate)
+
+                                              sigma2[j]       ~ dunif(0, Ps)
+                                              tau1a[j]        <- 1/sigma1^2
+                                              tau1b[j]        <- 1/sigma2[j]^2
+                                              tau1c[j]        ~ dexp(Ps)
+                                              tau1[j]         <- tau1a[j]*prV[1]+tau1b[j]*prV[2]+tau1c[j]*prV[3]
 
                                               for(k in 1:npw){
                                                 mu_M[j,k]    ~ dnorm(Pm[j,k], 1/Pe[j,k]^2)}
@@ -236,17 +257,22 @@ meta <- function(estimate, stderr, parameter=NULL, predictor=NULL,
 
                                               resid <- est-mu2
 
-                                              sigma  ~ dunif(0, Ps)
-                                              rate   ~ dunif(1/Ps)
-
                                               ##Stochastic behavior for the weights
                                               pw[1:npw] ~ ddirch(alpha_pw[1:npw])
+
+                                              #variance as scaling factor over al studies
+                                              sigma1       ~ dunif(0, Ps)
 
                                               ##priors
                                               for(j in 1:L){
                                                 beta_random[j] ~ dnorm(0, 1/100^2)
                                                 beta_adjust[j] ~ dnorm(0, 1/100^2)
-                                                tau1[j]        <- (equals(prV, 1)*(1/sigma^2))+(equals(prV, 2)*rate)
+
+                                                sigma2[j]       ~ dunif(0, Ps)
+                                                tau1a[j]        <- 1/sigma1^2
+                                                tau1b[j]        <- 1/sigma2[j]^2
+                                                tau1c[j]        ~ dexp(Ps)
+                                                tau1[j]         <- tau1a[j]*prV[1]+tau1b[j]*prV[2]+tau1c[j]*prV[3]
 
                                                 for(k in 1:npw){
                                                   mu_M[j,k]    ~ dnorm(Pm[j,k], 1/Pe[j,k]^2)}
@@ -270,23 +296,28 @@ meta <- function(estimate, stderr, parameter=NULL, predictor=NULL,
 
                                               resid <- est-mu2
 
-                                              sigma  ~ dunif(0, Ps)
-                                              rate   ~ dexp(1/Ps)
-
                                               ##Stochastic behavior for the weights
                                               pw[1:npw] ~ ddirch(alpha_pw[1:npw])
+
+                                              #variance as scaling factor over al studies
+                                              sigma1       ~ dunif(0, Ps)
 
                                               ##priors
                                               for(j in 1:L){
                                                 for(r in 1:R){
                                                 beta_random[j, r]  ~ dnorm(0, 1/100^2)}
                                                 beta_adjust[j]     ~ dnorm(0, 1/100^2)
-                                                tau1[j]            <- (equals(prV, 1)*(1/sigma^2))+(equals(prV, 2)*rate)
+
+                                                sigma2[j]       ~ dunif(0, Ps)
+                                                tau1a[j]        <- 1/sigma1^2
+                                                tau1b[j]        <- 1/sigma2[j]^2
+                                                tau1c[j]        ~ dexp(Ps)
+                                                tau1[j]         <- tau1a[j]*prV[1]+tau1b[j]*prV[2]+tau1c[j]*prV[3]
 
                                                 for(k in 1:npw){
-                                                  mu_M[j,k]    ~ dnorm(Pm[j,k], 1/Pe[j,k]^2)}
+                                                mu_M[j,k]    ~ dnorm(Pm[j,k], 1/Pe[j,k]^2)}
                                                 d[j]         ~ dcat(pw[1:npw])
-                                                mu[j]        <- inprod(mu_M[j, 1:npw], d[j] == 1:npw)}
+                                                mu[j]        <-inprod(mu_M[j, 1:npw], d[j] == 1:npw)}
 
                                               #I2 per level
                                               for(l in 1:L){
@@ -306,14 +337,20 @@ meta <- function(estimate, stderr, parameter=NULL, predictor=NULL,
 
                                             resid <- est-mu2
 
-                                            sigma  ~ dunif(0, Ps)
-                                            rate   ~ dexp(1/Ps)
+                                            #variance as scaling factor over al studies
+                                            sigma1       ~ dunif(0, Ps)
 
                                             ##priors
                                             for(j in 1:L){
                                               beta_adjust[j]   ~ dnorm(0, 1/100^2)
                                               mu[j]           ~ dnorm(Pm[j], 1/Pe[j]^2)
-                                              tau1[j]         <- (equals(prV, 1)*(1/sigma^2))+(equals(prV, 2)*rate)}
+
+                                              sigma2[j]       ~ dunif(0, Ps)
+                                              tau1a[j]        <- 1/sigma1^2
+                                              tau1b[j]        <- 1/sigma2[j]^2
+                                              tau1c[j]        ~ dexp(Ps)
+                                              tau1[j]         <- tau1a[j]*prV[1]+tau1b[j]*prV[2]+tau1c[j]*prV[3]
+                                              }
 
                                             #I2 per level
                                             for(l in 1:L){
@@ -332,15 +369,21 @@ meta <- function(estimate, stderr, parameter=NULL, predictor=NULL,
 
                                               resid <- est-mu2
 
-                                              sigma  ~ dunif(0, Ps)
-                                              rate   ~ dexp(1/Ps)
+                                              #variance as scaling factor over al studies
+                                              sigma1       ~ dunif(0, Ps)
 
                                               ##priors
                                               for(j in 1:L){
                                                 beta_random[j]  ~ dnorm(0, 1/100^2)
                                                 beta_adjust[j]  ~ dnorm(0, 1/100^2)
                                                 mu[j]           ~ dnorm(Pm[j], 1/Pe[j]^2)
-                                                tau1[j]         <- (equals(prV, 1)*(1/sigma^2))+(equals(prV, 2)*rate)}
+
+                                                sigma2[j]       ~ dunif(0, Ps)
+                                                tau1a[j]        <- 1/sigma1^2
+                                                tau1b[j]        <- 1/sigma2[j]^2
+                                                tau1c[j]        ~ dexp(Ps)
+                                                tau1[j]         <- tau1a[j]*prV[1]+tau1b[j]*prV[2]+tau1c[j]*prV[3]
+                                                }
 
                                               #I2 per level
                                               for(l in 1:L){
@@ -359,8 +402,8 @@ meta <- function(estimate, stderr, parameter=NULL, predictor=NULL,
 
                                               resid <- est-mu2
 
-                                              sigma  ~ dunif(0, Ps)
-                                              rate   ~ dexp(1/Ps)
+                                              #variance as scaling factor over al studies
+                                              sigma1       ~ dunif(0, Ps)
 
                                               ##priors
                                               for(j in 1:L){
@@ -368,7 +411,12 @@ meta <- function(estimate, stderr, parameter=NULL, predictor=NULL,
                                                 beta_random[j, r]  ~ dnorm(0, 1/100^2)}
                                                 beta_adjust[j]     ~ dnorm(0, 1/100^2)
                                                 mu[j]              ~ dnorm(Pm[j], 1/Pe[j]^2)
-                                                tau1[j]            <- (equals(prV, 1)*(1/sigma^2))+(equals(prV, 2)*rate)}
+
+                                                sigma2[j]       ~ dunif(0, Ps)
+                                                tau1a[j]        <- 1/sigma1^2
+                                                tau1b[j]        <- 1/sigma2[j]^2
+                                                tau1c[j]        ~ dexp(Ps)
+                                                tau1[j]         <- tau1a[j]*prV[1]+tau1b[j]*prV[2]+tau1c[j]*prV[3]}
 
                                               #I2 per level
                                               for(l in 1:L){
@@ -509,7 +557,7 @@ meta <- function(estimate, stderr, parameter=NULL, predictor=NULL,
                                          #Run the model
                                          model <- R2jags::jags.parallel(data = mod_data,
                                                                 model.file = meta_analysis,
-                                                                parameters.to.save =  c("mu", "d", "I2", "sigma", "rate", "beta_random", "beta_adjust", "resid"),
+                                                                parameters.to.save =  c("mu", "d", "I2", "sigma1", "sigma2", "beta_random", "beta_adjust", "resid"),
                                                                 n.chains = n_chain,
                                                                 n.thin = n_thin,
                                                                 jags.seed = n_seed,

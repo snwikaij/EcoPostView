@@ -7,8 +7,6 @@
 #' @param prior_sd Prior values for sd(Z) following a gamma distribution, which needs to be notated c(shape, rate)
 #' @param prior_threshold Prior values for the threshold for 'significance'
 #' @param prior_cens Prior values for the fractions of censored samples following a beta distribution, which needs to be notated as c(alpha, beta)
-#' @param prior_uncens Prior values for the fractions of uncensored samples following a beta distribution, which needs to be notated as c(alpha, beta)
-#' @param prior_odds_cens The likelihood of the prior odds
 #' @param distribution Either z-distribution or shifted t-distribution with 1 df
 #' @param density_steps An argument that determines the number of steps of the density function to derive the fit of the simulated to the data
 #' @param seed Set the seed
@@ -25,9 +23,7 @@ abctoz <- function(p, operator=NULL,
                    prior_mu=c(1, 1),
                    prior_sd=c(1, 2),
                    prior_threshold=c(1.96, 0.1),
-                   prior_cens=c(1, 1.5, 0.02, 1),
-                   prior_uncens=c(1, 1.5, 0, 0.02),
-                   prior_odds_cens=0.97,
+                   prior_cens=c(1, 1.5),
                    distribution="z",
                    density_steps=100,
                    min_dens_steps=20,
@@ -37,26 +33,16 @@ abctoz <- function(p, operator=NULL,
   nz               <- length(p)
 
   #generate a data frame for the priors
-  priors           <- as.data.frame(array(NA, dim=c(nsim, 7)))
-  colnames(priors) <- c("mu", "sd", "threshold", "cens", "n1", "n2", "H0/H1")
-
-  #based on the prior odds generate priors for the censoring
-  selection <- rbinom(nsim, 1, prior_odds_cens)
-  prior_cens_values <- mapply(function(x) {
-    if(x == 1){
-      return(truncdist::rtrunc(1, shape1=prior_cens[1], shape2=prior_cens[2], a=prior_cens[3], b=prior_cens[4], spec="beta"))
-    }else{
-      return(truncdist::rtrunc(1, shape1=prior_uncens[1], shape2=prior_uncens[2], a=prior_uncens[3], b=prior_uncens[4], spec="beta"))}
-  }, selection)
+  priors           <- as.data.frame(array(NA, dim=c(nsim, 6)))
+  colnames(priors) <- c("mu", "sd", "threshold", "cens", "n1", "n2")
 
   #generate all priors and place in df
   priors[,1] <- truncnorm::rtruncnorm(nsim, a = 0, b=Inf, mean=prior_mu[1], sd=prior_mu[2])
   priors[,2] <- rgamma(nsim, prior_sd[1], prior_sd[2])
   priors[,3] <- truncnorm::rtruncnorm(nsim, a = 0, b=Inf, mean=prior_threshold[1], sd=prior_threshold[2])
-  priors[,4] <- prior_cens_values
+  priors[,4] <- rbeta(nsim, prior_cens[1], prior_cens[2])
   priors[,5] <- round(nz*priors[,4])
   priors[,6] <- nz-priors[,5]
-  priors[,7] <- selection
 
   #if no operator is given
   if(is.null(operator)){

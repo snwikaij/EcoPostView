@@ -213,6 +213,23 @@ print(res_bias2$bias_se)
 
 In the method above the bias has been adjusted (not removed!). The pooled estimate is now much lower This means the relations between the standard error can be assessed by looking at the residuals. This is often performed with funnel plots but can as addition also be asses by simply checking the residuals. The adjustment should only be applied if patterns are extremely clear it can often lead to strong adjustments even if no clear bias is present. However, it is extremely effective if such bias is present in the data. In the future I hope to add multiple methods to assess the strength of the bias.
 
+The bias displayed in this example are clearly extreme in such cases it could be beneficial to explore the bias further to asses if there is clearly a 'publication gap'. This publication gab can be highlighted by looking at the z-distribution derived from the p-value. While normally the p-value is derived from the z-value. When there is a clear gap visible (as in Zwet and Cator 2021) then we should be able to model the absolute z-value this from a mixture of two half normal distributions. Here one model is truncate at 0 and the other at 1.96. Since the likelihood of a mixture is difficult the obtain an Approximate-Bayesian-Computation algorithm was used based on rejection sampling (ABC-rejection). This method is further highlighted in Csilléry et al. (2010) and Hartig et al. (2011) and the model given here is formally described in the theoretical section.
+
+```{r exploring bias with ABC-rjection, fig.width=7.8, fig.height=4, warning=FALSE}
+#From the dataset calculate the p-value from the effect-sizes and standard errors
+pvalues <- ptoz(estimate=example3$est, stderr=example3$se)
+
+#run the ABC-rejection model
+result_abc  <- abctoz(p=pvalues$data$p, nsim = 250000)
+
+#Extract the information from the results based on a selected threshold
+extract_abc <- extrabc(result_abc, dist_threshold = 0.052)
+
+#Plot the histogram of the z-values with the simulated density lines of the posterior
+plot(extract_abc$hist)
+```
+Based on the distribution of z-values we can clearly observe that z-values |z|>1.96 are more common published than those lower values. This would be reasonable if there was no gap observed and this strong boundary at >1.96. However, the z-values can be reasonable modeled and the model seems to fit decently (R-squared >0.6-0.7 is considered). Furthermore, the density lines decent and the  nicely overlay with the histogram. The number of observations from the censored model are 0.76 (76%). This does not mean that 76% is censored as the focus of this model to see if it can strongly fit to the data. This fit, if the bias is as sever as provided via the residuals, provides another hint that indication a selection procedure. To make sure the results are reasonable one can make sure that the fit stays sufficient and the accepted number of simulation is acceptable (heuristically > 100).
+
 ## 3.4 Setting priors
 
 A benefit of the the Bayesian approach is that we can included prior information. Thereby explicitly shifting the weight of the outcome to more plausible values of the pooled model parameter. To set only a single prior for each relation and parameter a specific structure is needed. By default the model parameters are set as Gaussian/normally distributed with a mean ($\mu$, prior_mu) of 0 and standard error ($se$, prior_mu_se) of 0.5. The prior distribution is at the moment restricted to the normal distribution. The prior for the standard deviation ($\sigma$) is uniform where only the maximum value (prior_sigma_max) can be set, which at default is 5. 
@@ -499,6 +516,86 @@ $$\mu_{posterior} =\frac{\frac{\mu_{prior} }{\sigma_{prior}^2} + \frac{\hat{x}_{
 \frac{1}{\sigma_{prior}^2} + \frac{1}{\sigma_{data}^2}}
 \\
 \sigma_{posterior}=\sqrt{\frac{1}{\frac{1}{\sigma_{prior}^2}+\frac{1}{\sigma_{data}^2}}}$$
+
+**Proof:**
+**Premise 1**
+Bayes rule can be simplified to
+$$P(\mu|Data) \propto P(Data|\mu) \cdot P(\mu)
+\\
+N(\mu_{posterior}, \sigma_{posterior}^2)=N(\mu_{sample}, \sigma_{sample}^2)\cdot N(\mu_{prior}, \sigma_{prior}^2)
+$$
+**Premise 2**
+The PDF for the normal distribution is
+$$f(x)=\frac{1}{2\cdot \sqrt{\sigma \pi}}\cdot exp(-\frac{1}{2}(\frac{x-\mu}{\sigma})^2)$$
+**Premise 3**
+$$Prior: P(\mu_{prior})=\frac{1}{2\cdot \sqrt{\sigma_{prior} \pi}}\cdot exp(-\frac{1}{2}(\frac{\theta-\mu_{prior}}{\sigma_{prior}})^2)
+\\
+Likelihood: P(\mu_{prior})=\frac{1}{2\cdot \sqrt{\sigma_{sample} \pi}}\cdot exp(-\frac{1}{2}(\frac{\mu_{sample}-\theta}{\sigma_{sample}})^2)
+$$
+**Premise 4**
+Both $\frac{1}{2\cdot \sqrt{\sigma_{prior} \pi}}$ and $\frac{1}{2\cdot \sqrt{\sigma_{sample} \pi}}$ are scalars and can be left out of the equation.
+
+**Premise 5**
+Since both exponent have the same base we can add the exponent $$(a^2+b^2=a^{2+2})$$ 
+resulting in
+$$exp(-\frac{1}{2}\cdot[(\frac{\theta-\mu_{prior}}{\sigma_{prior}})^2+(\frac{\mu_{sample}-\theta}{\sigma_{sample}})^2]$$
+After which brackets can be moved
+$$exp(-\frac{1}{2}\cdot[\frac{(\theta-\mu_{prior})^2}{\sigma_{prior}^2}+\frac{(\mu_{sample}-\theta)^2}{\sigma_{sample}^2}])$$
+**Premise 6**
+Expanding the brackets terms
+$$(a^2+b^2)=(a-b)\cdot(a-b)=a^2-ab-ab+b^2=a^2-2ab+b^2$$
+This means 
+$$(\theta-\mu_{prior})^2=\theta^2-2\theta\mu_{prior}+\mu_{prior}^2$$ 
+and
+$$(\mu_{sample}-\theta)^2=\mu_{sample}^2-2\mu_{sample}\theta+\mu_{sample}^2$$ 
+which can be replaced in premise 5
+$$exp(-\frac{1}{2}\cdot[\frac{\theta^2-2\theta\mu_{prior}+\mu_{prior}^2}{\sigma_{prior}^2}+\frac{\mu_{sample}^2-2\mu_{sample}\theta+\mu_{sample}^2}{\sigma_{sample}^2}])$$
+**Premise 7**
+Separating each term by dividing by $\sigma_{prior}^2$ and $\sigma_{sample}^2$
+$$exp(-\frac{1}{2}\cdot\frac{\theta^2}{\sigma_{prior}^2}+\frac{-2\theta\mu_{prior}}{\sigma_{prior}^2}+\frac{\mu_{prior}^2}{\sigma_{prior}^2}+
+\frac{\mu_{sample}^2}{\sigma_{sample}^2}+\frac{-2\mu_{sample}\theta}{\sigma_{sample}^2}+\frac{\mu_{sample}^2}{\sigma_{sample}^2})$$
+
+**Premise 8**
+Group each term by the nominator
+$$\frac{\theta^2}{\sigma_{prior}^2}+\frac{-2\theta\mu_{prior}}{\sigma_{prior}^2}+\frac{\mu_{prior}^2}{\sigma_{prior}^2}+
+\frac{\mu_{sample}^2}{\sigma_{sample}^2}+\frac{-2\mu_{sample}\theta}{\sigma_{sample}^2}+\frac{\mu_{sample}^2}{\sigma_{sample}^2}=
+\\
+\theta^2(\frac{1}{\sigma_{prior}^2}+\frac{1}{\sigma_{sample}^2})+
+-2\theta(\frac{\mu_{prior}}{\sigma_{prior}^2}+\frac{\mu_{sample}}{\sigma_{sample}^2})
++(\frac{\mu_{prior}^2}{\sigma_{prior}^2}+\frac{\mu_{sample}^2}{\sigma_{sample}^2})
+$$
+Since the last group is not dependent on $\theta$ it is not in our focus
+$$
+exp(-\frac{1}{2}\cdot[\frac{\theta^2}{\sigma_{prior}^2}+\frac{-2\theta\mu_{prior}}{\sigma_{prior}^2}+\frac{\mu_{prior}^2}{\sigma_{prior}^2}+
+\frac{\mu_{sample}^2}{\sigma_{sample}^2}+\frac{-2\mu_{sample}\theta}{\sigma_{sample}^2}+\frac{\mu_{sample}^2}{\sigma_{sample}^2}=
+\\
+exp(-\frac{1}{2}\cdot\theta^2(\frac{1}{\sigma_{prior}^2}+\frac{1}{\sigma_{sample}^2})+
+-2\theta(\frac{\mu_{prior}}{\sigma_{prior}^2}+\frac{\mu_{sample}}{\sigma_{sample}^2})
++not\ dependent\ on\ \theta])
+$$
+**Premise 9**
+The goal is to derive $P(\mu|Data)$ from $P(\mu|Data) \propto P(Data|\mu) \cdot P(\mu)$ An the general exponential form of the normal distribution is given in Premise 2 and the premises 6, 7 and 9 lead to
+$$\frac{1}{2}\cdot \theta^2 (\frac{1}{\sigma^2})+\theta(\frac{\mu}{\sigma^2})+C=
+\\
+\frac{1}{2}\cdot\theta^2A+\theta B+C$$
+the general exponential form for the normal distribution is always $\frac{1}{2}\cdot\theta^2A+\theta B+C$ meaning that $A=\frac{1}{\sigma^2}$ and $B=\frac{\mu}{\sigma^2}$ and to obtain the standard deviation $A$ needs to be re-arranged to $\sigma = \sqrt{\frac{1}{A}}$ and to obtain the mean $\mu=\frac{B}{A}=\frac{\frac{\mu}{\sigma^2}}{\frac{1}{\sigma^2}}$
+
+**Conclusion**
+In Premise 8
+$$
+exp(-\frac{1}{2}\cdot\theta^2(\frac{1}{\sigma_{prior}^2}+\frac{1}{\sigma_{sample}^2})+
+-2\theta(\frac{\mu_{prior}}{\sigma_{prior}^2}+\frac{\mu_{sample}}{\sigma_{sample}^2})+C)
+$$
+In Premise 9
+$$
+\sigma = \sqrt{\frac{1}{A}}, A=\frac{1}{\sigma^2}\\
+\mu=\frac{B}{A}=\frac{\frac{\mu}{\sigma^2}}{\frac{1}{\sigma^2}}
+$$
+Which implies that
+$$
+\sigma_{posterior}=\sqrt{\frac{1}{\frac{1}{\sigma_{prior}^2}+\frac{1}{\sigma_{sample}^2}}}\\
+\mu_{posterior}=\frac{\mu_{prior}}{\sigma_{prior}^2}+\frac{\mu_{sample}}{\sigma_{sample}^2}
+$$
 Another way to obtain the posterior mean would be via
 $$\mu_{posterior}=\frac{\frac{\mu_{prior}}{\sigma_{prior}^2}+\hat{x}_{data}*\frac{n}{\sigma_{data}^2}}
 {\frac{1}{\sigma_{prior}^2}+\frac{n}{\sigma_{data}^2}}$$
@@ -646,9 +743,13 @@ Baguley, Thom. 2009. “Standardized or Simple Effect Size: What Should Be Repor
 
 Cramer, J. S. 1991. The Logit Model: An Introduction for Economists. London: Edward Arnold.
 
+Csilléry, Katalin, Michael G.B. Blum, Oscar E. Gaggiotti, and Olivier François. 2010. “Approximate Bayesian Computation (ABC) in Practice.” Trends in Ecology & Evolution 25(7): 410–18. doi:10.1016/j.tree.2010.04.001.
+
 Fisher, R. A. (1949). The Design of Experiments (5th ed.). Oliver and Boyd.
 
 Gelman, Andrew, and Eric Loken. 2013. “The Garden of Forking Paths: Why Multiple Comparisons Can Be a Problem, Even When There Is No ‘FIshing Expedition’ or ‘p-Hacking’ and the Research Hypothesis Was Posited Ahead of Time.” 348(3): 1–17. doi: 10.1007/978-3-658-12153-2_7.
+
+Hartig, Florian, Justin M. Calabrese, Björn Reineking, Thorsten Wiegand, and Andreas Huth. 2011. “Statistical Inference for Stochastic Simulation Models - Theory and Application: Inference for Stochastic Simulation Models.” Ecology Letters 14(8): 816–27. doi:10.1111/j.1461-0248.2011.01640.x.
 
 Hinne, Max, Quentin F. Gronau, Don Van Den Bergh, and Eric-Jan Wagenmakers. 2020. “A Conceptual Introduction to Bayesian Model Averaging.” Advances in Methods and Practices in Psychological Science 3(2):200–215. doi: 10.1177/2515245919898657.
 
@@ -671,6 +772,8 @@ Stanley, T. D., and Hristos Doucouliagos. 2014. “Meta-Regression Approximation
 Tukey, John W. 1969. “Analysing Data: Sanctification or Detective Work?” American Psychologist 24(2): 83–91. doi: 10.1037/h0027108.
 
 Tong, Christopher. 2019. “Statistical Inference Enables Bad Science; Statistical Thinking Enables Good Science.” The American Statistician 73(sup1): 246–61. doi: 10.1080/00031305.2018.1518264.
+
+Van Zwet, E.W., Cator, E.A., 2021. "The significance filter, the winner’s curse and the need to shrink." Stat. Neerlandica 75, 437–452. doi: 10.1111/stan.12241
 
 Woolridge, Jeffery M. 2001. Econometric Analysis of Cross Section and Panel Data. Cambridge, Massachusetts, London, England: The MIT press.
 

@@ -5,8 +5,8 @@
 \title{P-to-z-values transformation}
 \usage{
 ptoz(
-  coef = NULL,
-  sei = NULL,
+  estimate = NULL,
+  stderr = NULL,
   zi = NULL,
   pi = NULL,
   names = NULL,
@@ -17,9 +17,9 @@ ptoz(
 )
 }
 \arguments{
-\item{coef}{The Effect-size}
+\item{estimate}{The Effect-size}
 
-\item{sei}{Standard error}
+\item{stderr}{Standard error}
 
 \item{zi}{z-value}
 
@@ -29,7 +29,7 @@ ptoz(
 
 \item{alpha}{Alpha level}
 
-\item{absolute}{Display coefficient on the absolute scale}
+\item{absolute}{Display estimates on the absolute scale}
 
 \item{xlim}{Limits of the x-axis}
 

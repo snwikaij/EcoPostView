@@ -2,7 +2,7 @@
 % Please edit documentation in R/abmeta.R
 \name{abmeta}
 \alias{abmeta}
-\title{Analytical approximate Bayesian Meta Analysis}
+\title{Empirical Bayesian Meta Analysis an analytical approach}
 \usage{
 abmeta(
   estimate,
@@ -10,6 +10,7 @@ abmeta(
   prior_mu = 0,
   prior_mu_se = 1000,
   prior_weights = NULL,
+  tau_2 = "DSL",
   interval = 0.9,
   RE = T,
   warnings = F
@@ -24,15 +25,24 @@ abmeta(
 
 \item{prior_mu_se}{Prior for the se}
 
+\item{prior_weights}{Weights for prior odds (default=1/number of priors)}
+
+\item{tau_2}{The method used to estimate tau^2 either a heuristic method 'HE0' or
+'DSL'=DerSimonian and Laird method (default = DSL).}
+
 \item{interval}{Credibility intervals for the summary (default=0.9)}
 
 \item{RE}{An argument indicating if RE or FE should be used (default RE=TRUE)}
-
-\item{prior}{weights for prior odds (default=1/number of priors)}
 }
 \description{
-Analytical Bayesian meta-analysis with random-effect (RE) or fixed-effect (FE). For the estimation for
-tau^2 the DSL DerSimonian and Laird (1986). This approach is easy yet slightly underestimates the 'true'
-variance (O Bai et al. 2016). That being said the between study variance is therefore treated as having an
-improper uniform prior, which simplifies most calculations.
+Empirical Bayesian meta-analysis with random-effect (RE) or fixed-effect (FE). For the estimation of
+tau^2 an Empirical Bayesian method was used utilizing DerSimonian and Laird (1986) or DSL estimator.
+This approach is easy but intervals are slightly smaller (O Bai et al. 2016). That being said the between study
+variance is therefore treated as having an improper uniform prior, which simplifies most calculations.
+
+The heuristic methods was (naive) attempt to formulate an approximation to a closed form solution. I started with a
+simple method of moment estimator but did not progress further. The HE is still rather empirical and results in similar results to the DSL and REML approach.
+\eqn{\tau^2 = \max\left(0, \frac{1}{n} \sum_{i=1}^{n} (\hat{\theta_i} - \theta_{\text{pooled}})^2 - \frac{\sum_{i=1}^{n} (w_i \cdot se_i)}{\sum_{i=1}^{n} w_i} \right)}
+However, HE will create wider intervals over the estimate under smaller sample sizes. Yet, by default DSL is still
+preferred.
 }

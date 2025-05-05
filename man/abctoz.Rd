@@ -11,9 +11,7 @@ abctoz(
   prior_mu = c(1, 1),
   prior_sd = c(1, 2),
   prior_threshold = c(1.96, 0.1),
-  prior_cens = c(1, 1.5, 0.02, 1),
-  prior_uncens = c(1, 1.5, 0, 0.02),
-  prior_odds_cens = 0.97,
+  prior_cens = c(1, 1.5),
   distribution = "z",
   density_steps = 100,
   min_dens_steps = 20,
@@ -34,10 +32,6 @@ abctoz(
 \item{prior_threshold}{Prior values for the threshold for 'significance'}
 
 \item{prior_cens}{Prior values for the fractions of censored samples following a beta distribution, which needs to be notated as c(alpha, beta)}
-
-\item{prior_uncens}{Prior values for the fractions of uncensored samples following a beta distribution, which needs to be notated as c(alpha, beta)}
-
-\item{prior_odds_cens}{The likelihood of the prior odds}
 
 \item{distribution}{Either z-distribution or shifted t-distribution with 1 df}
 

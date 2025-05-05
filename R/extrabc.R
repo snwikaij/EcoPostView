@@ -158,7 +158,9 @@ extrabc <- function(obj, dist_threshold=NULL,
   #create label
   mu_stat <- round(colMeans(est_array, na.rm = T),2)
   se_stat <- round(apply(est_array, 2, function(x) sd(x, na.rm = T)),2)
-  lab     <- paste0(c("R-squared=", "mean(Z)=", "sd(Z)=", "Censored=", "Threshold="), mu_stat, " (SE=", se_stat, ")\n", collapse = "")
+  n_accept<- nrow(est_array)
+  lab     <- paste0(c("R-squared=", "mean(Z)=", "sd(Z)=", "Censored=", "Threshold=", "Accepted="), c(mu_stat, n_accept), " (SE=", c(se_stat, NA), ")\n",  collapse = "")
+
 
   mean_max <- mean(aggregate(data=densline, y~i, max)[,2])
   sd_max   <- sd(aggregate(data=densline, y~i, max)[,2])
@@ -166,10 +168,10 @@ extrabc <- function(obj, dist_threshold=NULL,
   #Plot the histogram
   plhist <- ggplot(data.frame(z=obj$raw_data), aes(z))+xlim(0, 10)+
     xlab("z-value")+
-    geom_vline(xintercept = 1.96, lty=2, lwd=0.6)+
+    geom_vline(xintercept = 1.96, lty=2, lwd=0.2)+
     geom_histogram(col="black", fill="grey70",
                    alpha=0.2, position="identity",
-                   binwidth = 0.5,
+                   binwidth = 0.25,
                    boundary = 0, closed = "left")+
     xlab("z-value") +
     ylab("Count") +
@@ -213,17 +215,6 @@ extrabc <- function(obj, dist_threshold=NULL,
   #Also, I do not know how HDI behaves exactly with limited posterior samples
   interval_level              <- 0.5+c(-1,1)*interval/2
 
-  posth0h1 <- table(posterior$`H0/H1`)
-  if(!length(posth0h1) == 2){
-  if(names(posth0h1) == "0"){posth0h1 <- cbind("0"=posth0h1, "1"=0)}
-  if(names(posth0h1) == "1"){posth0h1 <- cbind("1"=0, "1"=posth0h1)}}
-
-  #summarize support
-  supstat <- round(c(setNames(posth0h1,c("Uncensored", "Censored")),
-                  setNames(posth0h1[2]/posth0h1[1],c("BayesFactor(H1/H0)")),
-                  setNames(plogis(log(posth0h1[2]/posth0h1[1])),c("Probability(H1/H0)")),
-                  tolerance=dist_threshold),2)
-
   #Generate a simple summary
   output <- data.frame(
     Statistic = c("c", "mu(z)", "sd(z)"),
@@ -236,8 +227,7 @@ extrabc <- function(obj, dist_threshold=NULL,
                  quantile(mu_adj, interval_level[2]),
                  quantile(sd_adj, interval_level[2])), 4))
 
-  print(list('Supportive statistics'=supstat,
-            'Summary statistics'=output))
+  print(output)
 
   return(invisible(list(summary=output,
               distance=seq_df,

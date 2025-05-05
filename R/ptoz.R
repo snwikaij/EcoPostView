@@ -1,12 +1,12 @@
 #' P-to-z-values transformation
 #'
-#' @param coef The Effect-size
-#' @param sei Standard error
+#' @param estimate The Effect-size
+#' @param stderr Standard error
 #' @param zi z-value
 #' @param pi p-value
 #' @param names Additional names
 #' @param alpha Alpha level
-#' @param absolute Display coefficient on the absolute scale
+#' @param absolute Display estimates on the absolute scale
 #' @param xlim Limits of the x-axis
 #' @param ylim Limits of the y-axis
 #'
@@ -22,50 +22,50 @@
 #' @importFrom ggplot2 theme
 #'
 #' @export
-ptoz <- function(coef=NULL, sei=NULL, zi=NULL, pi=NULL, names=NULL, alpha=0.05,
+ptoz <- function(estimate=NULL, stderr=NULL, zi=NULL, pi=NULL, names=NULL, alpha=0.05,
                  absolute=F, xlim=NULL, ylim=NULL){
 
   zint <- abs(qnorm(alpha/2))
 
-  if(!is.null(coef)){
+  if(!is.null(estimate)){
 
-    if(!is.null(sei)){
-      se  <- sei
-      z   <- coef/se
+    if(!is.null(stderr)){
+      se  <- stderr
+      z   <- estimate/se
       p   <- (1-pnorm(abs(z)))*2
-      ll  <- coef-zint*se
-      ul  <- coef+zint*se}
+      ll  <- estimate-zint*se
+      ul  <- estimate+zint*se}
 
     if(!is.null(zi)){
       z   <- zi
-      se  <- abs(coef)/abs(z)
+      se  <- abs(estimate)/abs(z)
       p   <- (1-pnorm(abs(z)))*2
-      ll  <- coef-zint*se
-      ul  <- coef+zint*se}
+      ll  <- estimate-zint*se
+      ul  <- estimate+zint*se}
 
     if(!is.null(pi)){
       p   <- pi
       z   <- qnorm(1 - p/2)
-      se  <- abs(coef)/abs(z)
-      ll  <- coef-zint*se
-      ul  <- coef+zint*se}
+      se  <- abs(estimate)/abs(z)
+      ll  <- estimate-zint*se
+      ul  <- estimate+zint*se}
 
     if(!is.null(names)){
-      if(length(coef)!=length(names)){stop("Names has not the same lenght as the data")}else{
-        df <- data.frame(names=names, coef=coef, se=se, z=z, p=p, ll=ll, ul=ul)
+      if(length(estimate)!=length(names)){stop("Names has not the same lenght as the data")}else{
+        df <- data.frame(names=names, estimate=estimate, se=se, z=z, p=p, ll=ll, ul=ul)
 
-        df2 <- data.frame(coef=df$coef,
-                          z=df$coef/df$se,
+        df2 <- data.frame(estimate=df$estimate,
+                          z=df$estimate/df$se,
                           pre=1/df$se,
                           se=df$se,
                           s=names)
 
         df2$sig <- ifelse(abs(df2$z)>abs(zint),"sig","nonsig")
 
-        df2     <- df2[!(is.infinite(df2$coef) | is.infinite(df2$pre)),]
+        df2     <- df2[!(is.infinite(df2$estimate) | is.infinite(df2$pre)),]
         spldf   <- split(df2, df2$s)
 
-        rcoef             <- quantile(abs(df2$coef), c(.005, .995))
+        rcoef             <- quantile(abs(df2$estimate), c(.005, .995))
         yl_pos            <- seq(0, ifelse(!is.null(ylim), ylim[2], rcoef[2]), length.out=50)
         yl_neg            <- seq(0, ifelse(!is.null(ylim), ylim[1], -1*rcoef[2]), length.out=50)
         sigline_pos       <- data.frame(coef=yl_pos, se=abs(yl_pos/1.96))
@@ -99,7 +99,7 @@ ptoz <- function(coef=NULL, sei=NULL, zi=NULL, pi=NULL, names=NULL, alpha=0.05,
           theme(legend.position = "none")}
 
         }
-    }else{df    <- data.frame(names=1:length(coef), coef=coef, se=se, z=z, p=p, ll=ll, ul=ul)
+    }else{df    <- data.frame(names=1:length(estimate), estimate=estimate, se=se, z=z, p=p, ll=ll, ul=ul)
           plot1 <- NULL}
 
   }else{

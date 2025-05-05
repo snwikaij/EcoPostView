@@ -116,8 +116,17 @@ our posterior. Thus transforming to standardized-effect sizes is an incredible w
 provided.
 }
 \note{
-If Nsamp (NA) this is replaced by 1 since 1/N where N=1 is 1=1/1. If parameters b0 or b1 or link functions are not given still a meta analysis is performed. One
-still needs to fill in the columns.
+Which prior variance 'family' needs to be selected on the between study variance is still unclear to me.
+I am not sure if there is an approximate optimal answer but would like to have one. It is possible to get unreasonable answers
+due to the extremely large or small variance among studies and variability in sample sizes when using 'unif2' or 'exp'.
+However extremely wide intervals across all levels are also possible when using 'unif1'. This means then that smaller pattern will not
+come out very clear.
+
+The 'unif1' could prevents over fitting to small-group variances for smaller sample sizes. Therefore it a conservative
+but stable approximate answer seems preferable at first glance. Consequently repetition could be performed in an second study
+with a less conservative hierarchical structure where 'unif2' and 'exp' could be utilized.
+
+If Nsamp (NA) this is replaced by 1 since 1/N where N=1 is 1=1/1.
 }
 \examples{
 data("example1")

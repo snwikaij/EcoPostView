@@ -138,7 +138,9 @@ meta <- function(estimate, stderr, parameter=NULL, predictor=NULL,
   #If multiple priors and weights are given asses the number
   if(is.null(nrow(prior_mu)) && length(prior_mu) == 1 &&
      is.null(nrow(prior_mu_se)) && length(prior_mu_se) == 1){
-    npw <- 1}else if(is.data.frame(prior_mu) && is.data.frame(prior_mu_se) &&
+    npw <- 1}else if(length(prior_mu) == length(prior_mu_se) &&
+                is.null(dim(prior_mu)) && is.null(dim(prior_mu_se))){npw <- 1
+    }else if(is.data.frame(prior_mu) && is.data.frame(prior_mu_se) &&
                      ncol(prior_mu) == ncol(prior_mu_se)){npw <- ncol(prior_mu)
     }else{stop(paste0("The the priors are not nummeric or the priors for prior_mu and prior_mu_se are not of the same dimensions."))}
 

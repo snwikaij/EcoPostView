@@ -518,30 +518,30 @@ $$\mu_{posterior} =\frac{\frac{\mu_{prior} }{\sigma_{prior}^2} + \frac{\hat{x}_{
 \sigma_{posterior}=\sqrt{\frac{1}{\frac{1}{\sigma_{prior}^2}+\frac{1}{\sigma_{data}^2}}}$$
 
 **Proof:**
-**Premise 1**
+**Premise 1)**
 Bayes rule can be simplified to
 $$P(\mu|Data) \propto P(Data|\mu) \cdot P(\mu)
 \\
 N(\mu_{posterior}, \sigma_{posterior}^2)=N(\mu_{sample}, \sigma_{sample}^2)\cdot N(\mu_{prior}, \sigma_{prior}^2)
 $$
-**Premise 2**
+**Premise 2)**
 The PDF for the normal distribution is
 $$f(x)=\frac{1}{2\cdot \sqrt{\sigma \pi}}\cdot exp(-\frac{1}{2}(\frac{x-\mu}{\sigma})^2)$$
-**Premise 3**
+**Premise 3)**
 $$Prior: P(\mu_{prior})=\frac{1}{2\cdot \sqrt{\sigma_{prior} \pi}}\cdot exp(-\frac{1}{2}(\frac{\theta-\mu_{prior}}{\sigma_{prior}})^2)
 \\
 Likelihood: P(\mu_{prior})=\frac{1}{2\cdot \sqrt{\sigma_{sample} \pi}}\cdot exp(-\frac{1}{2}(\frac{\mu_{sample}-\theta}{\sigma_{sample}})^2)
 $$
-**Premise 4**
+**Premise 4)**
 Both $\frac{1}{2\cdot \sqrt{\sigma_{prior} \pi}}$ and $\frac{1}{2\cdot \sqrt{\sigma_{sample} \pi}}$ are scalars and can be left out of the equation.
 
-**Premise 5**
+**Premise 5)**
 Since both exponent have the same base we can add the exponent $$(a^2+b^2=a^{2+2})$$ 
 resulting in
 $$exp(-\frac{1}{2}\cdot[(\frac{\theta-\mu_{prior}}{\sigma_{prior}})^2+(\frac{\mu_{sample}-\theta}{\sigma_{sample}})^2]$$
 After which brackets can be moved
 $$exp(-\frac{1}{2}\cdot[\frac{(\theta-\mu_{prior})^2}{\sigma_{prior}^2}+\frac{(\mu_{sample}-\theta)^2}{\sigma_{sample}^2}])$$
-**Premise 6**
+**Premise 6)**
 Expanding the brackets terms
 $$(a^2+b^2)=(a-b)\cdot(a-b)=a^2-ab-ab+b^2=a^2-2ab+b^2$$
 This means 
@@ -550,12 +550,12 @@ and
 $$(\mu_{sample}-\theta)^2=\mu_{sample}^2-2\mu_{sample}\theta+\mu_{sample}^2$$ 
 which can be replaced in premise 5
 $$exp(-\frac{1}{2}\cdot[\frac{\theta^2-2\theta\mu_{prior}+\mu_{prior}^2}{\sigma_{prior}^2}+\frac{\mu_{sample}^2-2\mu_{sample}\theta+\mu_{sample}^2}{\sigma_{sample}^2}])$$
-**Premise 7**
+**Premise 7)**
 Separating each term by dividing by $\sigma_{prior}^2$ and $\sigma_{sample}^2$
 $$exp(-\frac{1}{2}\cdot\frac{\theta^2}{\sigma_{prior}^2}+\frac{-2\theta\mu_{prior}}{\sigma_{prior}^2}+\frac{\mu_{prior}^2}{\sigma_{prior}^2}+
 \frac{\mu_{sample}^2}{\sigma_{sample}^2}+\frac{-2\mu_{sample}\theta}{\sigma_{sample}^2}+\frac{\mu_{sample}^2}{\sigma_{sample}^2})$$
 
-**Premise 8**
+**Premise 8)**
 Group each term by the nominator
 $$\frac{\theta^2}{\sigma_{prior}^2}+\frac{-2\theta\mu_{prior}}{\sigma_{prior}^2}+\frac{\mu_{prior}^2}{\sigma_{prior}^2}+
 \frac{\mu_{sample}^2}{\sigma_{sample}^2}+\frac{-2\mu_{sample}\theta}{\sigma_{sample}^2}+\frac{\mu_{sample}^2}{\sigma_{sample}^2}=
@@ -573,14 +573,14 @@ exp(-\frac{1}{2}\cdot\theta^2(\frac{1}{\sigma_{prior}^2}+\frac{1}{\sigma_{sample
 -2\theta(\frac{\mu_{prior}}{\sigma_{prior}^2}+\frac{\mu_{sample}}{\sigma_{sample}^2})
 +not\ dependent\ on\ \theta])
 $$
-**Premise 9**
+**Premise 9)**
 The goal is to derive $P(\mu|Data)$ from $P(\mu|Data) \propto P(Data|\mu) \cdot P(\mu)$ An the general exponential form of the normal distribution is given in Premise 2 and the premises 6, 7 and 9 lead to
 $$\frac{1}{2}\cdot \theta^2 (\frac{1}{\sigma^2})+\theta(\frac{\mu}{\sigma^2})+C=
 \\
 \frac{1}{2}\cdot\theta^2A+\theta B+C$$
 the general exponential form for the normal distribution is always $\frac{1}{2}\cdot\theta^2A+\theta B+C$ meaning that $A=\frac{1}{\sigma^2}$ and $B=\frac{\mu}{\sigma^2}$ and to obtain the standard deviation $A$ needs to be re-arranged to $\sigma = \sqrt{\frac{1}{A}}$ and to obtain the mean $\mu=\frac{B}{A}=\frac{\frac{\mu}{\sigma^2}}{\frac{1}{\sigma^2}}$
 
-**Conclusion**
+**Conclusion)**
 In Premise 8
 $$
 exp(-\frac{1}{2}\cdot\theta^2(\frac{1}{\sigma_{prior}^2}+\frac{1}{\sigma_{sample}^2})+

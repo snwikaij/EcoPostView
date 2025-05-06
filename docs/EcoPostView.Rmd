@@ -215,7 +215,7 @@ In the method above the bias has been adjusted (not removed!). The pooled estima
 
 The bias displayed in this example are clearly extreme in such cases it could be beneficial to explore the bias further to asses if there is clearly a 'publication gap'. This publication gab can be highlighted by looking at the z-distribution derived from the p-value. While normally the p-value is derived from the z-value. When there is a clear gap visible (as in Zwet and Cator 2021) then we should be able to model the absolute z-value this from a mixture of two half normal distributions. Here one model is truncate at 0 and the other at 1.96. Since the likelihood of a mixture is difficult the obtain an Approximate-Bayesian-Computation algorithm was used based on rejection sampling (ABC-rejection). This method is further highlighted in Csilléry et al. (2010) and Hartig et al. (2011) and the model given here is formally described in the theoretical section.
 
-```{r exploring bias with ABC-rjection, fig.width=7.8, fig.height=4, warning=FALSE}
+```{r exploring bias with ABC-rejection, fig.width=7.8, fig.height=4, warning=FALSE}
 #From the dataset calculate the p-value from the effect-sizes and standard errors
 pvalues <- ptoz(estimate=example3$est, stderr=example3$se)
 
@@ -469,6 +469,7 @@ All statistics focuses on estimating the parameter of interest $\theta$ which in
 
 ## 6.2 Bayes Theorem and probablistic estimation
 
+### 6.2.1 Bayes Theorem
 Informally Bayes Theorem would be notated $\text{Posterior}\, \text{probability} = \frac{\text{Likelihood} \cdot \text{Prior}}{\text{Evidence}}$. More formally Bayes theorem is often notated with A and B where P indicates probability and '|' given or conditional on. $P(A|B) = \frac{P(B|A) \cdot P(A)}{P(B)}$.Other expression such as $P(\theta|Data, Info) = \frac{P(Data|\theta) \cdot P(\theta|info)}{P(Data)}$ are to highlight that the posterior describes the information of that conditional on the prior `info` that is given in there.
 
 The derivation of Bayes theorem relies on the axioms probability theory.
@@ -506,6 +507,38 @@ $$
 $$
 P(A|B) = \frac{P(B|A) \cdot P(A)}{P(B)}
 $$
+
+### 6.2.2 Bayes Theorem in use
+
+The previous expression can help us with answer simple questions. Assume that there is a likelihood of 0.7 $P(Species|<Threshold)$ that a species if found below a certain threshold. Furthermore, we also know that that the environment will only be found 0.3 or 30% of the time as $P(<Threshold)$.How probable would it then be we are below the threshold if we observe the species $P(<Threshold|Species)$? 
+$$
+P(Species|<Threshold) = 0.7\\
+P(<Threshold) = 0.3\\
+P(<Threshold|Species) = ?\\
+$$
+Expressing this in Bayes theorem would result in
+$$
+P(<Threshold|Species)=\frac{P(<Threshold|Species)\cdot P(Species) }{P(<Threshold)}
+$$
+The only thing still required is $P(Species)$ often called the 'evidence'. Yet, this evidence is simply the total probability of observing a species, below and above the threshold. For this we can assume that this is the reverse of the $P(Species|<Threshold)$ and $P(<Threshold)$
+$$
+P(Species)=[P(<Threshold|Species)\cdot P(Species)] + [(1-P(<Threshold|Species))\cdot(1-P(Species))]\\
+0.42=[0.7\cdot0.3]+[0.3\cdot0.7]
+$$
+Then it is simply filling in the blanks
+$$
+P(<Threshold|Species)=\frac{P(<Threshold|Species)\cdot P(<Threshold) }{P(Species)}=\frac{0.7\cdot0.3}{0.42}=0.5
+$$
+The answer not very satisfying as the probability is simply a 'coin toss'. This could be improved if we would introduce more species with the same indicative potential.
+$$
+P(<Threshold|Species)=\frac{P(<Threshold|Species)\cdot P(<Threshold) }{P(Species)}=\frac{(0.7^2*0.3)}{[(0.7^2*0.3)+(1-0.7)^2*(1-0.3)]}=0.7
+$$
+We would need around five species to get an indicative potential of >0.95 (it would be 0.97).
+
+### 6.2.3 Bayes theorem and conjugate priors
+
+The previous example works for simpler approximations yet if we want to derive an interval for a particular parameter $\theta$ then we can approach this analytically using conjugate priors. Where a prior is conjugate to a likelihood if the resulting posterior is in the same family as the prior.
+
 As introduced, in statistics and estimation is about finding out the value for $\theta$ which is assumed be $\mu$. Where in the frequentist framework this is considered fixed and unknown, this is in the Bayesian framework considered to be random 'and approximately' known. Of course also in the Bayesian framework samples $x$ are taken. Assume that we already know something about $\mu$ then it is possible to restrict to exclude unreasonable values or for the information we have on $\mu$ to more acceptable values.
 $$
 P(\mu|Data) = \frac{P(Data|\mu) \cdot P(\mu)}{P(Data)}
@@ -530,7 +563,7 @@ $$f(x)=\frac{1}{2\cdot \sqrt{\sigma \pi}}\cdot exp(-\frac{1}{2}(\frac{x-\mu}{\si
 **Premise 3)**
 $$Prior: P(\mu_{prior})=\frac{1}{2\cdot \sqrt{\sigma_{prior} \pi}}\cdot exp(-\frac{1}{2}(\frac{\theta-\mu_{prior}}{\sigma_{prior}})^2)
 \\
-Likelihood: P(\mu_{prior})=\frac{1}{2\cdot \sqrt{\sigma_{sample} \pi}}\cdot exp(-\frac{1}{2}(\frac{\mu_{sample}-\theta}{\sigma_{sample}})^2)
+Likelihood: P(\mu_{sample})=\frac{1}{2\cdot \sqrt{\sigma_{sample} \pi}}\cdot exp(-\frac{1}{2}(\frac{\mu_{sample}-\theta}{\sigma_{sample}})^2)
 $$
 **Premise 4)**
 Both $\frac{1}{2\cdot \sqrt{\sigma_{prior} \pi}}$ and $\frac{1}{2\cdot \sqrt{\sigma_{sample} \pi}}$ are scalars and can be left out of the equation.
@@ -594,13 +627,13 @@ $$
 Which implies that
 $$
 \sigma_{posterior}=\sqrt{\frac{1}{\frac{1}{\sigma_{prior}^2}+\frac{1}{\sigma_{sample}^2}}}\\
-\mu_{posterior}=\frac{\mu_{prior}}{\sigma_{prior}^2}+\frac{\mu_{sample}}{\sigma_{sample}^2}
+\mu_{posterior}=\frac{\frac{\mu_{prior}}{\sigma_{prior}^2} + \frac{\mu_{sample}}{\sigma_{sample}^2}}{\frac{1}{\sigma_{prior}^2} + \frac{1}{\sigma_{sample}^2}}
 $$
 Another way to obtain the posterior mean would be via
 $$\mu_{posterior}=\frac{\frac{\mu_{prior}}{\sigma_{prior}^2}+\hat{x}_{data}*\frac{n}{\sigma_{data}^2}}
 {\frac{1}{\sigma_{prior}^2}+\frac{n}{\sigma_{data}^2}}$$
 
-As might be clear this is less computational heavy than MCMC methods. For more then two parameter such an analytical approach becomes more combersome. And, if conjugacy is not satisfied no closed form solution is available. In this regards, Laplacian approximation is also computational easy. Yet, the equation clearly formulate the idea what happens in Bayes theorem. A simple example below highlights how this this can be useful.
+As might be clear this is less computational heavy than MCMC methods. For more then two parameter such an analytically approach becomes more cumbersome. And, if conjugacy is not satisfied no closed form solution is available. In this regards, Laplacian approximation is also computational easy. Yet, the equation clearly formulate the idea what happens in Bayes theorem. A simple example below highlights how this this can be useful.
 
 ## 6.3 Salinity example
 

@@ -3,6 +3,7 @@
 export(abctoz)
 export(abmeta)
 export(extrabc)
+export(glmmJAGS)
 export(hop)
 export(meta)
 export(pdplot)

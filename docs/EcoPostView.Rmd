@@ -6,12 +6,17 @@ output:
     theme: cosmo
     toc: true
     toc_float: true
-    toc_depth: 3
+    toc_depth: 4
     number_sections: true 
     highlight: tango
 ---
 
-# Introduction
+# Summary
+This is a site that reads like an book/essay. It is a way to organize my thoughts and information. The site started around the EcoPostView package but now has multiple chapters. It focuses on the use of R functions within the package EcoPostView, analytical and empirical Bayes, and reasoning (and logic). Unfortunately the order is backwards where on preferably starts with reasoning and logic, analytical and empirical Bayes (statistics) and then the application of it. This will for many be too cumbersome. Many would like to directly use the functions, which is perfectly understandable. This whole site is then also a continuously developing project over time.
+
+# Ecopostview
+
+## Introduction
 
 Ecological data is scattered around literature in different formats. It is often 'case-study' specific and not representative for the totality if conditions encountered. Therefore, a lot of noise is introduced in the data. Furthermore, there exist no framework to re-use, generalize and fuse large amounts data into an understandable and predictive models hampering ecological knowledge by wasting valuable information. Hence, as ecologist we are not interested in only case specific situations and explaining away after the event happens. We want our information to cumulatively add to a larger body of knowledge and apply it.
 
@@ -71,7 +76,7 @@ rm(mod_intro)
 
 This package provides tools for ecological statistical modeling, largely using Bayesian approaches. While a basic understanding of R is sufficient to use the package, a detailed theoretical background is available in Section 6 at the end for those interested in exploring the concepts further. Please note that this is a continuously developing R-package, and updates or improvements may be made over time.
 
-# Data and models
+## Data and models
 
 The information needed for such a meta-analytic approach is available from figures, tables, data sets or combinations between them. However, these are hardly utilized in a consistent fashion. In simple words, multiple datasets are needed on which (G)LMs can be fitted (see Kaijser et al, ...). This, however, will show that most data is very noisy, perhaps biased and the heterogeneity among different studies is large. This is an issue if we focus on error-control and causality statements. Both error-control and causality need controlled environment with a well setup experimental conditions and exclusion or modeling of confounding variables. Yet, while error-control a posterior is not possible anymore, this makes the information still incredibly useful. It can be used to make probability statements, predictions and used to calculated the apriori needed power to setup a new experiment where the focus lies on error-control or causality. This package focuses on making posterior probability statements, visualization and prediction from information. Hence, the goal is to generalize ecological effects from literature, displaying its patterns and predict with it.
 
@@ -96,7 +101,7 @@ Sometimes these 'unofficial expressions' for *b0* and *b1* are used, due to the 
 $$g(E(y_{i} \mid x_{ij})) = \sum_{j=1}^{j} \beta_j \cdot x_{ij}$$
 Where $x_{ij}$ refers to the $j$ the predictor variable (e.g., salinity is $j$=1 and light is $j$=2) and $i$ is the $i$-th observation. This expression will later be utilized in the explanation of the visualization.
 
-# The meta-function
+## The meta-function
 
 ## Data
 
@@ -222,7 +227,7 @@ plot(extract_abc$hist)
 ```
 Based on the distribution of z-values we can clearly observe that z-values |z|>1.96 are more common published than those lower values. This would be reasonable if there was no gap observed and this strong boundary at >1.96. However, the z-values can be reasonable modeled and the model seems to fit decently (R-squared >0.6-0.7 is considered). Furthermore, the density lines decent and the  nicely overlay with the histogram. The number of observations from the censored model are 0.76 (76%). This does not mean that 76% is censored as the focus of this model to see if it can strongly fit to the data. This fit, if the bias is as sever as provided via the residuals, provides another hint that indication a selection procedure. To make sure the results are reasonable one can make sure that the fit stays sufficient and the accepted number of simulation is acceptable (heuristically > 100).
 
-## Setting priors
+### Setting priors
 
 A benefit of the the Bayesian approach is that we can included prior information. Thereby explicitly shifting the weight of the outcome to more plausible values of the pooled model parameter. To set only a single prior for each relation and parameter a specific structure is needed. By default the model parameters are set as Gaussian/normally distributed with a mean ($\mu$, prior_mu) of 0 and standard error ($se$, prior_mu_se) of 0.5. The prior distribution is at the moment restricted to the normal distribution. The prior for the standard deviation ($\sigma$) is uniform where only the maximum value (prior_sigma_max) can be set, which at default is 5. 
 
@@ -244,7 +249,7 @@ only_priors <- meta(estimate=example1$est,
 print(only_priors)
 ```
 
-## Setting multiple priors for Bayesian Model Averaging
+### Setting multiple priors for Bayesian Model Averaging
 
 A benefit of the the Bayesian approach is that we can included multiple ($k$) priors to perform Bayesian Model Averaging (BMA;  Hoeting et al., 1999; Hinne et al., 2020). Thereby explicitly adding multiple possible scenarios that could have generated the observable data and averaging over these plausible explanation. To set multiple priors we need a similar dataset as shown above.
 
@@ -276,7 +281,7 @@ The results of the meta-analysis are summarized in a table describing Maximum A 
 
 The prior for the between study variance known as $\tau^2$ is set as uniform with ranging from 0 till 5 by default. This has as an advantage that it will be result in wider intervals and be conservative for smaller sample sizes. A disadvantage is that it will be conservative. It can under particular conditions be very beneficial while under other conditions where more precision is required be a downside. To give the user the option the argument 'prior_var_fam' can be set to 'exp' (exponential distribution) instead of 'unif' (uniform distribution). Under 'unif' the maximum value of the uniform distribution is set as Uniform(0, prior_study_var) and when set to 'exp' the mean of the exponential distribution is used as Exponential(1/prior_study_var). In general cases with a large number of predictors and response as in Kaijser et al. ... I would advice the uniform prior if no convergence issues arise. If a more specific topic is choose like one or two predictors and one response and smaller datasets <10 observations the exponential distribution (e.q., with a mean of 1000) might suite well. These advice are heuristic in that they can be supported by personal experience and examples but are not to be taken for granted. Best is to try it out and perform a sensitivity analaysis (check).
 
-## rescheck-function and bias
+### rescheck-function and bias
 
 After analyzing the the meta-data also a check for bias should be performed. This can be via various methods. I believe this this should be a sensitivity analysis using various methods: Display of the z-distribution, Egger's test, Peters tests and/or funnel plots. Hence, there is always bias, but in the data you have it might be small.
 
@@ -340,8 +345,6 @@ print(inv_df)
 The table shows for sediment and logit in relation to fish, the posterior shift from mod0 to mod1 is influenced by 0.5-0.38=0.12 or 12%. Hence, our prior information provides some information that the relation between fine sediment and lotic fish species is negative that is not coming from the data alone. This is not a 'negative' thing, but what we do in reality. It shows that our prior information is often more 'directed' and meta-data that can be obtained from literature.
 
 This was the most difficult part where the data needs to be gathered and extracted, (G)LMs need to be fitted, priors need to formulated, bias needs to be assessed and the whole model needs to be optimized to get a stable results. To display or predict with the models requires less time.
-
-# Display
 
 ## pdplot-function
 
@@ -447,7 +450,7 @@ log_sal3 <- hop(mod2,
 print(log_sal3)
 ```
 
-# Prediction
+## Prediction
 
 This part is still under construction.
 
@@ -747,7 +750,6 @@ rm(sequpdate)
 ```
 *Figure 2: Sequential updating with credibility intervals on the left panel and a long-run of means with confidence intervals on the right The left panel.*
 
-
 ## A short reflection on uncertainty
 
 I do not believe statistics reflects uncertainty about events; rather, it reflects the information in the data under a particular model or the uncertainty about our belief in a parameter ($\theta, \beta, \mu$, etc.). The later concept is often vague and confusing because, if one assumes the parameter does not exist independently of the mind, then what exactly is uncertain - our belief? The claim to 'objective probability' is already compromised by the assumption that the parameter is objective. However, if the parameter does not exist outside the mind, the meaning of 'objective' in this context becomes questionable.
@@ -762,19 +764,64 @@ While this argument may be unsound — because unicorns do not exist — the rea
 
 We should also avoid treating models as a definitive representation of reality. Models are tools that convey information and serve as pragmatic instruments. The the model itself is not the result, the strength of the results relies on the argument, and how well the premises within the argument are clarified and supported by the model.
 
+# Reasoning
+
+## Introduction
+
+It is argued that till some extend reasoning is based on the principles of logic. Although there are that would argue otherwise (e.g., Harman, 1986). I will use formal expressions that are not all at full first-order-language and predicate logic, but mostly include some form of meta-language.
+For this I will use the basic principle of deductive logic based on. They are useful to lay out underlying believes and their connection between them.
+
+## Syllogism
+A simple syllogistic argument consisting of two premises.
+
+Major premise 1) all P are Q,
+Minor premise 2) x is P,
+Conclusion) therefore x is Q
+
+All premises in the argument being declarative statements defined as  propositions, which are either true or false. Each premise consists of the antecedent (subject; P), copula (is, am, will, etc.) and consequent (Q). 
+
+In propositional logic the argument as given before can be formalized  expressed as: P→Q, P ∴ Q. The right arrow indicating ‘implies’ and the three dots indicating therefore. 
+
+## Predicate logic 
+
+In predicate logic the argument is expressed as $\forall(P(x)\rightarrow Q(x))$ where ‘$\forall$’ indicates ‘for all’ and ‘$\models$’ therefore. Each proposition referred to as $𝓟_i$ consisting of P and Q called properties and x and element from a set $x\in X$. The benefit that individual elements can be assessed.
+
+## Semantica validity of argument
+
+An valid argument - in the semantic interpretation of validity - in case $𝓟_n$ $𝓟$ is true in all interpretations in which $𝓟_1, ..., 𝓟_{n-1} ,𝓟_n$ are true. A valid argument notated as $𝓟_1, …, 𝓟_{n-1} ,𝓟_n \models 𝓟_n$.  Simplistically, if all propositions are true the conclusion cannot be false. 
+
+## Non-deductive cogency of arguments
+
+In empirical sciences the universal quantifier ‘$\forall$’ (largely?) unsupported and therefore $\exists x(P(x) \rightarrow Q(x))$ where ‘$\exists$’ some. This indicates that propositions are merely acceptable. And in most cases ∃ can be ignored and as it would be wises to explicitly assume it. Meaning that $𝓟_i: (P(x)\rightarrow Q(x))$ or $P \rightarrow Q $ and referred to as a conjecture. A conjecture is a proposition which is accepted as true via a valuation function $v(𝓟_i)=T$ (True) or false $v(𝓟_i)=F$ (False). 
+
+Empirical science developing theories built upon conjectures. Where a conjecture has to be supported by either party in an argument. If a conjecture cannot  be accepted by one of the parties, discussion is meaningless and the source of the rejection of one of the parties should be resolved (Popper 1968). 
+
+Arguments are either weakly or strongly cogent (weak or strong arguments) as the conjectures cannot be guaranteed in empirical sciences. Strong arguments are then arguments where most conjectures are acceptable (e.g., temperature is 0 degrees when the  thermometer works and indicates 0 degrees).
+
+The arguments proposed are indicated as $𝒜$. And $𝒜: 𝓟_1, …, 𝓟_{n-1} ,𝓟_n \models 𝓟_n$ should entail the truth of the conjectures within the derived conclusion. And when this is the cases such an argument is then valid $valid(𝒜)$ when all parties agree on the truthood $v(𝓟_i)=T$ (True) of the conjectures involved.
+
+The problem is that the empirical sciences has no axiomatic foundation from which the proof of an argument can be logically deduced. In the sense that I believe the the conclusion ($𝓟_3$) of the following argument. $𝓟_1$: All humans die, $𝓟_2$: I am human, conclusion ($𝓟_1 \therefore  𝓟_2$), therefore I die (𝓟1→𝓟2, 𝓟1 ∴ 𝓟2). The conclusion forming a conjecture in my belief system and that of others. However, it does not ensure the soundness of the argument, where soundness refers to the factuality of all propositions. Yet, having not known all humans ever lived or going to live the argument is not sound. Moreover, it is questionable if reasoning deals with valid conclusions. Where one better can speak about cogency of the argument.
+
+The agreement among parties - rather informally - forming a belief system that would be a function of acceptable (cogent) conjectures (Usó-Doménech and Nescolarde-Selva 2016). The conjectures tied together for each individual moral agent (Carthwright et al. 1996; van Fraassen 1980, Closely representing the nodes and edges in a network). 
+
+The moral agent then entertains the relations between propositions and arguments. Counter intuitively, the moral agents also appoints a property to an element x. Hence, a colour blind person would not see the specific colours a person that is not color blind would see, therefore not appoint the same colour property. Or, if a person does not know the function of a wrench, and therefore does not appoint the property wrench to it. If a property is not appointed to an element then the cogency (or validity) of an argument does not follow because without a property on x, the element x remains inert and undefined. Therefore,$v(𝓟_i)=T$ or $v(𝓟_i)=F$ remains undecided because $(x \rightarrow Q(x)), x \models Q(x)$ does not follow. Hence, each element is appointed a property, each proposition is valued, woven into an a cogent or not cogent (strong or weak) and formulated as a belief system.
+
+
 # References
 
 Baguley, Thom. 2009. “Standardized or Simple Effect Size: What Should Be Reported?” British Journal of Psychology 100(3): 603–17. doi: 10.1348/000712608X377117.
 
+Carthwright, Nancy, Jordi Cat, Lola Fleck, and E. Thomas Uebel. 1996. Otto Neurath: Philosophy between Science and Politics. Cambridge: Cambridge university press.
+
 Cramer, J. S. 1991. The Logit Model: An Introduction for Economists. London: Edward Arnold.
 
-Csilléry, Katalin, Michael G.B. Blum, Oscar E. Gaggiotti, and Olivier François. 2010. “Approximate Bayesian Computation (ABC) in Practice.” Trends in Ecology & Evolution 25(7): 410–18. doi:10.1016/j.tree.2010.04.001.
+Csilléry, Katalin, Michael G.B. Blum, Oscar E. Gaggiotti, and Olivier François. 2010. “Approximate Bayesian Computation (ABC) in Practice.” Trends in Ecology & Evolution 25(7): 410–18. doi: 10.1016/j.tree.2010.04.001.
 
 Fisher, R. A. (1949). The Design of Experiments (5th ed.). Oliver and Boyd.
 
 Gelman, Andrew, and Eric Loken. 2013. “The Garden of Forking Paths: Why Multiple Comparisons Can Be a Problem, Even When There Is No ‘FIshing Expedition’ or ‘p-Hacking’ and the Research Hypothesis Was Posited Ahead of Time.” 348(3): 1–17. doi: 10.1007/978-3-658-12153-2_7.
 
-Hartig, Florian, Justin M. Calabrese, Björn Reineking, Thorsten Wiegand, and Andreas Huth. 2011. “Statistical Inference for Stochastic Simulation Models - Theory and Application: Inference for Stochastic Simulation Models.” Ecology Letters 14(8): 816–27. doi:10.1111/j.1461-0248.2011.01640.x.
+Hartig, Florian, Justin M. Calabrese, Björn Reineking, Thorsten Wiegand, and Andreas Huth. 2011. “Statistical Inference for Stochastic Simulation Models - Theory and Application: Inference for Stochastic Simulation Models.” Ecology Letters 14(8): 816–27. doi: 10.1111/j.1461-0248.2011.01640.x.
 
 Hinne, Max, Quentin F. Gronau, Don Van Den Bergh, and Eric-Jan Wagenmakers. 2020. “A Conceptual Introduction to Bayesian Model Averaging.” Advances in Methods and Practices in Psychological Science 3(2):200–215. doi: 10.1177/2515245919898657.
 
@@ -792,11 +839,17 @@ Pearl, J. (2009). Causality. Cambridge university press.
 
 Peters, Jaime L., Alex J. Sutton, David R. Sones, Keith R. Abrams, and Lesley Rushton. 2006. “Comparison of Two Methods to Detect Publication Bias in Meta-Analysis.” JAMA 295(6):676. doi: 10.1001/jama.295.6.676.
 
+Popper, Karl Raimund. 1968. The Logic of Scientific Discovery. Basic Books.
+
 Stanley, T. D., and Hristos Doucouliagos. 2014. “Meta-Regression Approximations to Reduce Publication Selection Bias.” Research Synthesis Methods 5(1):60–78. doi: 10.1002/jrsm.1095.
 
 Tukey, John W. 1969. “Analysing Data: Sanctification or Detective Work?” American Psychologist 24(2): 83–91. doi: 10.1037/h0027108.
 
 Tong, Christopher. 2019. “Statistical Inference Enables Bad Science; Statistical Thinking Enables Good Science.” The American Statistician 73(sup1): 246–61. doi: 10.1080/00031305.2018.1518264.
+
+Usó-Doménech, J. L., and J. Nescolarde-Selva. 2016. “What Are Belief Systems?” Foundations of Science 21(1): 147–52. doi: 10.1007/s10699-015-9409-z
+
+Van Fraassen, Bas C. 1980. The Scientific Image. Oxford University Press.
 
 Van Zwet, E.W., Cator, E.A., 2021. "The significance filter, the winner’s curse and the need to shrink." Stat. Neerlandica 75, 437–452. doi: 10.1111/stan.12241
 

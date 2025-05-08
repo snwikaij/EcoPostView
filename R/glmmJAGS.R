@@ -1,25 +1,27 @@
-
-dtest <- as.data.frame(array(rnorm(200), c(100,2)))
-b0=5
-b1=0.5
-b2=0.9
-sigma <- 0.3
-y <- rpois(nrow(dtest), b0+b1*dtest[,1]+b2*dtest[,2])#, sigma)
-
-dtest[3] <- as.integer(y)
-dtest <- dtest[dtest$V3 != 0,]
-
-pairs(dtest)
-
-plot(dtest$V2, dtest$V3)
-
-results <- glmmJAGS(V3~V2+V1, data=dtest, family = "negbinom_log")
-
-hist(results$JAGS_output$BUGSoutput$sims.list$residuals)
-
-
+#' Simple Generalized Linear Models with JAGS
+#'
+#' @param formula Atandard notation y~x
+#' @param random A vector that indicates random effects
+#' @param data A dataset
+#' @param family A set of "norm_ident", "norm_log", "gamma_ident", "gamma_log", "pois_ident", "pois_log", "negbinom_ident"
+#' "negbinom_log"
+#' @param prior_mu The prior for the mean of
+#' @param prior_mu_se The prior for the standard error of the parameter
+#' @param prior_dispersion The prior for the dispersion parameters (sigma or size) set via the gamma distribution
+#'
+#' @examples
+#'df  <- as.data.frame(array(rnorm(200), c(100,2)))
+#'b0=2
+#'b1=0.25
+#'b2=0.1
+#'
+#'y <- rpois(nrow(df), exp(b0+b1*df$V1+b2*df$V2))
+#'
+#' results <- glmmJAGS(V3~V1+V2, data=df, family = "pois_log")
+#'
+#' @export
 glmmJAGS <- function(formula=NULL, random=NULL, data=NULL, family="norm_ident",
-                     prior_mu=0, prior_mu_se=100){
+                     prior_mu=0, prior_mu_se=100, prior_dispersion=c(0.001, 0.001)){
 
   argument.call <- match.call()
 
@@ -42,7 +44,7 @@ if(family=="norm_ident"){
 
   for(j in 1:nx){bn[j] ~ dnorm(prior_mu, 1/prior_mu_se^2)}
 
-  sigma ~ dgamma(0.01, 0.01)
+  sigma ~ dgamma(prior_dispersion[1], prior_dispersion[2])
   tau   <- 1/sigma^2}
 
   return_parameters <- c("b0", "bn", "sigma")
@@ -59,7 +61,7 @@ if(family=="norm_ident"){
 
     for(j in 1:nx){bn[j] ~ dnorm(prior_mu, 1/prior_mu_se^2)}
 
-    sigma ~ dgamma(0.01, 0.01)
+    sigma ~ dgamma(prior_dispersion[1], prior_dispersion[2])
     tau   <- 1/sigma^2}
 
   return_parameters <- c("b0", "bn", "sigma")
@@ -76,7 +78,7 @@ if(family=="norm_ident"){
 
     for(j in 1:nx){bn[j] ~ dnorm(prior_mu, 1/prior_mu_se^2)}
 
-    sigma ~ dgamma(0.01, 0.01)}
+    sigma ~ dgamma(prior_dispersion[1], prior_dispersion[2])}
 
   return_parameters <- c("b0", "bn", "sigma")
 
@@ -92,7 +94,7 @@ if(family=="norm_ident"){
 
     for(j in 1:nx){bn[j] ~ dnorm(prior_mu, 1/prior_mu_se^2)}
 
-    sigma ~ dgamma(0.01, 0.01)}
+    sigma ~ dgamma(prior_dispersion[1], prior_dispersion[2])}
 
   return_parameters <- c("b0", "bn", "sigma")
 
@@ -141,7 +143,7 @@ if(family=="norm_ident"){
 
     for(j in 1:nx){bn[j] ~ dnorm(prior_mu, 1/prior_mu_se^2)}
 
-    size ~ dgamma(0.01, 0.01)}
+    size ~ dgamma(prior_dispersion[1], prior_dispersion[2])}
 
   return_parameters <- c("b0", "bn", "size")
 
@@ -158,7 +160,7 @@ if(family=="norm_ident"){
 
     for(j in 1:nx){bn[j] ~ dnorm(prior_mu, 1/prior_mu_se^2)}
 
-    size ~ dgamma(0.01, 0.01)}
+    size ~ dgamma(prior_dispersion[1], prior_dispersion[2])}
 
   return_parameters <- c("b0", "bn", "size")
 
@@ -168,7 +170,7 @@ parts <- unlist(strsplit(argument[3], "\\+"))
 x     <- as.matrix(data[colnames(data) %in% parts])
 y     <- data[,argument[2]]
 
-model_list  <- list(y=y, x=x, ni=nrow(x), nx=ncol(x), prior_mu=prior_mu, prior_mu_se=prior_mu_se)
+model_list  <- list(y=y, x=x, ni=nrow(x), nx=ncol(x), prior_mu=prior_mu, prior_mu_se=prior_mu_se, prior_dispersion=prior_dispersion)
 
 output <- jags.parallel(data = model_list, model.file = model,
               parameters.to.save = return_parameters,

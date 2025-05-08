@@ -14,7 +14,7 @@ output:
 # Summary
 This is a site that reads like an book/essay. It is a way to organize my thoughts and information. The site started around the EcoPostView package but now has multiple chapters. It focuses on the use of R functions within the package EcoPostView, analytical and empirical Bayes, and reasoning (and logic). Unfortunately the order is backwards where on preferably starts with reasoning and logic, analytical and empirical Bayes (statistics) and then the application of it. This will for many be too cumbersome. Many would like to directly use the functions, which is perfectly understandable. This whole site is then also a continuously developing project over time.
 
-# Ecopostview
+# EcoPostView
 
 ## Introduction
 
@@ -101,8 +101,6 @@ Sometimes these 'unofficial expressions' for *b0* and *b1* are used, due to the 
 $$g(E(y_{i} \mid x_{ij})) = \sum_{j=1}^{j} \beta_j \cdot x_{ij}$$
 Where $x_{ij}$ refers to the $j$ the predictor variable (e.g., salinity is $j$=1 and light is $j$=2) and $i$ is the $i$-th observation. This expression will later be utilized in the explanation of the visualization.
 
-## The meta-function
-
 ## Data
 
 To start using this R-package both JAGS and devtools need to be installed. JAGS can be installed from https://sourceforge.net/projects/mcmc-jags/ and devtools can be install in R. For the most recent version of the EcoPostView it can be installed from GitHub. Of course, any problems, questions or possible improvements can be directed to me.
@@ -124,7 +122,7 @@ head(example1)
 ```
 In the example above the column **est** (estimate) indicates the estimated model parameters and the column **se** the standard error of the estimate. The column **group** can be an organism group or specific species/taxon (or anything you wish to group by), the column **predictor** the specific predictor variable, the parameter whether the estimate is the intercept (*b0*) or a regression coefficient (*b1*) and the column **link** contains the link function. An additional and recommended option is to include the sample size **n** for adjusting for 'small-sample-effects' (Peters et al., 2006; Moreno et al., 2009).
 
-## Basic model structure for meta-analysis
+## Basic model structures for meta-analysis
 
 The meta function can include a random effect, by setting the argument RE=TRUE (default is TRUE). The  structure is then 
 $$\{\beta_{i}, ..., \beta_{n}\}= \beta_{\text{pooled}} + u_i$$
@@ -136,6 +134,8 @@ or inverse of the sample size $1/n$ (method=2, the latter option is performed be
 $$\{\beta_{i}, ..., \beta_{n}\} = \beta_{\text{pooled}} + u_i + \alpha_{i} \cdot \left(\frac{1}{n}\right)$$ 
 Of course if bias is considered neglect non can be performed (method=0). I still would like to include a third 4th option to utilize Robust Bayesian Model Averaging (RoBMA: Maier et al. 2023). But this sometimes adjust extremely when including $se^2$ and therefore I left this option open for now.
 
+## The meta-function
+The meta-function can be applied over the example data via the following argument.
 ```{r meta1}
 mod1 <- meta(estimate=example1$est,         #Model estimate
              stderr=example1$se,            #Standard error of the model estimate
@@ -769,26 +769,52 @@ We should also avoid treating models as a definitive representation of reality. 
 ## Introduction
 
 It is argued that till some extend reasoning is based on the principles of logic. Although there are that would argue otherwise (e.g., Harman, 1986). I will use formal expressions that are not all at full first-order-language and predicate logic, but mostly include some form of meta-language.
-For this I will use the basic principle of deductive logic based on. They are useful to lay out underlying believes and their connection between them.
+For this I will use the basic principle of deductive logic based on. They are useful to lay out underlying believes and their connection between them. Although this will not an full introduction into logic it will address some principles of it and for a more formal introduction see ... .
 
 ## Syllogism
-A simple syllogistic argument consisting of two premises.
 
-Major premise 1) all P are Q,
-Minor premise 2) x is P,
-Conclusion) therefore x is Q
+A simple syllogistic argument consisting of two premises. This argument is names "modens ponens" having a specific structure.
 
-All premises in the argument being declarative statements defined as  propositions, which are either true or false. Each premise consists of the antecedent (subject; P), copula (is, am, will, etc.) and consequent (Q). 
+### Modens Ponens 
 
-In propositional logic the argument as given before can be formalized  expressed as: P→Q, P ∴ Q. The right arrow indicating ‘implies’ and the three dots indicating therefore. 
+$$
+Major\ premise \ 1) \ all \ P \ are \ Q,\\
+Minor \ premise \ 2) \ x \ is \ P,\\
+Conclusion) \ therefore \ x \ is \ Q
+$$
+In an argument all premises in the argument being declarative statements defined as propositions, which are either True or False. Each premise consists of the antecedent (subject; P), copula (is, am, will, etc.) and consequent (Q). 
+
+A valid argument is an argument where if all propositions are to be true the conclusion cannot be false. In propositional logic the argument as given before can be formalized  expressed as below where indicates and implication as ‘implies’ and the three dots indicating therefore. 
+$$P \rightarrow Q, P \therefore Q$$
+
+### Modens Tollens
+
+$$P \rightarrow Q, \neg P \therefore \neg Q$$
+
+### Hypothetical Syllogism
+
+Also a hypothetical syllogism is a form of valid argument which seems closely related of how we construct our arguments.
+$$P \rightarrow Q, Q \rightarrow Z, P \therefore Z $$
+
+### Disjunctive Syllogism
+
+$$Either \ P \vee Q, P \therefore \neg Q$$
+
+### Semantic equivalent structures
+
+$$for \ all \ x \ that \ are P \ it \ implies \ they \ are \ Q, x \ is \ P \ therefore \ Q\\
+for \ all \ x \ that \ are \ P \ it \ implies \ they \ are \ Q, x \ is \ \neg P \ therefore \ \neg Q\\
+for \ all \ x \ that \ are \ P \ it \ implies \ they \ are \ Q, for \ all \ x \ that \ are \ Q \ it \ implies \ they \ are \ Z, \ x \ is \ P \ therefore \ Z \\
+either \ x \ is \ P \ or \ x \ is \ Q, x \ is \ P \ therefore \ \neg Q$$
+
+## Semantical validity of an argument
+
+An valid argument - in the semantic interpretation of validity - in case $𝓟_n$ $𝓟$ is true in all interpretations in which $𝓟_1, ..., 𝓟_{n-1} ,𝓟_n$ are true. Simplistically, if all propositions are true the conclusion cannot be false. Such a valid argument can be notated as
+$$𝓟_1, …, 𝓟_{n-1} ,𝓟_n \models 𝓟_n$$
 
 ## Predicate logic 
 
 In predicate logic the argument is expressed as $\forall(P(x)\rightarrow Q(x))$ where ‘$\forall$’ indicates ‘for all’ and ‘$\models$’ therefore. Each proposition referred to as $𝓟_i$ consisting of P and Q called properties and x and element from a set $x\in X$. The benefit that individual elements can be assessed.
-
-## Semantica validity of argument
-
-An valid argument - in the semantic interpretation of validity - in case $𝓟_n$ $𝓟$ is true in all interpretations in which $𝓟_1, ..., 𝓟_{n-1} ,𝓟_n$ are true. A valid argument notated as $𝓟_1, …, 𝓟_{n-1} ,𝓟_n \models 𝓟_n$.  Simplistically, if all propositions are true the conclusion cannot be false. 
 
 ## Non-deductive cogency of arguments
 
@@ -800,7 +826,7 @@ Arguments are either weakly or strongly cogent (weak or strong arguments) as the
 
 The arguments proposed are indicated as $𝒜$. And $𝒜: 𝓟_1, …, 𝓟_{n-1} ,𝓟_n \models 𝓟_n$ should entail the truth of the conjectures within the derived conclusion. And when this is the cases such an argument is then valid $valid(𝒜)$ when all parties agree on the truthood $v(𝓟_i)=T$ (True) of the conjectures involved.
 
-The problem is that the empirical sciences has no axiomatic foundation from which the proof of an argument can be logically deduced. In the sense that I believe the the conclusion ($𝓟_3$) of the following argument. $𝓟_1$: All humans die, $𝓟_2$: I am human, conclusion ($𝓟_1 \therefore  𝓟_2$), therefore I die (𝓟1→𝓟2, 𝓟1 ∴ 𝓟2). The conclusion forming a conjecture in my belief system and that of others. However, it does not ensure the soundness of the argument, where soundness refers to the factuality of all propositions. Yet, having not known all humans ever lived or going to live the argument is not sound. Moreover, it is questionable if reasoning deals with valid conclusions. Where one better can speak about cogency of the argument.
+The problem is that the empirical sciences has no axiomatic foundation from which the proof of an argument can be logically deduced. In the sense that I believe the the conclusion ($𝓟_3$) of the following argument. $𝓟_1$: All humans die, $𝓟_2$: I am human, conclusion ($𝓟_1 \therefore  𝓟_2$), therefore I die ($𝓟_1→𝓟_2, 𝓟_1 \therefore 𝓟_2$). The conclusion forming a conjecture in my belief system and that of others. However, it does not ensure the soundness of the argument, where soundness refers to the factuality of all propositions. Yet, having not known all humans ever lived or going to live the argument is not sound. Moreover, it is questionable if reasoning deals with valid conclusions. Where one better can speak about cogency of the argument.
 
 The agreement among parties - rather informally - forming a belief system that would be a function of acceptable (cogent) conjectures (Usó-Doménech and Nescolarde-Selva 2016). The conjectures tied together for each individual moral agent (Carthwright et al. 1996; van Fraassen 1980, Closely representing the nodes and edges in a network). 
 

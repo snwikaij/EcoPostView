@@ -24,7 +24,6 @@ glmmJAGS <- function(formula=NULL, random=NULL, data=NULL, family="norm_ident",
                      prior_mu=0, prior_mu_se=100, prior_dispersion=c(0.001, 0.001)){
 
   argument.call <- match.call()
-
   argument      <- gsub(" ", "", formula)
 
 if(is.null(formula)){stop("No formula provided")}

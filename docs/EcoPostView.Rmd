@@ -546,6 +546,7 @@ $$\mu_{posterior} =\frac{\frac{\mu_{prior} }{\sigma_{prior}^2} + \frac{\hat{x}_{
 \sigma_{posterior}=\sqrt{\frac{1}{\frac{1}{\sigma_{prior}^2}+\frac{1}{\sigma_{data}^2}}}$$
 
 **Proof:**
+
 **Premise 1)**
 Bayes rule can be simplified to
 $$P(\mu|Data) \propto P(Data|\mu) \cdot P(\mu)
@@ -773,39 +774,36 @@ For this I will use the basic principle of deductive logic based on. They are us
 
 ## Syllogism
 
-A simple syllogistic argument consisting of two premises. This argument is names "modens ponens" having a specific structure.
+A simple syllogistic argument consisting of two premises. The argument below is called "modens ponens" having a specific structure.
 
-### Modens Ponens 
-
+**Modens Ponens** 
 $$
 Major\ premise \ 1) \ all \ P \ are \ Q,\\
 Minor \ premise \ 2) \ x \ is \ P,\\
 Conclusion) \ therefore \ x \ is \ Q
 $$
-In an argument all premises in the argument being declarative statements defined as propositions, which are either True or False. Each premise consists of the antecedent (subject; P), copula (is, am, will, etc.) and consequent (Q). 
+In an argument, as the one above, all premises declarative statements defined as propositions, which are either True or False. Each premise consists of the antecedent (subject; P), copula (is, am, will, etc.) and consequent (Q). 
 
-A valid argument is an argument where if all propositions are to be true the conclusion cannot be false. In propositional logic the argument as given before can be formalized  expressed as below where indicates and implication as ‘implies’ and the three dots indicating therefore. 
+A valid argument is an argument where if all propositions are to be true the conclusion cannot be false. In propositional logic, the argument as given before can be formally expressed as below. In this formal expression $\rightarrow$ indicates and implication (as "implies") and the three dots $\therefore$ indicates therefore. Similar $\vee$ means "or", $\wedge$ means "and" and $\neg$ is the negation symbol. Thus for example $\neg P$ means not-P.
 $$P \rightarrow Q, P \therefore Q$$
 
-### Modens Tollens
-
+**Modens Tollens**
 $$P \rightarrow Q, \neg P \therefore \neg Q$$
 
-### Hypothetical Syllogism
-
+**Hypothetical Syllogism**
 Also a hypothetical syllogism is a form of valid argument which seems closely related of how we construct our arguments.
 $$P \rightarrow Q, Q \rightarrow Z, P \therefore Z $$
 
-### Disjunctive Syllogism
-
+**Disjunctive Syllogism**
 $$Either \ P \vee Q, P \therefore \neg Q$$
 
-### Semantic equivalent structures
-
-$$for \ all \ x \ that \ are P \ it \ implies \ they \ are \ Q, x \ is \ P \ therefore \ Q\\
-for \ all \ x \ that \ are \ P \ it \ implies \ they \ are \ Q, x \ is \ \neg P \ therefore \ \neg Q\\
-for \ all \ x \ that \ are \ P \ it \ implies \ they \ are \ Q, for \ all \ x \ that \ are \ Q \ it \ implies \ they \ are \ Z, \ x \ is \ P \ therefore \ Z \\
-either \ x \ is \ P \ or \ x \ is \ Q, x \ is \ P \ therefore \ \neg Q$$
+**Semantic equivalent structures**
+$$
+\text{Modens Ponens:} for \ all \ x \ that \ are P \ it \ implies \ they \ are \ Q, x \ is \ P \ therefore \ Q\\
+\text{Modens Tollens:} for \ all \ x \ that \ are \ P \ it \ implies \ they \ are \ Q, x \ is \ \neg P \ therefore \ \neg Q\\
+\text{Hypothetical Syllogism:} for \ all \ x \ that \ are \ P \ it \ implies \ they \ are \ Q, for \ all \ x \ that \ are \ Q \ it \ implies \ they \ are \ Z, \ x \ is \ P \ therefore \ Z \\
+\text{Disjunctive Syllogism:} either \ x \ is \ P \ or \ x \ is \ Q, x \ is \ P \ therefore \ \neg Q
+$$
 
 ## Semantical validity of an argument
 

@@ -11,16 +11,25 @@ output:
     highlight: tango
     css: style.css
 ---
+
 # Summary
-This is a site that reads like an book/essay. It is a way to organize my thoughts and information. The site started around the EcoPostView package but now has multiple chapters. It focuses on the use of R functions within the package EcoPostView, analytical and empirical Bayes, and reasoning (and logic). Unfortunately the order is backwards where on preferably starts with reasoning and logic, analytical and empirical Bayes (statistics) and then the application of it. This will for many be too cumbersome. Many would like to directly use the functions, which is perfectly understandable. This whole site is then also a continuously developing project over time.
+
+This site reads like an incomplete book or essay. It serves as a way to organize my thoughts and store information. The project initially began around the EcoPostView R package, but has since expanded into multiple chapters. It now includes sections on the use of R functions within the EcoPostView package, followed by reflections on analytical and empirical Bayes, and finally a focus on reasoning and logic.
+
+In hindsight, this structure is somewhat backwards. Ideally, one would begin with reasoning and logic, use that foundation to frame the statistical concepts of analytical and empirical Bayes, and only then proceed to practical application. However, for many readers, it’s more accessible - and entirely reasonable - to jump straight into using the functions.
+
+This site remains a work in progress, a continuously evolving project far from complete.
 
 # EcoPostView
 
 ## Introduction
 
-Ecological data is scattered around literature in different formats. It is often 'case-study' specific and not representative for the totality if conditions encountered. Therefore, a lot of noise is introduced in the data. Furthermore, there exist no framework to re-use, generalize and fuse large amounts data into an understandable and predictive models hampering ecological knowledge by wasting valuable information. Hence, as ecologist we are not interested in only case specific situations and explaining away after the event happens. We want our information to cumulatively add to a larger body of knowledge and apply it.
+Ecological data is scattered throughout the literature in varying formats. It is often case-specific and not representative of the full range of ecological conditions encountered in the real world. As a result, a large amount of noise is introduced, limiting the generalizability of results. Moreover, there is no coherent framework to re-use, generalize, and integrate large amount of ecological data into understandable and predictive models. This lack of structure hampers ecological understanding and leads to a loss of valuable information.
 
-Working with logic, meta-data and stochastic process can solidify our understanding of ecological relations. It can be used to make probability statements and predictions. This R-package can help make your life easier to do so. The goal of this package is to provide help to do so combine the benefits of multiple source of information. The current main function uses the information of multiple fitted Linear and Generalized Linear Models ((G)LMs) and the flexibility and strength of Bayesian methods to generalized the absolute effects of multiple (G)LMs to pool it in to one meta-analytic (G)LM. This meta-analytically derived (G)LM can be visualized (see the Fig. 1 below) and used to predict on new data. Hence, it is meant to get a reasonable generalization picture of ecological relation from using all possible sources of information. 
+As ecologists, we are not only interested in isolated, case-specific explanations or post-hoc rationalizations. We aim to build cumulative knowledge and apply it across diverse contexts.
+Working with logic, metadata, and stochastic processes can help solidify our understanding of ecological relationships. These tools enable us to make probability based statements and generate predictions. This R package is designed to assist with exactly that. Its goal is to facilitate the integration of multiple sources of information, combining their strengths to generate broader insights.
+
+The core function of the package utilizes outputs from multiple fitted Linear and Generalized Linear Models ((G)LMs), leveraging Bayesian methods to generalize their effects into a single, meta-analytic (G)LM. This synthesized model can then be visualized (see Fig. 1 below) and used to make predictions on new data. The ultimate aim is to provide a robust, generalized understanding of ecological relationships by drawing from all available sources of information.
 
 ```{r intro-plot,  fig.width=8, fig.height=4, echo=F, warning=FALSE}
 library(EcoPostView)
@@ -75,36 +84,53 @@ rm(mod_intro)
 
 *Figure 1: Expected evenness of aquatic invertebrates as a function of conductivity and fine sediment fraction within a river reach. The left panel shows the relationship on the response scale, while the right panel presents it on the log scale for improved visualization.*
 
-This package provides tools for ecological statistical modeling, largely using Bayesian approaches. While a basic understanding of R is sufficient to use the package, a detailed theoretical background is available in Section 6 at the end for those interested in exploring the concepts further. Please note that this is a continuously developing R-package, and updates or improvements may be made over time.
+This package offers tools for ecological statistical modeling, with a strong emphasis on Bayesian methods. While a basic understanding of R is sufficient to use the core functions, a more in-depth theoretical background is provided in chapter 3 for those interested in exploring the underlying concepts. Please note that this is an actively developed R package, and improvements or updates may be introduced over time.
 
 ## Data and models
 
-The information needed for such a meta-analytic approach is available from figures, tables, data sets or combinations between them. However, these are hardly utilized in a consistent fashion. In simple words, multiple datasets are needed on which (G)LMs can be fitted (see Kaijser et al, ...). This, however, will show that most data is very noisy, perhaps biased and the heterogeneity among different studies is large. This is an issue if we focus on error-control and causality statements. Both error-control and causality need controlled environment with a well setup experimental conditions and exclusion or modeling of confounding variables. Yet, while error-control a posterior is not possible anymore, this makes the information still incredibly useful. It can be used to make probability statements, predictions and used to calculated the apriori needed power to setup a new experiment where the focus lies on error-control or causality. This package focuses on making posterior probability statements, visualization and prediction from information. Hence, the goal is to generalize ecological effects from literature, displaying its patterns and predict with it.
+The information required for a meta-analytic approach can often be extracted from figures, tables, datasets, or combinations of these sources. However, such information is rarely used in a consistent or standardized way. Put simply, multiple datasets are needed on which (G)LMs can be fitted (see Kaijser et al., ...). This process often reveals that ecological data is noisy, potentially biased, and exhibits considerable heterogeneity across studies.
+
+These challenges pose difficulties for drawing causal inferences or controlling statistical error. Both error control and causal conclusions require controlled environments, well-designed experiments, and the identification or modeling of confounding variables. While it may not be possible to impose such controls retrospectively (i.e., a posteriori), the existing information is still highly valuable.
+
+This data can be used to make probabilistic statements, generate predictions, and estimate the a priori power required to design future studies that do focus on error control or causal inference. The purpose of this package is to enable such posterior analysis—allowing users to generalize ecological effects from the literature, visualize emerging patterns, and make informed predictions.
 
 ## (Generalized) Linear Models (G)LMs and extracting data
 
-To use this package data is needed and on this data (G)LMs need to be fitted. This (meta-)data can be obtained from figures (e.g., using WebPlotDigitizer), tables (i.e., extrected by converting pdf to Excel files), data sets and combinations between them (See Kaijser et al. ...). The effects we are talking of are not really 'effects' but model parameters more commonly known as the intercept or slope. The intercept (*b0* or *β0*) and slope (*b1* or *β1*) can be used to predict using the following equation: *response variable = b0 + b1 · predictor variable*. Hence, this package starts with the underlying philosophy that if we choose to believe claims as 'an effect' (*b1*) of the *predictor variable* was observed' then this should be clearly generalizable. For example the relation between chlorophyll-a and total phosphorus is generalizable. From here on I will use the term model 'parameter' instead of 'effect'. Hence, by gathering information on the parameters *b0* and *b1* we can give a pooled model a single or multiple new values (*i*) for *x*. By doing so we can understand the magnitude of the relation, variability of it and make a predictions. 
+To use this package effectively, data is required, and (G)LMs need to be fitted to that data. This (meta-)data can be obtained from figures (e.g., using tools like WebPlotDigitizer), tables (e.g., by converting PDFs to Excel files), datasets, or combinations of these sources (see Kaijser et al., ...).
 
-In a GLM the response variable is linked to to the linear component with a link-function often notated as *g(...)*. The 'identity' link function applies no link function. This indicates that the mean (expected value of *y* notated as *E(y)* or *(E(y|x))*) is directly related to the linear component.
+The so-called "effects" we refer to are, more precisely, model parameters, commonly known as the intercept and slope - typically denoted as (*b0* or *β0*) and (*b1* or *β1*). These parameters define the equation:
+
+**response variable = b0 + b1 · predictor variable**
+
+This package is built on the underlying philosophy that if we accept a reported parameter (e.g., (*b1*) to represent an "effect" of the predictor, then such an effect should ideally be generalizable. For instance, the relationship between chlorophyll-a and total phosphorus is widely considered generalizable across aquatic systems.
+
+From here on, the term model parameter will be used instead of "effect." By collecting estimates of (*b0*) and (*b1*) from various studies, we can build a pooled model that predicts responses for one or more new values (*xi* or $x_i$). This approach allows us to understand the magnitude of the relationship, assess its variability, and make informed predictions.
+
+In the context of Generalized Linear Models (GLMs), the response variable is linked to the linear predictor through a link function, commonly denoted as *g(...)*.For example, when using the identity link function, no transformation is applied. In this case, the expected value of y - written as *E(y)* or *(E(y|x))* - is directly related to the linear component, just as in a standard LM.
 $$g(E(y_{i} \mid x_{i})) = \beta_0 + \beta_1 \cdot x_{i}$$ 
 However, in a GLM with, log- or logit-link it is easier to talk about log-linear relations 
 $$log(E(y_{i} \mid x_{i})) = \beta_0 + \beta_1 \cdot x_{i}$$ 
 or logit-linear relations
 $$logit(E(y_{i} \mid x_{i})) = \beta_0 + \beta_1 \cdot x_{i}$$
-The slope in a GLM not a true slope anymore because there is not straight line anymore that links the response (*y*) and predictor variable (*x*). It is however still a linear model because the model parameters are still constructed  as in a linear equation. Therefore the term coefficient or regression coefficient refers to the model parameter ($\beta$). 
+In a Generalized Linear Model (GLM), the slope is not a "true" slope in the geometric sense, since the relationship between the response variable (*y*) and predictor variable (*x*) is no longer a straight line.However, the model is still considered linear because the parameters are incorporated linearly in the linear predictor. As such, the terms coefficient or regression coefficient typically refer to these model parameters, denoted as ($\beta$). 
 
-Heuristically, I prefer working often working with elasticity- or semi-elasticity coefficients (Woolridge, 2001). In this example I use the elasticity- or semi-elasticity coefficients. But, there are enough reasons not to do so and is dependent on the question, data and many other factors. The elasticity coefficient expresses the percentage change of $y$ (response) as relative to $x$ (predictor variable). Thus, 0.2 is 0.2% change in $y$ given 1% in $x$. Hence, for a log-linear model $log(E(y \mid x)) = \beta_0 + \beta_1 \cdot log(x)$
-and thus $\beta_1 = \frac{\log(y)}{\log(x)}$. For the semi-elasticity coefficient (i.e., logit-linear) this only accounts partially and values closer 0 are better interpretable because $logit(E(y \mid x)) = \beta_0 + \beta_1 \cdot log(x)$ and thus $\beta_1 = \frac{logit(y)}{\log(x)}$. This expressed the  change in the log-odds per 1% elasticity (Cramer 1991; Woolridge, 2001). This makes it possible to compare among different models and predictors and still keep the interpretation of to the units needed for prediction. Hence, we can still predict with the model and interpret the expected change of $y$ given an increase in $1·log(x)$, because the units of $x$ are retain under the $log$. This is not possible anymore if we would 'standardize' the regression coefficients.
+In practice, I often prefer to work with elasticity or semi-elasticity coefficients (Wooldridge, 2001), which can offer an interpretable measures in log-linear or logit-linear models. That said, their use is context-dependent and may not always be appropriate. The elasticity coefficient quantifies the percentage change in $y$ associated with a 1% change in $x$. For example, an elasticity of 0.2 implies a 0.2% increase in $y$ for every 1% increase in $x$. In a log-log model: $y$ given 1% in $x$. Hence, for a log-linear model $log(E(y \mid x)) = \beta_0 + \beta_1 \cdot log(x)$
+and thus $\beta_1 = \frac{\log(y)}{\log(x)}$. For the semi-elasticity coefficient (i.e., logit-linear) this only accounts partially and values closer 0 are better interpretable because $logit(E(y \mid x)) = \beta_0 + \beta_1 \cdot log(x)$ and thus $\beta_1 = \frac{logit(y)}{\log(x)}$. This expressed the  change in the log-odds per 1% elasticity 
 
-An example of the properties of the elasticity coefficient would be that decrease of 100 till 30 species of benthic-invertebrates from 50 till 5000 $\mu S·cm^-1$ would be $\beta_{elasticity}= (log(100)-log(30))/(log(50)-log(5000))=-0.26$. This decrease is the same if the decline occurred  from 10 till 3 over the same range $\beta_{elasticity}=(log(10)-log(3))/(log(50)-log(5000))=-0.26$ What does change is the intercept *b0* of the model. Yet, this is not an issue for understanding the magnitude, the uncertainty connected and visualization. 
+(Cramer, 1991; Wooldridge, 2001). These coefficients allow comparison across models and predictors while maintaining interpretable units for prediction. Since $x$ is log-transformed, its original units are preserved — unlike in standardized coefficients, where this interpretability is lost.
 
-Sometimes these 'unofficial expressions' for *b0* and *b1* are used, due to the reference in the R-package to the expressions $\beta_0$ and $\beta_1$. The expression from the models above would be more more formally expressed: 
+As an example, consider a decline in benthic invertebrate species richness from 100 to 30 as conductivity increases from 50 till 5000 $\mu S·cm^-1$ The elasticity is: 
+$$\beta_{elasticity}= (log(100)-log(30))/(log(50)-log(5000))=-0.26$$. 
+This decrease is the same for a decline from 10 till 3 over the same range $$\beta_{elasticity}=(log(10)-log(3))/(log(50)-log(5000))=-0.26$$ 
+Although the model’s intercept $\beta_0$would differ, this does not affect the interpretation of the regression coefficient $\beta_1$, nor its uncertainty or visualization.
+
+I use the 'unofficial expressions' for *b0* and *b1*, due to the reference in the R-package to The expression from the models above would be more more formally expressed: 
 $$g(E(y_{i} \mid x_{ij})) = \sum_{j=1}^{j} \beta_j \cdot x_{ij}$$
 Where $x_{ij}$ refers to the $j$ the predictor variable (e.g., salinity is $j$=1 and light is $j$=2) and $i$ is the $i$-th observation. This expression will later be utilized in the explanation of the visualization.
 
-## Data
+## Data and R-package
 
-To start using this R-package both JAGS and devtools need to be installed. JAGS can be installed from https://sourceforge.net/projects/mcmc-jags/ and devtools can be install in R. For the most recent version of the EcoPostView it can be installed from GitHub. Of course, any problems, questions or possible improvements can be directed to me.
+To start using this R-package, both JAGS and devtools must be installed. JAGS can be installed from https://sourceforge.net/projects/mcmc-jags/ and devtools can be installed in R via CRAN. The most recent version of the EcoPostView it can be installed from GitHub. Of course, any problems, questions or possible improvements can be directed to me.
 
 ```{r setup}
 #install.packages("devtools")
@@ -114,14 +140,15 @@ library(devtools)
 library(EcoPostView)
 ```
 
-From here I assume multiple (G)LMs were fitted and from these fitted models the parameter estimates and the standard error were gathered and stored in a dataset. In connection to these parameter estimates it is convenient to note the source (e.g., DOI), the type of predictor variable (e.g., conductivity), group of the response type (e.g., benthic-invertebrates), link-function and if the model parameters is the intercept *b0* or a regression coefficient *b1*. If multiple predictor variables are fitted in a model all regression coefficients as notated as *b1* to distinguish it from the intercept *b0*. The example in R shows the structure of the data frame.
+At this stage, we assume that multiple (G)LMs have been fitted. From these models, the parameter estimates and their standard errors have been extracted and compiled into a dataset. For each estimate, it is useful to record relevant metadata including the source (e.g., DOI), the type of predictor variable (e.g., conductivity), group of the response type (e.g., benthic-invertebrates), link-function and if the model parameters is the intercept *b0* or a regression coefficient *b1*. When models include multiple predictor variables, all corresponding regression coefficients are denoted as *b1*, distinguishing them from the intercept *b0*. The example below in R demonstrates the expected structure of this data frame.
 
 ```{r data}
 data(example1)
 head(example1)
 
 ```
-In the example above the column **est** (estimate) indicates the estimated model parameters and the column **se** the standard error of the estimate. The column **group** can be an organism group or specific species/taxon (or anything you wish to group by), the column **predictor** the specific predictor variable, the parameter whether the estimate is the intercept (*b0*) or a regression coefficient (*b1*) and the column **link** contains the link function. An additional and recommended option is to include the sample size **n** for adjusting for 'small-sample-effects' (Peters et al., 2006; Moreno et al., 2009).
+
+In the example above, the **est** column contains the estimated model parameters, while the **se** column holds the standard error of those estimates. The **group** column can represent an organism group, specific species, or taxon (or any other category you wish to use for grouping). The **predictor** column denotes the specific predictor variable, and the **parameter** column indicates whether the estimate corresponds to the intercept (*b1*) or a regression coefficient (*b1*). The link column specifies the link function used in the model. Additionally, it is recommended to include the sample size (**n**) in your dataset to adjust for 'small-sample effects' if needed (Peters et al., 2006; Moreno et al., 2009).
 
 ## Basic model structures for meta-analysis
 
@@ -151,9 +178,15 @@ mod1 <- meta(estimate=example1$est,         #Model estimate
 
 The meta-function can return a warning that the MCMC-chains are not properly mixing. This can be an issue due to various reasons. Where this warning originates from can be assessed by looking at the 'raw' JAGS model output (`mod1$model$JAGS_model`). This could show that a parameter of interested 'mu[.]' Has a a large Rhat or small effective sample size. Most of these issues can be resolved by thinning the chains, increasing the number of chains or setting more informed or stronger priors. Moreover, if the issue is not an issue of the estimated 'mu' parameter, it could be decided to ignore it. These choices are ultimately up to the user. An option to prevent warnings would be to set the warning level for Eff_warn lower i.e., Eff_warn = 500.
 
+The meta-function may return a warning indicating that the MCMC chains are not mixing properly. This issue can arise for various reasons. To diagnose the source of the warning, examine the raw JAGS model output (`mod1$model$JAGS_model`). Specifically, look for cases where a parameter of interest, such as `mu[.]`, has a large Rhat value or a small effective sample size.
+
+Most of these issues can be addressed by thinning the chains, increasing the number of chains, or specifying more informed or stronger priors. If the problem is not related to the mu parameter, you may choose to disregard the warning. Ultimately, the decision on how to address these issues lies with the user.
+
+To prevent the warning from being raised, you can lower the threshold for the Eff_warn parameter (e.g., Eff_warn = 500).
+
 ## Standard meta-analysis
 
-Often a meta-analysis is performed over standardized-effect-sizes (SES). While I do not condone this practice in any way, I do not see the use of always using this practice has much benefit for field ecology, applied ecology, generalizations or learning about the impacts of real world application of ecological relations (Baguley 2009; Tukey  1969). Therefore a short introduction meta-analysis and also displaying how the bias correction methods perform. I compare it with my standard favorite metafor package in R.
+Meta-analysis is often performed using standardized effect sizes (SES). While I do not endorse this practice, I believe it offers limited benefits for field ecology, applied ecology, and the generalization of real-world ecological relations (Baguley, 2009; Tukey, 1969). Therefore, I will provide a brief introduction to meta-analysis and demonstrate how bias correction methods perform. To illustrate this, I will compare the results with those obtained using my preferred metafor package in R.
 
 ```{r, bias adjustment and metafor}
 #First run and check standard output for metafor
@@ -174,7 +207,7 @@ print(standard_meta$Summary)
 
 ```
 
-Both the metafor and EcoPostView show similar means -0.22 and standard errors. Hence not informing priors is often meaningless. However, we can now also check the bias via the residuals.
+Both the metafor and EcoPostView packages yield similar means (-0.22) and standard errors. This suggests that, in many cases, not specifying priors may be uninformative. However, we can further assess the models performance by examining the bias through the residuals.
 
 ```{r plot metafor and EcoPostView, fig.width=8, fig.height=4}
 par(mfrow=c(1,2))
@@ -187,7 +220,7 @@ plot(1/example3$se, standard_meta$Residuals,
 abline(a=0, b=0, col="red", lty=2)
 ```
 
-Here we clearly see a diagonal pattern almost similar for both functions. The posterior means are however pulled closer (shrinkage) to the mean for estimates with weaker standard errors. This bias can also be asses using the rescheck function from EcoPostView.
+Both functions reveal a clear diagonal pattern, which is nearly identical in both cases. However, the posterior means are pulled closer to the overall mean (a phenomenon known as shrinkage) for estimates with weaker standard errors. This bias can also be assessed using the rescheck function from EcoPostView
 
 ```{r plot rescheck function, fig.width=8, warning=FALSE, fig.height=4}
 #Use the residual check function within EcoPostView
@@ -196,7 +229,7 @@ res_bias <- rescheck(standard_meta)
 print(res_bias$bias_se)
 ```
 
-This bias is very obviously caused by leaving out or selecting 'significant' results. Often by manually dropping 'non-significant' variables, forward-backward AIC, BIC selection methods to find the 'best' model (Gelman and Loken, 2013). This leading to large overestimation of the parameter ('effect-size'). This bias can be corrected using method 1 of Stanley and Doucouliagos (2014).
+This bias is clearly a result of excluding or selectively retaining 'significant' results, often through practices such as manually dropping 'non-significant' variables or using stepwise model selection methods like forward/backward AIC or BIC (Gelman & Loken, 2013). These practices can lead to a significant overestimation of the parameter (or 'effect size'). This bias can be corrected using Method 1 presented by Stanley and Doucouliagos (2014).
 
 ```{r adjusting bias via Eggers approach, fig.width=7.8, fig.height=4, warning=FALSE}
 #Run EcoPostView (increased the chain thinning interval and number of iterations to improve mixing)
@@ -210,9 +243,11 @@ res_bias2 <- rescheck(adjusted_meta)
 print(res_bias2$bias_se)
 ```
 
-In the method above the bias has been adjusted (not removed!). The pooled estimate is now much lower This means the relations between the standard error can be assessed by looking at the residuals. This is often performed with funnel plots but can as addition also be asses by simply checking the residuals. The adjustment should only be applied if patterns are extremely clear it can often lead to strong adjustments even if no clear bias is present. However, it is extremely effective if such bias is present in the data. In the future I hope to add multiple methods to assess the strength of the bias.
+In the method outlined above, the bias has been adjusted (not removed), resulting in a much lower pooled estimate. This adjustment allows for a clearer assessment of the relationship between the standard errors by examining the residuals. While this is commonly done using funnel plots, it can also be done by directly checking the residuals.
 
-The bias displayed in this example are clearly extreme in such cases it could be beneficial to explore the bias further to asses if there is clearly a 'publication gap'. This publication gab can be highlighted by looking at the z-distribution derived from the p-value. While normally the p-value is derived from the z-value. When there is a clear gap visible (as in Zwet and Cator 2021) then we should be able to model the absolute z-value this from a mixture of two half normal distributions. Here one model is truncate at 0 and the other at 1.96. Since the likelihood of a mixture is difficult the obtain an Approximate-Bayesian-Computation algorithm was used based on rejection sampling (ABC-rejection). This method is further highlighted in Csilléry et al. (2010) and Hartig et al. (2011) and the model given here is formally described in the theoretical section.
+However, the adjustment should only be applied when clear patterns of bias are present, as it can lead to over-corrections even when no bias is evident. That said, it is highly effective when a bias is present in the data. In the future, I aim to incorporate additional methods to better assess the strength of any bias.
+
+The bias displayed in this example is extreme, and in such cases, it may be beneficial to further explore the nature of the bias to determine if a 'publication gap' exists. This gap can be highlighted by examining the z-distribution derived from the p-value. Normally, the p-value is derived from the z-value, but when a clear gap is visible (as observed in Zwet & Cator, 2021), we should be able to model the absolute z-value as a mixture of two half-normal distributions - one truncated at 0 and the other at 1.96. Since the likelihood of such a mixture is challenging to estimate, I employ an Approximate Bayesian Computation (ABC) algorithm based on rejection sampling (ABC-rejection). This method is further described in Csilléry et al. (2010) and Hartig et al. (2011), and the model is formally presented in the theoretical section.
 
 ```{r exploring bias with ABC-rejection, fig.width=7.8, fig.height=4, warning=FALSE}
 #From the dataset calculate the p-value from the effect-sizes and standard errors
@@ -228,15 +263,19 @@ extract_abc <- extrabc(result_abc, dist_threshold = 0.052)
 plot(extract_abc$hist)
 ```
 
-Based on the distribution of z-values we can clearly observe that z-values |z|>1.96 are more common published than those lower values. This would be reasonable if there was no gap observed and this strong boundary at >1.96. However, the z-values can be reasonable modeled and the model seems to fit decently (R-squared >0.6-0.7 is considered). Furthermore, the density lines decent and the  nicely overlay with the histogram. The number of observations from the censored model are 0.76 (76%). This does not mean that 76% is censored as the focus of this model to see if it can strongly fit to the data. This fit, if the bias is as sever as provided via the residuals, provides another hint that indication a selection procedure. To make sure the results are reasonable one can make sure that the fit stays sufficient and the accepted number of simulation is acceptable (heuristically > 100).
+Based on the distribution of z-values, we can clearly observe that values where |z|>1.96 are more frequently published than those with lower absolute values. This would be reasonable if no publication gap existed; however, the sharp boundary at |z| > 1.96 suggests otherwise. The z-values can be reasonably modeled, and the model appears to fit the data well, with an R-squared typically above 0.6–0.7, which is considered acceptable. Additionally, the density curves align well with the histogram, further supporting the model's fit.
+
+The proportion of observations explained by the censored component of the model is 0.76 (76%). This does not imply that 76% of the data is censored, but rather that the model's censored component captures a substantial portion of the observed pattern. The goal here is to determine whether the model provides a good fit to the data under the assumption of selective reporting. If the residuals suggest severe bias, this model fit offers additional information of a selection process at play.
+
+To ensure the robustness of the results, one should verify that the model fit remains adequate and that the number of accepted simulations is heuristically sufficient (typically > 100).
 
 ### Setting priors
 
-A benefit of the the Bayesian approach is that we can included prior information. Thereby explicitly shifting the weight of the outcome to more plausible values of the pooled model parameter. To set only a single prior for each relation and parameter a specific structure is needed. By default the model parameters are set as Gaussian/normally distributed with a mean ($\mu$, prior_mu) of 0 and standard error ($se$, prior_mu_se) of 0.5. The prior distribution is at the moment restricted to the normal distribution. The prior for the standard deviation ($\sigma$) is uniform where only the maximum value (prior_sigma_max) can be set, which at default is 5. 
+A key advantage of the Bayesian approach is the ability to incorporate prior information, thereby explicitly shifting the posterior estimates toward more plausible values for the pooled model parameter. To define a single prior for each relation and parameter, a specific structure is required. By default, model parameters are assumed to follow a normal (Gaussian) distribution with a mean ($\mu$, `prior_mu`) of 0 and a standard deviation ($\sigma$, `prior_mu_se`) of 0.5. At present, the prior distribution for model parameters is limited to the normal distribution. The prior for the residual standard deviation ($\sigma$) is defined as a uniform distribution, with the upper bound (`prior_sigma_max`) set to 5 by default.
 
-As explained in section 2.1 I heuristically like to work with the elasticity- or semi-elasticity coefficient. However, THIS IS NOT A NECESSITY! an therefore means priors change depending on what you like to use and known. Hence, not thinking about your prior - even if not a lot of information is available, but at least inform it - is often not doing a Bayesian analysis at all. 
+As discussed in Section, I often prefer to work heuristically with elasticity or semi-elasticity coefficients. However, this is not required, and the choice of prior should reflect your modeling preferences and domain knowledge. In fact, failing to think carefully about the priors — even when even limited prior information is available — means the analysis is not truly Bayesian in nature.
 
-That being said you can choose an prior values for the mean and standard deviation. To get a nice table overview of the structure need for the priors can be obtained by setting the 'get_prior_only' to 'TRUE'. This will return a dataframe, with a column **level**, priors for the **mu** ($\mu$) and for the standard error ($se$). The numbers can adjusted to the specific topic based on prior information available. How to included this dataframe will be explained in more detail in section 3.5.
+Users can specify their own prior values for both the mean and standard deviation. To obtain a structured overview of the required prior inputs, set `get_prior_only = TRUE`. This will return a data frame containing a level column, as well as columns for the prior mean ($\mu$) and standard deviation ($se$). These values can then be tailored to the specific context of the analysis using available prior information. Details on how to incorporate this prior data frame into your model are provided later.
 
 ``` {r meta2 example priors}
 only_priors <- meta(estimate=example1$est,        
@@ -254,11 +293,13 @@ print(only_priors)
 
 ### Setting multiple priors for Bayesian Model Averaging
 
-A benefit of the the Bayesian approach is that we can included multiple ($k$) priors to perform Bayesian Model Averaging (BMA;  Hoeting et al., 1999; Hinne et al., 2020). Thereby explicitly adding multiple possible scenarios that could have generated the observable data and averaging over these plausible explanation. To set multiple priors we need a similar dataset as shown above.
+An important advantage of the Bayesian framework is the ability to incorporate multiple prior distributions ($k$), enabling Bayesian Model Averaging (BMA; Hoeting et al., 1999; Hinne et al., 2020). This approach allows one to represent multiple plausible scenarios that could have explained the observed data, and to average over these competing models based on their relative credibility.
 
-Often prior weights are added, which indicate how heavy a prior weighs in the model. These prior weights could any number between 0 (0%) and 1 (100%) so that it preferably adds up to 100%. To avoid the already increasing complex model on could set these to equal weights. For example, if there are three priors then each weighs 1/3. However to avoid fumbling around with this one could also decide that these prior weights are uncertain and treat them a stochastic by letting them arise from a Dirichlet distribution $weight \sim Dir(\alpha_i)$ where $\alpha_i=1$ if the number ($i$) of prior distributions is >1. Meaning the Dirichlet distribution is 'uniform'.
+To implement BMA, a dataset similar in structure to the single-prior setup is required, but extended to include multiple prior specifications. Each prior distribution typically includes a mean ($\mu$) and standard error ($se$), just as before.
 
-In the example below the priors have varying values for the parameters $mu$ and $se$, and a broader prior $N(\mu=0, se=10)$ for the intercept is reasonable.
+In many cases, prior weights are assigned to reflect how strongly each prior contributes to the model. These weights range between 0 and 1 and ideally sum to 1 (or 100%). For simplicity, especially when no strong preference among priors exists, equal weighting can be used (e.g., with three priors, each receives a weight of 1/3). Alternatively, when the weights themselves are uncertain, they can be treated as random variables and modeled using a Dirichlet distribution: $weight \sim Dir(\alpha_i)$ where $\alpha_i = 1$ for each prior ($i$), yielding a uniform Dirichlet distribution.
+
+In the example below, I illustrate this approach using priors with varying values of $\mu$ and $se$. For intercept parameters, a broader prior such as $N(\mu = 0, se = 10)$ is often reasonable, reflecting higher uncertainty.
 
 ``` {r meta3 BMA}
 data("example2")
@@ -281,15 +322,27 @@ mod2 <- meta(estimate=example1$est,
 mod2$Summary
 ```
 
-The results of the meta-analysis are summarized in a table describing Maximum A Priori values (MAP), the $\mu$, $se$ and the high density intervals at default (90%). Additionally the $I2$ heterogeneity is given.
+The results of the meta-analysis are summarized in a table that includes the Maximum A Posteriori (MAP) estimates, the posterior mean ($\mu$), standard error ($se$), and the High Density Interval (HDI), which by default is set to 90%. Additionally, the heterogeneity among studies is quantified using the $I^2$ statistic.
 
-The prior for the between study variance known as $\tau^2$ is set as uniform with ranging from 0 till 5 by default. This has as an advantage that it will be result in wider intervals and be conservative for smaller sample sizes. A disadvantage is that it will be conservative. It can under particular conditions be very beneficial while under other conditions where more precision is required be a downside. To give the user the option the argument 'prior_var_fam' can be set to 'exp' (exponential distribution) instead of 'unif' (uniform distribution). Under 'unif' the maximum value of the uniform distribution is set as Uniform(0, prior_study_var) and when set to 'exp' the mean of the exponential distribution is used as Exponential(1/prior_study_var). In general cases with a large number of predictors and response as in Kaijser et al. ... I would advice the uniform prior if no convergence issues arise. If a more specific topic is choose like one or two predictors and one response and smaller datasets <10 observations the exponential distribution (e.q., with a mean of 1000) might suite well. These advice are heuristic in that they can be supported by personal experience and examples but are not to be taken for granted. Best is to try it out and perform a sensitivity analaysis (check).
+The prior for the between-study variance ($\tau^2$) is, by default, specified as a uniform distribution ranging from 0 to 5. This choice has the benefit of producing wider intervals, which can be conservative—particularly useful when dealing with smaller sample sizes. However, this conservatism can also be a drawback in cases where more precision is desired.
+
+To offer users flexibility, the argument `prior_var_fam` can be set to `"exp"` to use an exponential distribution instead of the default `"unif"` (uniform distribution). When using`"unif"`, the variance prior is specified as $Unif(0, \text{prior_study_var})$. When "exp" is selected, the prior variance becomes $Exponential(\frac{1}{\text{prior_study_var})}$
+
+In general, for complex meta-analyses with many predictors and responses (e.g., Kaijser et al. ...), the uniform prior is recommended, provided that convergence is achieved. In contrast, for more focused analyses with fewer predictors and responses - and particularly with small datasets (e.g., $n < 10$) — an exponential prior (e.g., with a mean of 1000) may be more appropriate.
+
+These recommendations are heuristic — they are grounded in practical experience and prior applications, but should not be treated as universally optimal. Users are strongly encouraged to conduct sensitivity analyses to assess how prior assumptions influence the results.
 
 ### rescheck-function and bias
 
-After analyzing the the meta-data also a check for bias should be performed. This can be via various methods. I believe this this should be a sensitivity analysis using various methods: Display of the z-distribution, Egger's test, Peters tests and/or funnel plots. Hence, there is always bias, but in the data you have it might be small.
+After analyzing the meta-data, it is essential to check for bias, which can arise from multiple sources. This check should ideally be part of a sensitivity analysis, employing various methods such as: Display of the z-distribution, Egger's test, Peters tests and/or funnel plots. Bias is nearly always present to some extent, but its magnitude may vary depending on the dataset.
 
-A simple option is to visually asses the relation of the residuals relative to $1/se$ and if sample sizes is provided in the data $1/n$. If a clear diagonal pattern is visual this means that there is a strong relation of the $\beta$ to $se$ which can indicate the selection of only larger effects with broader intervals, p-hacking or noise in the data. A relation with $n$ often occurs when small sample sizes an noise result in so called 'small-study-effects'. There are different ways to asses the residuals relation relative to $1/se$ or $1/n$: in total, per group or per predictor. Below the residuals per group in relation to $1/se$.
+A straightforward first step is to visually assess the relationship between the residuals and the inverse of the standard error ($1/se$). If sample sizes are available, one can also assess the relationship with $1/n$.
+
+If a clear diagonal pattern between $\beta$ to $1/se$ can indicate the selection larger effects with broader intervals, p-hacking, HARKing, data dredging, noise in the data, etc. A relation with $1/n$ often occurs when small sample sizes an noise result in so called 'small-study-effects'. 
+
+The residuals can be assessed across the total dataset, per group or per predictor. 
+
+Below the residuals per group in relation to $1/se$.
 
 ```{r, residual check, fig.width=8, fig.height=4, warning=FALSE}
 res_mod2 <- rescheck(mod2)
@@ -303,15 +356,19 @@ And the residuals per predictor in relation to $1/se$.
 print(res_mod2$bias_se_predictor)
 ```
 
-The dotted red line should more-or-less-ish overlay the solid blue line having an intercept and slope of 0. Small sample sizes can strongly influence the slope of this line. When bias is present then a different correction method can be selected or stronger priors can set to reduce this.
+The dotted red line should approximately overlay the solid blue line, which represents the expected relationship with an intercept and slope of 0. However, small sample sizes can substantially influence the slope of the red line, potentially leading to misleading inferences. When clear bias is detected, it is advisable to either apply a bias correction method or specify stronger priors to mitigate the consequences.
 
 ## senscheck-function and prior sensitivity
 
-Sensitivity checks can make up an important part of assessing the results. For simpler an more informing models it might not be necessary. Hence, we simply cannot assume the same results would be obtained in the next study under any circumstances. Strong conclusions based on intervals covering or not covering 0 are therefore rather arbitrary. Observing the posterior distribution with estimate and its error and a reasonable visualization of the patterns the estimates uncover with its variance is sufficient. Especially the nature of ecological data being extremely noise and exploratory. This means that also the posterior of each study can be drastically different. Nonetheless, it can be helpful to asses the sensitivity as a form of reality check.
+Sensitivity checks play an important role in assessing the robustness of model results. For simpler models with highly informative data, these checks may not always be necessary. However, one cannot assume that identical results would be obtained in a subsequent study under different conditions. Consequently, drawing strong conclusions based solely on whether an interval includes zero is arbitrary and often misleading.
 
-The sensitivity check asses the shift between a model with full prior implementations (mod1) versus another model (mod0). This is simply performed by dividing the posterior of $Log(P(Mod1|Data, Info)/P(Mod0|Data, Info))$ assuming all model hyper parameters are held constant except for the priors. This means we calculate the posterior odds ratio between two models. Another possibility is to asses how much the prior information of mod1 versus mod0 adds to a positive or negative shifts away from 0. This means we check $Log(P(Mod1>0|Data, Info)/P(Mod0>0|Data, Info))$ which is transformed back to a percentage between 0 and 1. Where 0.5 no change of the prior density compared to 0, and 0 a completely negative and 1 completely positive. I am not the biggest fan of this way of assessing sensitivity, as this again treats the posterior as a form of dichotomous hypothesis test. It is available but I left it out of the examples below.
+A more informative approach involves directly inspecting the posterior distribution, along with the estimate, its uncertainty, and a visualization of the variance in patterns revealed by the data. This is particularly important in ecology, where data tend to be noisy and often exploratory in nature—meaning the posterior distribution can vary substantially between studies. Still, sensitivity checks can serve as a useful reality check.
 
-In the previous example mod2 was created, here treated as mod1. We can create a model with hardly any prior information (mod0) setting the $\mu$ of all priors to 0 and prior for the $se$ to 100.
+In this framework, a sensitivity check evaluates the difference between a fully specified model with informed priors (mod1) and a baseline model with vague or weak priors (mod0). This comparison is made by computing the posterior odds ratio: $Log(P(Mod1|Data, Info)/P(Mod0|Data, Info))$ assuming that all other model hyper parameters are held constant except for the priors.
+
+An alternative approach is to assess the extent to which prior information in mod1 versus mod0 contributes to a shift in the posterior away from zero: $Log(P(Mod1>0|Data, Info)/P(Mod0>0|Data, Info))$ This can be transformed into a probability between 0 and 1, where 0.5 indicates no net influence of the prior on the posterior, 0 indicates complete negative influence, and 1 complete positive influence. However, I am not the biggest fan of this way of assessing sensitivity, as this again treats the posterior as a form of dichotomous hypothesis test.
+
+In the earlier example, mod2 was treated as mod1. A corresponding weakly informed mod0 model can be created by setting all prior means ($\mu$) to 0 and their standard errors ($se$) to 100.
 
 ```{r, sensitivity check, fig.width=8, fig.height=4, warning=FALSE}
 #Create a model with minimal prior information
@@ -336,7 +393,9 @@ print(sens_check$posterior_odds)
 
 ```
 
-The vertical black line indicates the value at which no difference between between mod1 and mod0 would be observed as $0=Log(P(Mod1|Data, Info)/P(Mod0|Data, Info))$ The most obvious results jump out where fish and oxygen for log-linear model and for salinity and sediment for the logit-linear models the priors pull the posterior to more negative values. It is possible to asses the strength by taking the inverse logit of the MAP $logit^{-1}(MAP)$ expressing it as the shift in the probability caused by the prior. Where smaller then 0.5 indicates negative shift, bigger than 0.5 a positive shift and 0.5 none.
+The vertical black line in the plot represents the threshold where there is no difference between the models, i.e., where: $0=Log(P(Mod1|Data, Info)/P(Mod0|Data, Info))$ This corresponds to equal support for both mod1 and mod0. Notably, the results show that for log-linear models, the fish–oxygen relationship, and for logit-linear models, the salinity–sediment relationship, the inclusion of prior information in mod1 shifts the posterior distributions toward more negative values.
+
+To quantify the strength and direction of this shift, the inverse logit of the Maximum A Posteriori (MAP) value can be taken: To quantify the strength and direction of this shift, the inverse logit of the Maximum A Posteriori (MAP) value can be taken: $logit^{-1}(MAP)$ This transformation expresses the shift as a probability where smaller then 0.5 indicates negative shift, bigger than 0.5 a positive shift and 0.5 none.
 
 ```{r, sensitivity quantif, warning=FALSE}
 #Select only predictor and link function
@@ -349,13 +408,20 @@ inv_df$prob <-plogis(sens_check$table$mu[sens_check$table$group=="Fish"])
 print(inv_df)
 ```
 
-The table shows for sediment and logit in relation to fish, the posterior shift from mod0 to mod1 is influenced by 0.5-0.38=0.12 or 12%. Hence, our prior information provides some information that the relation between fine sediment and lotic fish species is negative that is not coming from the data alone. This is not a 'negative' thing, but what we do in reality. It shows that our prior information is often more 'directed' and meta-data that can be obtained from literature.
+The table shows that for sediment in a logit-linear model related to fish, the posterior probability shifts from 0.38 in mod0 to 0.50 in mod1. This corresponds to a 12% increase, i.e., 
+0.50−0.38=0.12. This indicates that prior information contributes additional support for a negative relationship between fine sediment and lotic fish species — an relation is not fully supported by the data alone.
 
-This was the most difficult part where the data needs to be gathered and extracted, (G)LMs need to be fitted, priors need to formulated, bias needs to be assessed and the whole model needs to be optimized to get a stable results. To display or predict with the models requires less time.
+This is not a limitation but rather reflects what occurs in practice: prior information often drawn from empirical studies or domain expertise tends to be more directional. This highlights the value of incorporating prior information from the literature when building and refining Bayesian models.
+
+Admittedly, this is the most demanding phase of the workflow: gathering and extracting data, fitting multiple (G)LMs, defining and implementing priors, assessing potential biases, and optimizing the model to ensure stable and interpretable results. Once complete, presenting the results or making predictions from the fitted models is considerably more straightforward.
 
 ## pdplot-function
 
-To display the posterior results one could display the results with a point and interval range. However, this interval displaying a strong boundary on a continues set of possibilities does not completely capture  the idea of the posterior probability distribution. Another option would be to display the Posterior Density Distribution (PDD) combined with the point and interval estimate. Hence, the PDD displays the possible values of the prior information where the pooled estimated might have originated from $f(\beta_{\text{pooled}} \mid Meta-data, Info)$ it is the inverse of the likelihood which informs us of the values of the meta-data given we selected a particular pooled estimate $f(Meta-data \mid \{\beta_{i}, ..., \beta_{n}\})$. This can be  performed with the pdplot function.
+To visualize posterior results, a common approach is to display point estimates along with credible intervals. However, this method imposes sharp boundaries on a continuous distribution of uncertainty, which may not fully reflect the nature of a posterior probability distribution.
+
+An alternative—and often more informative—approach is to plot the Posterior Density Distribution (PDD). This plot combines the point estimate, interval range, and the full shape of the posterior, offering a richer picture of the uncertainty and possible parameter values.
+
+The PDD represents the distribution of the pooled parameter estimate conditional on the meta-data and prior information: $f(\beta_{\text{pooled}} \mid Meta-data, Info)$. This is conceptually the inverse of the likelihood, which tells us how likely the observed data are given a set of parameter values: $f(Meta-data \mid \{\beta_{i}, ..., \beta_{n}\})$. In practice, this visualization can be generated using the `pdplot()` function, which overlays the posterior density curve with interval and point estimates, allowing for intuitive interpretation of the central tendency and uncertainty of the pooled estimate.
 
 ```{r pdplot}
 pdd <- pdplot(mod2, 
@@ -384,24 +450,41 @@ And, a summary belonging to the figures.
 print(pdd$summary)
 ```
 
-For larger datasets with multiple groups and predictor variables the order of the PDDs can be changed by using the arguments 'order_predictor' and 'order_group"' needing a character string with the names of the desired order.
+For larger datasets with multiple groups and predictor variables, it may be useful to adjust the order of the Posterior Density Distributions (PDDs) for better clarity and comparison. You can control the ordering of predictors and groups by using the arguments order_predictor and order_group. These arguments expect a character vector containing the names of the predictors or groups in the desired order.
+
+By adjusting these arguments, you can organize the PDDs in a way that facilitates easier interpretation, especially when working with complex models involving numerous predictors and groupings.
 
 ## hop-function (Hypothetical Outcome Plots)
 
-Hypothetical Outcome Plots (HOPs) are a powerful method to visualize the possibilities the expected value could take on given a change in the predictor variable (Kale et al. 2019).
-HOPs lines display the marginal change of the expected value given a change in the predictor variable holding all other variables constant.
+Hypothetical Outcome Plots (HOPs) are a valuable tool for visualizing how the expected value of a response variable might change in response to variations in a predictor variable, while keeping all other variables constant (Kale et al., 2019).
+
+In a HOP, each line represents the marginal change in the expected value of the response variable as the predictor variable changes. This allows for a clear understanding of how the relationship between the predictor and response behaves, without the influence of other variables.
 
 $$
 g(E(y_{i} \mid x_{ij)})) = \beta_{pooled,j=0,m} + \beta_{pooled,j=1,m} \cdot x_{i,j=1}+ \sum_{j=1}^{j} \beta_{pooled,j} \cdot \hat{x}_{j}
 $$
 
-This hypothetical prediction is generated using the posterior estimates $f(\beta_{pooled}|Data, Info)$. Hence, this parameter describes the influence on the response give one unit change in the predictor. To display this change a set of sequential values for $x_{i,j=1}$ can be generated as $x_{i,j=1}=\{i, ..., n\}$ realistic for the observed gradient. The function $f(\beta_{pooled,j}|Data, Info)$ contains most plausible values for $\beta_{pooled,j}$. By generating a value $m$ from this function $\beta_{pooled,j,m}\sim f(\beta_{pooled,j}|Data, Info)$ and repeating it $m$ times a bunch of hypothetical outcomes can be generated. To arrive at this display, all other estimated parameters are held constant at the sum the other estimates $\sum_{j=1}^{j} \beta_{pooled,j}$. The HOPs lines are therefore simulation of (marginal) possibilities from the posterior. There is a slight difference with classical hops because in the case of the meta-analysis $\hat{x}=1$. This still displays the marginal change of $y_i$ given $x_{i,j}$ but only under the conditions where all predictors are $\hat{x}_j=1$ 
+The hypothetical prediction is generated using the posterior estimates, denoted as $f(\beta_{pooled}|Data, Info)$. This parameter reflects the influence of a one-unit change in the predictor on the response variable.
+
+To display this change, a set of sequential values for the predictor $x_{i,j=1}$ can be generated where $x_{i,j=1}=\{i, ..., n\}$ represents realistic values for the observed gradient of the predictor. The function $f(\beta_{pooled,j}|Data, Info)$ provides the most plausible values for the pooled regression coefficients $\beta_{pooled,j}$. By drawing a sample $m$ from this distribution, $\beta_{pooled,j,m}\sim f(\beta_{pooled,j}|Data, Info)$ and repeating this process multiple times, a range of hypothetical outcomes can be generated.
+
+For this process, all other parameters are held constant at their estimated values, $\sum_{j=1}^{j} \beta_{pooled,j}$, while the predictor $x_j$ is varied. Therefore, the HOP lines represent simulations of possible marginal changes in the response from the posterior distribution.
+
+A slight difference from classical HOPs is that, in the case of meta-analysis, $\hat{x}=1$ is assumed. This approach still illustrates the marginal change in $y_i$ given a change in $x_{i,j}$
+ , but only under the condition where all other predictors are set to their estimated values 
+$\hat{x}_j=1$.
 
 $$
 g(E(y_{i} \mid x_{ij)})) = \beta_{pooled,j=0,m} + \beta_{pooled,j=1,m} \cdot x_{i,j=1}+ \sum_{j=1}^{j} \beta_{pooled,j} \cdot 1
 $$
 
-Note that the function works under the idea of log transformed variables. This means that argument xlim (the limits of the figures) as given below are exp(-4.6)=0.01 and exp(0)=1 for the fraction of fine sediment. The y-axis is on the response scale. I hope soon to make it possible to use an argument that makes it possible to set the xlim on the response scale. Below an example of the outcomes of the response of invertebrate taxonomic richness along the gradient of fine sediment. 
+Note that the function operates under the assumption of log-transformed variables. This implies that the xlim argument, which defines the limits of the x-axis in the plot, is given in log-transformed units. For example, for the fraction of fine sediment, the log-transformation of the limits is exp(−4.6)=0.01 and exp(0)=1. These values correspond to the range of the fraction of fine sediment on a logarithmic scale.
+
+The y-axis, on the other hand, is presented on the response scale, meaning that the values are not transformed, and they represent the actual predicted responses (e.g., taxonomic richness in this case).
+
+In the future, I plan to implement an argument that allows users to set the xlim on the response scale directly, without needing to manually convert to log-transformed values.
+
+Below is an example of the outcomes showing the response of invertebrate taxonomic richness along the gradient of fine sediment.
 
 ```{r HOPs log salinity fig1, fig.width=8, fig.height=4,  warning=FALSE}
 log_sal1 <- hop(mod2,                                  #Object from the meta function
@@ -418,7 +501,9 @@ log_sal1 <- hop(mod2,                                  #Object from the meta fun
 print(log_sal1)
 ```
 
-It is also possible to scale to display the exponentiate values on the x-axis using the argument 'exp_axis'. Note that one might suggest the intercept is to high. This could be correct, because this is the average intercept over all studies keeping the other variables constant at 1. To change the position of the intercept the argument 'shift_b0' can be used. 
+It is also possible to scale the x-axis to display the exponentiated values using the argument `exp_axis`. This option will transform the values on the x-axis back from their log-transformed scale to their original scale, providing a more intuitive representation of the predictor variable.
+
+Additionally, you may notice that the intercept could appear unusually high. This might be due to the fact that the intercept represents the average intercept across all studies, with all other variables held constant at a value of 1. If you wish to adjust the position of the intercept, you can use the `shift_b0` argument. This allows you to shift the intercept value for a more accurate representation based on the specific context of your analysis.
 
 ```{r HOPs log salinity fig2, fig.width=8, fig.height=4,  warning=FALSE,}
 log_sal2 <- hop(mod2,                                   
@@ -440,7 +525,9 @@ print(log_sal2)
 
 ## hop function (and Partial Dependency Plots)
 
-There are multiple predictors is the dataset. Therefore it possible to display the MAP predicted value given a change in one of the two predictors. This can be performed by display in Partial Dependency Plots.
+When multiple predictors are included in the dataset, it is possible to visualize the effect of a change in one predictor while holding the other predictors constant. This can be achieved by creating Partial Dependency Plots (PDPs), which show how the predicted response variable changes as a particular predictor varies, keeping other predictors fixed.
+
+The Partial Dependency Plot is a powerful tool for understanding the marginal effect of each predictor on the response variable. In the context of a meta-analysis, it helps illustrate how the relationship between a specific predictor and the response is shaped by the collective data from multiple studies, while controlling for the influence of other variables.
 
 ```{r HOPs log salinity fig3, fig.width=8, fig.height=4,  warning=FALSE,}
 log_sal3 <- hop(mod2,                                              

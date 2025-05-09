@@ -165,11 +165,32 @@ if(family=="norm_ident"){
 
 }else{stop("family not recognized")}
 
+############################
+#standard formula y~x+...+x#
+############################
+
 parts <- unlist(strsplit(argument[3], "\\+"))
 x     <- as.matrix(data[colnames(data) %in% parts])
 y     <- data[,argument[2]]
 
-model_list  <- list(y=y, x=x, ni=nrow(x), nx=ncol(x), prior_mu=prior_mu, prior_mu_se=prior_mu_se, prior_dispersion=prior_dispersion)
+############################################
+#random effect formula y~x+...+x+random(r1)#
+############################################
+
+rand_eff <- parts[grepl("random", parts)]
+
+if(length(rand_eff)!=0){
+  names_rand_eff <- sub(".*\\((.*)\\).*", "\\1", rand_eff)
+  rx             <- matrix(1, nrow = nrow(data), ncol = length(rand_eff))}
+else{
+  rx             <- matrix(1, nrow = nrow(data), ncol = 1)}
+
+############################
+#model data in final format#
+############################
+
+model_list  <- list(y=y, x=x, ni=nrow(x), nx=ncol(x), rx=rx,
+                      prior_mu=prior_mu, prior_mu_se=prior_mu_se, prior_dispersion=prior_dispersion)
 
 output <- jags.parallel(data = model_list, model.file = model,
               parameters.to.save = return_parameters,

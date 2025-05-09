@@ -1,12 +1,17 @@
-/* style.css */
-  @media screen and (min-width: 768px) {
-    #TOC {
+/* Move TOC */
+@media screen and (min-width: 768px) {
+  #TOC {
     left: 10px !important;
     width: 220px;
   }
 }
 
-/* Justify all paragraph text */
-body p {
-  text-align: justify;
+/* Force justify text inside the main content */
+body, .container, .content {
+  text-align: justify !important;
+}
+
+/* Also justify text inside all paragraphs */
+body p, .container p, .content p {
+  text-align: justify !important;
 }

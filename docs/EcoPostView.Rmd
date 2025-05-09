@@ -9,8 +9,8 @@ output:
     toc_depth: 4
     number_sections: true 
     highlight: tango
+    css: style.css
 ---
-
 # Summary
 This is a site that reads like an book/essay. It is a way to organize my thoughts and information. The site started around the EcoPostView package but now has multiple chapters. It focuses on the use of R functions within the package EcoPostView, analytical and empirical Bayes, and reasoning (and logic). Unfortunately the order is backwards where on preferably starts with reasoning and logic, analytical and empirical Bayes (statistics) and then the application of it. This will for many be too cumbersome. Many would like to directly use the functions, which is perfectly understandable. This whole site is then also a continuously developing project over time.
 
@@ -22,7 +22,7 @@ Ecological data is scattered around literature in different formats. It is often
 
 Working with logic, meta-data and stochastic process can solidify our understanding of ecological relations. It can be used to make probability statements and predictions. This R-package can help make your life easier to do so. The goal of this package is to provide help to do so combine the benefits of multiple source of information. The current main function uses the information of multiple fitted Linear and Generalized Linear Models ((G)LMs) and the flexibility and strength of Bayesian methods to generalized the absolute effects of multiple (G)LMs to pool it in to one meta-analytic (G)LM. This meta-analytically derived (G)LM can be visualized (see the Fig. 1 below) and used to predict on new data. Hence, it is meant to get a reasonable generalization picture of ecological relation from using all possible sources of information. 
 
-```{r intro-plot,  fig.width=7.1, fig.height=4, echo=F, warning=FALSE}
+```{r intro-plot,  fig.width=8, fig.height=4, echo=F, warning=FALSE}
 library(EcoPostView)
 library(ggplot2)
 library(cowplot)
@@ -72,6 +72,7 @@ intro_plot <- cowplot::plot_grid(pl1, pl2, rel_widths = c(0.43, 0.57))
 print(intro_plot)
 rm(mod_intro)
 ```
+
 *Figure 1: Expected evenness of aquatic invertebrates as a function of conductivity and fine sediment fraction within a river reach. The left panel shows the relationship on the response scale, while the right panel presents it on the log scale for improved visualization.*
 
 This package provides tools for ecological statistical modeling, largely using Bayesian approaches. While a basic understanding of R is sufficient to use the package, a detailed theoretical background is available in Section 6 at the end for those interested in exploring the concepts further. Please note that this is a continuously developing R-package, and updates or improvements may be made over time.
@@ -136,6 +137,7 @@ Of course if bias is considered neglect non can be performed (method=0). I still
 
 ## The meta-function
 The meta-function can be applied over the example data via the following argument.
+
 ```{r meta1}
 mod1 <- meta(estimate=example1$est,         #Model estimate
              stderr=example1$se,            #Standard error of the model estimate
@@ -174,7 +176,7 @@ print(standard_meta$Summary)
 
 Both the metafor and EcoPostView show similar means -0.22 and standard errors. Hence not informing priors is often meaningless. However, we can now also check the bias via the residuals.
 
-```{r plot metafor and EcoPostView, fig.width=7.8, fig.height=4}
+```{r plot metafor and EcoPostView, fig.width=8, fig.height=4}
 par(mfrow=c(1,2))
 plot(1/example3$se, resid(standard_metafor), 
      xlab = "1/se", ylab="Residuals", main="metafor")
@@ -187,7 +189,7 @@ abline(a=0, b=0, col="red", lty=2)
 
 Here we clearly see a diagonal pattern almost similar for both functions. The posterior means are however pulled closer (shrinkage) to the mean for estimates with weaker standard errors. This bias can also be asses using the rescheck function from EcoPostView.
 
-```{r plot rescheck function, fig.width=7.8, warning=FALSE, fig.height=4}
+```{r plot rescheck function, fig.width=8, warning=FALSE, fig.height=4}
 #Use the residual check function within EcoPostView
 res_bias <- rescheck(standard_meta)
 
@@ -225,6 +227,7 @@ extract_abc <- extrabc(result_abc, dist_threshold = 0.052)
 #Plot the histogram of the z-values with the simulated density lines of the posterior
 plot(extract_abc$hist)
 ```
+
 Based on the distribution of z-values we can clearly observe that z-values |z|>1.96 are more common published than those lower values. This would be reasonable if there was no gap observed and this strong boundary at >1.96. However, the z-values can be reasonable modeled and the model seems to fit decently (R-squared >0.6-0.7 is considered). Furthermore, the density lines decent and the  nicely overlay with the histogram. The number of observations from the censored model are 0.76 (76%). This does not mean that 76% is censored as the focus of this model to see if it can strongly fit to the data. This fit, if the bias is as sever as provided via the residuals, provides another hint that indication a selection procedure. To make sure the results are reasonable one can make sure that the fit stays sufficient and the accepted number of simulation is acceptable (heuristically > 100).
 
 ### Setting priors
@@ -277,6 +280,7 @@ mod2 <- meta(estimate=example1$est,
 #Display the summarized results
 mod2$Summary
 ```
+
 The results of the meta-analysis are summarized in a table describing Maximum A Priori values (MAP), the $\mu$, $se$ and the high density intervals at default (90%). Additionally the $I2$ heterogeneity is given.
 
 The prior for the between study variance known as $\tau^2$ is set as uniform with ranging from 0 till 5 by default. This has as an advantage that it will be result in wider intervals and be conservative for smaller sample sizes. A disadvantage is that it will be conservative. It can under particular conditions be very beneficial while under other conditions where more precision is required be a downside. To give the user the option the argument 'prior_var_fam' can be set to 'exp' (exponential distribution) instead of 'unif' (uniform distribution). Under 'unif' the maximum value of the uniform distribution is set as Uniform(0, prior_study_var) and when set to 'exp' the mean of the exponential distribution is used as Exponential(1/prior_study_var). In general cases with a large number of predictors and response as in Kaijser et al. ... I would advice the uniform prior if no convergence issues arise. If a more specific topic is choose like one or two predictors and one response and smaller datasets <10 observations the exponential distribution (e.q., with a mean of 1000) might suite well. These advice are heuristic in that they can be supported by personal experience and examples but are not to be taken for granted. Best is to try it out and perform a sensitivity analaysis (check).
@@ -287,15 +291,18 @@ After analyzing the the meta-data also a check for bias should be performed. Thi
 
 A simple option is to visually asses the relation of the residuals relative to $1/se$ and if sample sizes is provided in the data $1/n$. If a clear diagonal pattern is visual this means that there is a strong relation of the $\beta$ to $se$ which can indicate the selection of only larger effects with broader intervals, p-hacking or noise in the data. A relation with $n$ often occurs when small sample sizes an noise result in so called 'small-study-effects'. There are different ways to asses the residuals relation relative to $1/se$ or $1/n$: in total, per group or per predictor. Below the residuals per group in relation to $1/se$.
 
-```{r, residual check, fig.width=7.1, fig.height=4, warning=FALSE}
+```{r, residual check, fig.width=8, fig.height=4, warning=FALSE}
 res_mod2 <- rescheck(mod2)
 
 print(res_mod2$bias_se_group)
 ```
+
 And the residuals per predictor in relation to $1/se$.
-```{r, residuals predictor, fig.width=7.1, fig.height=4, warning=FALSE}
+
+```{r, residuals predictor, fig.width=8, fig.height=4, warning=FALSE}
 print(res_mod2$bias_se_predictor)
 ```
+
 The dotted red line should more-or-less-ish overlay the solid blue line having an intercept and slope of 0. Small sample sizes can strongly influence the slope of this line. When bias is present then a different correction method can be selected or stronger priors can set to reduce this.
 
 ## senscheck-function and prior sensitivity
@@ -306,7 +313,7 @@ The sensitivity check asses the shift between a model with full prior implementa
 
 In the previous example mod2 was created, here treated as mod1. We can create a model with hardly any prior information (mod0) setting the $\mu$ of all priors to 0 and prior for the $se$ to 100.
 
-```{r, sensitivity check, fig.width=7.1, fig.height=4, warning=FALSE}
+```{r, sensitivity check, fig.width=8, fig.height=4, warning=FALSE}
 #Create a model with minimal prior information
 mod0 <- meta(estimate=example1$est,        
                     stderr=example1$se,            
@@ -383,16 +390,20 @@ For larger datasets with multiple groups and predictor variables the order of th
 
 Hypothetical Outcome Plots (HOPs) are a powerful method to visualize the possibilities the expected value could take on given a change in the predictor variable (Kale et al. 2019).
 HOPs lines display the marginal change of the expected value given a change in the predictor variable holding all other variables constant.
+
 $$
 g(E(y_{i} \mid x_{ij)})) = \beta_{pooled,j=0,m} + \beta_{pooled,j=1,m} \cdot x_{i,j=1}+ \sum_{j=1}^{j} \beta_{pooled,j} \cdot \hat{x}_{j}
 $$
+
 This hypothetical prediction is generated using the posterior estimates $f(\beta_{pooled}|Data, Info)$. Hence, this parameter describes the influence on the response give one unit change in the predictor. To display this change a set of sequential values for $x_{i,j=1}$ can be generated as $x_{i,j=1}=\{i, ..., n\}$ realistic for the observed gradient. The function $f(\beta_{pooled,j}|Data, Info)$ contains most plausible values for $\beta_{pooled,j}$. By generating a value $m$ from this function $\beta_{pooled,j,m}\sim f(\beta_{pooled,j}|Data, Info)$ and repeating it $m$ times a bunch of hypothetical outcomes can be generated. To arrive at this display, all other estimated parameters are held constant at the sum the other estimates $\sum_{j=1}^{j} \beta_{pooled,j}$. The HOPs lines are therefore simulation of (marginal) possibilities from the posterior. There is a slight difference with classical hops because in the case of the meta-analysis $\hat{x}=1$. This still displays the marginal change of $y_i$ given $x_{i,j}$ but only under the conditions where all predictors are $\hat{x}_j=1$ 
+
 $$
 g(E(y_{i} \mid x_{ij)})) = \beta_{pooled,j=0,m} + \beta_{pooled,j=1,m} \cdot x_{i,j=1}+ \sum_{j=1}^{j} \beta_{pooled,j} \cdot 1
 $$
+
 Note that the function works under the idea of log transformed variables. This means that argument xlim (the limits of the figures) as given below are exp(-4.6)=0.01 and exp(0)=1 for the fraction of fine sediment. The y-axis is on the response scale. I hope soon to make it possible to use an argument that makes it possible to set the xlim on the response scale. Below an example of the outcomes of the response of invertebrate taxonomic richness along the gradient of fine sediment. 
 
-```{r HOPs log salinity fig1, fig.width=7.1, fig.height=4,  warning=FALSE}
+```{r HOPs log salinity fig1, fig.width=8, fig.height=4,  warning=FALSE}
 log_sal1 <- hop(mod2,                                  #Object from the meta function
     group="Invertebrates",                             #Select group to out of Invertebrates and Fish
     predictor = "Sediment",                            #Select group to out of Salinity and Oxygen
@@ -409,7 +420,7 @@ print(log_sal1)
 
 It is also possible to scale to display the exponentiate values on the x-axis using the argument 'exp_axis'. Note that one might suggest the intercept is to high. This could be correct, because this is the average intercept over all studies keeping the other variables constant at 1. To change the position of the intercept the argument 'shift_b0' can be used. 
 
-```{r HOPs log salinity fig2, fig.width=7.1, fig.height=4,  warning=FALSE,}
+```{r HOPs log salinity fig2, fig.width=8, fig.height=4,  warning=FALSE,}
 log_sal2 <- hop(mod2,                                   
     group="Invertebrates",                             
     predictor = "Sediment",                            
@@ -431,7 +442,7 @@ print(log_sal2)
 
 There are multiple predictors is the dataset. Therefore it possible to display the MAP predicted value given a change in one of the two predictors. This can be performed by display in Partial Dependency Plots.
 
-```{r HOPs log salinity fig3, fig.width=7.1, fig.height=4,  warning=FALSE,}
+```{r HOPs log salinity fig3, fig.width=8, fig.height=4,  warning=FALSE,}
 log_sal3 <- hop(mod2,                                              
     group="Invertebrates",                            
     predictor = c("Sediment", "Oxygen"),                     #Select both Sediment and Oxygen
@@ -465,37 +476,49 @@ All statistics focuses on estimating the parameter of interest $\theta$ which in
 ## Bayes Theorem and probablistic estimation
 
 ### Bayes Theorem
-Informally Bayes Theorem would be notated $\text{Posterior}\, \text{probability} = \frac{\text{Likelihood} \cdot \text{Prior}}{\text{Evidence}}$. More formally Bayes theorem is often notated with A and B where P indicates probability and '|' given or conditional on. $P(A|B) = \frac{P(B|A) \cdot P(A)}{P(B)}$.Other expression such as $P(\theta|Data, Info) = \frac{P(Data|\theta) \cdot P(\theta|info)}{P(Data)}$ are to highlight that the posterior describes the information of that conditional on the prior `info` that is given in there.
+
+Informally Bayes Theorem would be notated $\text{Posterior}\, \text{probability} = \frac{\text{Likelihood} \cdot \text{Prior}}{\text{Evidence}}$. More formally Bayes theorem is often notated with A and B where P indicates probability and '|' given or conditional on. $P(A|B) = \frac{P(B|A) \cdot P(A)}{P(B)}$.Other expression such as $P(\theta|Data, Info) = \frac{P(Data|\theta) \cdot P(\theta|info)}{P(Data)}$ are to highlight that the posterior describes the information of that conditional on the prior information that is given in there.
 
 The derivation of Bayes theorem relies on the axioms probability theory.
+
 **Premise 1)**
+
 $$
 P(A | B) = \frac{P(A \cap B)}{P(B)}
 $$
 similarly
+
 $$
 P(B |A) = \frac{P(B \cap A)}{P(B)}
 $$
 **Premise 2)**
+
 Also, the joint probability, expressed as a set-theoretic relationship on $z$, indicates that element of both sets are the same.
+
 $$
 z = \{x : x \in A \cap B : x \in B \cap A\}
 $$
 thus
+
 $$
 P(A \cap B) = P(B \cap A)
 $$
 **Premise 3)**
+
 In accordance with the previous
+
 $$
 P(A| B) \cdot P(A) = P(A \cap B)
 $$
 and
+
 $$
 P(B | A) \cdot P(B) = P(B \cap A)
 $$
 **Conclusion)**
+
 Therefore
+
 $$
 P(A | B) \cdot P(A) = P(B | A) \cdot P(B)
 $$
@@ -506,38 +529,82 @@ $$
 ### Bayes Theorem in use
 
 The previous expression can help us with answer simple questions. Assume that there is a likelihood of 0.7 $P(Species|<Threshold)$ that a species if found below a certain threshold. Furthermore, we also know that that the environment will only be found 0.3 or 30% of the time as $P(<Threshold)$.How probable would it then be we are below the threshold if we observe the species $P(<Threshold|Species)$? 
+
 $$
 P(Species|<Threshold) = 0.7\\
 P(<Threshold) = 0.3\\
 P(<Threshold|Species) = ?\\
 $$
+
 Expressing this in Bayes theorem would result in
+
 $$
 P(<Threshold|Species)=\frac{P(<Threshold|Species)\cdot P(Species) }{P(<Threshold)}
 $$
+
 The only thing still required is $P(Species)$ often called the 'evidence'. Yet, this evidence is simply the total probability of observing a species, below and above the threshold. For this we can assume that this is the reverse of the $P(Species|<Threshold)$ and $P(<Threshold)$
+
 $$
 P(Species)=[P(<Threshold|Species)\cdot P(Species)] + [(1-P(<Threshold|Species))\cdot(1-P(Species))]\\
 0.42=[0.7\cdot0.3]+[0.3\cdot0.7]
 $$
+
 Then it is simply filling in the blanks
+
 $$
 P(<Threshold|Species)=\frac{P(<Threshold|Species)\cdot P(<Threshold) }{P(Species)}=\frac{0.7\cdot0.3}{0.42}=0.5
 $$
+
 The answer not very satisfying as the probability is simply a 'coin toss'. This could be improved if we would introduce more species with the same indicative potential.
+
 $$
 P(<Threshold|Species)=\frac{P(<Threshold|Species)\cdot P(<Threshold) }{P(Species)}=\frac{(0.7^2*0.3)}{[(0.7^2*0.3)+(1-0.7)^2*(1-0.3)]}=0.7
 $$
 We would need around five species to get an indicative potential of >0.95 (it would be 0.97).
+
+### Approximate Bayesian Computation with rejection sampling
+
+Approximate Bayesian Computation with rejection sampling (ABC-rejection) is a computationally expensive method for approximating the posterior distribution. However, when the number of parameters is relatively small, the posterior can still be approximated quite well. ABC-rejection is especially useful when the likelihood function cannot be computed or approximated accurately.
+
+One example is the use of ABC to explore potential bias in the EcoPostView package. In a simplified case, assuming both the prior and the data-generating model are normally distributed, the ABC-rejection algorithm begins by simulating a parameter from the prior distribution.
+
+$$
+\mu_{i}^*\sim N(\mu_{prior},\sigma_{prior}^2) \\
+\sigma_{i}^{2*}\sim Exp(rate)
+$$
+
+The asterisk ($^*$) denotes that these parameters are temporary, and this will become important later.Next, a data-generating model is used to simulate data based on these temporary parameters. We assume the observed data is approximately normally distributed, though any model could be used. For each simulation, we generate $n_{data}$ values.
+
+$$
+x_{i}\sim N(\mu^*, \sigma^{2*})
+$$
+
+Depending on the parameter of interest (e.g., $\mu$, $\sigma$, mode, or median), a summary statistic is computed from the simulated data. In this example, we focus on estimating $\mu$.
+
+$$
+\hat{x}_{sim, i}=\frac{\sum_{i=1}^n(x_i, ..., x_n)}{n_{data}}
+$$
+
+Each simulated mean $\hat{x}_{sim, i}$ (typically out of 100,000 simulations) is compared to the observed mean $\hat{x}_{data}$ using the Euclidean distance.
+
+$$
+E_{i}=\sqrt{(\hat{x}_{sim, i} - \hat{x}_{data})^2}
+$$
+
+A tolerance threshold is then selected to determine which simulated values are accepted. Simulations with $E_i > tolerance$ are rejected, while those with $E_i \leq tolerance$ are retained. While a tolerance of zero would yield the most accurate posterior, it would typically result in rejecting all simulations. On the other hand, setting the tolerance too high would allow in too many poor matches.
+
+Each accepted simulation corresponds to an accepted pair of simulated parameters $\mu_{i}^*, \sigma_{i}^{2}*$. Since all $\mu_{i}^*$ were originally drawn from the prior, the subset of accepted values approximates the posterior distribution of $\mu$.
 
 ### Bayes theorem and conjugate priors
 
 The previous example works for simpler approximations yet if we want to derive an interval for a particular parameter $\theta$ then we can approach this analytically using conjugate priors. Where a prior is conjugate to a likelihood if the resulting posterior is in the same family as the prior.
 
 As introduced, in statistics and estimation is about finding out the value for $\theta$ which is assumed be $\mu$. Where in the frequentist framework this is considered fixed and unknown, this is in the Bayesian framework considered to be random 'and approximately' known. Of course also in the Bayesian framework samples $x$ are taken. Assume that we already know something about $\mu$ then it is possible to restrict to exclude unreasonable values or for the information we have on $\mu$ to more acceptable values.
+
 $$
 P(\mu|Data) = \frac{P(Data|\mu) \cdot P(\mu)}{P(Data)}
 $$
+
 For a simple mean and variance an analytical approach can be used to derive the posterior given the likelihood and prior via the following equations.
 
 $$\mu_{posterior} =\frac{\frac{\mu_{prior} }{\sigma_{prior}^2} + \frac{\hat{x}_{data} }{\sigma_{data}^2}}{
@@ -548,30 +615,42 @@ $$\mu_{posterior} =\frac{\frac{\mu_{prior} }{\sigma_{prior}^2} + \frac{\hat{x}_{
 **Proof:**
 
 **Premise 1)**
+
 Bayes rule can be simplified to
 $$P(\mu|Data) \propto P(Data|\mu) \cdot P(\mu)
 \\
-N(\mu_{posterior}, \sigma_{posterior}^2)=N(\mu_{sample}, \sigma_{sample}^2)\cdot N(\mu_{prior}, \sigma_{prior}^2)
-$$
+N(\mu_{posterior}, \sigma_{posterior}^2)=N(\mu_{sample}, \sigma_{sample}^2)\cdot N(\mu_{prior}, \sigma_{prior}^2)$$
+
 **Premise 2)**
+
 The PDF for the normal distribution is
 $$f(x)=\frac{1}{2\cdot \sqrt{\sigma \pi}}\cdot exp(-\frac{1}{2}(\frac{x-\mu}{\sigma})^2)$$
+
 **Premise 3)**
+
 $$Prior: P(\mu_{prior})=\frac{1}{2\cdot \sqrt{\sigma_{prior} \pi}}\cdot exp(-\frac{1}{2}(\frac{\theta-\mu_{prior}}{\sigma_{prior}})^2)
 \\
 Likelihood: P(\mu_{sample})=\frac{1}{2\cdot \sqrt{\sigma_{sample} \pi}}\cdot exp(-\frac{1}{2}(\frac{\mu_{sample}-\theta}{\sigma_{sample}})^2)
 $$
+
 **Premise 4)**
+
 Both $\frac{1}{2\cdot \sqrt{\sigma_{prior} \pi}}$ and $\frac{1}{2\cdot \sqrt{\sigma_{sample} \pi}}$ are scalars and can be left out of the equation.
 
 **Premise 5)**
+
 Since both exponent have the same base we can add the exponent $$(a^2+b^2=a^{2+2})$$ 
 resulting in
+
 $$exp(-\frac{1}{2}\cdot[(\frac{\theta-\mu_{prior}}{\sigma_{prior}})^2+(\frac{\mu_{sample}-\theta}{\sigma_{sample}})^2]$$
+
 After which brackets can be moved
 $$exp(-\frac{1}{2}\cdot[\frac{(\theta-\mu_{prior})^2}{\sigma_{prior}^2}+\frac{(\mu_{sample}-\theta)^2}{\sigma_{sample}^2}])$$
+
 **Premise 6)**
+
 Expanding the brackets terms
+
 $$(a^2+b^2)=(a-b)\cdot(a-b)=a^2-ab-ab+b^2=a^2-2ab+b^2$$
 This means 
 $$(\theta-\mu_{prior})^2=\theta^2-2\theta\mu_{prior}+\mu_{prior}^2$$ 
@@ -579,13 +658,18 @@ and
 $$(\mu_{sample}-\theta)^2=\mu_{sample}^2-2\mu_{sample}\theta+\mu_{sample}^2$$ 
 which can be replaced in premise 5
 $$exp(-\frac{1}{2}\cdot[\frac{\theta^2-2\theta\mu_{prior}+\mu_{prior}^2}{\sigma_{prior}^2}+\frac{\mu_{sample}^2-2\mu_{sample}\theta+\mu_{sample}^2}{\sigma_{sample}^2}])$$
+
 **Premise 7)**
+
 Separating each term by dividing by $\sigma_{prior}^2$ and $\sigma_{sample}^2$
+
 $$exp(-\frac{1}{2}\cdot\frac{\theta^2}{\sigma_{prior}^2}+\frac{-2\theta\mu_{prior}}{\sigma_{prior}^2}+\frac{\mu_{prior}^2}{\sigma_{prior}^2}+
 \frac{\mu_{sample}^2}{\sigma_{sample}^2}+\frac{-2\mu_{sample}\theta}{\sigma_{sample}^2}+\frac{\mu_{sample}^2}{\sigma_{sample}^2})$$
 
 **Premise 8)**
+
 Group each term by the nominator
+
 $$\frac{\theta^2}{\sigma_{prior}^2}+\frac{-2\theta\mu_{prior}}{\sigma_{prior}^2}+\frac{\mu_{prior}^2}{\sigma_{prior}^2}+
 \frac{\mu_{sample}^2}{\sigma_{sample}^2}+\frac{-2\mu_{sample}\theta}{\sigma_{sample}^2}+\frac{\mu_{sample}^2}{\sigma_{sample}^2}=
 \\
@@ -602,7 +686,9 @@ exp(-\frac{1}{2}\cdot\theta^2(\frac{1}{\sigma_{prior}^2}+\frac{1}{\sigma_{sample
 -2\theta(\frac{\mu_{prior}}{\sigma_{prior}^2}+\frac{\mu_{sample}}{\sigma_{sample}^2})
 +not\ dependent\ on\ \theta])
 $$
+
 **Premise 9)**
+
 The goal is to derive $P(\mu|Data)$ from $P(\mu|Data) \propto P(Data|\mu) \cdot P(\mu)$ An the general exponential form of the normal distribution is given in Premise 2 and the premises 6, 7 and 9 lead to
 $$\frac{1}{2}\cdot \theta^2 (\frac{1}{\sigma^2})+\theta(\frac{\mu}{\sigma^2})+C=
 \\
@@ -610,6 +696,7 @@ $$\frac{1}{2}\cdot \theta^2 (\frac{1}{\sigma^2})+\theta(\frac{\mu}{\sigma^2})+C=
 the general exponential form for the normal distribution is always $\frac{1}{2}\cdot\theta^2A+\theta B+C$ meaning that $A=\frac{1}{\sigma^2}$ and $B=\frac{\mu}{\sigma^2}$ and to obtain the standard deviation $A$ needs to be re-arranged to $\sigma = \sqrt{\frac{1}{A}}$ and to obtain the mean $\mu=\frac{B}{A}=\frac{\frac{\mu}{\sigma^2}}{\frac{1}{\sigma^2}}$
 
 **Conclusion)**
+
 In Premise 8
 $$
 exp(-\frac{1}{2}\cdot\theta^2(\frac{1}{\sigma_{prior}^2}+\frac{1}{\sigma_{sample}^2})+
@@ -700,7 +787,7 @@ If the focus lies on objectivity and the error control over the different studie
 
 In a less formal way is the Bayesian framework more focused on transfer of information an precision. On the other hand the frequentist framework is more interested in objectivity, consistency and error among studies.
 
-```{r sequential updating,  fig.width=7.1, fig.height=4, echo=F, warning=FALSE}
+```{r sequential updating,  fig.width=8, fig.height=4, echo=F, warning=FALSE}
 postvals <- function(mu_data, sigma_data, mu_prior, sigma_prior){
   
   post_mu <- (mu_prior / sigma_prior^2 + mu_data /sigma_data^2) / (1 / sigma_prior^2 + 1 / sigma_data^2)
@@ -749,6 +836,7 @@ sequpdate <- cowplot::plot_grid(p1, p2, ncol=2)
 print(sequpdate)
 rm(sequpdate)
 ```
+
 *Figure 2: Sequential updating with credibility intervals on the left panel and a long-run of means with confidence intervals on the right The left panel.*
 
 ## A short reflection on uncertainty
@@ -769,7 +857,7 @@ We should also avoid treating models as a definitive representation of reality. 
 
 ## Introduction
 
-It is argued that till some extend reasoning is based on the principles of logic. Although there are that would argue otherwise (e.g., Harman, 1986). I will use formal expressions that are not all at full first-order-language and predicate logic, but mostly include some form of meta-language.
+It is argued that to some extend reasoning is based on the principles of logic. Although some argue otherwise (e.g., Harman, 1986). I will use formal expressions that are not all at full first-order-language and predicate logic, but mostly include some form of meta-language.
 For this I will use the basic principle of deductive logic based on. They are useful to lay out underlying believes and their connection between them. Although this will not an full introduction into logic it will address some principles of it and for a more formal introduction see ... .
 
 ## Syllogism
@@ -788,31 +876,39 @@ A valid argument is an argument where if all propositions are to be true the con
 $$P \rightarrow Q, P \therefore Q$$
 
 **Modens Tollens**
-$$P \rightarrow Q, \neg P \therefore \neg Q$$
+$$P \rightarrow Q, \neg Q \therefore \neg P$$
 
 **Hypothetical Syllogism**
 Also a hypothetical syllogism is a form of valid argument which seems closely related of how we construct our arguments.
 $$P \rightarrow Q, Q \rightarrow Z, P \therefore Z $$
 
 **Disjunctive Syllogism**
-$$Either \ P \vee Q, P \therefore \neg Q$$
+$$Either \ P \vee Q, \neg P \therefore Q$$
 
 **Semantic equivalent structures**
 $$
-\text{Modens Ponens:} for \ all \ x \ that \ are P \ it \ implies \ they \ are \ Q, x \ is \ P \ therefore \ Q\\
-\text{Modens Tollens:} for \ all \ x \ that \ are \ P \ it \ implies \ they \ are \ Q, x \ is \ \neg P \ therefore \ \neg Q\\
+\text{Modens Ponens:} for \ all \ x \ that \ are P \ it \ implies \ they \ are \ Q, x \ is \ P \ therefore \ x \ is \ Q\\
+\text{Modens Tollens:} for \ all \ x \ that \ are \ P \ it \ implies \ they \ are \ Q, x \ is \ \neg Q \ therefore \ x \ is \ \neg P \\
 \text{Hypothetical Syllogism:} for \ all \ x \ that \ are \ P \ it \ implies \ they \ are \ Q, for \ all \ x \ that \ are \ Q \ it \ implies \ they \ are \ Z, \ x \ is \ P \ therefore \ Z \\
-\text{Disjunctive Syllogism:} either \ x \ is \ P \ or \ x \ is \ Q, x \ is \ P \ therefore \ \neg Q
+\text{Disjunctive Syllogism:} either \ x \ is \ P \ or \ x \ is \ Q, x \ is \neg P \ therefore \ x \ is \ Q
 $$
 
 ## Semantical validity of an argument
 
-An valid argument - in the semantic interpretation of validity - in case $𝓟_n$ $𝓟$ is true in all interpretations in which $𝓟_1, ..., 𝓟_{n-1} ,𝓟_n$ are true. Simplistically, if all propositions are true the conclusion cannot be false. Such a valid argument can be notated as
-$$𝓟_1, …, 𝓟_{n-1} ,𝓟_n \models 𝓟_n$$
+An valid argument - in the semantic interpretation of validity - in case $𝓟_n$ $𝓟_i$ is true in all interpretations in which $𝓟_1, ..., 𝓟_{n-1} ,𝓟_n$ are true. Simplistically, if all propositions are true the conclusion cannot be false. Such a valid argument can be notated as
+$$𝓟_1, …, 𝓟_{n-1} \models 𝓟_n$$ (see also Haack, 1978)
 
 ## Predicate logic 
 
-In predicate logic the argument is expressed as $\forall(P(x)\rightarrow Q(x))$ where ‘$\forall$’ indicates ‘for all’ and ‘$\models$’ therefore. Each proposition referred to as $𝓟_i$ consisting of P and Q called properties and x and element from a set $x\in X$. The benefit that individual elements can be assessed.
+In predicate logic modens ponens is expressed as $\forall(P(x)\rightarrow Q(x))$ where ‘$\forall$’ indicates ‘for all’ and ‘$\models$’ therefore. Each proposition referred to as $𝓟_i$ consisting of P and Q called properties and x and element from a set $x\in X$. The benefit of predicate logic (or approximating languages such as deontic-logic or a meta-language)is its possibility to quantify over different elements form a set $x \in X$ can be assessed.
+
+**Predicated equivalent structures**
+$$
+\text{Modens Ponens:} \forall x(P(x)\rightarrow Q(x)), P(x) \vdash Q(x) \\
+\text{Modens Tollens:} \forall x(P(x)\rightarrow Q(x)), \neg Q(x) \vdash \neg P(x) \\
+\text{Hypothetical Syllogism:} \forall x(P(x)\rightarrow Q(x)) \wedge \forall x(Q(x) \rightarrow Z(x)), P(x) \rightarrow Z(x) \\ 
+\text{Disjunctive Syllogism:} P(x) \vee Q(x), \neg P(x) \vdash Q(x) \\
+$$
 
 ## Non-deductive cogency of arguments
 
@@ -844,6 +940,10 @@ Csilléry, Katalin, Michael G.B. Blum, Oscar E. Gaggiotti, and Olivier François
 Fisher, R. A. (1949). The Design of Experiments (5th ed.). Oliver and Boyd.
 
 Gelman, Andrew, and Eric Loken. 2013. “The Garden of Forking Paths: Why Multiple Comparisons Can Be a Problem, Even When There Is No ‘FIshing Expedition’ or ‘p-Hacking’ and the Research Hypothesis Was Posited Ahead of Time.” 348(3): 1–17. doi: 10.1007/978-3-658-12153-2_7.
+
+Haack, Susan. 1978. Philosophy of Logics. 1st ed. Cambridge University Press. doi: 10.1017/CBO9780511812866.
+
+Harman, Gilbert. 1986. Change in View: Principles of Reasoning. A Bradford Book, The MIT press Cambridge, Massachusetts, London England.
 
 Hartig, Florian, Justin M. Calabrese, Björn Reineking, Thorsten Wiegand, and Andreas Huth. 2011. “Statistical Inference for Stochastic Simulation Models - Theory and Application: Inference for Stochastic Simulation Models.” Ecology Letters 14(8): 816–27. doi: 10.1111/j.1461-0248.2011.01640.x.
 

@@ -31,11 +31,22 @@ This site remains a work in progress—a continuously evolving project, far from
 ## Introduction
 
 It is argued that to some extend reasoning is based on the principles of logic. Although some argue otherwise (e.g., Harman, 1986). I will use formal expressions that are not all at full first-order-language and predicate logic, but mostly include some form of meta-language.
-For this I will use the basic principle of deductive logic based on. They are useful to lay out underlying believes and their connection between them. Although this will not an full introduction into logic it will address some principles of it and for a more formal introduction see ... .
+For this I will use the basic principle of deductive logic based. I believe they are useful to lay out underlying believes and their connection between them. 
+
+To understand arguments, validity, soundness, cogency and the formalization of arguments and introduction to logic is needed. Although this will not be an full introduction into logic it will address some principles of it and for a more formal and extended introduction see (Barwise et al. 2002; Lee 2017; Smith 2021). Therefore I will start with an introduction to classical syllogism.
 
 ## Syllogism
 
-A simple syllogistic argument consisting of two premises. The argument below is called "modens ponens" having a specific structure.
+A simple syllogistic argument consisting of two premises.
+
+$$
+Major\ premise \ 1) \ all \ insects \ have \ six \ legs,\\
+Minor \ premise \ 2) \ x \ is \ an \ insect,\\
+Conclusion) \ therefore \ x \ has \ six \ legs
+$$
+The argument above is called "modus ponens", which follows a specific logical structure. In this form, the conclusion is entailed by the premises — that is, the truth of the premises guarantees the truth of the conclusion. Entailment means that in all cases where the premises are true, the conclusion cannot be false. If an argument has this feature, it is considered logically valid.
+
+This argument can be further condensed by abstracting away the content and focusing only on its structure. In this way, the validity of the argument depends solely on the form of the entailment, not on the specific subject matter.
 
 **Modens Ponens** 
 $$
@@ -43,16 +54,20 @@ Major\ premise \ 1) \ all \ P \ are \ Q,\\
 Minor \ premise \ 2) \ x \ is \ P,\\
 Conclusion) \ therefore \ x \ is \ Q
 $$
-In an argument, as the one above, all premises declarative statements defined as propositions, which are either True or False. Each premise consists of the antecedent (subject; P), copula (is, am, will, etc.) and consequent (Q). 
+In an argument like the one above, all premises are declarative statements, also known as propositions — sentences that are either True or False, but not both. Each premise typically consists of a subject (or antecedent), a copula (such as is, are, will be, etc.), and a predicate (or consequent). These components express a logical relationship between concepts.
 
-A valid argument is an argument where if all propositions are to be true the conclusion cannot be false. In propositional logic, the argument as given before can be formally expressed as below. In this formal expression $\rightarrow$ indicates and implication (as "implies") and the three dots $\therefore$ indicates therefore. Similar $\vee$ means "or", $\wedge$ means "and" and $\neg$ is the negation symbol. Thus for example $\neg P$ means not-P.
+An argument is said to be **valid** if, assuming all the premises are true, the conclusion cannot be false. In other words, the conclusion is logically entailed by the premises.
+An argument is **sound** if it is both valid and all of its premises are in factually true. Therefore, soundness implies both logical structure and factual accuracy. 
+
+For example: P1: All unicorns fly when eating carrots, P2: my unicorn eat a carrot, C: therefore my unicorn will fly. This is a valid argument because if the premises were true, the conclusion would necessarily follow. However, it is not sound because unicorns do not exist (as far as I know), so No consider the following argument: P1: most grass is green P2: the sky is blue C: you are reading this text. Even if all three propositions happen to be true, this argument is not valid because the conclusion is not entailed by the premises — there is no logical connection between them. An argument where the conclusion does not follow from the premises is considered invalid, regardless of whether its statements are true.
+
+In propositional logic, the argument as given before can be formally expressed as below. In this formal expression $\rightarrow$ indicates and implication (as "implies") and the three dots $\therefore$ indicates therefore. Similar $\vee$ means "or", $\wedge$ means "and" and $\neg$ is the negation symbol. Thus for example $\neg P$ means not-P. Other operators include $\vee$ indicates "or" (disjunction) and $\wedge$ indicates "and" (conjunction). Using these basic operators, many more valid argument forms can be constructed—such as disjunctive syllogism, hypothetical syllogism, modus tollens, and more. These forms serve as the foundation for formal reasoning in logic.
 $$P \rightarrow Q, P \therefore Q$$
 
 **Modens Tollens**
 $$P \rightarrow Q, \neg Q \therefore \neg P$$
 
 **Hypothetical Syllogism**
-Also a hypothetical syllogism is a form of valid argument which seems closely related of how we construct our arguments.
 $$P \rightarrow Q, Q \rightarrow Z, P \therefore Z $$
 
 **Disjunctive Syllogism**
@@ -82,8 +97,17 @@ $$
 \text{Hypothetical Syllogism:} \forall x(P(x)\rightarrow Q(x)) \wedge \forall x(Q(x) \rightarrow Z(x)), P(x) \rightarrow Z(x) \\ 
 \text{Disjunctive Syllogism:} P(x) \vee Q(x), \neg P(x) \vdash Q(x) \\
 $$
+## Deduction, induction and abuction
 
-## Non-deductive cogency of arguments
+Deductive reasoning moves from general principles to specific conclusions. It begins with premises that are assumed to be universally true and applies them to individual cases. If the premises are true and the reasoning is valid, the conclusion cannot be false. For example: P1: All humans are mortal, P2: I am a human C: Therefore I am mortal. 
+
+In contrast, inductive reasoning moves from specific observations to broader generalizations. It attempts to infer a universal rule or principle from limited data, and thus does not guarantee the truth of the conclusion — even if all observed instances support it. Induction tries to generals from the instances (x) we observe to all.
+
+If I observe twenty white swans therefore all swans are white.
+
+This reasoning is not valid. The observation of one swan with any other colour would negate the whole argument. This issue is known as the problem of induction. Hence, how can I justify my conclusion to be universally true based on a limited set of instances? This means inductive arguments might not be valid or sound.
+
+##cogency of arguments
 
 In empirical sciences the universal quantifier ‘$\forall$’ (largely?) unsupported and therefore $\exists x(P(x) \rightarrow Q(x))$ where ‘$\exists$’ some. This indicates that propositions are merely acceptable. And in most cases ∃ can be ignored and as it would be wises to explicitly assume it. Meaning that $𝓟_i: (P(x)\rightarrow Q(x))$ or $P \rightarrow Q $ and referred to as a conjecture. A conjecture is a proposition which is accepted as true via a valuation function $v(𝓟_i)=T$ (True) or false $v(𝓟_i)=F$ (False). 
 
@@ -98,6 +122,23 @@ The problem is that the empirical sciences has no axiomatic foundation from whic
 The agreement among parties - rather informally - forming a belief system that would be a function of acceptable (cogent) conjectures (Usó-Doménech and Nescolarde-Selva 2016). The conjectures tied together for each individual moral agent (Carthwright et al. 1996; van Fraassen 1980, Closely representing the nodes and edges in a network). 
 
 The moral agent then entertains the relations between propositions and arguments. Counter intuitively, the moral agents also appoints a property to an element x. Hence, a colour blind person would not see the specific colours a person that is not color blind would see, therefore not appoint the same colour property. Or, if a person does not know the function of a wrench, and therefore does not appoint the property wrench to it. If a property is not appointed to an element then the cogency (or validity) of an argument does not follow because without a property on x, the element x remains inert and undefined. Therefore,$v(𝓟_i)=T$ or $v(𝓟_i)=F$ remains undecided because $(x \rightarrow Q(x)), x \models Q(x)$ does not follow. Hence, each element is appointed a property, each proposition is valued, woven into an a cogent or not cogent (strong or weak) and formulated as a belief system.
+
+## Skepticism
+
+Understanding skepticism made most parts of why I am dissatisfied with most argument fall in its place. It perhaps plays a central but indirect part in this chapter. I will try to (meta-logical) formalize the Agrippa's trilemma and other skeptical "tools" that should lead to the realization that most of our justifications are not as strong and each of them could be undermined. 
+
+Any conclusion $𝓟_n$ under some condition $c \in C$ in an argument $𝓟_1, …, 𝓟_{n-1} \models 𝓟_n$. Can be suspended based on any other premise that is not certain/conclusive and therefore $𝓟_n$ does not follow. 
+
+More formally, for any claim from a subject ($s \in S$) there exists at least some propositions of disagreement over the claim under particular conditions so that the disagreement can be exploited in the mode of hypothesis (MH), Mode of Circularity (MC) and mode of infinite regress (MI).
+$$
+\forall s \forall 𝓟 \exists (Claim(s, 𝓟_n) \rightarrow Disagreement(Claim(s, 𝓟_n), c) \rightarrow \{MH \vee MC \vee MI\}
+\\
+MH: Pr(𝓟_n, s)/Pr(\neg𝓟_n, s) \neq \{0, \infty\} \rightarrow \neg Valid(𝓟_n) = Undecided
+\\
+MC: Valid(s, 𝓟_1, …, 𝓟_{n-1} \models 𝓟_n) 𝓟_n \in \{ 𝓟_1, …, 𝓟_{n-1} \}) = Circulair
+\\
+MI: \forall n(Valid(s, 𝓟_n) \rightarrow Valid(s, 𝓟_{n-1}) \rightarrow Valid(s, 𝓟_{n-\infty})) = Non-foundational 
+$$
 
 # Theory and background
 
@@ -1027,6 +1068,8 @@ This part is still under construction.
 
 Baguley, Thom. 2009. “Standardized or Simple Effect Size: What Should Be Reported?” British Journal of Psychology 100(3): 603–17. doi: 10.1348/000712608X377117.
 
+Barwise, Jon, John Etchemendy, Gerard Allwein, Dave Barker-Plummer, and Albert Liu. 2002. Language, Proof, and Logic. Stanford, Calif: CSLI Publications.
+
 Carthwright, Nancy, Jordi Cat, Lola Fleck, and E. Thomas Uebel. 1996. Otto Neurath: Philosophy between Science and Politics. Cambridge: Cambridge university press.
 
 Cramer, J. S. 1991. The Logit Model: An Introduction for Economists. London: Edward Arnold.
@@ -1049,6 +1092,8 @@ Hoeting, Jennifer A., David Madigan, Adrian E. Raftery, and Chris T. Volinsky. 1
 
 Kale, Alex, Francis Nguyen, Matthew Kay, and Jessica Hullman. 2019. “Hypothetical Outcome Plots Help Untrained Observers Judge Trends in Ambiguous Data.” IEEE Transactions on Visualization and Computer Graphics 25(1): 892–902. doi: 10.1109/TVCG.2018.2864909.
 
+Lee, Siu-Fan. 2017. Logic: A Complete Introduction. Great Britain: Hodder & Stoughton.
+
 Maier, Maximilian, František Bartoš, and Eric-Jan Wagenmakers. 2023. “Robust Bayesian Meta-Analysis: Addressing Publication Bias with Model-Averaging.” Psychological Methods 28(1): 107–22. doi: 10.1037/met0000405.
 
 Mayo, D. G. (2018). Statistical Inference as Severe Testing: How to Get Beyond the Statistics Wars. Cambridge University Press.
@@ -1060,6 +1105,8 @@ Pearl, J. (2009). Causality. Cambridge university press.
 Peters, Jaime L., Alex J. Sutton, David R. Sones, Keith R. Abrams, and Lesley Rushton. 2006. “Comparison of Two Methods to Detect Publication Bias in Meta-Analysis.” JAMA 295(6):676. doi: 10.1001/jama.295.6.676.
 
 Popper, Karl Raimund. 1968. The Logic of Scientific Discovery. Basic Books.
+
+Smith, Peter. 2021. An Introduction to Formal Logic. Second edition, reprinted with corrections. Monee, IL: Logic Matters.
 
 Stanley, T. D., and Hristos Doucouliagos. 2014. “Meta-Regression Approximations to Reduce Publication Selection Bias.” Research Synthesis Methods 5(1):60–78. doi: 10.1002/jrsm.1095.
 

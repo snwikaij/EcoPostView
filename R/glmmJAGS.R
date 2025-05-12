@@ -15,9 +15,9 @@
 #'b1=0.25
 #'b2=0.1
 #'
-#'y <- rpois(nrow(df), exp(b0+b1*df$V1+b2*df$V2))
+#'df$V3 <- rpois(nrow(df), exp(b0+b1*df$V1+b2*df$V2))
 #'
-#' results <- glmmJAGS(V3~V1+V2, data=df, family = "pois_log")
+#'results <- glmmJAGS(V3~V1+V2, data=df, family = "pois_log")
 #'
 #' @export
 glmmJAGS <- function(formula=NULL, random=NULL, data=NULL, family="norm_ident",
@@ -37,9 +37,14 @@ if(family=="norm_ident"){
 
   for(i in 1:ni){
     y[i]    ~ dnorm(mu[i], tau)
-    mu[i]   <- b0+inprod(bn[],x[i,])}
 
-  b0 ~ dnorm(prior_mu, prior_mu_se)
+    for (r in 1:ri) {
+      mu[i] <- mu[i]+inprod(b0[random[i, r]], rx[i, r])
+    }
+
+    mu[i]   <- inprod(bn[],x[i,])}
+
+  for(k in 1:ri) {b0[k] ~ dnorm(prior_mu, prior_mu_se)}
 
   for(j in 1:nx){bn[j] ~ dnorm(prior_mu, 1/prior_mu_se^2)}
 
@@ -54,11 +59,16 @@ if(family=="norm_ident"){
 
     for(i in 1:ni){
       y[i]    ~ dnorm(mu[i], tau)
-      log(mu[i])   <- b0+inprod(bn[],x[i,])}
 
-    b0 ~ dnorm(prior_mu, prior_mu_se)
+      for (r in 1:ri) {
+        log(mu[i]) <- mu[i]+inprod(b0[random[i, r]], rx[i, r])
+      }
 
-    for(j in 1:nx){bn[j] ~ dnorm(prior_mu, 1/prior_mu_se^2)}
+      mu[i]   <- inprod(bn[],x[i,])}
+
+    for(k in 1:ri) {b0[k] ~ dnorm(prior_mu, 1/prior_mu_se^2)}
+
+    for(j in 1:nx) {bn[j] ~ dnorm(prior_mu, 1/prior_mu_se^2)}
 
     sigma ~ dgamma(prior_dispersion[1], prior_dispersion[2])
     tau   <- 1/sigma^2}
@@ -181,15 +191,21 @@ rand_eff <- parts[grepl("random", parts)]
 
 if(length(rand_eff)!=0){
   names_rand_eff <- sub(".*\\((.*)\\).*", "\\1", rand_eff)
-  rx             <- matrix(1, nrow = nrow(data), ncol = length(rand_eff))}
+  rx             <- matrix(1, nrow = nrow(data), ncol = length(rand_eff))
+  random         <- as.matrix(data[colnames(data) %in% names_rand_eff])
+  random         <- apply(random, 2, as.factor)}
 else{
-  rx             <- matrix(1, nrow = nrow(data), ncol = 1)}
+  rx             <- matrix(1, nrow = nrow(data), ncol = 1)
+  random         <- as.matrix(matrix(1, nrow = nrow(data), ncol = 1))
+  random         <- apply(random, 2, as.factor)}
+
+ri               <- length(rand_eff)
 
 ############################
 #model data in final format#
 ############################
 
-model_list  <- list(y=y, x=x, ni=nrow(x), nx=ncol(x), rx=rx,
+model_list  <- list(y=y, x=x, ni=nrow(x), nx=ncol(x), random=random, rx=rx, ri=ri,
                       prior_mu=prior_mu, prior_mu_se=prior_mu_se, prior_dispersion=prior_dispersion)
 
 output <- jags.parallel(data = model_list, model.file = model,

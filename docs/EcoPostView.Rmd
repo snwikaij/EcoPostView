@@ -16,19 +16,19 @@ output:
 
 This site reads like an incomplete book or essay. It serves as a way to organize my thoughts and store information. The project initially began around the EcoPostView R package but has since expanded into multiple chapters covering broader ideas.
 
-On the left, you will find these chapters in the drop down menu. They start with incomplete explorations of reasoning, and analytical and empirical Bayes, and end with a chapter focused on the EcoPostView R package. While this structure reflects a logical progression — from abstract foundations to practical application — many readers will find it more accessible to jump straight into using the R functions. That is entirely reasonable, and the material is designed to support both entry points.
+On the left, you will find these chapters in the drop down menu. They start with incomplete explorations of reasoning, and  Statistics (and analytical and emperical Bayes), and end with a chapter focused on the EcoPostView R package. While this structure reflects a logical progression — from abstract foundations to practical application — many readers will find it more accessible to jump straight into using the R functions. That is entirely reasonable, and the material is designed to support both entry points.
 
 In hindsight, this structure is in the correct order, as I believe all principles of what we *believe* about the natural world and ecology can ultimately be traced back to metaphysics and language. Reasoning and logic are not tools to find *truth*, but to try to contain and entail it in our propositions — perhaps not by assuming the propositions are *true*, but by entertaining them as being *true*.
 
-Ideally, one would begin with reasoning and logic, use that foundation to frame the statistical concepts of analytical and empirical Bayes, and only then proceed to practical application. But exploring these paths in reverse — from application back to one's *beliefs* about *reality* and *being* - might even be more beneficial. These *themes* may seem like existential, rather than scientific, questions, but the boundary between the two remains debated and unresolved.
+Ideally, one would begin with reasoning and logic, use that foundation to frame the statistical concepts of analytical and empirical Bayes, and only then proceed to practical application. But exploring these paths in reverse — from application back to one's *beliefs* about *reality* and *being* - might even be more beneficial. These *themes* may seem like existential, rather than scientific, questions, but the boundary between the two remains debated and unresolved. 
 
-Following the full path from reasoning and logic to application and *belief*, one may recognize that many — if not most — of our *beliefs* are not *justified* under particular lines of reasoning. This leads to deeper questions (1.) How do we *justify* our *beliefs*? (2.) Which propositions should we *believe* (3.) Why do we try to *justify* them? And perhaps more drastic (4.) How should we behave in light of this information?
-
-This site remains a work in progress—a continuously evolving project, far from complete.
+I hope the structure is not too confusing if you prefer to go directly to the EcoPostView package. This site remains a work in progress — a continuously evolving project, far from complete.
 
 # Reasoning
 
 ## Introduction
+
+Following the full path from reasoning and logic to application and *belief*, one may recognize that many — if not most — of our *beliefs* are not *justified* under particular lines of reasoning. This leads to deeper questions (1.) How do we *justify* our *beliefs*? (2.) Which propositions should we *believe* (3.) Why do we try to *justify* them? And perhaps more drastic (4.) How should we behave in light of this information?
 
 It is argued that to some extend reasoning is based on the principles of logic. Although some argue otherwise (e.g., Harman, 1986). I will use formal expressions that are not all at full first-order-language and predicate logic, but mostly include some form of meta-language.
 For this I will use the basic principle of deductive logic based. I believe they are useful to lay out underlying believes and their connection between them. 
@@ -75,9 +75,9 @@ $$Either \ P \vee Q, \neg P \therefore Q$$
 
 **Semantic equivalent structures**
 $$
-\text{Modens Ponens:} for \ all \ x \ that \ are P \ it \ implies \ they \ are \ Q, x \ is \ P \ therefore \ x \ is \ Q\\
+\text{Modens Ponens:} for \ all \ x \ that \ are \ P \ it \ implies \ they \ are \ Q, x \ is \ P \ therefore \ x \ is \ Q\\
 \text{Modens Tollens:} for \ all \ x \ that \ are \ P \ it \ implies \ they \ are \ Q, x \ is \ \neg Q \ therefore \ x \ is \ \neg P \\
-\text{Hypothetical Syllogism:} for \ all \ x \ that \ are \ P \ it \ implies \ they \ are \ Q, for \ all \ x \ that \ are \ Q \ it \ implies \ they \ are \ Z, \ x \ is \ P \ therefore \ Z \\
+\text{Hypothetical Syllogism:} for \ all \ x \ that \ are \ P \ it \ implies \ they \ are \ Q, for \ all \ x \ that \ are \ Q \ it \ implies \ they \ are \ Z, \ x \ is \ P \ therefore \ x \ is \ Z \\
 \text{Disjunctive Syllogism:} either \ x \ is \ P \ or \ x \ is \ Q, x \ is \neg P \ therefore \ x \ is \ Q
 $$
 
@@ -97,6 +97,7 @@ $$
 \text{Hypothetical Syllogism:} \forall x(P(x)\rightarrow Q(x)) \wedge \forall x(Q(x) \rightarrow Z(x)), P(x) \rightarrow Z(x) \\ 
 \text{Disjunctive Syllogism:} P(x) \vee Q(x), \neg P(x) \vdash Q(x) \\
 $$
+
 ## Deduction, induction and abuction
 
 Deductive reasoning moves from general principles to specific conclusions. It begins with premises that are assumed to be universally true and applies them to individual cases. If the premises are true and the reasoning is valid, the conclusion cannot be false. For example: P1: All humans are mortal, P2: I am a human C: Therefore I am mortal. 
@@ -107,9 +108,9 @@ If I observe twenty white swans therefore all swans are white.
 
 This reasoning is not valid. The observation of one swan with any other colour would negate the whole argument. This issue is known as the problem of induction. Hence, how can I justify my conclusion to be universally true based on a limited set of instances? This means inductive arguments might not be valid or sound.
 
-##cogency of arguments
+## Cogency of arguments
 
-In empirical sciences the universal quantifier ‘$\forall$’ (largely?) unsupported and therefore $\exists x(P(x) \rightarrow Q(x))$ where ‘$\exists$’ some. This indicates that propositions are merely acceptable. And in most cases ∃ can be ignored and as it would be wises to explicitly assume it. Meaning that $𝓟_i: (P(x)\rightarrow Q(x))$ or $P \rightarrow Q $ and referred to as a conjecture. A conjecture is a proposition which is accepted as true via a valuation function $v(𝓟_i)=T$ (True) or false $v(𝓟_i)=F$ (False). 
+In empirical sciences the universal quantifier ‘$\forall$’ (largely?) unsupported and therefore $\exists x(P(x) \rightarrow Q(x))$ where ‘$\exists$’ some. This indicates that propositions are merely acceptable. And in most cases ∃ can be ignored and as it would be wises to explicitly assume it. Meaning that $𝓟_i: (P(x)\rightarrow Q(x))$ or $P \rightarrow Q$ and referred to as a conjecture. A conjecture is a proposition which is accepted as true via a valuation function $v(𝓟_i)=T$ (True) or false $v(𝓟_i)=F$ (False). 
 
 Empirical science developing theories built upon conjectures. Where a conjecture has to be supported by either party in an argument. If a conjecture cannot  be accepted by one of the parties, discussion is meaningless and the source of the rejection of one of the parties should be resolved (Popper 1968). 
 
@@ -135,12 +136,12 @@ $$
 \\
 MH: Pr(𝓟_n, s)/Pr(\neg𝓟_n, s) \neq \{0, \infty\} \rightarrow \neg Valid(𝓟_n) = Undecided
 \\
-MC: Valid(s, 𝓟_1, …, 𝓟_{n-1} \models 𝓟_n) 𝓟_n \in \{ 𝓟_1, …, 𝓟_{n-1} \}) = Circulair
+MC: Valid(s, 𝓟_1, …, 𝓟_{n-1} \models 𝓟_n) \ 𝓟_n \in \{ 𝓟_1, …, 𝓟_{n-1} \}) \rightarrow \neg Valid(𝓟_n) = Circulair
 \\
-MI: \forall n(Valid(s, 𝓟_n) \rightarrow Valid(s, 𝓟_{n-1}) \rightarrow Valid(s, 𝓟_{n-\infty})) = Non-foundational 
+MI: \forall𝓟_m \exists𝓟_n (Valid(s, 𝓟_m \models 𝓟_n) \wedge 𝓟_m <  𝓟_n ) \rightarrow \neg Valid(𝓟_m)=  Non-foundational 
 $$
 
-# Theory and background
+# Statistics (analytical and emperical Bayes)
 
 In most cases the theory and background is often not provided in many cookbooks, but makes it impossible to interpreted, criticize our results. This section introduces some theory. However, if you are already familiar with it or find it too technical, feel free to skip it. Since this R-package primarily uses Bayesian inference, an introduction to Bayes Theorem and methods used may be of interest. While it is not necessary needed for the utilization of the R-package itself.
 
@@ -595,7 +596,7 @@ rm(mod_intro)
 
 *Figure 1: Expected evenness of aquatic invertebrates as a function of conductivity and fine sediment fraction within a river reach. The left panel shows the relationship on the response scale, while the right panel presents it on the log scale for improved visualization.*
 
-This package offers tools for ecological statistical modeling, with a strong emphasis on Bayesian methods. While a basic understanding of R is sufficient to use the core functions, a more in-depth theoretical background is provided in chapter 3 for those interested in exploring the underlying concepts. Please note that this is an actively developed R package, and improvements or updates may be introduced over time.
+This package offers tools for ecological statistical modeling, with a strong emphasis on Bayesian methods. While a basic understanding of R is sufficient to use the core functions, a more in-depth theoretical background is provided in chapter 2 for those interested in exploring the underlying concepts. Please note that this is an actively developed R package, and improvements or updates may be introduced over time.
 
 ## Data and models
 

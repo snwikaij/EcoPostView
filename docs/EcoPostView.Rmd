@@ -13,524 +13,15 @@ output:
 ---
 
 # Overview
+This site reads like an incomplete book or essay. It serves as a way to organize my thoughts and collect fragments of information. The project originally started around the EcoPostView R package, but has since expanded into several loosely connected chapters that explore broader ideas.
 
-This site reads like an incomplete book or essay. It serves as a way to organize my thoughts and store information. The project initially began around the EcoPostView R package but has since expanded into multiple chapters covering broader ideas.
+On the left, you will find these chapters in the dropdown menu. They begin with an explorations of the EcoPostView package, move through topics some topics in statistics(including analytical and empirical Bayes) and end with a chapter on reasoning. The order is backwards: where a logical structure would start with abstract foundations and move toward application, here it begins with practice. Many readers will find it easier to start with the R functions and skip the more abstract chapters. That is completely fine — the site is meant to support that kind of entry point.
 
-On the left, you will find these chapters in the drop down menu. They start with incomplete explorations of reasoning, and  Statistics (and analytical and emperical Bayes), and end with a chapter focused on the EcoPostView R package. While this structure reflects a logical progression — from abstract foundations to practical application — many readers will find it more accessible to jump straight into using the R functions. That is entirely reasonable, and the material is designed to support both entry points.
+The reversed order reflects something about how we come to understand the world. We often begin with practice, then build frameworks around our experiences. But if we trace our tools and methods back far enough, we find ourselves dealing with metaphysical questions — about language, logic, and what we believe about reality. Reasoning, in my opinion, is not about discovering truth directly, but about trying to contain or express it through propositions. The point is not to assume these propositions are true, but to see what follows if we treat them as if they were.
 
-In hindsight, this structure is in the correct order, as I believe all principles of what we *believe* about the natural world and ecology can ultimately be traced back to metaphysics and language. Reasoning and logic are not tools to find *truth*, but to try to contain and entail it in our propositions — perhaps not by assuming the propositions are *true*, but by entertaining them as being *true*.
+Ideally, one might begin with reasoning and logic, then move through statistical ideas, and finally arrive at practical application. But going in reverse — from code and data to abstract beliefs — it might even be confronting. These themes can feel more existential than scientific, but the boundary between those categories is itself unclear to me (Bárdos and Tuboly 2025; Heidegger 1929; Laudan 1983; Popper 1968).
 
-Ideally, one would begin with reasoning and logic, use that foundation to frame the statistical concepts of analytical and empirical Bayes, and only then proceed to practical application. But exploring these paths in reverse — from application back to one's *beliefs* about *reality* and *being* - might even be more beneficial. These *themes* may seem like existential, rather than scientific, questions, but the boundary between the two remains debated and unresolved. 
-
-I hope the structure is not too confusing if you prefer to go directly to the EcoPostView package. This site remains a work in progress — a continuously evolving project, far from complete.
-
-# Reasoning
-
-## Introduction
-
-Following the full path from reasoning and logic to application and *belief*, one may recognize that many — if not most — of our *beliefs* are not *justified* under particular lines of reasoning. This leads to deeper questions (1.) How do we *justify* our *beliefs*? (2.) Which propositions should we *believe* (3.) Why do we try to *justify* them? And perhaps more drastic (4.) How should we behave in light of this information?
-
-It is argued that to some extend reasoning is based on the principles of logic. Although some argue otherwise (e.g., Harman, 1986). I will use formal expressions that are not all at full first-order-language and predicate logic, but mostly include some form of meta-language.
-For this I will use the basic principle of deductive logic based. I believe they are useful to lay out underlying believes and their connection between them. 
-
-To understand arguments, validity, soundness, cogency and the formalization of arguments and introduction to logic is needed. Although this will not be an full introduction into logic it will address some principles of it and for a more formal and extended introduction see (Barwise et al. 2002; Lee 2017; Smith 2021). Therefore I will start with an introduction to classical syllogism.
-
-## Syllogism
-
-A simple syllogistic argument consisting of two premises.
-
-$$
-Major\ premise \ 1) \ all \ insects \ have \ six \ legs,\\
-Minor \ premise \ 2) \ x \ is \ an \ insect,\\
-Conclusion) \ therefore \ x \ has \ six \ legs
-$$
-The argument above is called "modus ponens", which follows a specific logical structure. In this form, the conclusion is entailed by the premises — that is, the truth of the premises guarantees the truth of the conclusion. Entailment means that in all cases where the premises are true, the conclusion cannot be false. If an argument has this feature, it is considered logically valid.
-
-This argument can be further condensed by abstracting away the content and focusing only on its structure. In this way, the validity of the argument depends solely on the form of the entailment, not on the specific subject matter.
-
-**Modens Ponens** 
-$$
-Major\ premise \ 1) \ all \ P \ are \ Q,\\
-Minor \ premise \ 2) \ x \ is \ P,\\
-Conclusion) \ therefore \ x \ is \ Q
-$$
-In an argument like the one above, all premises are declarative statements, also known as propositions — sentences that are either True or False, but not both. Each premise typically consists of a subject (or antecedent), a copula (such as is, are, will be, etc.), and a predicate (or consequent). These components express a logical relationship between concepts.
-
-An argument is said to be **valid** if, assuming all the premises are true, the conclusion cannot be false. In other words, the conclusion is logically entailed by the premises.
-An argument is **sound** if it is both valid and all of its premises are in factually true. Therefore, soundness implies both logical structure and factual accuracy. 
-
-For example: P1: All unicorns fly when eating carrots, P2: my unicorn eat a carrot, C: therefore my unicorn will fly. This is a valid argument because if the premises were true, the conclusion would necessarily follow. However, it is not sound because unicorns do not exist (as far as I know), so No consider the following argument: P1: most grass is green P2: the sky is blue C: you are reading this text. Even if all three propositions happen to be true, this argument is not valid because the conclusion is not entailed by the premises — there is no logical connection between them. An argument where the conclusion does not follow from the premises is considered invalid, regardless of whether its statements are true.
-
-In propositional logic, the argument as given before can be formally expressed as below. In this formal expression $\rightarrow$ indicates and implication (as "implies") and the three dots $\therefore$ indicates therefore. Similar $\vee$ means "or", $\wedge$ means "and" and $\neg$ is the negation symbol. Thus for example $\neg P$ means not-P. Other operators include $\vee$ indicates "or" (disjunction) and $\wedge$ indicates "and" (conjunction). Using these basic operators, many more valid argument forms can be constructed—such as disjunctive syllogism, hypothetical syllogism, modus tollens, and more. These forms serve as the foundation for formal reasoning in logic.
-$$P \rightarrow Q, P \therefore Q$$
-
-**Modens Tollens**
-$$P \rightarrow Q, \neg Q \therefore \neg P$$
-
-**Hypothetical Syllogism**
-$$P \rightarrow Q, Q \rightarrow Z, P \therefore Z $$
-
-**Disjunctive Syllogism**
-$$Either \ P \vee Q, \neg P \therefore Q$$
-
-**Semantic equivalent structures**
-$$
-\text{Modens Ponens:} for \ all \ x \ that \ are \ P \ it \ implies \ they \ are \ Q, x \ is \ P \ therefore \ x \ is \ Q\\
-\text{Modens Tollens:} for \ all \ x \ that \ are \ P \ it \ implies \ they \ are \ Q, x \ is \ \neg Q \ therefore \ x \ is \ \neg P \\
-\text{Hypothetical Syllogism:} for \ all \ x \ that \ are \ P \ it \ implies \ they \ are \ Q, for \ all \ x \ that \ are \ Q \ it \ implies \ they \ are \ Z, \ x \ is \ P \ therefore \ x \ is \ Z \\
-\text{Disjunctive Syllogism:} either \ x \ is \ P \ or \ x \ is \ Q, x \ is \neg P \ therefore \ x \ is \ Q
-$$
-
-## Semantical validity of an argument
-
-An valid argument - in the semantic interpretation of validity - in case $𝓟_n$ $𝓟_i$ is true in all interpretations in which $𝓟_1, ..., 𝓟_{n-1} ,𝓟_n$ are true. Simplistically, if all propositions are true the conclusion cannot be false. Such a valid argument can be notated as
-$$𝓟_1, …, 𝓟_{n-1} \models 𝓟_n$$ (see also Haack, 1978)
-
-## Predicate logic 
-
-In predicate logic modens ponens is expressed as $\forall(P(x)\rightarrow Q(x))$ where ‘$\forall$’ indicates ‘for all’ and ‘$\models$’ therefore. Each proposition referred to as $𝓟_i$ consisting of P and Q called properties and x and element from a set $x\in X$. The benefit of predicate logic (or approximating languages such as deontic-logic or a meta-language)is its possibility to quantify over different elements form a set $x \in X$ can be assessed.
-
-**Predicated equivalent structures**
-$$
-\text{Modens Ponens:} \forall x(P(x)\rightarrow Q(x)), P(x) \vdash Q(x) \\
-\text{Modens Tollens:} \forall x(P(x)\rightarrow Q(x)), \neg Q(x) \vdash \neg P(x) \\
-\text{Hypothetical Syllogism:} \forall x(P(x)\rightarrow Q(x)) \wedge \forall x(Q(x) \rightarrow Z(x)), P(x) \rightarrow Z(x) \\ 
-\text{Disjunctive Syllogism:} P(x) \vee Q(x), \neg P(x) \vdash Q(x) \\
-$$
-
-## Deduction, induction and abuction
-
-Deductive reasoning moves from general principles to specific conclusions. It begins with premises that are assumed to be universally true and applies them to individual cases. If the premises are true and the reasoning is valid, the conclusion cannot be false. For example: P1: All humans are mortal, P2: I am a human C: Therefore I am mortal. 
-
-In contrast, inductive reasoning moves from specific observations to broader generalizations. It attempts to infer a universal rule or principle from limited data, and thus does not guarantee the truth of the conclusion — even if all observed instances support it. Induction tries to generals from the instances (x) we observe to all.
-
-If I observe twenty white swans therefore all swans are white.
-
-This reasoning is not valid. The observation of one swan with any other colour would negate the whole argument. This issue is known as the problem of induction. Hence, how can I justify my conclusion to be universally true based on a limited set of instances? This means inductive arguments might not be valid or sound.
-
-## Cogency of arguments
-
-In empirical sciences the universal quantifier ‘$\forall$’ (largely?) unsupported and therefore $\exists x(P(x) \rightarrow Q(x))$ where ‘$\exists$’ some. This indicates that propositions are merely acceptable. And in most cases ∃ can be ignored and as it would be wises to explicitly assume it. Meaning that $𝓟_i: (P(x)\rightarrow Q(x))$ or $P \rightarrow Q$ and referred to as a conjecture. A conjecture is a proposition which is accepted as true via a valuation function $v(𝓟_i)=T$ (True) or false $v(𝓟_i)=F$ (False). 
-
-Empirical science developing theories built upon conjectures. Where a conjecture has to be supported by either party in an argument. If a conjecture cannot  be accepted by one of the parties, discussion is meaningless and the source of the rejection of one of the parties should be resolved (Popper 1968). 
-
-Arguments are either weakly or strongly cogent (weak or strong arguments) as the conjectures cannot be guaranteed in empirical sciences. Strong arguments are then arguments where most conjectures are acceptable (e.g., temperature is 0 degrees when the  thermometer works and indicates 0 degrees).
-
-The arguments proposed are indicated as $𝒜$. And $𝒜: 𝓟_1, …, 𝓟_{n-1} ,𝓟_n \models 𝓟_n$ should entail the truth of the conjectures within the derived conclusion. And when this is the cases such an argument is then valid $valid(𝒜)$ when all parties agree on the truthood $v(𝓟_i)=T$ (True) of the conjectures involved.
-
-The problem is that the empirical sciences has no axiomatic foundation from which the proof of an argument can be logically deduced. In the sense that I believe the the conclusion ($𝓟_3$) of the following argument. $𝓟_1$: All humans die, $𝓟_2$: I am human, conclusion ($𝓟_1 \therefore  𝓟_2$), therefore I die ($𝓟_1→𝓟_2, 𝓟_1 \therefore 𝓟_2$). The conclusion forming a conjecture in my belief system and that of others. However, it does not ensure the soundness of the argument, where soundness refers to the factuality of all propositions. Yet, having not known all humans ever lived or going to live the argument is not sound. Moreover, it is questionable if reasoning deals with valid conclusions. Where one better can speak about cogency of the argument.
-
-The agreement among parties - rather informally - forming a belief system that would be a function of acceptable (cogent) conjectures (Usó-Doménech and Nescolarde-Selva 2016). The conjectures tied together for each individual moral agent (Carthwright et al. 1996; van Fraassen 1980, Closely representing the nodes and edges in a network). 
-
-The moral agent then entertains the relations between propositions and arguments. Counter intuitively, the moral agents also appoints a property to an element x. Hence, a colour blind person would not see the specific colours a person that is not color blind would see, therefore not appoint the same colour property. Or, if a person does not know the function of a wrench, and therefore does not appoint the property wrench to it. If a property is not appointed to an element then the cogency (or validity) of an argument does not follow because without a property on x, the element x remains inert and undefined. Therefore,$v(𝓟_i)=T$ or $v(𝓟_i)=F$ remains undecided because $(x \rightarrow Q(x)), x \models Q(x)$ does not follow. Hence, each element is appointed a property, each proposition is valued, woven into an a cogent or not cogent (strong or weak) and formulated as a belief system.
-
-## Skepticism
-
-Understanding skepticism made most parts of why I am dissatisfied with most argument fall in its place. It perhaps plays a central but indirect part in this chapter. I will try to (meta-logical) formalize the Agrippa's trilemma and other skeptical "tools" that should lead to the realization that most of our justifications are not as strong and each of them could be undermined. 
-
-Any conclusion $𝓟_n$ under some condition $c \in C$ in an argument $𝓟_1, …, 𝓟_{n-1} \models 𝓟_n$. Can be suspended based on any other premise that is not certain/conclusive and therefore $𝓟_n$ does not follow. 
-
-More formally, for any claim from a subject ($s \in S$) there exists at least some propositions of disagreement over the claim under particular conditions so that the disagreement can be exploited in the mode of hypothesis (MH), Mode of Circularity (MC) and mode of infinite regress (MI).
-$$
-\forall s \forall 𝓟 \exists (Claim(s, 𝓟_n) \rightarrow Disagreement(Claim(s, 𝓟_n), c) \rightarrow \{MH \vee MC \vee MI\}
-\\
-MH: Pr(𝓟_n, s)/Pr(\neg𝓟_n, s) \neq \{0, \infty\} \rightarrow \neg Valid(𝓟_n) = Undecided
-\\
-MC: Valid(s, 𝓟_1, …, 𝓟_{n-1} \models 𝓟_n) \ 𝓟_n \in \{ 𝓟_1, …, 𝓟_{n-1} \}) \rightarrow \neg Valid(𝓟_n) = Circulair
-\\
-MI: \forall𝓟_m \exists𝓟_n (Valid(s, 𝓟_m \models 𝓟_n) \wedge 𝓟_m <  𝓟_n ) \rightarrow \neg Valid(𝓟_m)=  Non-foundational 
-$$
-
-# Statistics (analytical and emperical Bayes)
-
-In most cases the theory and background is often not provided in many cookbooks, but makes it impossible to interpreted, criticize our results. This section introduces some theory. However, if you are already familiar with it or find it too technical, feel free to skip it. Since this R-package primarily uses Bayesian inference, an introduction to Bayes Theorem and methods used may be of interest. While it is not necessary needed for the utilization of the R-package itself.
-
-## Classical statistics and estimation
-
-All statistics focuses on estimating the parameter of interest $\theta$ which in most (G)LMs is denoted as the parameter $\mu$ or $\beta$. For consistency I will use the parameter of interest $\mu$. The population parameter of interest $\mu$ is fixed and unknown. To investigate potential values for $\mu$ we take measurements/samples. The observed measurements or samples ($x$) are realizations of an unknown random variable $X$, where both x and X represents sets $x = \{x_i, \dots, x_n \mid x \in \mathbb{R}\}$ and $X = \{X_i, \dots, X_N \mid X \in \mathbb{R}\}$. Here, $x$ is a realization and $X$ denotes the random variable. It is then assumed that $x$ is originating as randomly identically and independent distributed random variable (iid) from X as in $x\sim X$ or $x \stackrel{\text{iid}}{\sim} N(\mu, \sigma^2)$. Since we do not have $X$ but only a set of realizations we need an estimator for it which it the sample mean $\hat{x}(x)$. Hence, the mean of the random variable $X$ would be $\mu(X)=\frac{X_i,\cdots,X_N}{N}$ and if x are indeed iid $\hat{x}(x)=\frac{x_i,\cdots,x_n}{n}$ would be an estimator for $\mu$. Therefore, the sample mean has certain properties $\mathbb{E}[\hat{x}]$ and $Var(\hat{x})=\frac{\sigma^2}{n}$. Then the weak law of large numbers suggest that the probability of deviation from the population parameter decreases when sample size $n$ increases $\lim_{n\to\infty} P\left(|\hat{X}_n-\mu|\geq \epsilon\right)=0$. This means that according to the central limit theorem $Z_n=\frac{\hat{x}-mu}{\sigma/\sqrt(n)}$ converges to the standard normal under $mu=0$. The probability of observing $Z$ under a long-run of repetitions $P(-1.96\lesssim Z \lesssim 1.96)=0.95$. Similair, the probability of the intervals of $\overline{x}$ to cover $\mu$ in a long-run of repeated experiments at 95% is $1  - c = P(\overline{x} > \mu - 1.96 \cdot \frac{\sigma}{\sqrt{n}}) ~and~  P(\overline{x} < \mu - 1.96 \cdot \frac{\sigma}{\sqrt{n}})$. I visually explain this in this shiny app https://snwikaij.shinyapps.io/shiny/. Furthermore, it is clear that statistics does do nothing with causality in the first place and the focus on error-control and causality starts by satisfying theoretical conditions needed the arrive at believes in these concepts. Hence, error-control and causality start a-priori (Fisher 1949, Pearl 2009, Mayo 2018). Yet, such a focus and framework would, for example be extremely useful if objectivity over repetitions are the goal and favorable. While classical statistics focuses on fixed but unknown parameters, error-control and objectivity of information, Bayesian methods extend this perspective by introducing prior information and viewing parameters as random variables. This shift opens the door to more flexible and informative inference, as explained in the next section.
-
-## Bayes Theorem and probablistic estimation
-
-### Bayes Theorem
-
-Informally Bayes Theorem would be notated $\text{Posterior}\, \text{probability} = \frac{\text{Likelihood} \cdot \text{Prior}}{\text{Evidence}}$. More formally Bayes theorem is often notated with A and B where P indicates probability and '|' given or conditional on. $P(A|B) = \frac{P(B|A) \cdot P(A)}{P(B)}$.Other expression such as $P(\theta|Data, Info) = \frac{P(Data|\theta) \cdot P(\theta|info)}{P(Data)}$ are to highlight that the posterior describes the information of that conditional on the prior information that is given in there.
-
-The derivation of Bayes theorem relies on the axioms probability theory.
-
-**Premise 1)**
-
-$$
-P(A | B) = \frac{P(A \cap B)}{P(B)}
-$$
-similarly
-
-$$
-P(B |A) = \frac{P(B \cap A)}{P(B)}
-$$
-**Premise 2)**
-
-Also, the joint probability, expressed as a set-theoretic relationship on $z$, indicates that element of both sets are the same.
-
-$$
-z = \{x : x \in A \cap B : x \in B \cap A\}
-$$
-thus
-
-$$
-P(A \cap B) = P(B \cap A)
-$$
-**Premise 3)**
-
-In accordance with the previous
-
-$$
-P(A| B) \cdot P(A) = P(A \cap B)
-$$
-and
-
-$$
-P(B | A) \cdot P(B) = P(B \cap A)
-$$
-**Conclusion)**
-
-Therefore
-
-$$
-P(A | B) \cdot P(A) = P(B | A) \cdot P(B)
-$$
-$$
-P(A|B) = \frac{P(B|A) \cdot P(A)}{P(B)}
-$$
-
-### Bayes Theorem in use
-
-The previous expression can help us with answer simple questions. Assume that there is a likelihood of 0.7 $P(Species|<Threshold)$ that a species if found below a certain threshold. Furthermore, we also know that that the environment will only be found 0.3 or 30% of the time as $P(<Threshold)$.How probable would it then be we are below the threshold if we observe the species $P(<Threshold|Species)$? 
-
-$$
-P(Species|<Threshold) = 0.7\\
-P(<Threshold) = 0.3\\
-P(<Threshold|Species) = ?\\
-$$
-
-Expressing this in Bayes theorem would result in
-
-$$
-P(<Threshold|Species)=\frac{P(<Threshold|Species)\cdot P(Species) }{P(<Threshold)}
-$$
-
-The only thing still required is $P(Species)$ often called the 'evidence'. Yet, this evidence is simply the total probability of observing a species, below and above the threshold. For this we can assume that this is the reverse of the $P(Species|<Threshold)$ and $P(<Threshold)$
-
-$$
-P(Species)=[P(<Threshold|Species)\cdot P(Species)] + [(1-P(<Threshold|Species))\cdot(1-P(Species))]\\
-0.42=[0.7\cdot0.3]+[0.3\cdot0.7]
-$$
-
-Then it is simply filling in the blanks
-
-$$
-P(<Threshold|Species)=\frac{P(<Threshold|Species)\cdot P(<Threshold) }{P(Species)}=\frac{0.7\cdot0.3}{0.42}=0.5
-$$
-
-The answer not very satisfying as the probability is simply a 'coin toss'. This could be improved if we would introduce more species with the same indicative potential.
-
-$$
-P(<Threshold|Species)=\frac{P(<Threshold|Species)\cdot P(<Threshold) }{P(Species)}=\frac{(0.7^2*0.3)}{[(0.7^2*0.3)+(1-0.7)^2*(1-0.3)]}=0.7
-$$
-We would need around five species to get an indicative potential of >0.95 (it would be 0.97).
-
-### Approximate Bayesian Computation with rejection sampling
-
-Approximate Bayesian Computation with rejection sampling (ABC-rejection) is a computationally expensive method for approximating the posterior distribution. However, when the number of parameters is relatively small, the posterior can still be approximated quite well. ABC-rejection is especially useful when the likelihood function cannot be computed or approximated accurately.
-
-One example is the use of ABC to explore potential bias in the EcoPostView package. In a simplified case, assuming both the prior and the data-generating model are normally distributed, the ABC-rejection algorithm begins by simulating a parameter from the prior distribution.
-
-$$
-\mu_{i}^*\sim N(\mu_{prior},\sigma_{prior}^2) \\
-\sigma_{i}^{2*}\sim Exp(rate)
-$$
-
-The asterisk ($^*$) denotes that these parameters are temporary, and this will become important later.Next, a data-generating model is used to simulate data based on these temporary parameters. We assume the observed data is approximately normally distributed, though any model could be used. For each simulation, we generate $n_{data}$ values.
-
-$$
-x_{i}\sim N(\mu^*, \sigma^{2*})
-$$
-
-Depending on the parameter of interest (e.g., $\mu$, $\sigma$, mode, or median), a summary statistic is computed from the simulated data. In this example, we focus on estimating $\mu$.
-
-$$
-\hat{x}_{sim, i}=\frac{\sum_{i=1}^n(x_i, ..., x_n)}{n_{data}}
-$$
-
-Each simulated mean $\hat{x}_{sim, i}$ (typically out of 100,000 simulations) is compared to the observed mean $\hat{x}_{data}$ using the Euclidean distance.
-
-$$
-E_{i}=\sqrt{(\hat{x}_{sim, i} - \hat{x}_{data})^2}
-$$
-
-A tolerance threshold is then selected to determine which simulated values are accepted. Simulations with $E_i > tolerance$ are rejected, while those with $E_i \leq tolerance$ are retained. While a tolerance of zero would yield the most accurate posterior, it would typically result in rejecting all simulations. On the other hand, setting the tolerance too high would allow in too many poor matches.
-
-Each accepted simulation corresponds to an accepted pair of simulated parameters $\mu_{i}^*, \sigma_{i}^{2}*$. Since all $\mu_{i}^*$ were originally drawn from the prior, the subset of accepted values approximates the posterior distribution of $\mu$.
-
-### Bayes theorem and conjugate priors
-
-The previous example works for simpler approximations yet if we want to derive an interval for a particular parameter $\theta$ then we can approach this analytically using conjugate priors. Where a prior is conjugate to a likelihood if the resulting posterior is in the same family as the prior.
-
-As introduced, in statistics and estimation is about finding out the value for $\theta$ which is assumed be $\mu$. Where in the frequentist framework this is considered fixed and unknown, this is in the Bayesian framework considered to be random 'and approximately' known. Of course also in the Bayesian framework samples $x$ are taken. Assume that we already know something about $\mu$ then it is possible to restrict to exclude unreasonable values or for the information we have on $\mu$ to more acceptable values.
-
-$$
-P(\mu|Data) = \frac{P(Data|\mu) \cdot P(\mu)}{P(Data)}
-$$
-
-For a simple mean and variance an analytical approach can be used to derive the posterior given the likelihood and prior via the following equations.
-
-$$\mu_{posterior} =\frac{\frac{\mu_{prior} }{\sigma_{prior}^2} + \frac{\hat{x}_{data} }{\sigma_{data}^2}}{
-\frac{1}{\sigma_{prior}^2} + \frac{1}{\sigma_{data}^2}}
-\\
-\sigma_{posterior}=\sqrt{\frac{1}{\frac{1}{\sigma_{prior}^2}+\frac{1}{\sigma_{data}^2}}}$$
-
-**Proof:**
-
-**Premise 1)**
-
-Bayes rule can be simplified to
-$$P(\mu|Data) \propto P(Data|\mu) \cdot P(\mu)
-\\
-N(\mu_{posterior}, \sigma_{posterior}^2)=N(\mu_{sample}, \sigma_{sample}^2)\cdot N(\mu_{prior}, \sigma_{prior}^2)$$
-
-**Premise 2)**
-
-The PDF for the normal distribution is
-$$f(x)=\frac{1}{2\cdot \sqrt{\sigma \pi}}\cdot exp(-\frac{1}{2}(\frac{x-\mu}{\sigma})^2)$$
-
-**Premise 3)**
-
-$$Prior: P(\mu_{prior})=\frac{1}{2\cdot \sqrt{\sigma_{prior} \pi}}\cdot exp(-\frac{1}{2}(\frac{\theta-\mu_{prior}}{\sigma_{prior}})^2)
-\\
-Likelihood: P(\mu_{sample})=\frac{1}{2\cdot \sqrt{\sigma_{sample} \pi}}\cdot exp(-\frac{1}{2}(\frac{\mu_{sample}-\theta}{\sigma_{sample}})^2)
-$$
-
-**Premise 4)**
-
-Both $\frac{1}{2\cdot \sqrt{\sigma_{prior} \pi}}$ and $\frac{1}{2\cdot \sqrt{\sigma_{sample} \pi}}$ are scalars and can be left out of the equation.
-
-**Premise 5)**
-
-Since both exponent have the same base we can add the exponent $$(a^2+b^2=a^{2+2})$$ 
-resulting in
-
-$$exp(-\frac{1}{2}\cdot[(\frac{\theta-\mu_{prior}}{\sigma_{prior}})^2+(\frac{\mu_{sample}-\theta}{\sigma_{sample}})^2]$$
-
-After which brackets can be moved
-$$exp(-\frac{1}{2}\cdot[\frac{(\theta-\mu_{prior})^2}{\sigma_{prior}^2}+\frac{(\mu_{sample}-\theta)^2}{\sigma_{sample}^2}])$$
-
-**Premise 6)**
-
-Expanding the brackets terms
-
-$$(a^2+b^2)=(a-b)\cdot(a-b)=a^2-ab-ab+b^2=a^2-2ab+b^2$$
-This means 
-$$(\theta-\mu_{prior})^2=\theta^2-2\theta\mu_{prior}+\mu_{prior}^2$$ 
-and
-$$(\mu_{sample}-\theta)^2=\mu_{sample}^2-2\mu_{sample}\theta+\mu_{sample}^2$$ 
-which can be replaced in premise 5
-$$exp(-\frac{1}{2}\cdot[\frac{\theta^2-2\theta\mu_{prior}+\mu_{prior}^2}{\sigma_{prior}^2}+\frac{\mu_{sample}^2-2\mu_{sample}\theta+\mu_{sample}^2}{\sigma_{sample}^2}])$$
-
-**Premise 7)**
-
-Separating each term by dividing by $\sigma_{prior}^2$ and $\sigma_{sample}^2$
-
-$$exp(-\frac{1}{2}\cdot\frac{\theta^2}{\sigma_{prior}^2}+\frac{-2\theta\mu_{prior}}{\sigma_{prior}^2}+\frac{\mu_{prior}^2}{\sigma_{prior}^2}+
-\frac{\mu_{sample}^2}{\sigma_{sample}^2}+\frac{-2\mu_{sample}\theta}{\sigma_{sample}^2}+\frac{\mu_{sample}^2}{\sigma_{sample}^2})$$
-
-**Premise 8)**
-
-Group each term by the nominator
-
-$$\frac{\theta^2}{\sigma_{prior}^2}+\frac{-2\theta\mu_{prior}}{\sigma_{prior}^2}+\frac{\mu_{prior}^2}{\sigma_{prior}^2}+
-\frac{\mu_{sample}^2}{\sigma_{sample}^2}+\frac{-2\mu_{sample}\theta}{\sigma_{sample}^2}+\frac{\mu_{sample}^2}{\sigma_{sample}^2}=
-\\
-\theta^2(\frac{1}{\sigma_{prior}^2}+\frac{1}{\sigma_{sample}^2})+
--2\theta(\frac{\mu_{prior}}{\sigma_{prior}^2}+\frac{\mu_{sample}}{\sigma_{sample}^2})
-+(\frac{\mu_{prior}^2}{\sigma_{prior}^2}+\frac{\mu_{sample}^2}{\sigma_{sample}^2})
-$$
-Since the last group is not dependent on $\theta$ it is not in our focus
-$$
-exp(-\frac{1}{2}\cdot[\frac{\theta^2}{\sigma_{prior}^2}+\frac{-2\theta\mu_{prior}}{\sigma_{prior}^2}+\frac{\mu_{prior}^2}{\sigma_{prior}^2}+
-\frac{\mu_{sample}^2}{\sigma_{sample}^2}+\frac{-2\mu_{sample}\theta}{\sigma_{sample}^2}+\frac{\mu_{sample}^2}{\sigma_{sample}^2}=
-\\
-exp(-\frac{1}{2}\cdot\theta^2(\frac{1}{\sigma_{prior}^2}+\frac{1}{\sigma_{sample}^2})+
--2\theta(\frac{\mu_{prior}}{\sigma_{prior}^2}+\frac{\mu_{sample}}{\sigma_{sample}^2})
-+not\ dependent\ on\ \theta])
-$$
-
-**Premise 9)**
-
-The goal is to derive $P(\mu|Data)$ from $P(\mu|Data) \propto P(Data|\mu) \cdot P(\mu)$ An the general exponential form of the normal distribution is given in Premise 2 and the premises 6, 7 and 9 lead to
-$$\frac{1}{2}\cdot \theta^2 (\frac{1}{\sigma^2})+\theta(\frac{\mu}{\sigma^2})+C=
-\\
-\frac{1}{2}\cdot\theta^2A+\theta B+C$$
-the general exponential form for the normal distribution is always $\frac{1}{2}\cdot\theta^2A+\theta B+C$ meaning that $A=\frac{1}{\sigma^2}$ and $B=\frac{\mu}{\sigma^2}$ and to obtain the standard deviation $A$ needs to be re-arranged to $\sigma = \sqrt{\frac{1}{A}}$ and to obtain the mean $\mu=\frac{B}{A}=\frac{\frac{\mu}{\sigma^2}}{\frac{1}{\sigma^2}}$
-
-**Conclusion)**
-
-In Premise 8
-$$
-exp(-\frac{1}{2}\cdot\theta^2(\frac{1}{\sigma_{prior}^2}+\frac{1}{\sigma_{sample}^2})+
--2\theta(\frac{\mu_{prior}}{\sigma_{prior}^2}+\frac{\mu_{sample}}{\sigma_{sample}^2})+C)
-$$
-In Premise 9
-$$
-\sigma = \sqrt{\frac{1}{A}}, A=\frac{1}{\sigma^2}\\
-\mu=\frac{B}{A}=\frac{\frac{\mu}{\sigma^2}}{\frac{1}{\sigma^2}}
-$$
-Which implies that
-$$
-\sigma_{posterior}=\sqrt{\frac{1}{\frac{1}{\sigma_{prior}^2}+\frac{1}{\sigma_{sample}^2}}}\\
-\mu_{posterior}=\frac{\frac{\mu_{prior}}{\sigma_{prior}^2} + \frac{\mu_{sample}}{\sigma_{sample}^2}}{\frac{1}{\sigma_{prior}^2} + \frac{1}{\sigma_{sample}^2}}
-$$
-Another way to obtain the posterior mean would be via
-$$\mu_{posterior}=\frac{\frac{\mu_{prior}}{\sigma_{prior}^2}+\hat{x}_{data}*\frac{n}{\sigma_{data}^2}}
-{\frac{1}{\sigma_{prior}^2}+\frac{n}{\sigma_{data}^2}}$$
-
-As might be clear this is less computational heavy than MCMC methods. For more then two parameter such an analytically approach becomes more cumbersome. And, if conjugacy is not satisfied no closed form solution is available. In this regards, Laplacian approximation is also computational easy. Yet, the equation clearly formulate the idea what happens in Bayes theorem. A simple example below highlights how this this can be useful.
-
-## Salinity example
-
-For example, we want to know the probable relation between insects and salinity over a whole gradient from 0 till 5000 $\mu S \cdot cm ^{-1}$. To do so we generate a simple log-linear model $log(insect ~ diversity)=\beta_1*conductivity~+~\beta_0$. We know that insect diversity declines with an increasing salinity therefore we could exclude  positive values and shift the weight to more negative values. In the frequentist framework this is not performed and there is worked under the principle of indifference. This means all values are apriori equally likely. This is from an consistent error-control perspective preferred, but from a probabilistic perspective unreasonable. Hence, it would be beneficial to leverage this information into the model.
-$$
-P(\beta|Data, info) = \frac{P(Data|\beta) \cdot P(\beta|info)}{P(Data)}
-$$
-Under different context we can leverage more information over the likelihood using Bayesian Model Averaging (BMA) that does not use a single prior, but multiple priors.
-
-## Introduction to Bayesian Model Averaging (BMA)
-
-Instead of $P$ the function '$f$' are used this to highlight that the probability is a mapping function. A mapping function being a 'rule' that maps $x$ to $y$ and so $y=f(x)$.
-$$
-f(\beta \mid Data, Info) = 
-\frac{f(Data \mid \beta) \cdot f(\beta \mid Info)}
-{\int f(Data \mid \beta) \cdot f(\beta \mid Info)}
-$$
-The integral in the denominator is used to scale the posterior probability to one. This expression is sometimes simplified to
-$$f(\beta \mid Data, Info) = f(Data \mid \beta) \propto f(\beta \mid Info)$$
-Where the $\propto$ symbol indicates 'proportional to' highlighting the idea of exchangeability. Therefore, the posterior is nothing more than a function that describes the probability $y$ as a function of $\beta$ conditional on $Data$ and $Info$ ($y=f(\beta \mid Data, Info)$). This cannot be solely conditional on the $Data$ as the $Data$ is not uncertain our information/believe is uncertain about a none existing object $\beta$ (unless Platonism is true). 
-
-In the previous part a single prior model was used. Bayesian Model Averaging (BMA) has the advantages that it allows multiple ($k$) functions to be utilized as prior. I specifically choose the use of $f$ so multiple priors as $f_k$ in the equation below can be seen nothing more as multiple functions (or models). This in my opinion makes it easier to see that there is only optimized between multiple functions. It sound weird to say to optimize between probabilities.
-Hence, multiple possible scenarios that could have been responsible for $\beta$ can be introduced as below.
-$$
-f(\beta \mid Data,Info) = \frac{f(Data \mid \beta) \cdot f_k(\beta \mid Info)}{\int \left( \sum_{k=1}^{k} f(Data \mid \beta) \cdot f_k(\beta \mid Info) \right)}
-$$
-Now it should be clear that each $\beta$ contained within $g(E(y \mid x_{ij})) = \sum_{j=1}^{v} \beta_j \cdot x_{ij}$ is being restricted by the prior models. While in frequentism it is unrestricted and 'complete indifference' towards the  possibility of $\beta$. All these methods can be used in a meta-analysis.
-
-## Meta-analysis
-
-A standard meta-analysis uses a measure of location (mean) and scale (precision) to estimate a pooled value based on all parameters. For a fixed meta-analysis the pooled parameter is derived via the following equation.
-$$\theta_{pooled} = \frac{\sum_{i=1}^{k}(\theta_i\cdot w_i)}{\sum_{k=1}^kw_i}$$
-$\theta_i$ is the extracted effect-size for a study $i$. The $w_i$ is the weight per study $i$ for allk $k$ studies, derived from the precision $1/se_i^2$ via the equation below.
-$$w_i = \frac{1}{se_i^2}$$
-The standard error for the pooled effect-size can then be derived via the formula given below.
-
-$$se(\theta_{pooled})=\frac{1}{\sqrt\sum_{i=1}^{k}(w_i)}$$
-For a random-effect meta-analysis the variance between studies is separately modeled. In the metafor package REML or (Restricted Maximum Likelihood) is used to estimate this between study variance. However it is also possible using the DerSimonian and Laird method.
-$$
-\tau^2=max(0, \frac{Q-(k-1)}{\sum_{i=1}^{k}\frac{1}{w_i}-\frac{\sum_{i=1}^{k}1/w_i^2}{\sum_{i=1}^{k}1/w_i}})\
-\\
-w^*_i=\frac{1}{(\frac{1}{w_i}+\tau^2)}
-\\
-\theta_{pooled} = \frac{\sum_{i=1}^{k}(\theta_i\cdot w^*_i)}{\sum_{i=1}^{k}(w^*_i)}
-\\
-se(\theta_{pooled})=\frac{1}{\sqrt(\sum_{i=1}^{k}w^*_i)}
-$$
-If we now go back to how we analytically derived the posterior we can devise a function that can analytically perform a fixed effect meta-analysis with ease. I have placed this in a function called 'abmeta'. In in simple cases it approximates the results of metafor and the meta function inf EcoPostView relatively well. Of course the variance component slightly differs with that from metafor and the 'meta' function due to the different method of estimation.
-
-## BMA and meta-analysis
-
-In a meta-analysis we do not talk about $\beta$ but about a set of estimates $\beta=\{\beta_{i}, ..., \beta_{n}\}$ meaning that $f(Meta-data\mid\{\beta_{i}, ..., \beta_{n}\})$. Hereby the flexibility allows that these estimates are either likelihood estimates ($\hat{\beta}$) or  posterior estimates ($\beta$). and we end up with an expression that should capture the inference to an underlying pooled model parameter.
-$$
-f(\beta_{poolded} \mid Meta-data,Info) = \frac{f(Meta-data \mid \{\beta_{i}, ..., \beta_{n}\}) \cdot f_k(\beta_{pooled} \mid Info)}{\int \left( \sum_{k=1}^{m} f(Meta-data \mid \{\beta_{i}, ..., \beta_{n}\}) \cdot f_k(\beta_{pooled} \mid Info) \right)}
-$$
-
-## Sequential updating
-
-Bayesian sequential updating refers to the practice of re-using the derived posterior of a previous model as the prior for the new model. For this the assumption of conditional independence between the the datasets is assumed. The parameter of interest is $\theta$ based on a dataset $Data_1$ and we derive the posterior. 
-$$P(\theta|Data_1) = \frac{P(Data_1|\theta) \cdot P(\theta)}{P(Data_1)}$$
-The next would be 
-$$P(\theta|Data_1, Data_2) = \frac{P(Data_2|\theta) \cdot P(\theta|Data_1)}{P(Data_2)}$$ 
-till $$P(\theta|Data_n) = \frac{P(Data_n|\theta) \cdot P(\theta|Data_1,\cdots,Data_{n-1})}{P(Data_n)}$$
-
-For example, we would like to know what $\mu$ from a population of interest. Our example population has $\mu=0.5$, $\sigma=5$ and each study would have an error of $\alpha = 40\%$ when when we assume $\alpha=5\%$ (meaning that our heterogeneity is larger than expected). Our first prior starts with $N(0, 5)$ after which the posterior of previous is sequentially re-used visually represented in Fig. 2a below. Where more studies increase the precision of the estimated posterior. 
-
-If the focus lies on objectivity and the error control over the different studies and assume iid then the curve between studies would follow that of Fig. 2b below. 
-
-In a less formal way is the Bayesian framework more focused on transfer of information an precision. On the other hand the frequentist framework is more interested in objectivity, consistency and error among studies.
-
-```{r sequential updating,  fig.width=8, fig.height=4, echo=F, warning=FALSE}
-
-library(ggplot2)
-
-postvals <- function(mu_data, sigma_data, mu_prior, sigma_prior){
-  
-  post_mu <- (mu_prior / sigma_prior^2 + mu_data /sigma_data^2) / (1 / sigma_prior^2 + 1 / sigma_data^2)
-  post_sigma <- sqrt(1/(1 / sigma_prior^2 + 1 / sigma_data^2))
-  
-  c(mu=post_mu, sigma=post_sigma)}
-
-nsim <- 100
-cint <- 0.05
-errint <- 0.4
-theta  <- 0.5
-postset <- array(NA, dim=c(nsim, 5))
-freqset <- array(NA, dim=c(nsim, 5))
-
-z_adj <- abs(qnorm(errint/2))/abs(qnorm(cint/2))
-
-set.seed(3)
-for(i in 1:nrow(postset)){
-xsamp <- rnorm(25, theta, 5)
-if(i==1){
-post  <- postvals(mean(xsamp), sd(xsamp)/sqrt(length(xsamp)), 0, 5)
-}else{
-post  <- postvals(mean(xsamp), sd(xsamp)/sqrt(length(xsamp)), post[1], post[2])}
-postset[i,] <- c(i, post, post[1]-post[2]*abs(qnorm(cint/2))*z_adj, post[1]+post[2]*abs(qnorm(cint/2))*z_adj)
-
-fse <- sd(xsamp)/sqrt(length(xsamp))
-freqset[i,] <- c(i, mean(xsamp), fse,  mean(xsamp)-fse*abs(qnorm(cint/2))*z_adj,  mean(xsamp)+fse*abs(qnorm(cint/2))*z_adj)}
-
-postset <- setNames(as.data.frame(postset), c("iter", "mu", "se", "ll", "ul"))
-
-p1 <- ggplot(postset, aes(iter, mu))+
-  geom_line()+ylab("µ")+xlab("Study")+
-  geom_hline(yintercept = 0.5, col="tomato3", lty=2, lwd=0.2)+
-  geom_ribbon(aes(ymin = ll, ymax = ul), fill = "grey70", alpha=0.2)+
-  theme_classic()
-
-freqset <- setNames(as.data.frame(freqset), c("iter", "mu", "se", "ll", "ul"))
-
-p2 <- ggplot(freqset, aes(iter, mu))+
-  geom_line()+ylab("")+xlab("Study")+
-  geom_hline(yintercept = 0.5, col="tomato3", lty=2, lwd=0.2)+
-  geom_ribbon(aes(ymin = ll, ymax = ul), fill = "grey70", alpha=0.2)+
-  theme_classic()
-
-sequpdate <- cowplot::plot_grid(p1, p2, ncol=2)
-print(sequpdate)
-rm(sequpdate)
-```
-
-*Figure 2: Sequential updating with credibility intervals on the left panel and a long-run of means with confidence intervals on the right The left panel.*
-
-## A short reflection on uncertainty
-
-I do not believe statistics reflects uncertainty about events; rather, it reflects the information in the data under a particular model or the uncertainty about our belief in a parameter ($\theta, \beta, \mu$, etc.). The later concept is often vague and confusing because, if one assumes the parameter does not exist independently of the mind, then what exactly is uncertain - our belief? The claim to 'objective probability' is already compromised by the assumption that the parameter is objective. However, if the parameter does not exist outside the mind, the meaning of 'objective' in this context becomes questionable.
-
-When people refer to objectivity, they often mean that the data itself is the most 'objective' part of the process. However, if some conditions are not met, such as (1) the data is not randomly sampled from a population of interest, (2) the model is not pre-selected in advance, (3) a sufficiently large sample size is not chosen based on the model, and (4) confounding variables are present, then even the data cannot be considered truly objective unless these limitations are explicitly acknowledged. Moreover, model selection procedures further contaminate the objectivity of the data, meaning that the estimated model parameters no longer fully reflect the objectivity of the data which is often implied in our conclusions (Gelman and Loken, 2013; Tong, 2019).
-
-In Bayesian updating, the prior reflects the extent to which we want to sacrifice over the objectivity of the likelihood by using information which cannot be formalized into the likelihood. This is captured by the relationship $f(\theta \mid Data, Info) = f(Data \mid \theta) \propto f(\theta \mid Info)$
-
-The posterior, therefore, is merely the weighted combination of the prior and likelihood. It represents the relationship (e.g., $0.25$ as $0.5 \cdot 0.5$) between the prior and the likelihood. There is no invalidity in a logical argument such as:(Premise 1.) All unicorns are orange. (Premise 2.) I have a unicorn. (Conclusion) Therefore, my unicorn is orange.
-
-While this argument may be unsound — because unicorns do not exist — the reasoning itself is not flawed. The issue lies with the premises, not the structure of the argument. Hence, Uncertainty does not exist in the 'real' world; it resides solely in our minds. We cannot be 'wrong' or 'correct' about $f(\beta \mid \text{Data, Info})$ because it does not exist as a tangible entity. Even if it did, its existence would have no impact on reality because uncertainty is unrelated to the way reality operates. In the real world, events either occur or they do not. If my unicorn does not exist, I will never see it, and it was never orange in the first place.
-
-We should also avoid treating models as a definitive representation of reality. Models are tools that convey information and serve as pragmatic instruments. The the model itself is not the result, the strength of the results relies on the argument, and how well the premises within the argument are clarified and supported by the model.
+This site is still a work in progress — a kind of evolving rather than a polished presentation.
 
 # EcoPostView
 
@@ -1064,10 +555,522 @@ print(log_sal3)
 
 This part is still under construction.
 
+# Statistics (analytical and emperical Bayes)
+
+In most cases the theory and background is often not provided in many cookbooks, but makes it impossible to interpreted, criticize our results. This section introduces some theory. However, if you are already familiar with it or find it too technical, feel free to skip it. Since this R-package primarily uses Bayesian inference, an introduction to Bayes Theorem and methods used may be of interest. While it is not necessary needed for the utilization of the R-package itself.
+
+## Classical statistics and estimation
+
+All statistics focuses on estimating the parameter of interest $\theta$ which in most (G)LMs is denoted as the parameter $\mu$ or $\beta$. For consistency I will use the parameter of interest $\mu$. The population parameter of interest $\mu$ is fixed and unknown. To investigate potential values for $\mu$ we take measurements/samples. The observed measurements or samples ($x$) are realizations of an unknown random variable $X$, where both x and X represents sets $x = \{x_i, \dots, x_n \mid x \in \mathbb{R}\}$ and $X = \{X_i, \dots, X_N \mid X \in \mathbb{R}\}$. Here, $x$ is a realization and $X$ denotes the random variable. It is then assumed that $x$ is originating as randomly identically and independent distributed random variable (iid) from X as in $x\sim X$ or $x \stackrel{\text{iid}}{\sim} N(\mu, \sigma^2)$. Since we do not have $X$ but only a set of realizations we need an estimator for it which it the sample mean $\hat{x}(x)$. Hence, the mean of the random variable $X$ would be $\mu(X)=\frac{X_i,\cdots,X_N}{N}$ and if x are indeed iid $\hat{x}(x)=\frac{x_i,\cdots,x_n}{n}$ would be an estimator for $\mu$. Therefore, the sample mean has certain properties $\mathbb{E}[\hat{x}]$ and $Var(\hat{x})=\frac{\sigma^2}{n}$. Then the weak law of large numbers suggest that the probability of deviation from the population parameter decreases when sample size $n$ increases $\lim_{n\to\infty} P\left(|\hat{X}_n-\mu|\geq \epsilon\right)=0$. This means that according to the central limit theorem $Z_n=\frac{\hat{x}-mu}{\sigma/\sqrt(n)}$ converges to the standard normal under $mu=0$. The probability of observing $Z$ under a long-run of repetitions $P(-1.96\lesssim Z \lesssim 1.96)=0.95$. Similair, the probability of the intervals of $\overline{x}$ to cover $\mu$ in a long-run of repeated experiments at 95% is $1  - c = P(\overline{x} > \mu - 1.96 \cdot \frac{\sigma}{\sqrt{n}}) ~and~  P(\overline{x} < \mu - 1.96 \cdot \frac{\sigma}{\sqrt{n}})$. I visually explain this in this shiny app https://snwikaij.shinyapps.io/shiny/. Furthermore, it is clear that statistics does do nothing with causality in the first place and the focus on error-control and causality starts by satisfying theoretical conditions needed the arrive at believes in these concepts. Hence, error-control and causality start a-priori (Fisher 1949, Pearl 2009, Mayo 2018). Yet, such a focus and framework would, for example be extremely useful if objectivity over repetitions are the goal and favorable. While classical statistics focuses on fixed but unknown parameters, error-control and objectivity of information, Bayesian methods extend this perspective by introducing prior information and viewing parameters as random variables. This shift opens the door to more flexible and informative inference, as explained in the next section.
+
+## Bayes Theorem and probablistic estimation
+
+### Bayes Theorem
+
+Informally Bayes Theorem would be notated $\text{Posterior}\, \text{probability} = \frac{\text{Likelihood} \cdot \text{Prior}}{\text{Evidence}}$. More formally Bayes theorem is often notated with A and B where P indicates probability and '|' given or conditional on. $P(A|B) = \frac{P(B|A) \cdot P(A)}{P(B)}$.Other expression such as $P(\theta|Data, Info) = \frac{P(Data|\theta) \cdot P(\theta|info)}{P(Data)}$ are to highlight that the posterior describes the information of that conditional on the prior information that is given in there.
+
+The derivation of Bayes theorem relies on the axioms probability theory.
+
+**Premise 1)**
+
+$$
+P(A | B) = \frac{P(A \cap B)}{P(B)}
+$$
+similarly
+
+$$
+P(B |A) = \frac{P(B \cap A)}{P(B)}
+$$
+**Premise 2)**
+
+Also, the joint probability, expressed as a set-theoretic relationship on $z$, indicates that element of both sets are the same.
+
+$$
+z = \{x : x \in A \cap B : x \in B \cap A\}
+$$
+thus
+
+$$
+P(A \cap B) = P(B \cap A)
+$$
+**Premise 3)**
+
+In accordance with the previous
+
+$$
+P(A| B) \cdot P(A) = P(A \cap B)
+$$
+and
+
+$$
+P(B | A) \cdot P(B) = P(B \cap A)
+$$
+**Conclusion)**
+
+Therefore
+
+$$
+P(A | B) \cdot P(A) = P(B | A) \cdot P(B)
+$$
+$$
+P(A|B) = \frac{P(B|A) \cdot P(A)}{P(B)}
+$$
+
+### Bayes Theorem in use
+
+The previous expression can help us with answer simple questions. Assume that there is a likelihood of 0.7 $P(Species|<Threshold)$ that a species if found below a certain threshold. Furthermore, we also know that that the environment will only be found 0.3 or 30% of the time as $P(<Threshold)$.How probable would it then be we are below the threshold if we observe the species $P(<Threshold|Species)$? 
+
+$$
+P(Species|<Threshold) = 0.7\\
+P(<Threshold) = 0.3\\
+P(<Threshold|Species) = ?\\
+$$
+
+Expressing this in Bayes theorem would result in
+
+$$
+P(<Threshold|Species)=\frac{P(<Threshold|Species)\cdot P(Species) }{P(<Threshold)}
+$$
+
+The only thing still required is $P(Species)$ often called the 'evidence'. Yet, this evidence is simply the total probability of observing a species, below and above the threshold. For this we can assume that this is the reverse of the $P(Species|<Threshold)$ and $P(<Threshold)$
+
+$$
+P(Species)=[P(<Threshold|Species)\cdot P(Species)] + [(1-P(<Threshold|Species))\cdot(1-P(Species))]\\
+0.42=[0.7\cdot0.3]+[0.3\cdot0.7]
+$$
+
+Then it is simply filling in the blanks
+
+$$
+P(<Threshold|Species)=\frac{P(<Threshold|Species)\cdot P(<Threshold) }{P(Species)}=\frac{0.7\cdot0.3}{0.42}=0.5
+$$
+
+The answer not very satisfying as the probability is simply a 'coin toss'. This could be improved if we would introduce more species with the same indicative potential.
+
+$$
+P(<Threshold|Species)=\frac{P(<Threshold|Species)\cdot P(<Threshold) }{P(Species)}=\frac{(0.7^2*0.3)}{[(0.7^2*0.3)+(1-0.7)^2*(1-0.3)]}=0.7
+$$
+We would need around five species to get an indicative potential of >0.95 (it would be 0.97).
+
+### Approximate Bayesian Computation with rejection sampling
+
+Approximate Bayesian Computation with rejection sampling (ABC-rejection) is a computationally expensive method for approximating the posterior distribution. However, when the number of parameters is relatively small, the posterior can still be approximated quite well. ABC-rejection is especially useful when the likelihood function cannot be computed or approximated accurately.
+
+One example is the use of ABC to explore potential bias in the EcoPostView package. In a simplified case, assuming both the prior and the data-generating model are normally distributed, the ABC-rejection algorithm begins by simulating a parameter from the prior distribution.
+
+$$
+\mu_{i}^*\sim N(\mu_{prior},\sigma_{prior}^2) \\
+\sigma_{i}^{2*}\sim Exp(rate)
+$$
+
+The asterisk ($^*$) denotes that these parameters are temporary, and this will become important later.Next, a data-generating model is used to simulate data based on these temporary parameters. We assume the observed data is approximately normally distributed, though any model could be used. For each simulation, we generate $n_{data}$ values.
+
+$$
+x_{i}\sim N(\mu^*, \sigma^{2*})
+$$
+
+Depending on the parameter of interest (e.g., $\mu$, $\sigma$, mode, or median), a summary statistic is computed from the simulated data. In this example, we focus on estimating $\mu$.
+
+$$
+\hat{x}_{sim, i}=\frac{\sum_{i=1}^n(x_i, ..., x_n)}{n_{data}}
+$$
+
+Each simulated mean $\hat{x}_{sim, i}$ (typically out of 100,000 simulations) is compared to the observed mean $\hat{x}_{data}$ using the Euclidean distance.
+
+$$
+E_{i}=\sqrt{(\hat{x}_{sim, i} - \hat{x}_{data})^2}
+$$
+
+A tolerance threshold is then selected to determine which simulated values are accepted. Simulations with $E_i > tolerance$ are rejected, while those with $E_i \leq tolerance$ are retained. While a tolerance of zero would yield the most accurate posterior, it would typically result in rejecting all simulations. On the other hand, setting the tolerance too high would allow in too many poor matches.
+
+Each accepted simulation corresponds to an accepted pair of simulated parameters $\mu_{i}^*, \sigma_{i}^{2}*$. Since all $\mu_{i}^*$ were originally drawn from the prior, the subset of accepted values approximates the posterior distribution of $\mu$.
+
+### Bayes theorem and conjugate priors
+
+The previous example works for simpler approximations yet if we want to derive an interval for a particular parameter $\theta$ then we can approach this analytically using conjugate priors. Where a prior is conjugate to a likelihood if the resulting posterior is in the same family as the prior.
+
+As introduced, in statistics and estimation is about finding out the value for $\theta$ which is assumed be $\mu$. Where in the frequentist framework this is considered fixed and unknown, this is in the Bayesian framework considered to be random 'and approximately' known. Of course also in the Bayesian framework samples $x$ are taken. Assume that we already know something about $\mu$ then it is possible to restrict to exclude unreasonable values or for the information we have on $\mu$ to more acceptable values.
+
+$$
+P(\mu|Data) = \frac{P(Data|\mu) \cdot P(\mu)}{P(Data)}
+$$
+
+For a simple mean and variance an analytical approach can be used to derive the posterior given the likelihood and prior via the following equations.
+
+$$\mu_{posterior} =\frac{\frac{\mu_{prior} }{\sigma_{prior}^2} + \frac{\hat{x}_{data} }{\sigma_{data}^2}}{
+\frac{1}{\sigma_{prior}^2} + \frac{1}{\sigma_{data}^2}}
+\\
+\sigma_{posterior}=\sqrt{\frac{1}{\frac{1}{\sigma_{prior}^2}+\frac{1}{\sigma_{data}^2}}}$$
+
+**Proof:**
+
+**Premise 1)**
+
+Bayes rule can be simplified to
+$$P(\mu|Data) \propto P(Data|\mu) \cdot P(\mu)
+\\
+N(\mu_{posterior}, \sigma_{posterior}^2)=N(\mu_{sample}, \sigma_{sample}^2)\cdot N(\mu_{prior}, \sigma_{prior}^2)$$
+
+**Premise 2)**
+
+The PDF for the normal distribution is
+$$f(x)=\frac{1}{2\cdot \sqrt{\sigma \pi}}\cdot exp(-\frac{1}{2}(\frac{x-\mu}{\sigma})^2)$$
+
+**Premise 3)**
+
+$$Prior: P(\mu_{prior})=\frac{1}{2\cdot \sqrt{\sigma_{prior} \pi}}\cdot exp(-\frac{1}{2}(\frac{\theta-\mu_{prior}}{\sigma_{prior}})^2)
+\\
+Likelihood: P(\mu_{sample})=\frac{1}{2\cdot \sqrt{\sigma_{sample} \pi}}\cdot exp(-\frac{1}{2}(\frac{\mu_{sample}-\theta}{\sigma_{sample}})^2)
+$$
+
+**Premise 4)**
+
+Both $\frac{1}{2\cdot \sqrt{\sigma_{prior} \pi}}$ and $\frac{1}{2\cdot \sqrt{\sigma_{sample} \pi}}$ are scalars and can be left out of the equation.
+
+**Premise 5)**
+
+Since both exponent have the same base we can add the exponent $$(a^2+b^2=a^{2+2})$$ 
+resulting in
+
+$$exp(-\frac{1}{2}\cdot[(\frac{\theta-\mu_{prior}}{\sigma_{prior}})^2+(\frac{\mu_{sample}-\theta}{\sigma_{sample}})^2]$$
+
+After which brackets can be moved
+$$exp(-\frac{1}{2}\cdot[\frac{(\theta-\mu_{prior})^2}{\sigma_{prior}^2}+\frac{(\mu_{sample}-\theta)^2}{\sigma_{sample}^2}])$$
+
+**Premise 6)**
+
+Expanding the brackets terms
+
+$$(a^2+b^2)=(a-b)\cdot(a-b)=a^2-ab-ab+b^2=a^2-2ab+b^2$$
+This means 
+$$(\theta-\mu_{prior})^2=\theta^2-2\theta\mu_{prior}+\mu_{prior}^2$$ 
+and
+$$(\mu_{sample}-\theta)^2=\mu_{sample}^2-2\mu_{sample}\theta+\mu_{sample}^2$$ 
+which can be replaced in premise 5
+$$exp(-\frac{1}{2}\cdot[\frac{\theta^2-2\theta\mu_{prior}+\mu_{prior}^2}{\sigma_{prior}^2}+\frac{\mu_{sample}^2-2\mu_{sample}\theta+\mu_{sample}^2}{\sigma_{sample}^2}])$$
+
+**Premise 7)**
+
+Separating each term by dividing by $\sigma_{prior}^2$ and $\sigma_{sample}^2$
+
+$$exp(-\frac{1}{2}\cdot\frac{\theta^2}{\sigma_{prior}^2}+\frac{-2\theta\mu_{prior}}{\sigma_{prior}^2}+\frac{\mu_{prior}^2}{\sigma_{prior}^2}+
+\frac{\mu_{sample}^2}{\sigma_{sample}^2}+\frac{-2\mu_{sample}\theta}{\sigma_{sample}^2}+\frac{\mu_{sample}^2}{\sigma_{sample}^2})$$
+
+**Premise 8)**
+
+Group each term by the nominator
+
+$$\frac{\theta^2}{\sigma_{prior}^2}+\frac{-2\theta\mu_{prior}}{\sigma_{prior}^2}+\frac{\mu_{prior}^2}{\sigma_{prior}^2}+
+\frac{\mu_{sample}^2}{\sigma_{sample}^2}+\frac{-2\mu_{sample}\theta}{\sigma_{sample}^2}+\frac{\mu_{sample}^2}{\sigma_{sample}^2}=
+\\
+\theta^2(\frac{1}{\sigma_{prior}^2}+\frac{1}{\sigma_{sample}^2})+
+-2\theta(\frac{\mu_{prior}}{\sigma_{prior}^2}+\frac{\mu_{sample}}{\sigma_{sample}^2})
++(\frac{\mu_{prior}^2}{\sigma_{prior}^2}+\frac{\mu_{sample}^2}{\sigma_{sample}^2})
+$$
+Since the last group is not dependent on $\theta$ it is not in our focus
+$$
+exp(-\frac{1}{2}\cdot[\frac{\theta^2}{\sigma_{prior}^2}+\frac{-2\theta\mu_{prior}}{\sigma_{prior}^2}+\frac{\mu_{prior}^2}{\sigma_{prior}^2}+
+\frac{\mu_{sample}^2}{\sigma_{sample}^2}+\frac{-2\mu_{sample}\theta}{\sigma_{sample}^2}+\frac{\mu_{sample}^2}{\sigma_{sample}^2}=
+\\
+exp(-\frac{1}{2}\cdot\theta^2(\frac{1}{\sigma_{prior}^2}+\frac{1}{\sigma_{sample}^2})+
+-2\theta(\frac{\mu_{prior}}{\sigma_{prior}^2}+\frac{\mu_{sample}}{\sigma_{sample}^2})
++not\ dependent\ on\ \theta])
+$$
+
+**Premise 9)**
+
+The goal is to derive $P(\mu|Data)$ from $P(\mu|Data) \propto P(Data|\mu) \cdot P(\mu)$ An the general exponential form of the normal distribution is given in Premise 2 and the premises 6, 7 and 9 lead to
+$$\frac{1}{2}\cdot \theta^2 (\frac{1}{\sigma^2})+\theta(\frac{\mu}{\sigma^2})+C=
+\\
+\frac{1}{2}\cdot\theta^2A+\theta B+C$$
+the general exponential form for the normal distribution is always $\frac{1}{2}\cdot\theta^2A+\theta B+C$ meaning that $A=\frac{1}{\sigma^2}$ and $B=\frac{\mu}{\sigma^2}$ and to obtain the standard deviation $A$ needs to be re-arranged to $\sigma = \sqrt{\frac{1}{A}}$ and to obtain the mean $\mu=\frac{B}{A}=\frac{\frac{\mu}{\sigma^2}}{\frac{1}{\sigma^2}}$
+
+**Conclusion)**
+
+In Premise 8
+$$
+exp(-\frac{1}{2}\cdot\theta^2(\frac{1}{\sigma_{prior}^2}+\frac{1}{\sigma_{sample}^2})+
+-2\theta(\frac{\mu_{prior}}{\sigma_{prior}^2}+\frac{\mu_{sample}}{\sigma_{sample}^2})+C)
+$$
+In Premise 9
+$$
+\sigma = \sqrt{\frac{1}{A}}, A=\frac{1}{\sigma^2}\\
+\mu=\frac{B}{A}=\frac{\frac{\mu}{\sigma^2}}{\frac{1}{\sigma^2}}
+$$
+Which implies that
+$$
+\sigma_{posterior}=\sqrt{\frac{1}{\frac{1}{\sigma_{prior}^2}+\frac{1}{\sigma_{sample}^2}}}\\
+\mu_{posterior}=\frac{\frac{\mu_{prior}}{\sigma_{prior}^2} + \frac{\mu_{sample}}{\sigma_{sample}^2}}{\frac{1}{\sigma_{prior}^2} + \frac{1}{\sigma_{sample}^2}}
+$$
+Another way to obtain the posterior mean would be via
+$$\mu_{posterior}=\frac{\frac{\mu_{prior}}{\sigma_{prior}^2}+\hat{x}_{data}*\frac{n}{\sigma_{data}^2}}
+{\frac{1}{\sigma_{prior}^2}+\frac{n}{\sigma_{data}^2}}$$
+
+As might be clear this is less computational heavy than MCMC methods. For more then two parameter such an analytically approach becomes more cumbersome. And, if conjugacy is not satisfied no closed form solution is available. In this regards, Laplacian approximation is also computational easy. Yet, the equation clearly formulate the idea what happens in Bayes theorem. A simple example below highlights how this this can be useful.
+
+## Salinity example
+
+For example, we want to know the probable relation between insects and salinity over a whole gradient from 0 till 5000 $\mu S \cdot cm ^{-1}$. To do so we generate a simple log-linear model $log(insect ~ diversity)=\beta_1*conductivity~+~\beta_0$. We know that insect diversity declines with an increasing salinity therefore we could exclude  positive values and shift the weight to more negative values. In the frequentist framework this is not performed and there is worked under the principle of indifference. This means all values are apriori equally likely. This is from an consistent error-control perspective preferred, but from a probabilistic perspective unreasonable. Hence, it would be beneficial to leverage this information into the model.
+$$
+P(\beta|Data, info) = \frac{P(Data|\beta) \cdot P(\beta|info)}{P(Data)}
+$$
+Under different context we can leverage more information over the likelihood using Bayesian Model Averaging (BMA) that does not use a single prior, but multiple priors.
+
+## Introduction to Bayesian Model Averaging (BMA)
+
+Instead of $P$ the function '$f$' are used this to highlight that the probability is a mapping function. A mapping function being a 'rule' that maps $x$ to $y$ and so $y=f(x)$.
+$$
+f(\beta \mid Data, Info) = 
+\frac{f(Data \mid \beta) \cdot f(\beta \mid Info)}
+{\int f(Data \mid \beta) \cdot f(\beta \mid Info)}
+$$
+The integral in the denominator is used to scale the posterior probability to one. This expression is sometimes simplified to
+$$f(\beta \mid Data, Info) = f(Data \mid \beta) \propto f(\beta \mid Info)$$
+Where the $\propto$ symbol indicates 'proportional to' highlighting the idea of exchangeability. Therefore, the posterior is nothing more than a function that describes the probability $y$ as a function of $\beta$ conditional on $Data$ and $Info$ ($y=f(\beta \mid Data, Info)$). This cannot be solely conditional on the $Data$ as the $Data$ is not uncertain our information/believe is uncertain about a none existing object $\beta$ (unless Platonism is true). 
+
+In the previous part a single prior model was used. Bayesian Model Averaging (BMA) has the advantages that it allows multiple ($k$) functions to be utilized as prior. I specifically choose the use of $f$ so multiple priors as $f_k$ in the equation below can be seen nothing more as multiple functions (or models). This in my opinion makes it easier to see that there is only optimized between multiple functions. It sound weird to say to optimize between probabilities.
+Hence, multiple possible scenarios that could have been responsible for $\beta$ can be introduced as below.
+$$
+f(\beta \mid Data,Info) = \frac{f(Data \mid \beta) \cdot f_k(\beta \mid Info)}{\int \left( \sum_{k=1}^{k} f(Data \mid \beta) \cdot f_k(\beta \mid Info) \right)}
+$$
+Now it should be clear that each $\beta$ contained within $g(E(y \mid x_{ij})) = \sum_{j=1}^{v} \beta_j \cdot x_{ij}$ is being restricted by the prior models. While in frequentism it is unrestricted and 'complete indifference' towards the  possibility of $\beta$. All these methods can be used in a meta-analysis.
+
+## Meta-analysis
+
+A standard meta-analysis uses a measure of location (mean) and scale (precision) to estimate a pooled value based on all parameters. For a fixed meta-analysis the pooled parameter is derived via the following equation.
+$$\theta_{pooled} = \frac{\sum_{i=1}^{k}(\theta_i\cdot w_i)}{\sum_{k=1}^kw_i}$$
+$\theta_i$ is the extracted effect-size for a study $i$. The $w_i$ is the weight per study $i$ for allk $k$ studies, derived from the precision $1/se_i^2$ via the equation below.
+$$w_i = \frac{1}{se_i^2}$$
+The standard error for the pooled effect-size can then be derived via the formula given below.
+
+$$se(\theta_{pooled})=\frac{1}{\sqrt\sum_{i=1}^{k}(w_i)}$$
+For a random-effect meta-analysis the variance between studies is separately modeled. In the metafor package REML or (Restricted Maximum Likelihood) is used to estimate this between study variance. However it is also possible using the DerSimonian and Laird method.
+$$
+\tau^2=max(0, \frac{Q-(k-1)}{\sum_{i=1}^{k}\frac{1}{w_i}-\frac{\sum_{i=1}^{k}1/w_i^2}{\sum_{i=1}^{k}1/w_i}})\
+\\
+w^*_i=\frac{1}{(\frac{1}{w_i}+\tau^2)}
+\\
+\theta_{pooled} = \frac{\sum_{i=1}^{k}(\theta_i\cdot w^*_i)}{\sum_{i=1}^{k}(w^*_i)}
+\\
+se(\theta_{pooled})=\frac{1}{\sqrt(\sum_{i=1}^{k}w^*_i)}
+$$
+If we now go back to how we analytically derived the posterior we can devise a function that can analytically perform a fixed effect meta-analysis with ease. I have placed this in a function called 'abmeta'. In in simple cases it approximates the results of metafor and the meta function inf EcoPostView relatively well. Of course the variance component slightly differs with that from metafor and the 'meta' function due to the different method of estimation.
+
+## BMA and meta-analysis
+
+In a meta-analysis we do not talk about $\beta$ but about a set of estimates $\beta=\{\beta_{i}, ..., \beta_{n}\}$ meaning that $f(Meta-data\mid\{\beta_{i}, ..., \beta_{n}\})$. Hereby the flexibility allows that these estimates are either likelihood estimates ($\hat{\beta}$) or  posterior estimates ($\beta$). and we end up with an expression that should capture the inference to an underlying pooled model parameter.
+$$
+f(\beta_{poolded} \mid Meta-data,Info) = \frac{f(Meta-data \mid \{\beta_{i}, ..., \beta_{n}\}) \cdot f_k(\beta_{pooled} \mid Info)}{\int \left( \sum_{k=1}^{m} f(Meta-data \mid \{\beta_{i}, ..., \beta_{n}\}) \cdot f_k(\beta_{pooled} \mid Info) \right)}
+$$
+
+## Sequential updating
+
+Bayesian sequential updating refers to the practice of re-using the derived posterior of a previous model as the prior for the new model. For this the assumption of conditional independence between the the datasets is assumed. The parameter of interest is $\theta$ based on a dataset $Data_1$ and we derive the posterior. 
+$$P(\theta|Data_1) = \frac{P(Data_1|\theta) \cdot P(\theta)}{P(Data_1)}$$
+The next would be 
+$$P(\theta|Data_1, Data_2) = \frac{P(Data_2|\theta) \cdot P(\theta|Data_1)}{P(Data_2)}$$ 
+till $$P(\theta|Data_n) = \frac{P(Data_n|\theta) \cdot P(\theta|Data_1,\cdots,Data_{n-1})}{P(Data_n)}$$
+
+For example, we would like to know what $\mu$ from a population of interest. Our example population has $\mu=0.5$, $\sigma=5$ and each study would have an error of $\alpha = 40\%$ when when we assume $\alpha=5\%$ (meaning that our heterogeneity is larger than expected). Our first prior starts with $N(0, 5)$ after which the posterior of previous is sequentially re-used visually represented in Fig. 2a below. Where more studies increase the precision of the estimated posterior. 
+
+If the focus lies on objectivity and the error control over the different studies and assume iid then the curve between studies would follow that of Fig. 2b below. 
+
+In a less formal way is the Bayesian framework more focused on transfer of information an precision. On the other hand the frequentist framework is more interested in objectivity, consistency and error among studies.
+
+```{r sequential updating,  fig.width=8, fig.height=4, echo=F, warning=FALSE}
+
+library(ggplot2)
+
+postvals <- function(mu_data, sigma_data, mu_prior, sigma_prior){
+  
+  post_mu <- (mu_prior / sigma_prior^2 + mu_data /sigma_data^2) / (1 / sigma_prior^2 + 1 / sigma_data^2)
+  post_sigma <- sqrt(1/(1 / sigma_prior^2 + 1 / sigma_data^2))
+  
+  c(mu=post_mu, sigma=post_sigma)}
+
+nsim <- 100
+cint <- 0.05
+errint <- 0.4
+theta  <- 0.5
+postset <- array(NA, dim=c(nsim, 5))
+freqset <- array(NA, dim=c(nsim, 5))
+
+z_adj <- abs(qnorm(errint/2))/abs(qnorm(cint/2))
+
+set.seed(3)
+for(i in 1:nrow(postset)){
+xsamp <- rnorm(25, theta, 5)
+if(i==1){
+post  <- postvals(mean(xsamp), sd(xsamp)/sqrt(length(xsamp)), 0, 5)
+}else{
+post  <- postvals(mean(xsamp), sd(xsamp)/sqrt(length(xsamp)), post[1], post[2])}
+postset[i,] <- c(i, post, post[1]-post[2]*abs(qnorm(cint/2))*z_adj, post[1]+post[2]*abs(qnorm(cint/2))*z_adj)
+
+fse <- sd(xsamp)/sqrt(length(xsamp))
+freqset[i,] <- c(i, mean(xsamp), fse,  mean(xsamp)-fse*abs(qnorm(cint/2))*z_adj,  mean(xsamp)+fse*abs(qnorm(cint/2))*z_adj)}
+
+postset <- setNames(as.data.frame(postset), c("iter", "mu", "se", "ll", "ul"))
+
+p1 <- ggplot(postset, aes(iter, mu))+
+  geom_line()+ylab("µ")+xlab("Study")+
+  geom_hline(yintercept = 0.5, col="tomato3", lty=2, lwd=0.2)+
+  geom_ribbon(aes(ymin = ll, ymax = ul), fill = "grey70", alpha=0.2)+
+  theme_classic()
+
+freqset <- setNames(as.data.frame(freqset), c("iter", "mu", "se", "ll", "ul"))
+
+p2 <- ggplot(freqset, aes(iter, mu))+
+  geom_line()+ylab("")+xlab("Study")+
+  geom_hline(yintercept = 0.5, col="tomato3", lty=2, lwd=0.2)+
+  geom_ribbon(aes(ymin = ll, ymax = ul), fill = "grey70", alpha=0.2)+
+  theme_classic()
+
+sequpdate <- cowplot::plot_grid(p1, p2, ncol=2)
+print(sequpdate)
+rm(sequpdate)
+```
+
+*Figure 2: Sequential updating with credibility intervals on the left panel and a long-run of means with confidence intervals on the right The left panel.*
+
+## A short reflection on uncertainty
+
+I do not believe statistics reflects uncertainty about events; rather, it reflects the information in the data under a particular model or the uncertainty about our belief in a parameter ($\theta, \beta, \mu$, etc.). The later concept is often vague and confusing because, if one assumes the parameter does not exist independently of the mind, then what exactly is uncertain - our belief? The claim to 'objective probability' is already compromised by the assumption that the parameter is objective. However, if the parameter does not exist outside the mind, the meaning of 'objective' in this context becomes questionable.
+
+When people refer to objectivity, they often mean that the data itself is the most 'objective' part of the process. However, if some conditions are not met, such as (1) the data is not randomly sampled from a population of interest, (2) the model is not pre-selected in advance, (3) a sufficiently large sample size is not chosen based on the model, and (4) confounding variables are present, then even the data cannot be considered truly objective unless these limitations are explicitly acknowledged. Moreover, model selection procedures further contaminate the objectivity of the data, meaning that the estimated model parameters no longer fully reflect the objectivity of the data which is often implied in our conclusions (Gelman and Loken, 2013; Tong, 2019).
+
+In Bayesian updating, the prior reflects the extent to which we want to sacrifice over the objectivity of the likelihood by using information which cannot be formalized into the likelihood. This is captured by the relationship $f(\theta \mid Data, Info) = f(Data \mid \theta) \propto f(\theta \mid Info)$
+
+The posterior, therefore, is merely the weighted combination of the prior and likelihood. It represents the relationship (e.g., $0.25$ as $0.5 \cdot 0.5$) between the prior and the likelihood. There is no invalidity in a logical argument such as:(Premise 1.) All unicorns are orange. (Premise 2.) I have a unicorn. (Conclusion) Therefore, my unicorn is orange.
+
+While this argument may be unsound — because unicorns do not exist — the reasoning itself is not flawed. The issue lies with the premises, not the structure of the argument. Hence, Uncertainty does not exist in the 'real' world; it resides solely in our minds. We cannot be 'wrong' or 'correct' about $f(\beta \mid \text{Data, Info})$ because it does not exist as a tangible entity. Even if it did, its existence would have no impact on reality because uncertainty is unrelated to the way reality operates. In the real world, events either occur or they do not. If my unicorn does not exist, I will never see it, and it was never orange in the first place.
+
+We should also avoid treating models as a definitive representation of reality. Models are tools that convey information and serve as pragmatic instruments. The the model itself is not the result, the strength of the results relies on the argument, and how well the premises within the argument are clarified and supported by the model.
+
+
+# Reasoning
+
+## Introduction
+
+Following the full path from reasoning and logic to application and *belief*, one may recognize that many — if not most — of our *beliefs* are not *justified* under particular lines of reasoning. This leads to deeper questions (1.) How do we *justify* our *beliefs*? (2.) Which propositions should we *believe* (3.) Why do we try to *justify* them? And perhaps more drastic (4.) How should we behave in light of this information?
+
+It is argued that to some extend reasoning is based on the principles of logic. Although some argue otherwise (e.g., Harman, 1986). I will use formal expressions that are not all at full first-order-language and predicate logic, but mostly include some form of meta-language.
+For this I will use the basic principle of deductive logic based. I believe they are useful to lay out underlying believes and their connection between them. 
+
+To understand arguments, validity, soundness, cogency and the formalization of arguments and introduction to logic is needed. Although this will not be an full introduction into logic it will address some principles of it and for a more formal and extended introduction see (Barwise et al. 2002; Lee 2017; Smith 2021). Therefore I will start with an introduction to classical syllogism.
+
+## Syllogism
+
+A simple syllogistic argument consisting of two premises.
+
+$$
+Major\ premise \ 1) \ all \ insects \ have \ six \ legs,\\
+Minor \ premise \ 2) \ x \ is \ an \ insect,\\
+Conclusion) \ therefore \ x \ has \ six \ legs
+$$
+The argument above is called "modus ponens", which follows a specific logical structure. In this form, the conclusion is entailed by the premises — that is, the truth of the premises guarantees the truth of the conclusion. Entailment means that in all cases where the premises are true, the conclusion cannot be false. If an argument has this feature, it is considered logically valid.
+
+This argument can be further condensed by abstracting away the content and focusing only on its structure. In this way, the validity of the argument depends solely on the form of the entailment, not on the specific subject matter.
+
+**Modens Ponens** 
+$$
+Major\ premise \ 1) \ all \ P \ are \ Q,\\
+Minor \ premise \ 2) \ x \ is \ P,\\
+Conclusion) \ therefore \ x \ is \ Q
+$$
+In an argument like the one above, all premises are declarative statements, also known as propositions — sentences that are either True or False, but not both. Each premise typically consists of a subject (or antecedent), a copula (such as is, are, will be, etc.), and a predicate (or consequent). These components express a logical relationship between concepts.
+
+An argument is said to be **valid** if, assuming all the premises are true, the conclusion cannot be false. In other words, the conclusion is logically entailed by the premises.
+An argument is **sound** if it is both valid and all of its premises are in factually true. Therefore, soundness implies both logical structure and factual accuracy. 
+
+For example: P1: All unicorns fly when eating carrots, P2: my unicorn eat a carrot, C: therefore my unicorn will fly. This is a valid argument because if the premises were true, the conclusion would necessarily follow. However, it is not sound because unicorns do not exist (as far as I know), so No consider the following argument: P1: most grass is green P2: the sky is blue C: you are reading this text. Even if all three propositions happen to be true, this argument is not valid because the conclusion is not entailed by the premises — there is no logical connection between them. An argument where the conclusion does not follow from the premises is considered invalid, regardless of whether its statements are true.
+
+In propositional logic, the argument as given before can be formally expressed as below. In this formal expression $\rightarrow$ indicates and implication (as "implies") and the three dots $\therefore$ indicates therefore. Similar $\vee$ means "or", $\wedge$ means "and" and $\neg$ is the negation symbol. Thus for example $\neg P$ means not-P. Other operators include $\vee$ indicates "or" (disjunction) and $\wedge$ indicates "and" (conjunction). Using these basic operators, many more valid argument forms can be constructed—such as disjunctive syllogism, hypothetical syllogism, modus tollens, and more. These forms serve as the foundation for formal reasoning in logic.
+$$P \rightarrow Q, P \therefore Q$$
+
+**Modens Tollens**
+$$P \rightarrow Q, \neg Q \therefore \neg P$$
+
+**Hypothetical Syllogism**
+$$P \rightarrow Q, Q \rightarrow Z, P \therefore Z $$
+
+**Disjunctive Syllogism**
+$$Either \ P \vee Q, \neg P \therefore Q$$
+
+**Semantic equivalent structures**
+$$
+\text{Modens Ponens:} for \ all \ x \ that \ are \ P \ it \ implies \ they \ are \ Q, x \ is \ P \ therefore \ x \ is \ Q\\
+\text{Modens Tollens:} for \ all \ x \ that \ are \ P \ it \ implies \ they \ are \ Q, x \ is \ \neg Q \ therefore \ x \ is \ \neg P \\
+\text{Hypothetical Syllogism:} for \ all \ x \ that \ are \ P \ it \ implies \ they \ are \ Q, for \ all \ x \ that \ are \ Q \ it \ implies \ they \ are \ Z, \ x \ is \ P \ therefore \ x \ is \ Z \\
+\text{Disjunctive Syllogism:} either \ x \ is \ P \ or \ x \ is \ Q, x \ is \neg P \ therefore \ x \ is \ Q
+$$
+
+## Semantical validity of an argument
+
+An valid argument - in the semantic interpretation of validity - in case $𝓟_n$ $𝓟_i$ is true in all interpretations in which $𝓟_1, ..., 𝓟_{n-1} ,𝓟_n$ are true. Simplistically, if all propositions are true the conclusion cannot be false. Such a valid argument can be notated as
+$$𝓟_1, …, 𝓟_{n-1} \models 𝓟_n$$ (see also Haack, 1978)
+
+## Predicate logic 
+
+In predicate logic modens ponens is expressed as $\forall(P(x)\rightarrow Q(x))$ where ‘$\forall$’ indicates ‘for all’ and ‘$\models$’ therefore. Each proposition referred to as $𝓟_i$ consisting of P and Q called properties and x and element from a set $x\in X$. The benefit of predicate logic (or approximating languages such as deontic-logic or a meta-language)is its possibility to quantify over different elements form a set $x \in X$ can be assessed.
+
+**Predicated equivalent structures**
+$$
+\text{Modens Ponens:} \forall x(P(x)\rightarrow Q(x)), P(x) \vdash Q(x) \\
+\text{Modens Tollens:} \forall x(P(x)\rightarrow Q(x)), \neg Q(x) \vdash \neg P(x) \\
+\text{Hypothetical Syllogism:} \forall x(P(x)\rightarrow Q(x)) \wedge \forall x(Q(x) \rightarrow Z(x)), P(x) \rightarrow Z(x) \\ 
+\text{Disjunctive Syllogism:} P(x) \vee Q(x), \neg P(x) \vdash Q(x) \\
+$$
+
+## Deduction, induction and abuction
+
+Deductive reasoning moves from general principles to specific conclusions. It begins with premises that are assumed to be universally true and applies them to individual cases. If the premises are true and the reasoning is valid, the conclusion cannot be false. For example: P1: All humans are mortal, P2: I am a human C: Therefore I am mortal. 
+
+In contrast, inductive reasoning moves from specific observations to broader generalizations. It attempts to infer a universal rule or principle from limited data, and thus does not guarantee the truth of the conclusion — even if all observed instances support it. Induction tries to generals from the instances (x) we observe to all.
+
+If I observe twenty white swans therefore all swans are white.
+
+This reasoning is not valid. The observation of one swan with any other colour would negate the whole argument. This issue is known as the problem of induction. Hence, how can I justify my conclusion to be universally true based on a limited set of instances? This means inductive arguments might not be valid or sound.
+
+## Cogency of arguments
+
+In empirical sciences the universal quantifier ‘$\forall$’ (largely?) unsupported and therefore $\exists x(P(x) \rightarrow Q(x))$ where ‘$\exists$’ some. This indicates that propositions are merely acceptable. And in most cases ∃ can be ignored and as it would be wises to explicitly assume it. Meaning that $𝓟_i: (P(x)\rightarrow Q(x))$ or $P \rightarrow Q$ and referred to as a conjecture. A conjecture is a proposition which is accepted as true via a valuation function $v(𝓟_i)=T$ (True) or false $v(𝓟_i)=F$ (False). 
+
+Empirical science developing theories built upon conjectures. Where a conjecture has to be supported by either party in an argument. If a conjecture cannot  be accepted by one of the parties, discussion is meaningless and the source of the rejection of one of the parties should be resolved (Popper 1968). 
+
+Arguments are either weakly or strongly cogent (weak or strong arguments) as the conjectures cannot be guaranteed in empirical sciences. Strong arguments are then arguments where most conjectures are acceptable (e.g., temperature is 0 degrees when the  thermometer works and indicates 0 degrees).
+
+The arguments proposed are indicated as $𝒜$. And $𝒜: 𝓟_1, …, 𝓟_{n-1} ,𝓟_n \models 𝓟_n$ should entail the truth of the conjectures within the derived conclusion. And when this is the cases such an argument is then valid $valid(𝒜)$ when all parties agree on the truthood $v(𝓟_i)=T$ (True) of the conjectures involved.
+
+The problem is that the empirical sciences has no axiomatic foundation from which the proof of an argument can be logically deduced. In the sense that I believe the the conclusion ($𝓟_3$) of the following argument. $𝓟_1$: All humans die, $𝓟_2$: I am human, conclusion ($𝓟_1 \therefore  𝓟_2$), therefore I die ($𝓟_1→𝓟_2, 𝓟_1 \therefore 𝓟_2$). The conclusion forming a conjecture in my belief system and that of others. However, it does not ensure the soundness of the argument, where soundness refers to the factuality of all propositions. Yet, having not known all humans ever lived or going to live the argument is not sound. Moreover, it is questionable if reasoning deals with valid conclusions. Where one better can speak about cogency of the argument.
+
+The agreement among parties - rather informally - forming a belief system that would be a function of acceptable (cogent) conjectures (Usó-Doménech and Nescolarde-Selva 2016). The conjectures tied together for each individual moral agent (Carthwright et al. 1996; van Fraassen 1980, Closely representing the nodes and edges in a network). 
+
+The moral agent then entertains the relations between propositions and arguments. Counter intuitively, the moral agents also appoints a property to an element x. Hence, a colour blind person would not see the specific colours a person that is not color blind would see, therefore not appoint the same colour property. Or, if a person does not know the function of a wrench, and therefore does not appoint the property wrench to it. If a property is not appointed to an element then the cogency (or validity) of an argument does not follow because without a property on x, the element x remains inert and undefined. Therefore,$v(𝓟_i)=T$ or $v(𝓟_i)=F$ remains undecided because $(x \rightarrow Q(x)), x \models Q(x)$ does not follow. Hence, each element is appointed a property, each proposition is valued, woven into an a cogent or not cogent (strong or weak) and formulated as a belief system.
+
+## Skepticism
+
+Understanding skepticism made most parts of why I am dissatisfied with most argument fall in its place. It perhaps plays a central but indirect part in this chapter. I will try to (meta-logical) formalize the Agrippa's trilemma and other skeptical "tools" that should lead to the realization that most of our justifications are not as strong and each of them could be undermined. 
+
+Any conclusion $𝓟_n$ under some condition $c \in C$ in an argument $𝓟_1, …, 𝓟_{n-1} \models 𝓟_n$. Can be suspended based on any other premise that is not certain/conclusive and therefore $𝓟_n$ does not follow. 
+
+More formally, for any claim from a subject ($s \in S$) there exists at least some propositions of disagreement over the claim under particular conditions so that the disagreement can be exploited in the mode of hypothesis (MH), Mode of Circularity (MC) and mode of infinite regress (MI).
+$$
+\forall s \forall 𝓟 \exists (Claim(s, 𝓟_n) \rightarrow Disagreement(Claim(s, 𝓟_n), c) \rightarrow \{MH \vee MC \vee MI\}
+\\
+MH: Pr(𝓟_n, s)/Pr(\neg𝓟_n, s) \neq \{0, \infty\} \rightarrow \neg Valid(𝓟_n) = Undecided
+\\
+MC: Valid(s, 𝓟_1, …, 𝓟_{n-1} \models 𝓟_n) \ 𝓟_n \in \{ 𝓟_1, …, 𝓟_{n-1} \}) \rightarrow \neg Valid(𝓟_n) = Circulair
+\\
+MI: \forall𝓟_m \exists𝓟_n (Valid(s, 𝓟_m \models 𝓟_n) \wedge 𝓟_m <  𝓟_n ) \rightarrow \neg Valid(𝓟_m)=  Non-foundational 
+$$
+
+
 
 # References
 
 Baguley, Thom. 2009. “Standardized or Simple Effect Size: What Should Be Reported?” British Journal of Psychology 100(3): 603–17. doi: 10.1348/000712608X377117.
+
+Bárdos, Dániel, and Adam Tamas Tuboly. 2025. Science, Pseudoscience, and the Demarcation Problem. Cambridge: Cambridge University Press. doi: 10.1017/9781009429597.
 
 Barwise, Jon, John Etchemendy, Gerard Allwein, Dave Barker-Plummer, and Albert Liu. 2002. Language, Proof, and Logic. Stanford, Calif: CSLI Publications.
 
@@ -1087,11 +1090,15 @@ Harman, Gilbert. 1986. Change in View: Principles of Reasoning. A Bradford Book,
 
 Hartig, Florian, Justin M. Calabrese, Björn Reineking, Thorsten Wiegand, and Andreas Huth. 2011. “Statistical Inference for Stochastic Simulation Models - Theory and Application: Inference for Stochastic Simulation Models.” Ecology Letters 14(8): 816–27. doi: 10.1111/j.1461-0248.2011.01640.x.
 
+Heidegger, Martin. 1929. “What Is Metaphysics.” https://www.stephenhicks.org/wp-content/uploads/2013/03/heideggerm-what-is-metaphysics.pdf.
+
 Hinne, Max, Quentin F. Gronau, Don Van Den Bergh, and Eric-Jan Wagenmakers. 2020. “A Conceptual Introduction to Bayesian Model Averaging.” Advances in Methods and Practices in Psychological Science 3(2):200–215. doi: 10.1177/2515245919898657.
 
 Hoeting, Jennifer A., David Madigan, Adrian E. Raftery, and Chris T. Volinsky. 1999. “Bayesian Model Averaging: A Tutorial.” Statistical Science 14(4):382–417. doi: 10.1214/ss/1009212519.
 
 Kale, Alex, Francis Nguyen, Matthew Kay, and Jessica Hullman. 2019. “Hypothetical Outcome Plots Help Untrained Observers Judge Trends in Ambiguous Data.” IEEE Transactions on Visualization and Computer Graphics 25(1): 892–902. doi: 10.1109/TVCG.2018.2864909.
+
+Laudan, Larry. 1983. “The Demise of the Demarcation Problem.” In Physics, Philosophy and Psychoanalysis, Boston Studies in the Philosophy of Science, eds. R. S. Cohen and L. Laudan. Dordrecht: Springer Netherlands, 111–27. doi: 10.1007/978-94-009-7055-7_6.
 
 Lee, Siu-Fan. 2017. Logic: A Complete Introduction. Great Britain: Hodder & Stoughton.
 

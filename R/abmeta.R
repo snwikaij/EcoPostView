@@ -71,7 +71,7 @@ abmeta <- function(estimate, stderr, prior_mu=0, prior_mu_se=1000, prior_weights
       # Heuristic method for tau^2
       tau2 <- max(0, (1/length(estimate))*sum((estimate-pooled)^2)-(sum(w*stderr)/sum(w)))
     } else if (tau_2 == "DSL") {
-      # DSL method for tau^2
+      #DSL method for tau^2
       Q    <- sum(w*(estimate-pooled)^2)
       tau2 <- max(0, (Q-(length(estimate)-1))/(sum(w)-sum(w^2)/sum(w)))
     } else {
@@ -90,12 +90,25 @@ abmeta <- function(estimate, stderr, prior_mu=0, prior_mu_se=1000, prior_weights
     pooled <- sum(prior_weights*post_mu)
     se     <- sqrt(sum(prior_weights*(post_se^2+post_mu^2))-pooled^2)}
 
+  #Compute marginal likelihood for BMA
+  logmarglike_m1 <- sapply(1:length(prior_mu), function(k) {
+    dnorm(pooled, mean=prior_mu[k], sd=sqrt(prior_mu_se[k]^2+se^2), log=TRUE)})
+
+  #sum log marginal likelihood
+  logmarglike_m1 <- log(sum(prior_weights*exp(logmarglike_m1)))
+
+  #marginal likelihood under null model same se
+  logmarglike_m0 <- dnorm(pooled, mean = 0, sd = se, log = TRUE)
+
+  #Bayes Factor
+  BF10 <- exp(logmarglike_m1-logmarglike_m0)
+
   #Simple ETI intervals because its is normal ETI is HDI
   ci <- pooled + se * c(-1, 1) * qnorm(interval + ((1 - interval) / 2))
 
   if(RE==T){
-    results <- c(mu=as.numeric(pooled), se=as.numeric(se), ll=ci[1], ul=ci[2], tau2=tau2)
+    results <- c(mu=as.numeric(pooled), se=as.numeric(se), ll=ci[1], ul=ci[2], tau2=tau2, BF10)
   }else{
-    results <- c(mu=as.numeric(pooled), se=as.numeric(se), ll=ci[1], ul=ci[2])}
+    results <- c(mu=as.numeric(pooled), se=as.numeric(se), ll=ci[1], ul=ci[2], BF10)}
 
   return(round(results, 4))}

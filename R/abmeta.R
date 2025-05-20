@@ -107,8 +107,8 @@ abmeta <- function(estimate, stderr, prior_mu=0, prior_mu_se=1000, prior_weights
   ci <- pooled + se * c(-1, 1) * qnorm(interval + ((1 - interval) / 2))
 
   if(RE==T){
-    results <- c(mu=as.numeric(pooled), se=as.numeric(se), ll=ci[1], ul=ci[2], tau2=tau2, BF10)
+    results <- c(mu=as.numeric(pooled), se=as.numeric(se), ll=ci[1], ul=ci[2], tau2=tau2, "BF10"=BF10)
   }else{
-    results <- c(mu=as.numeric(pooled), se=as.numeric(se), ll=ci[1], ul=ci[2], BF10)}
+    results <- c(mu=as.numeric(pooled), se=as.numeric(se), ll=ci[1], ul=ci[2], "BF10"=BF10)}
 
   return(round(results, 4))}

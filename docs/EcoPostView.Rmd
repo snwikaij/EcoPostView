@@ -29,8 +29,7 @@ This site is still a work in progress — a kind of evolving rather than a polis
 
 Ecological data is scattered throughout the literature in varying formats. It is often case-specific and not representative of the full range of ecological conditions encountered in the real world. As a result, a large amount of noise is introduced, limiting the generalizability of results. Moreover, there is no coherent framework to re-use, generalize, and integrate large amount of ecological data into understandable and predictive models. This lack of structure hampers ecological understanding and leads to a loss of valuable information.
 
-As ecologists, we are not only interested in isolated, case-specific explanations or post-hoc rationalizations. We aim to build cumulative knowledge and apply it across diverse contexts.
-Working with logic, metadata, and stochastic processes can help solidify our understanding of ecological relationships. These tools enable us to make probability based statements and generate predictions. This R package is designed to assist with exactly that. Its goal is to facilitate the integration of multiple sources of information, combining their strengths to generate broader insights.
+As ecologists, we are not only interested in isolated, case-specific explanations or post-hoc rationalizations. We aim to build cumulative knowledge and apply it across diverse contexts. Working with logic, metadata, and stochastic processes can help solidify our understanding of ecological relationships. These tools enable us to make probability based statements and generate predictions. This R package is designed to assist with exactly that. Its goal is to facilitate the integration of multiple sources of information, combining their strengths to generate broader insights.
 
 The core function of the package utilizes outputs from multiple fitted Linear and Generalized Linear Models ((G)LMs), leveraging Bayesian methods to generalize their effects into a single, meta-analytic (G)LM. This synthesized model can then be visualized (see Fig. 1 below) and used to make predictions on new data. The ultimate aim is to provide a robust, generalized understanding of ecological relationships by drawing from all available sources of information.
 
@@ -555,7 +554,7 @@ print(log_sal3)
 
 This part is still under construction.
 
-# Statistics (analytical and emperical Bayes)
+# Statistics (analytical and empirical Bayes)
 
 In most cases the theory and background is often not provided in many cookbooks, but makes it impossible to interpreted, criticize our results. This section introduces some theory. However, if you are already familiar with it or find it too technical, feel free to skip it. Since this R-package primarily uses Bayesian inference, an introduction to Bayes Theorem and methods used may be of interest. While it is not necessary needed for the utilization of the R-package itself.
 
@@ -953,8 +952,7 @@ We should also avoid treating models as a definitive representation of reality. 
 
 Following the full path from reasoning and logic to application and *belief*, one may recognize that many — if not most — of our *beliefs* are not *justified* under particular lines of reasoning. This leads to deeper questions (1.) How do we *justify* our *beliefs*? (2.) Which propositions should we *believe* (3.) Why do we try to *justify* them? And perhaps more drastic (4.) How should we behave in light of this information?
 
-It is argued that to some extend reasoning is based on the principles of logic. Although some argue otherwise (e.g., Harman, 1986). I will use formal expressions that are not all at full first-order-language and predicate logic, but mostly include some form of meta-language.
-For this I will use the basic principle of deductive logic based. I believe they are useful to lay out underlying believes and their connection between them. 
+It is argued that to some extend reasoning is based on the principles of logic. Although some argue otherwise (e.g., Harman, 1986). I will use formal expressions that are not all at full first-order-language and predicate logic, but mostly include some form of meta-language. For this I will use the basic principle of deductive logic based. I believe they are useful to lay out underlying believes and their connection between them. 
 
 To understand arguments, validity, soundness, cogency and the formalization of arguments and introduction to logic is needed. Although this will not be an full introduction into logic it will address some principles of it and for a more formal and extended introduction see (Barwise et al. 2002; Lee 2017; Smith 2021). Therefore I will start with an introduction to classical syllogism.
 
@@ -1039,7 +1037,7 @@ Empirical science developing theories built upon conjectures. Where a conjecture
 
 Arguments are either weakly or strongly cogent (weak or strong arguments) as the conjectures cannot be guaranteed in empirical sciences. Strong arguments are then arguments where most conjectures are acceptable (e.g., temperature is 0 degrees when the  thermometer works and indicates 0 degrees).
 
-The arguments proposed are indicated as $𝒜$. And $𝒜: 𝓟_1, …, 𝓟_{n-1} ,𝓟_n \models 𝓟_n$ should entail the truth of the conjectures within the derived conclusion. And when this is the cases such an argument is then valid $valid(𝒜)$ when all parties agree on the truthood $v(𝓟_i)=T$ (True) of the conjectures involved.
+The arguments proposed are indicated as $𝒜$. And $𝒜: 𝓟_1, …, 𝓟_{n-1} \models 𝓟_n$ should entail the truth of the conjectures within the derived conclusion. And when this is the cases such an argument is then valid $valid(𝒜)$ when all parties agree on the truthood $v(𝓟_i)=T$ (True) of the conjectures involved.
 
 The problem is that the empirical sciences has no axiomatic foundation from which the proof of an argument can be logically deduced. In the sense that I believe the the conclusion ($𝓟_3$) of the following argument. $𝓟_1$: All humans die, $𝓟_2$: I am human, conclusion ($𝓟_1 \therefore  𝓟_2$), therefore I die ($𝓟_1→𝓟_2, 𝓟_1 \therefore 𝓟_2$). The conclusion forming a conjecture in my belief system and that of others. However, it does not ensure the soundness of the argument, where soundness refers to the factuality of all propositions. Yet, having not known all humans ever lived or going to live the argument is not sound. Moreover, it is questionable if reasoning deals with valid conclusions. Where one better can speak about cogency of the argument.
 
@@ -1049,7 +1047,7 @@ The moral agent then entertains the relations between propositions and arguments
 
 ## Skepticism
 
-Understanding skepticism made most parts of why I am dissatisfied with most argument fall in its place. It perhaps plays a central but indirect part in this chapter. I will try to (meta-logical) formalize the Agrippa's trilemma and other skeptical "tools" that should lead to the realization that most of our justifications are not as strong and each of them could be undermined. 
+Understanding skepticism made most parts of why I am dissatisfied with most argument fall in its place (Barnes 2007; Stefan 2019). It perhaps plays a central but indirect part in this chapter. I will try to (meta-logical) formalize the Agrippa's trilemma and other skeptical "tools" that should lead to the realization that most of our justifications are not as strong and each of them could be undermined. 
 
 Any conclusion $𝓟_n$ under some condition $c \in C$ in an argument $𝓟_1, …, 𝓟_{n-1} \models 𝓟_n$. Can be suspended based on any other premise that is not certain/conclusive and therefore $𝓟_n$ does not follow. 
 
@@ -1064,13 +1062,97 @@ MC: Valid(s, 𝓟_1, …, 𝓟_{n-1} \models 𝓟_n) \ 𝓟_n \in \{ 𝓟_1, …
 MI: \forall𝓟_m \exists𝓟_n (Valid(s, 𝓟_m \models 𝓟_n) \wedge 𝓟_m <  𝓟_n ) \rightarrow \neg Valid(𝓟_m)=  Non-foundational 
 $$
 
+## Belief structure of reasoning
 
+As highlighted earlier, the agreement among the beliefs of individuals and groups forms what we might call a belief system — a structure dependent on a set of acceptable propositions called conjectures. The way our beliefs are organized directly influences how we reason.
+
+```{r belief structure,  fig.width=8, fig.height=4, echo=F, warning=FALSE, message = FALSE}
+library(igraph)
+library(ggraph)
+library(ggplot2)
+
+edges <- c(
+  "A", "B", "B", "C", "C", "D",
+  "D", "E", "D", "F", "D", "G",
+  "G", "H", "F", "H",
+  "E", "I", "I", "J",
+  
+  "A2", "B2", "B2", "C2", "C2", "D2",
+  "D2", "E2", "D2", "F2", "D2", "G2",
+  "G2", "H2", "F2", "H2",
+  "E2", "I2", "I2", "J2")
+
+g <- graph(edges, directed = TRUE)
+
+layout_custom <- matrix(c(
+  0, -2,   # A
+  0, -1,   # B
+  0,  0,   # C
+  0,  1,   # D
+  -1,  2,   # E
+  0,  2,   # F
+  1,  2,   # G
+  1,  3,   # H
+  0,  3,   # I
+  1,  4,   # J
+
+  5, -2,   # A2
+  5, -1,   # B2
+  5,  0,   # C2
+  5,  1,   # D2
+  4,  2,   # E2
+  5,  2,   # F2
+  6,  2,   # G2
+  6,  3,   # H2
+  5,  3,   # I2
+  6,  4    # J2
+), byrow = TRUE, ncol = 2)
+
+gpl <- ggraph(g, layout = layout_custom) +
+  geom_edge_link(
+    arrow = arrow(length = unit(1, "mm"), type = "closed"),
+    end_cap = circle(5, "pt"),
+    edge_colour = "black"
+  ) + ylim(-2.5, 4.5)+
+  geom_node_point(shape = 21,
+                  fill = "white",
+                  color = "black",
+                  size = 14,
+                  stroke = .8) +
+  geom_node_text(aes(label = name), color = "black", size = 4) +
+  theme_classic()+
+  theme(plot.margin = unit(c(20, 20, 20, 20), "mm"),
+        axis.title = element_blank(),
+        axis.text = element_blank(),
+        axis.line = element_blank(),
+        axis.ticks = element_blank())
+
+print(gpl)
+```
+
+*Figure 2: Examplified structure of a belief system*
+
+A 'string; of beliefs can be traced from a foundational or "hinge" proposition (labeled 'A' in Fig. 2), which supports subsequent beliefs. If this foundational belief turns out to be false, all dependent beliefs — B, C, D, etc. — are undermined. This reflects the logical principle that if any proposition in a chain of implications  $𝓟_1, …, 𝓟_{n-1}$ is false, then the conclusion $𝓟_n$ in $𝓟_1, …, 𝓟_{n-1}\models 𝓟_n$ does not follow.
+
+For example, if $A(x) \rightarrow B(x)$ and the valuation $v(A(x))=F$ then logically $A(x) \rightarrow \neg B(x)$. This view reflects what Harman (1986) refers to as the foundational theory of belief revision: a belief in a proposition $𝓟_n$ needs to be supported by another proposition $𝓟_{n-1}$. It is then clearly visible base on skepticism that either we fall to an infinite regress ($MI$) which requires the need to justify each proposition $𝓟_n$ by $𝓟_{n-1}$ or there is not support for $𝓟_n$ and thus no foundation or it is a circular argument $MC$.
+
+It turns out that people do not follow this system most of the time and actually search to minimal reconstruct their believes system  (Harman, 1986).For example, suppose we have $F(x) \rightarrow H(x)$ and $v(F(x))=F$. This leads to $F(x) \rightarrow \neg H(x)$ threatening our belief in $H(x)$. To preserve our believe in $H(x)$ we might adopt a new proposition $G(x) \rightarrow H(x)$, provided it does not conflict with existing beliefs. This is the basis of coherence theory in belief revision (Harman, 1986): people tend to make minimal changes that preserve the overall structure and coherence of their belief system. We can draw parallels to a system van Fraassen (1980) sketches.
+
+Consider a practical example. Suppose I believe I am bad at cooking because people dislike my food: $DislikeFood(x) \rightarrow BadCooking(x)$ However, I later realize that some people dislike vegetarian food specifically. In contrast, vegetarians enjoy my cooking. The original belief no longer holds because: $\neg DislikeFood(x) \rightarrow BadCooking(x)$. Therefore I need to revise all my beliefs that follow from my $BadCooking$. According to the foundational theory of belief revision I need to drop the belief I am bad at cooking. According to the coherence theory of belief revision I could rationalize that vegetarians “have no taste,” preserving my original belief. This mirrors the logic shift from $F(x) \rightarrow \neg H(x)$ to $G(x) \rightarrow H(x)$.
+
+A hybrid view can integrate both the foundational and coherence models. Beliefs can be seen as clusters (e.g., D, E, F, H, I, J), connected via strings of core beliefs (A, B, D). Different set of strings and clusters can be connected. For example, the left cluster connects to the right cluster (A2, ..., J2) bridging beliefs.
+
+Some beliefs (propositions) are accepted tentatively — neither fully embraced nor rejected. However, in practice, people often fully accept propositions because suspending judgment creates cognitive dissonance. Dewey (1997) notes that suspending belief is uncomfortable; full acceptance gives us peace of mind and reduces cognitive load  (Harman, 1986).
+
+Yet, full acceptance of a belief implies the need for *justification*. We must ask: Why do we accept this proposition? And how do we justify it?
 
 # References
 
 Baguley, Thom. 2009. “Standardized or Simple Effect Size: What Should Be Reported?” British Journal of Psychology 100(3): 603–17. doi: 10.1348/000712608X377117.
 
 Bárdos, Dániel, and Adam Tamas Tuboly. 2025. Science, Pseudoscience, and the Demarcation Problem. Cambridge: Cambridge University Press. doi: 10.1017/9781009429597.
+
+Barnes, Jonathan. 2007. The Toils of Scepticism. Digitally print. version. Cambridge: Cambridge Univ. Press.
 
 Barwise, Jon, John Etchemendy, Gerard Allwein, Dave Barker-Plummer, and Albert Liu. 2002. Language, Proof, and Logic. Stanford, Calif: CSLI Publications.
 
@@ -1079,6 +1161,8 @@ Carthwright, Nancy, Jordi Cat, Lola Fleck, and E. Thomas Uebel. 1996. Otto Neura
 Cramer, J. S. 1991. The Logit Model: An Introduction for Economists. London: Edward Arnold.
 
 Csilléry, Katalin, Michael G.B. Blum, Oscar E. Gaggiotti, and Olivier François. 2010. “Approximate Bayesian Computation (ABC) in Practice.” Trends in Ecology & Evolution 25(7): 410–18. doi: 10.1016/j.tree.2010.04.001.
+
+Dewey, John. 1997. How We Think. Mineola, N.Y: Dover Publications.
 
 Fisher, R. A. (1949). The Design of Experiments (5th ed.). Oliver and Boyd.
 
@@ -1117,6 +1201,8 @@ Popper, Karl Raimund. 1968. The Logic of Scientific Discovery. Basic Books.
 Smith, Peter. 2021. An Introduction to Formal Logic. Second edition, reprinted with corrections. Monee, IL: Logic Matters.
 
 Stanley, T. D., and Hristos Doucouliagos. 2014. “Meta-Regression Approximations to Reduce Publication Selection Bias.” Research Synthesis Methods 5(1):60–78. doi: 10.1002/jrsm.1095.
+
+Stefan, Sienkiewicz. 2019. Five Modes of Scepticism: Sextus Empiricus and the Agrippan Modes. Great Clarendon Street, Oxfored, OX2 6DP, United Kingdom: Oxford University Press.
 
 Tukey, John W. 1969. “Analysing Data: Sanctification or Detective Work?” American Psychologist 24(2): 83–91. doi: 10.1037/h0027108.
 

@@ -651,39 +651,6 @@ P(<Threshold|Species)=\frac{P(<Threshold|Species)\cdot P(<Threshold) }{P(Species
 $$
 We would need around five species to get an indicative potential of >0.95 (it would be 0.97).
 
-### Approximate Bayesian Computation with rejection sampling
-
-Approximate Bayesian Computation with rejection sampling (ABC-rejection) is a computationally expensive method for approximating the posterior distribution. However, when the number of parameters is relatively small, the posterior can still be approximated quite well. ABC-rejection is especially useful when the likelihood function cannot be computed or approximated accurately.
-
-One example is the use of ABC to explore potential bias in the EcoPostView package. In a simplified case, assuming both the prior and the data-generating model are normally distributed, the ABC-rejection algorithm begins by simulating a parameter from the prior distribution.
-
-$$
-\mu_{i}^*\sim N(\mu_{prior},\sigma_{prior}^2) \\
-\sigma_{i}^{2*}\sim Exp(rate)
-$$
-
-The asterisk ($^*$) denotes that these parameters are temporary, and this will become important later.Next, a data-generating model is used to simulate data based on these temporary parameters. We assume the observed data is approximately normally distributed, though any model could be used. For each simulation, we generate $n_{data}$ values.
-
-$$
-x_{i}\sim N(\mu^*, \sigma^{2*})
-$$
-
-Depending on the parameter of interest (e.g., $\mu$, $\sigma$, mode, or median), a summary statistic is computed from the simulated data. In this example, we focus on estimating $\mu$.
-
-$$
-\hat{x}_{sim, i}=\frac{\sum_{i=1}^n(x_i, ..., x_n)}{n_{data}}
-$$
-
-Each simulated mean $\hat{x}_{sim, i}$ (typically out of 100,000 simulations) is compared to the observed mean $\hat{x}_{data}$ using the Euclidean distance.
-
-$$
-E_{i}=\sqrt{(\hat{x}_{sim, i} - \hat{x}_{data})^2}
-$$
-
-A tolerance threshold is then selected to determine which simulated values are accepted. Simulations with $E_i > tolerance$ are rejected, while those with $E_i \leq tolerance$ are retained. While a tolerance of zero would yield the most accurate posterior, it would typically result in rejecting all simulations. On the other hand, setting the tolerance too high would allow in too many poor matches.
-
-Each accepted simulation corresponds to an accepted pair of simulated parameters $\mu_{i}^*, \sigma_{i}^{2}*$. Since all $\mu_{i}^*$ were originally drawn from the prior, the subset of accepted values approximates the posterior distribution of $\mu$.
-
 ### Bayes theorem and conjugate priors
 
 The previous example works for simpler approximations yet if we want to derive an interval for a particular parameter $\theta$ then we can approach this analytically using conjugate priors. Where a prior is conjugate to a likelihood if the resulting posterior is in the same family as the prior.
@@ -701,7 +668,7 @@ $$\mu_{posterior} =\frac{\frac{\mu_{prior} }{\sigma_{prior}^2} + \frac{\hat{x}_{
 \\
 \sigma_{posterior}=\sqrt{\frac{1}{\frac{1}{\sigma_{prior}^2}+\frac{1}{\sigma_{data}^2}}}$$
 
-**Proof:**
+**Derivation:**
 
 **Premise 1)**
 
@@ -719,7 +686,7 @@ $$f(x)=\frac{1}{2\cdot \sqrt{\sigma \pi}}\cdot exp(-\frac{1}{2}(\frac{x-\mu}{\si
 
 $$Prior: P(\mu_{prior})=\frac{1}{2\cdot \sqrt{\sigma_{prior} \pi}}\cdot exp(-\frac{1}{2}(\frac{\theta-\mu_{prior}}{\sigma_{prior}})^2)
 \\
-Likelihood: P(\mu_{sample})=\frac{1}{2\cdot \sqrt{\sigma_{sample} \pi}}\cdot exp(-\frac{1}{2}(\frac{\mu_{sample}-\theta}{\sigma_{sample}})^2)
+Likelihood: P(Data|\mu_{sample})=\frac{1}{2\cdot \sqrt{\sigma_{sample} \pi}}\cdot exp(-\frac{1}{2}(\frac{\mu_{sample}-\theta}{\sigma_{sample}})^2)
 $$
 
 **Premise 4)**
@@ -801,19 +768,142 @@ $$
 \sigma_{posterior}=\sqrt{\frac{1}{\frac{1}{\sigma_{prior}^2}+\frac{1}{\sigma_{sample}^2}}}\\
 \mu_{posterior}=\frac{\frac{\mu_{prior}}{\sigma_{prior}^2} + \frac{\mu_{sample}}{\sigma_{sample}^2}}{\frac{1}{\sigma_{prior}^2} + \frac{1}{\sigma_{sample}^2}}
 $$
-Another way to obtain the posterior mean would be via
-$$\mu_{posterior}=\frac{\frac{\mu_{prior}}{\sigma_{prior}^2}+\hat{x}_{data}*\frac{n}{\sigma_{data}^2}}
-{\frac{1}{\sigma_{prior}^2}+\frac{n}{\sigma_{data}^2}}$$
+Another way to obtain the posterior including the sample size is via:
+$$\mu_{posterior}=\frac{\frac{\mu_{prior}}{\sigma_{prior}^2}+\mu_{sample}*\frac{n}{\sigma_{sample}^2}}
+{\frac{1}{\sigma_{prior}^2}+\frac{n}{\sigma_{sample}^2}}$$
 
-As might be clear this is less computational heavy than MCMC methods. For more then two parameter such an analytically approach becomes more cumbersome. And, if conjugacy is not satisfied no closed form solution is available. In this regards, Laplacian approximation is also computational easy. Yet, the equation clearly formulate the idea what happens in Bayes theorem. A simple example below highlights how this this can be useful.
+**Derivation:**
 
-## Salinity example
+**Premise 1)**
 
-For example, we want to know the probable relation between insects and salinity over a whole gradient from 0 till 5000 $\mu S \cdot cm ^{-1}$. To do so we generate a simple log-linear model $log(insect ~ diversity)=\beta_1*conductivity~+~\beta_0$. We know that insect diversity declines with an increasing salinity therefore we could exclude  positive values and shift the weight to more negative values. In the frequentist framework this is not performed and there is worked under the principle of indifference. This means all values are apriori equally likely. This is from an consistent error-control perspective preferred, but from a probabilistic perspective unreasonable. Hence, it would be beneficial to leverage this information into the model.
 $$
-P(\beta|Data, info) = \frac{P(Data|\beta) \cdot P(\beta|info)}{P(Data)}
+Prior: P(\mu_{prior})=\frac{1}{2\cdot \sqrt{\sigma_{prior} \pi}}\cdot exp(-\frac{1}{2}(\frac{\theta-\mu_{prior}}{\sigma_{prior}})^2)
+\\
+Likelihood: P(Data|\mu_{sample})=\prod_{i=1}^n \frac{1}{2\cdot \sqrt{\sigma_{sample} \pi}}\cdot exp(-\frac{1}{2}(\frac{x_i-\theta}{\sigma_{sample}})^2)
 $$
-Under different context we can leverage more information over the likelihood using Bayesian Model Averaging (BMA) that does not use a single prior, but multiple priors.
+
+**Premise 2)**
+
+Both $\frac{1}{2\cdot \sqrt{\sigma_{prior} \pi}}$ and $\frac{1}{2\cdot \sqrt{\sigma_{sample} \pi}}$ are scalars and can be left out of the equation.
+
+**Premise 3)**
+
+The likelihood is the product of $n$>1 random variables
+$exp(a)\cdot exp(b) = exp(a+b)$ thus $exp(a_i)\cdot, ...,\cdot exp(a_n)=exp(\sum_{i=1}^n(a_i))$.
+
+$$
+exp(\sum_{i=1}^n-\frac{1}{2}\cdot(\frac{x_i-\theta}{\sigma_{sample}})^2)=exp(-\frac{1}{2}\cdot\sum_{i=1}^n(\frac{x_i-\theta}{\sigma_{sample}})^2)
+$$
+**Premise 4)**
+
+As in premise 6 of the previous derivation we expand all terms and ignore terms independent of $\theta$.
+
+$$
+\sum_{i=1}^n(x_i-\theta)=\sum_{i=1}^nx_i^2-2x_i\cdot \theta +\theta^2
+=\sum_{i=1}^nx_i-\sum_{i=1}^n2x_i\cdot\theta+\sum_{i=1}^n\theta^2=
+\sum_{i=1}^nx_i-2\theta\sum_{i=1}^nx_i+\sum_{i=1}^n\theta^2=
+-2\theta\sum_{i=1}^nx_i+n\theta^2
+$$
+
+**Premise 5)**
+
+Substitute the expression back into the equation.
+
+$$
+exp(\frac{1}{2}\cdot[\frac{-2\theta\sum_{i=1}^nx_i+n\theta^2}{\sigma^2_{sample}}])
+$$
+
+**Premise 6)**
+
+The posterior can then be rewritten as $P(\mu|Data) \propto P(Data|\mu) \cdot P(\mu)$
+
+$$
+exp(\frac{1}{2}\cdot[\frac{-2\theta\sum_{i=1}^nx_i+n\theta^2}{\sigma^2_{sample}}])
+*exp(-\frac{1}{2}\cdot(\frac{\theta-\mu_{prior}}{\sigma^2_{prior}})^2)=\\
+exp(\frac{1}{2}\cdot[\frac{-2\theta\sum_{i=1}^nx_i+n\theta^2}{\sigma^2_{sample}}+\frac{\theta-\mu_{prior}}{\sigma^2_{prior}})^2])
+$$
+
+**Premise 7)**
+
+Expanding the term of the nominator in the prior and substitute it back in the previous equation.
+$$
+(\theta-\mu_{prior})^2=\theta^2-2\theta\mu_{prior}+\mu_{prior}^2
+\\
+\frac{\theta^2}{\sigma_{prior}^2}+\frac{-2\theta\mu_{prior}}{\sigma_{prior}^2}+\frac{\mu_{prior}^2}{\sigma_{prior}^2}
+\\
+exp(-\frac{1}{2}\cdot[\frac{\theta^2}{\sigma_{prior}^2}+\frac{-2\theta\mu_{prior}}{\sigma_{prior}^2}+\frac{\mu_{prior}^2}{\sigma_{prior}^2}+
+\frac{-2\theta\sum_{i=1}^nx_i+n\theta^2}{\sigma^2_{sample}}])
+$$
+
+**Premise 8)**
+
+Expand the last term and divide by $\sigma^2_{sample}$
+
+$$
+exp(-\frac{1}{2}\cdot[\frac{\theta^2}{\sigma_{prior}^2}+\frac{-2\theta\mu_{prior}}{\sigma_{prior}^2}+\frac{\mu_{prior}^2}{\sigma_{prior}^2}-
+\frac{2\theta\sum_{i=1}^nx_i}{\sigma^2_{sample}}+\frac{n\theta^2}{\sigma^2_{sample}}])
+$$
+
+**Premise 9)**
+
+Group each term by its nominator
+
+$$
+exp(-\frac{1}{2}\cdot\theta^2(\frac{1}{\sigma_{prior}^2}+\frac{n}{\sigma_{sample}^2})+
+-2\theta(\frac{\mu_{prior}}{\sigma_{prior}^2}+\frac{\sum_{i=1}^nx_i}{\sigma_{sample}^2})
++not\ dependent\ on\ \theta])$$
+
+Since: $\sum_{i=1}^nx_i=\mu_{sample}\cdot n$
+
+$$
+exp(-\frac{1}{2}\cdot\theta^2(\frac{1}{\sigma_{prior}^2}+\frac{n}{\sigma_{sample}^2})+
+-2\theta(\frac{\mu_{prior}}{\sigma_{prior}^2}+\frac{\mu_{sample}\cdot n}{\sigma_{sample}^2})
++not\ dependent\ on\ \theta])
+$$
+
+**Conclusion)**
+
+From the steps 8 and 9 in the previous derivation we arive at
+
+$$
+\sigma_{posterior}=\sqrt{\frac{1}{\frac{1}{\sigma_{prior}^2}+\frac{n}{\sigma_{sample}^2}}}\\
+\mu_{posterior}=\frac{\frac{\mu_{prior}}{\sigma_{prior}^2} + \frac{\mu_{sample}\cdot n}{\sigma_{sample}^2}}{\frac{1}{\sigma_{prior}^2} + \frac{n}{\sigma_{sample}^2}}
+$$
+
+As might be clear this is less computational heavy than MCMC methods. For more then two parameter such an analytically approach becomes more cumbersome. And, if conjugacy is not satisfied no closed form solution is available. In this regards, Laplacian approximation is also computational easy. Yet, the equation clearly formulate the idea what happens in Bayes theorem.
+
+### Approximate Bayesian Computation with rejection sampling
+
+Approximate Bayesian Computation with rejection sampling (ABC-rejection) is a computationally expensive method for approximating the posterior distribution. However, when the number of parameters is relatively small, the posterior can still be approximated quite well. ABC-rejection is especially useful when the likelihood function cannot be computed or approximated accurately.
+
+One example is the use of ABC to explore potential bias in the EcoPostView package. In a simplified case, assuming both the prior and the data-generating model are normally distributed, the ABC-rejection algorithm begins by simulating a parameter from the prior distribution.
+
+$$
+\mu_{i}^*\sim N(\mu_{prior},\sigma_{prior}^2) \\
+\sigma_{i}^{2*}\sim Exp(rate)
+$$
+
+The asterisk ($^*$) denotes that these parameters are temporary, and this will become important later.Next, a data-generating model is used to simulate data based on these temporary parameters. We assume the observed data is approximately normally distributed, though any model could be used. For each simulation, we generate $n_{data}$ values.
+
+$$
+x_{i}\sim N(\mu^*, \sigma^{2*})
+$$
+
+Depending on the parameter of interest (e.g., $\mu$, $\sigma$, mode, or median), a summary statistic is computed from the simulated data. In this example, we focus on estimating $\mu$.
+
+$$
+\hat{x}_{sim, i}=\frac{\sum_{i=1}^n(x_i, ..., x_n)}{n_{data}}
+$$
+
+Each simulated mean $\hat{x}_{sim, i}$ (typically out of 100,000 simulations) is compared to the observed mean $\hat{x}_{data}$ using the Euclidean distance.
+
+$$
+E_{i}=\sqrt{(\hat{x}_{sim, i} - \hat{x}_{data})^2}
+$$
+
+A tolerance threshold is then selected to determine which simulated values are accepted. Simulations with $E_i > tolerance$ are rejected, while those with $E_i \leq tolerance$ are retained. While a tolerance of zero would yield the most accurate posterior, it would typically result in rejecting all simulations. On the other hand, setting the tolerance too high would allow in too many poor matches.
+
+Each accepted simulation corresponds to an accepted pair of simulated parameters $\mu_{i}^*, \sigma_{i}^{2}*$. Since all $\mu_{i}^*$ were originally drawn from the prior, the subset of accepted values approximates the posterior distribution of $\mu$.
 
 ## Introduction to Bayesian Model Averaging (BMA)
 
@@ -1012,6 +1102,7 @@ $$𝓟_1, …, 𝓟_{n-1} \models 𝓟_n$$ (see also Haack, 1978)
 In predicate logic modens ponens is expressed as $\forall(P(x)\rightarrow Q(x))$ where ‘$\forall$’ indicates ‘for all’ and ‘$\models$’ therefore. Each proposition referred to as $𝓟_i$ consisting of P and Q called properties and x and element from a set $x\in X$. The benefit of predicate logic (or approximating languages such as deontic-logic or a meta-language)is its possibility to quantify over different elements form a set $x \in X$ can be assessed.
 
 **Predicated equivalent structures**
+
 $$
 \text{Modens Ponens:} \forall x(P(x)\rightarrow Q(x)), P(x) \vdash Q(x) \\
 \text{Modens Tollens:} \forall x(P(x)\rightarrow Q(x)), \neg Q(x) \vdash \neg P(x) \\

@@ -1035,18 +1035,21 @@ While this argument may be unsound — because unicorns do not exist — the rea
 
 We should also avoid treating models as a definitive representation of reality. Models are tools that convey information and serve as pragmatic instruments. The the model itself is not the result, the strength of the results relies on the argument, and how well the premises within the argument are clarified and supported by the model.
 
-
-# Reasoning
+# Reasoning, logic and beliefs
 
 ## Introduction
 
-Following the full path from reasoning and logic to application and *belief*, one may recognize that many — if not most — of our *beliefs* are not *justified* under particular lines of reasoning. This leads to deeper questions (1.) How do we *justify* our *beliefs*? (2.) Which propositions should we *believe* (3.) Why do we try to *justify* them? And perhaps more drastic (4.) How should we behave in light of this information?
+I consider reasoning and logic (and epistemics) to be among the most important aspects of life. They should also play a central role in science. Yet, in practice, reasoning — especially formal logic — is often not a major concern for many scientists. To be fair, some of the most significant scientific breakthroughs were not the result of formal reasoning (e.g., the discovery of penicillin; see Feyerabend, 1975). Nevertheless, logic and structured reasoning guide our thinking, shape clear arguments, and offer clarity to our thoughts. Perhaps the most immediate benefit of logic is not its guarantee of 'truth', but the aesthetic and coherence it brings to our arguments.
 
-It is argued that to some extend reasoning is based on the principles of logic. Although some argue otherwise (e.g., Harman, 1986). I will use formal expressions that are not all at full first-order-language and predicate logic, but mostly include some form of meta-language. For this I will use the basic principle of deductive logic based. I believe they are useful to lay out underlying believes and their connection between them. 
+Despite the previous values, many conclusions drawn and claims made in contemporary society are neither logically valid nor sound. This becomes especially evident when one closely examines the structure of arguments in scientific papers and popular articles. Perhaps an immediat consequence of understanding reasoning and logic is the impossibility (or near impossibility) for science to develop valid and sound arguments. Logic, in its formal sense, concerns itself with the structure of arguments: for example, if B follows from A, and C follows from B, then C follows from A. Logic does not concern itself with the 'truth' of A, B, or C — those could just as well be X, Y, Z or $\alpha, \beta, \gamma$. What matters is that the form of reasoning obeys certain principles.
 
-To understand arguments, validity, soundness, cogency and the formalization of arguments and introduction to logic is needed. Although this will not be an full introduction into logic it will address some principles of it and for a more formal and extended introduction see (Barwise et al. 2002; Lee 2017; Smith 2021). Therefore I will start with an introduction to classical syllogism.
+It is often argued that reasoning, to some extent, depends on the principles of logic — though some (e.g., Harman, 1986) challenge this view. In everyday life, strict logical principles may not always be applicable or followed. Still, this does not diminish their potential instrumental value. I propose that applying logical principles can improve our ability to (1.) Decide what to believe about the world, (2.) clearly communicate our thoughts to others, and (3.) better understand the reasoning of others. This makes no attempt to 'justify' why one should use logic it might lighten the burden of cognitive effort it demands in shaping a picture of the world.
 
-## Syllogism
+Throughout this work, I will use formal expressions — though not strictly within the syntax of formal predicate logic. Instead, I will make use of meta-language and well-formed formulas based on predicate-logic that draw on the basic principles of deductive logic. These expressions help expose the structure of beliefs and arguments, making their internal connections explicit. They are concise and avoid the ambiguities of natural language, aiming for a more neutral and formal presentation of meaning. While this is not intended to be a full introduction to logic, it will address key concepts such as validity, soundness, cogency, and the formalization of arguments. For a more comprehensive treatment, see Barwise et al. (2002), Lee (2017), and Smith (2021).
+
+Following the path from reasoning and logic to application and ultimately to *belief*, one may recognize that many — if not most — of our *beliefs* are not *justified* under particular lines of reasoning. This raises deeper philosophical questions: (1.) What are *beliefs* (2.) what do we mean by *justified* (3.) How do we *justify* our *beliefs*? (4.) What should we *believe* (5.) Why do we try to *justify* them? And perhaps more drastic (6.) How should we behave in light of this information?
+
+## Syllogism, propositional and predicate logic
 
 A simple syllogistic argument consisting of two premises.
 
@@ -1092,12 +1095,8 @@ $$
 \text{Disjunctive Syllogism:} either \ x \ is \ P \ or \ x \ is \ Q, x \ is \neg P \ therefore \ x \ is \ Q
 $$
 
-## Semantical validity of an argument
-
-An valid argument - in the semantic interpretation of validity - in case $𝓟_n$ $𝓟_i$ is true in all interpretations in which $𝓟_1, ..., 𝓟_{n-1} ,𝓟_n$ are true. Simplistically, if all propositions are true the conclusion cannot be false. Such a valid argument can be notated as
+An **valid** argument - in the semantic interpretation of validity - in case $𝓟_n$ $𝓟_i$ is true in all interpretations in which $𝓟_1, ..., 𝓟_{n-1} ,𝓟_n$ are true. Simplistically, if all propositions are true the conclusion cannot be false. Such a valid argument can be notated as
 $$𝓟_1, …, 𝓟_{n-1} \models 𝓟_n$$ (see also Haack, 1978)
-
-## Predicate logic 
 
 In predicate logic modens ponens is expressed as $\forall(P(x)\rightarrow Q(x))$ where ‘$\forall$’ indicates ‘for all’ and ‘$\models$’ therefore. Each proposition referred to as $𝓟_i$ consisting of P and Q called properties and x and element from a set $x\in X$. The benefit of predicate logic (or approximating languages such as deontic-logic or a meta-language)is its possibility to quantify over different elements form a set $x \in X$ can be assessed.
 
@@ -1112,17 +1111,38 @@ $$
 
 ## Deduction, induction and abuction
 
-Deductive reasoning moves from general principles to specific conclusions. It begins with premises that are assumed to be universally true and applies them to individual cases. If the premises are true and the reasoning is valid, the conclusion cannot be false. For example: P1: All humans are mortal, P2: I am a human C: Therefore I am mortal. 
+**Deduction**
 
-In contrast, inductive reasoning moves from specific observations to broader generalizations. It attempts to infer a universal rule or principle from limited data, and thus does not guarantee the truth of the conclusion — even if all observed instances support it. Induction tries to generals from the instances (x) we observe to all.
+Deductive reasoning moves from general principles to specific conclusions. It begins with premises that are assumed to be universally true and applies them to individual cases. If the premises are true and the reasoning is valid, the conclusion cannot be false. For example: P1: All humans are mortal, P2: I am a human C: Therefore I am mortal.
+$$
+\forall x (H(x) \rightarrow M(x)), H(x) \models M(x)
+$$
 
-If I observe twenty white swans therefore all swans are white.
+All the argument displayed before where deductive moving from axiomatic assumptions to individual elements or objects. 
 
+**Induction**
+
+In contrast, inductive reasoning moves from specific observations to broader generalizations. It attempts to infer a universal rule or principle from limited data, and thus does not guarantee the truth of the conclusion — even if all observed instances support it. Induction tries to generalize from the instances (x) we observe to all $\forall$.
+
+As such, if I observe twenty white swans therefore all swans are white.
+
+$$
+(Observe(x) \rightarrow WhiteSwan(x)) \models \forall(Observe(x) \rightarrow WhiteSwan(x))
+$$
 This reasoning is not valid. The observation of one swan with any other colour would negate the whole argument. This issue is known as the problem of induction. Hence, how can I justify my conclusion to be universally true based on a limited set of instances? This means inductive arguments might not be valid or sound.
+
+**Abduction**
+
+Abduction might be better seen in light of the Bayesian and looks more like affirming the consequent. If we state $W1(a)$ 50% of the swans are white or $W2(a)$ 90% of swans are white. We take 20 observations and see all are white we might therefore infer 10% of the swans are black. 
+
+$$
+WS1(a) \vee WS2(a), ((Observe(x) \rightarrow WhiteSwan(x)) \models WS2(x)
+$$
+Of course also this is invalid because we might actual have sampled a wrong location where only white swans occurred. However, it can be derived more quantitative. This makes abduction appealing in practice, although often not applied due to its subjective perception of how WS1 or WS2 are derived.
 
 ## Cogency of arguments
 
-In empirical sciences the universal quantifier ‘$\forall$’ (largely?) unsupported and therefore $\exists x(P(x) \rightarrow Q(x))$ where ‘$\exists$’ some. This indicates that propositions are merely acceptable. And in most cases ∃ can be ignored and as it would be wises to explicitly assume it. Meaning that $𝓟_i: (P(x)\rightarrow Q(x))$ or $P \rightarrow Q$ and referred to as a conjecture. A conjecture is a proposition which is accepted as true via a valuation function $v(𝓟_i)=T$ (True) or false $v(𝓟_i)=F$ (False). 
+As explained before deduction on empirical data is not possible so no valid or sound argument can be generated. The universal quantifier ‘$\forall$’ (largely?) unsupported and therefore $\exists x(P(x) \rightarrow Q(x))$ where ‘$\exists$’ some. This indicates that propositions are merely acceptable. And in most cases ∃ can be ignored and as it would be wises to explicitly assume it. Meaning that $𝓟_i: (P(x)\rightarrow Q(x))$ or $P \rightarrow Q$ and referred to as a conjecture. A conjecture is a proposition which is accepted as true via a valuation function $v(𝓟_i)=T$ (True) or false $v(𝓟_i)=F$ (False). 
 
 Empirical science developing theories built upon conjectures. Where a conjecture has to be supported by either party in an argument. If a conjecture cannot  be accepted by one of the parties, discussion is meaningless and the source of the rejection of one of the parties should be resolved (Popper 1968). 
 
@@ -1133,25 +1153,7 @@ The arguments proposed are indicated as $𝒜$. And $𝒜: 𝓟_1, …, 𝓟_{n-
 The problem is that the empirical sciences has no axiomatic foundation from which the proof of an argument can be logically deduced. In the sense that I believe the the conclusion ($𝓟_3$) of the following argument. $𝓟_1$: All humans die, $𝓟_2$: I am human, conclusion ($𝓟_1 \therefore  𝓟_2$), therefore I die ($𝓟_1→𝓟_2, 𝓟_1 \therefore 𝓟_2$). The conclusion forming a conjecture in my belief system and that of others. However, it does not ensure the soundness of the argument, where soundness refers to the factuality of all propositions. Yet, having not known all humans ever lived or going to live the argument is not sound. Moreover, it is questionable if reasoning deals with valid conclusions. Where one better can speak about cogency of the argument.
 
 The agreement among parties - rather informally - forming a belief system that would be a function of acceptable (cogent) conjectures (Usó-Doménech and Nescolarde-Selva 2016). The conjectures tied together for each individual moral agent (Carthwright et al. 1996; van Fraassen 1980, Closely representing the nodes and edges in a network). 
-
 The moral agent then entertains the relations between propositions and arguments. Counter intuitively, the moral agents also appoints a property to an element x. Hence, a colour blind person would not see the specific colours a person that is not color blind would see, therefore not appoint the same colour property. Or, if a person does not know the function of a wrench, and therefore does not appoint the property wrench to it. If a property is not appointed to an element then the cogency (or validity) of an argument does not follow because without a property on x, the element x remains inert and undefined. Therefore,$v(𝓟_i)=T$ or $v(𝓟_i)=F$ remains undecided because $(x \rightarrow Q(x)), x \models Q(x)$ does not follow. Hence, each element is appointed a property, each proposition is valued, woven into an a cogent or not cogent (strong or weak) and formulated as a belief system.
-
-## Skepticism
-
-Understanding skepticism made most parts of why I am dissatisfied with most argument fall in its place (Barnes 2007; Stefan 2019). It perhaps plays a central but indirect part in this chapter. I will try to (meta-logical) formalize the Agrippa's trilemma and other skeptical "tools" that should lead to the realization that most of our justifications are not as strong and each of them could be undermined. 
-
-Any conclusion $𝓟_n$ under some condition $c \in C$ in an argument $𝓟_1, …, 𝓟_{n-1} \models 𝓟_n$. Can be suspended based on any other premise that is not certain/conclusive and therefore $𝓟_n$ does not follow. 
-
-More formally, for any claim from a subject ($s \in S$) there exists at least some propositions of disagreement over the claim under particular conditions so that the disagreement can be exploited in the mode of hypothesis (MH), Mode of Circularity (MC) and mode of infinite regress (MI).
-$$
-\forall s \forall 𝓟 \exists (Claim(s, 𝓟_n) \rightarrow Disagreement(Claim(s, 𝓟_n), c) \rightarrow \{MH \vee MC \vee MI\}
-\\
-MH: Pr(𝓟_n, s)/Pr(\neg𝓟_n, s) \neq \{0, \infty\} \rightarrow \neg Valid(𝓟_n) = Undecided
-\\
-MC: Valid(s, 𝓟_1, …, 𝓟_{n-1} \models 𝓟_n) \ 𝓟_n \in \{ 𝓟_1, …, 𝓟_{n-1} \}) \rightarrow \neg Valid(𝓟_n) = Circulair
-\\
-MI: \forall𝓟_m \exists𝓟_n (Valid(s, 𝓟_m \models 𝓟_n) \wedge 𝓟_m <  𝓟_n ) \rightarrow \neg Valid(𝓟_m)=  Non-foundational 
-$$
 
 ## Belief structure of reasoning
 
@@ -1225,7 +1227,7 @@ print(gpl)
 
 A 'string; of beliefs can be traced from a foundational or "hinge" proposition (labeled 'A' in Fig. 2), which supports subsequent beliefs. If this foundational belief turns out to be false, all dependent beliefs — B, C, D, etc. — are undermined. This reflects the logical principle that if any proposition in a chain of implications  $𝓟_1, …, 𝓟_{n-1}$ is false, then the conclusion $𝓟_n$ in $𝓟_1, …, 𝓟_{n-1}\models 𝓟_n$ does not follow.
 
-For example, if $A(x) \rightarrow B(x)$ and the valuation $v(A(x))=F$ then logically $A(x) \rightarrow \neg B(x)$. This view reflects what Harman (1986) refers to as the foundational theory of belief revision: a belief in a proposition $𝓟_n$ needs to be supported by another proposition $𝓟_{n-1}$. It is then clearly visible base on skepticism that either we fall to an infinite regress ($MI$) which requires the need to justify each proposition $𝓟_n$ by $𝓟_{n-1}$ or there is not support for $𝓟_n$ and thus no foundation or it is a circular argument $MC$.
+For example, if $A(x) \rightarrow B(x)$ and the valuation $v(A(x))=F$ then logically $A(x) \rightarrow \neg B(x)$. This view reflects what Harman (1986) refers to as the foundational theory of belief revision: a belief in a proposition $𝓟_n$ needs to be supported by another proposition $𝓟_{n-1}$.
 
 It turns out that people do not follow this system most of the time and actually search to minimal reconstruct their believes system  (Harman, 1986).For example, suppose we have $F(x) \rightarrow H(x)$ and $v(F(x))=F$. This leads to $F(x) \rightarrow \neg H(x)$ threatening our belief in $H(x)$. To preserve our believe in $H(x)$ we might adopt a new proposition $G(x) \rightarrow H(x)$, provided it does not conflict with existing beliefs. This is the basis of coherence theory in belief revision (Harman, 1986): people tend to make minimal changes that preserve the overall structure and coherence of their belief system. We can draw parallels to a system van Fraassen (1980) sketches.
 
@@ -1236,6 +1238,145 @@ A hybrid view can integrate both the foundational and coherence models. Beliefs 
 Some beliefs (propositions) are accepted tentatively — neither fully embraced nor rejected. However, in practice, people often fully accept propositions because suspending judgment creates cognitive dissonance. Dewey (1997) notes that suspending belief is uncomfortable; full acceptance gives us peace of mind and reduces cognitive load  (Harman, 1986).
 
 Yet, full acceptance of a belief implies the need for *justification*. We must ask: Why do we accept this proposition? And how do we justify it?
+
+## Skepticism
+
+I will here focus my skepticism to skepticism against philosophy (or meta-physics), although I am convinced that most things we believe are meta-physical. Skepticism proposes a system in which the properties, propositions, or arguments are 'attacked'. Considering the structure of a valid semantic argument $𝓟_1, …, 𝓟_{n-1} \models 𝓟_n$ an attack tries to invoke disagreement so that the ground on which the properties within a proposition, and the propositions on which they are built cannot be considered true or false. Since valid argument is a believable argument unable to valuate the truth or falsehood of a proposition makes it impossible to asses its validity $𝓟_1, …, 𝓟_{n-1} \models 𝓟_n$ or invalidity $𝓟_1, …, 𝓟_{n-1} \not\models 𝓟_n$. Since, neither truth or falsehood can be asses one can neither judge the conclusion to follow from it. Unable to close an argument leads to suspense in judgement on 𝓟_n$. What remains unclear is that whether the skeptic aims at the suspense of judgment on the factuality of the propositions, the validity of the argument or both. I would assume both are a target because it is eventually we want to talk about the factual universe not about the validity of an argument.
+
+The dogmatist - as opposed to the skeptic - always claims to have 'knowledge' or 'truth' but never able to show it upon attack. Nobody is really a full skeptic, nobody a full dogmatist therefore an absurd skeptic is unable to accept the suspense of judgement always in pursuit of refinement. The absurd skeptic searches for a different kind of meaning to ever regress propositional knowledge, perhaps to the annoyance of peers and willing ignorance of others due to the painful suspense of judgment (Dewey, 1979). It is willing to challenge its belief by entertaining ideas beyond dogma. It is both a revolt against to stagnation (status quo) and dogmatism.
+
+### First line of attack
+
+I will place the following sections under the first line of attack. These sections highlight different methods (3 modes) to causing doubt in the believed conjecture. Hence, if the conjecture cannot be believed to hold then it logically follows that $𝓟_1, …, 𝓟_{n-1} \not\models 𝓟_n$. 
+
+The problem being the attachment of identity to knowledge (belief a proposition is true forming a conjecture). Hence, if one of the conjectures does not hold anymore and any belief that follow from it to $v(𝓟_i)=F$. This attacks the identity of the moral agent often leading to conflict. As such the logical counter argument cannot be accepted which in my experience often invokes an appeal to common practice or authority. I believe this to be the case because we believe the social hierarchy holds with identity. But to admit that most of the arguments we pose are invalid means to give up on social hierarchy.
+
+### Mode of disagreement
+
+The generation of an initial proposition $𝓟_1$ and counter proposition $𝓟_2$ generates a source of disagreement. For example, species x (P(x))  occurs more in freshwater (Q(x)) than in brackish water (~Q(x)). The latter can be utilized in the mode of disagreement either based on a dogmatic argument to disagreement between ‘experts’ of what brackish is, or on the basis that there is no demarcation line as salt in surface water is  a concentration  not a dichotomous anthropological defined boundary. Falling to the **mode of relativity**. Since experts decide whether x is Q(x) and ~Q(x) the ground of it relative. Either the expert provides full proof without contradiction or the expert cannot use the belief system with falling back to an appeal to authority. 
+
+The grounds for $v(𝓟_1)=T$ not known $𝓟_1, …, 𝓟_{n-1} \not\models 𝓟_n$. What is questioned is the valuation function $v(...)$ assigning a 'truth' value to a proposition and based on what grounds does the ecologist decide $v(𝓟_i)=T$ or $v(𝓟_i)=F$. The state of this proposition called a 'final variable' or by De Groot (1998),describing the acceptance of $v(𝓟i)=T$ without requiring any more normative justification in similar fashion Wittgenstein referred to it as a  'hinge proposition'. Hence, a source of disagreement is almost sure to appear when searching for foundation or support of a ‘basic belief’ (in foundationalism source).
+
+**Equipollence**
+
+I consider the mode of disagreement a way to start the 'attack'. I do no specifically consider it a mode. The principle of equipollence is for example a way to start or end an 'attack'. Perhaps equipollence is to be situated on similar grounds as the mode of hypothesis, which will be addressed later. A skeptical 'attack' starts with often proposing an equipollent argument. An equipollent argument being with the same structure and weight, but absurd conclusion. Often they can be used to highlight an informal fallacy, such as an appeal to authority, common practice or reduction to the absurd . If an equal weighted equipollent argument has the same persuasion power and cannot be accepted on the same grounds, suspense of judgement should reasonably follow on the original argument. 
+
+Equipollent arguments are however, not easily related to only the formal structure of an argument of a logical valid argument. A logical valid argument is $C(x)→W(x), C(x) \models W(x)$ has the same form as $U(x)→G(x), U(x) \models G(x)$ which are both valid. In plain language the former argument could be, A cactus (C) needs water to grow (W), there is no water, therefore it will not grow (modes tollens). This is as valid as the argument, my unicorn (U) can only fly when eating grass (G), my unicorn did not eat grass, therefore it cannot fly. An equipollent argument, thus attacks not only the validity of the argument, but mainly the context of the predicates or hidden premises. If I give the cactus salt brine water it will grow, which is absurd, in this case the argument is incomplete. As the argument is not complete it does not guarantee the the conclusion under all conditions. It is then reasonable to suggest it is internally valid iff these propositions would make up the context of the argument the moral agent refers to, but this is also absurd because that is not how the world works. Hence, the skeptic also attacks the soundness of the argument by pointing to the non-factual status of the propositions. Just as equipollent arguments highlight the incompleteness of premises, the problem of induction demonstrates that a finite set of observations cannot determine universal truths. This reinforces the skeptic's claim that absolute certainty is unattainable.
+
+### Mode of hypothesis
+
+The mode of hypothesis asserting that if observing worldwide biodiversity decline (B) is caused by humans (H) it is equally evident that observing no worldwide biodiversity (~B) occur if no humans are present (~H) is equally valid: $𝓟_1: \forall x (B(x) \rightarrow H(x))$ or $𝓟_2: \forall x (~B(x)→~H(x))$. If one has not proposed the counter proposition (hypothesis) and did not consider observations on $𝓟_1$, how to then to unbiased (with a straight face and conscience) suggest $𝓟_2$ is not equally likely? 
+
+Any proposition ($𝓟_1$) accepted as conjecture in an argument where a counter proposition ($𝓟_2$) has not been addressed can only be tautological. Since ($𝓟_2$) might be a possibility, and $𝓟_2$ has been asserted then the commitment to believe $𝓟_1$ might be the wrong. Since this commitment might be potential wrong, it does not guarantee the conclusion, suspense of judgment should reasonably follow. 
+
+### Mode of circularity 
+
+If we can define support for $𝓟_1$ via $𝓟_2$  till $𝓟_n$, where $𝓟_n$ is support for $𝓟_1$ we have a circular argument. For example, $𝓟_1 :(D0(x)\rightarrow F(x))$, $𝓟_2: (F(x) \rightarrow C(x))$ and $𝓟3: (C(x) \rightarrow F(x))$. Here $𝓟_1$: When it is 0 degrees D0(x) water (x) freezes F(x). And $𝓟_2$: when the water is frozen F(x) it crystallizes C(x) and when the water is crystallized it is 0 degrees D0(x). Thus, when it is 0 degrees water freezes and when the water is frozen it is zero degrees $(D0(x)\leftrightarrow F(x) \leftrightarrow C(x))$. We cannot verify beyond the propositions. The same argument is used to defend a dogmatic boundary for ‘significance’ highlighted by Wasserstein and Lazar (2016). 
+
+Q: Why do so many colleges and grad schools teach p = .05?
+A: Because that's still what the scientific community and journal editors use.
+Q: Why do so many people still use p = .05?
+A: Because that's what they were taught in college or grad school.
+
+The same issue accounts for other forms of boundaries. Hence, a BayesFactor01 < .05 could be raised to the same dogmatic status.
+
+### Mode of infinite regress
+
+The claim to any proposition $𝓟_1$ requires support by $𝓟_2$ and $𝓟_2$  by $𝓟_3$  $...$ $𝓟_{\infty}$. Assume the following example $𝓟_1$: Grass is truely green, $𝓟_2$ green light are particles having a particular wavelength, $𝓟_3$ the particles have this wavelength because $...$. When we regress till infinity we cannot support $𝓟_1$ because $𝓟_{\infty}$ is unknown. Therefore we cannot suggest that the grass is truly green because we do not know what greenness truly consists of $𝓟_{\infty}, ..., 𝓟_2 \not\models 𝓟_1$.  Since, the soundness of $𝓟_1$  cannot be supported based on a known foundation, judgement should reasonably follow. This does not mean infinite regress is a 'bad; thing. It highlights the weak basis arguments are founded on. Another example, $𝓟_1$: A BayesFactor10>20 is strong support, $𝓟_2$ >20 indicates >95%, $𝓟_3$ we use >95% because $...$. Even a pragmatic reason for 95% would need a supporting proposition. For example, 95% is uses because 99% is too unstable in the iterations of the Markov-Chain-Monte-Carlo and then we can invoke the **mode of hypothesis** why is not 96% used? or **mode of relativity** what does 95% represent of reality?
+
+This highlight any believe in a proposition $𝓟_n$ under some condition $c \in C$ in an argument $𝓟_1, …, 𝓟_{n-1} \models 𝓟_n$. Can be suspended based on any other premise that is not certain/conclusive and therefore $𝓟_n$ does not follow. 
+
+More formally, for any claim from a subject ($s \in S$) there exists at least some propositions of disagreement over the claim under particular conditions so that the disagreement can be exploited in the mode of hypothesis (MH), Mode of Circularity (MC) and mode of infinite regress (MI).
+$$
+\forall s \forall 𝓟 \exists (Claim(s, 𝓟_n) \rightarrow Disagreement(Claim(s, 𝓟_n), c) \rightarrow \{MH \vee MC \vee MI\}
+\\
+MH: Pr(𝓟_n, s)/Pr(\neg𝓟_n, s) \neq \{0, \infty\} \rightarrow \neg Valid(𝓟_n) = Undecided
+\\
+MC: Valid(s, 𝓟_1, …, 𝓟_{n-1} \models 𝓟_n) \ 𝓟_n \in \{ 𝓟_1, …, 𝓟_{n-1} \}) \rightarrow \neg Valid(𝓟_n) = Circulair
+\\
+MI: \forall𝓟_m \exists𝓟_n (Valid(s, 𝓟_m \models 𝓟_n) \wedge 𝓟_m <  𝓟_n ) \rightarrow \neg Valid(𝓟_m)=  Non-foundational 
+$$
+
+This formal expression can be more clearly visualized in a diagram as in Fig. 3 below.
+
+```{r skeptic network,  fig.width=8, fig.height=4, echo=F, warning=FALSE, message = FALSE}
+library(igraph)
+library(ggraph)
+library(ggplot2)
+library(grid)
+
+edges <- c("P1", "P1a", "P1", "P2", "P2", "P2a", "P2", "P2b", "P2", "P3", "P3", "P3a", "P3", "P3b", "P3", "Pinf")
+g <- graph(edges, directed = TRUE)
+
+V(g)$label <- NA 
+
+V(g)$label[V(g)$name == "P1"]   <- "P[1]"
+V(g)$label[V(g)$name == "P1a"]  <- "P['1a']"
+V(g)$label[V(g)$name == "P2"]   <- "P[2]"
+V(g)$label[V(g)$name == "P2a"]  <- "P['2a']"
+V(g)$label[V(g)$name == "P2b"]  <- "P['1']"
+V(g)$label[V(g)$name == "P3"]   <- "P['...']"
+V(g)$label[V(g)$name == "P3a"]  <- "P['...a']"
+V(g)$label[V(g)$name == "P3b"]  <- "P['1 or 2']"
+V(g)$label[V(g)$name == "Pinf"] <- "P[infinity]"
+
+layout_custom <- matrix(NA, nrow = vcount(g), ncol = 2)
+rownames(layout_custom) <- V(g)$name
+
+layout_custom["P1", ]   <- c(0, 0)
+layout_custom["P1a", ]  <- c(0, -1)
+text_p1 <- c("Propositional claim"); coord_p1 <- c(0.5, 0)
+text_p1a <- c("Unsupported propositional \nclaim. This proposition has \nno 'foundation'. Therefore \nwe cannot know P1 and \nwe suspend judgement. The \n application of MH or Equipollence."); coord_p1a <- c(-0.5, -1)
+
+layout_custom["P2", ]   <- c(1, -1)
+layout_custom["P2a", ]   <- c(0, -2)
+layout_custom["P2b", ]   <- c(1, -2)
+text_p2 <- c("Support for P1"); coord_p2 <- c(1.5, -1)
+text_p2a <- c("Unsupported propositional \nclaim. This proposition has \nno 'foundation'. Therefore \nwe cannot know P2 and \nwe suspend judgement. Since \n P2 is not supporting P1 \n P1 can also not be known. The \n application of MH or Equipollence"); coord_p2a <- c(-0.5, -2)
+text_p2b <- c("The same claim as P1. \n Therefore it is circulair and \nsuspense of judgement follows. \n The application of MC."); coord_p2b <- c(0.5, -2)
+
+layout_custom["P3", ]   <- c(2, -2)
+layout_custom["P3a", ]   <- c(1, -3)
+layout_custom["P3b", ]   <- c(2, -3)
+text_p3 <- c("Support for P3"); coord_p3 <- c(2.5, -2.2)
+
+layout_custom["Pinf", ] <- c(3, -3)
+text_p4 <- c("Infinite regress"); coord_p4 <- c(3.5, -3)
+text_p4c <- c("Since we cannot know \n the foundation on which \n P1 is standing we cannot \n claim to know P1. The \napplication of MI"); coord_p4c <- c(3, -3.6)
+
+gr1 <- ggraph(g, layout = layout_custom) +
+  geom_edge_link(
+    arrow = arrow(length = unit(3, "mm"), type = "closed"),
+    end_cap = circle(22, "pt"),
+    edge_colour = "black"
+  ) +
+  xlim(-1.2, 3.5) + ylim(-3.7, 0.2) +
+  geom_node_point(shape = 21,
+                  fill = "white",
+                  color = "black",
+                  size = 20,
+                  stroke = .8) +
+  geom_node_text(aes(label = label), parse = TRUE, color = "black", size = 4) +
+  annotate("text", x=coord_p1[1], y=coord_p1[2], label=text_p1)+
+  annotate("text", x=coord_p1a[1], y=coord_p1a[2], label=text_p1a, size=3)+
+  annotate("text", x=coord_p2[1], y=coord_p2[2], label=text_p2)+
+  annotate("text", x=coord_p2a[1], y=coord_p2a[2], label=text_p2a, size=3)+
+  annotate("text", x=coord_p2b[1], y=coord_p2b[2], label=text_p2b, size=3)+
+  annotate("text", x=coord_p3[1], y=coord_p3[2], label=text_p3)+
+  annotate("text", x=coord_p4[1], y=coord_p4[2], label=text_p4)+
+  annotate("text", x=coord_p4c[1], y=coord_p4c[2], label=text_p4c, size=3)+
+  theme_classic() +
+  theme(
+    plot.margin = unit(c(20, 20, 20, 20), "mm"),
+    axis.title = element_blank(),
+    axis.text = element_blank(),
+    axis.line = element_blank(),
+    axis.ticks = element_blank())
+
+print(gr1)
+```
+
+*Figure 3: Structure of a the skeptical network that can be applied to suspend judgment on propositional claims.*
 
 # References
 
@@ -1253,7 +1394,11 @@ Cramer, J. S. 1991. The Logit Model: An Introduction for Economists. London: Edw
 
 Csilléry, Katalin, Michael G.B. Blum, Oscar E. Gaggiotti, and Olivier François. 2010. “Approximate Bayesian Computation (ABC) in Practice.” Trends in Ecology & Evolution 25(7): 410–18. doi: 10.1016/j.tree.2010.04.001.
 
+de Groot, W.T. 1998. “Problem-In-Context: A Framework for the Analysis, Explanation and Solution of Environmental Problems.” In Environmental Management in Practice: Vol 1: Instruments for Environmental Management, Oxford: Routledge, 22–43.
+
 Dewey, John. 1997. How We Think. Mineola, N.Y: Dover Publications.
+
+Feyerabend, Paul. 1975. Against Method: Outline of an Anarchistic Theory of Knowledge. 4th ed. London and New York: Verso.
 
 Fisher, R. A. (1949). The Design of Experiments (5th ed.). Oliver and Boyd.
 
@@ -1304,6 +1449,8 @@ Usó-Doménech, J. L., and J. Nescolarde-Selva. 2016. “What Are Belief Systems
 Van Fraassen, Bas C. 1980. The Scientific Image. Oxford University Press.
 
 Van Zwet, E.W., Cator, E.A., 2021. "The significance filter, the winner’s curse and the need to shrink." Stat. Neerlandica 75, 437–452. doi: 10.1111/stan.12241
+
+Wasserstein, Ronald L., and Nicole A. Lazar. 2016. “The ASA Statement on p -Values: Context, Process, and Purpose.” The American Statistician 70(2): 129–33. doi: 10.1080/00031305.2016.1154108.
 
 Woolridge, Jeffery M. 2001. Econometric Analysis of Cross Section and Panel Data. Cambridge, Massachusetts, London, England: The MIT press.
 

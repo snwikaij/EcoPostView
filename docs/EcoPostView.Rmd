@@ -1140,6 +1140,30 @@ WS1(a) \vee WS2(a), ((Observe(x) \rightarrow WhiteSwan(x)) \models WS2(x)
 $$
 Of course also this is invalid because we might actual have sampled a wrong location where only white swans occurred. However, it can be derived more quantitative. This makes abduction appealing in practice, although often not applied due to its subjective perception of how WS1 or WS2 are derived.
 
+## Beliefs
+
+I believe that beliefs are formed through impressions and sensory experiences, shaped by our emotions. The way I perceive the world is influenced by what I experience through my senses, and these perceptions are further colored by past experiences and emotional states — both present and past. Beliefs are not static; they can also play a functional role in guiding future actions and decisions.
+
+Moreover, beliefs may be formulated or sustained to produce desirable emotional states — such as comfort, hope, or confidence — or to achieve social benefits, such as identity reinforcement or enhanced status. This suggests that beliefs are not always purely reflective of objective reality but may instead be constructed or maintained for normative or instrumental reasons.
+
+For example, cognitive biases often arise when new sensory experiences conflict with existing beliefs. In such cases, we may suppress or reinterpret this new information in order to preserve older, emotionally anchored beliefs. This behavior indicates that belief is not only descriptive but also normative and, at times, self-serving.
+
+However, this does not imply that all beliefs must serve a practical function. Some philosophical theories — such as the dispositional account of belief (Silva 2024) — argue that beliefs are characterized by a tendency to act: to assert the proposition, to deliberate with it, or to behave in ways consistent with it. Yet this view seems to rely on a prior assumption: that the proposition being acted upon is taken to represent something meaningful about the world. If a belief had no representational content — no relevance to one’s understanding of reality (including social, cultural, or religious contexts) — it is unclear why it would influence behavior at all. Thus, even dispositionalist theories seem to rest upon a representational core.
+
+A belief, then, can be understood as an attitude toward a proposition (or other abstract representation). It is a mental stance regarding how that proposition relates to the world. In this way, belief can be best described as a mental model or picture of reality. Whether this model reflects the world as it is or as it ought to be remains an open question. Often, belief is treated dichotomously: we either accept a proposition as true or we do not. For instance, if I believe the proposition "the grass is green," then I regard it as a true statement about the world.
+
+Of course, some approaches — such as Bayesian epistemology — interpret belief in terms of degrees of credence, assigning probabilities to propositions. This works well for events that can be framed in terms of empirical frequency — such as the likelihood of drawing a black marble from a jar. However, this probabilistic interpretation becomes less coherent when applied to abstract entities. For instance, how should one assign a probability to the slope of a linear regression? The slope is a theoretical construct derived from data — it does not "exist" in the same way a marble does. Thus, beliefs about such constructs are not directly about reality but about models of reality. This raises questions about what these beliefs actually represent.
+
+Consequently, I adopt a more traditional, dichotomous view of belief: we either hold a proposition to be true or we do not. This view aligns most closely with representationalism, which I take as foundational. The core of this position can be summarized formally:
+
+$$
+\text{At least part of what it is for an moral agent S to believe proposition } \mathcal{P}_i \text{ is for  S} \text{ to take } \mathcal{P}_i \text{ as an adequate representation of the world }\omega
+$$
+
+In contrast, dispositionalism claims that to believe $P_i$ is to be disposed to assert it, act on it, or treat it as a premise in deliberation (Silva 2024). Yet this still presumes that the agent regards  $P_i$ as a adequate representation of $\omega$. One would not be disposed to act on a proposition unless one first represents it as true or significant in relation to the world. Therefore, I argue that even dispositionalist accounts depend on — and cannot escape — an underlying representationalist framework.
+
+In general beliefs can be hold in the mind termed "occurent" believes, or "dispositional" we know that grass will not often be purple or red. Therefore if we are asked about non common colours of white we give an answer. Yet we do not actively think about it. There are thus different views on what a belief might be and how a belief might be used to shape our understanding of the world.
+
 ## Objective language and normativity
 
 Language and the beliefs shaped by it play a role in sharing information. The objectivity of the language and chosen words conveying the beliefs, intent, status, knowledge and moral and political position of the author. It is therefore used to convey meaning. Broadly there could be three levels of objective uses of language.

@@ -599,7 +599,7 @@ For example: P1: All unicorns fly when eating carrots, P2: my unicorn eat a carr
 
 In propositional logic, the argument as given before can be formally expressed as below. In this formal expression $\rightarrow$ indicates and implication (as "implies") and the three dots $\therefore$ indicates therefore. Similar $\vee$ means "or", $\wedge$ means "and" and $\neg$ is the negation symbol. Thus for example $\neg P$ means not-P. Other operators include $\vee$ indicates "or" (disjunction) and $\wedge$ indicates "and" (conjunction). Using these basic operators, many more valid argument forms can be constructed—such as disjunctive syllogism, hypothetical syllogism, modus tollens, and more. These forms serve as the foundation for formal reasoning in logic.
 
-In **meta-language** it is adrresses how we speak about the **object language**. The meta-language discusses how the object language should and is used. It can contain more operators as long as it is defined what they imply. For example  $\equiv$ and $\leftrightarrow$: equivalence via $A \leftrightarrowB $ and $\equiv (A \rightarrow )b ∧ (B \rightarrow A)$. Hera $A\equiv  B$ have equivalent logical status, but are not the same. $=$ indicates $is$ or outcome as identity i.e., $A = B$ indicating A and B are the same. The symbol / indicates over or divided by. 
+In **meta-language** it is adrresses how we speak about the **object language**. The meta-language discusses how the object language should and is used. It can contain more operators as long as it is defined what they imply. For example  $\equiv$ and $\leftrightarrow$ indicates equivalence which can be understood as $A \leftrightarrow B$ or $(A \rightarrow B) ∧ (B \rightarrow A)$. Hera $A \equiv B$ have equivalent logical status, but are not the same. $=$ indicates $is$ or an outcome as identity i.e., $A = B$ indicating A and B are the same. The symbol $/$ indicates over or divided by. 
 
 In propositional logic modens ponens is then expressed as follows:
 $$P \rightarrow Q, P \therefore Q$$
@@ -635,15 +635,22 @@ $$
 \text{Disjunctive Syllogism:} P(x) \vee Q(x), \neg P(x) \vdash Q(x) \\
 $$
 
-## Logic and rules
+## Reasons, Logic and rules
 
-There exist some rules (axioms) of logic that are self evident. I will lay them out here for further support. This does not mean they are not normative, but they will be useful down the line.
+There exist some rules (axioms) of logic that are self evident. There are no clear rules of reasoning as far as I am aware. Of course there are 'laws' in logic that can be derived from within the object language. There some *normative?) rules of rationality that make intuitively sense if one is aware of them. Yet, it remains unclear if we actually use them. I will lay them out here for further support. This does not mean they are not normative, but they will be useful down the line.
 
 **Law of identity**
 Informal: The law of identity states that any object that is equal to itself.
 $$
 \text{Formal:}\ A=A \ or \ A(x)=A(x)
 $$
+
+**Law of excluded middle**
+Informal: A proposition is either true or false (there is no middle ground)
+$$
+\text{Formal:}\ A(x)\vee \neg A(x)
+$$
+
 **Law of non-contradiction**
 Informal: One cannot rationally hold logically inconsistent beliefs.
 $$
@@ -654,15 +661,16 @@ $$
 \text {Meta-language}: \neg\exists s \forall 𝓟(Rational(s) \rightarrow Believe(s, 𝓟) \wedge Believe(s, \neg 𝓟))
 $$
 
-**Law of excluded middle**
-Informal: A proposition is either true or false (there is no middle ground)
-$$
-\text{Formal:}\ A(x)\vee \neg A(x)
-$$
-**norm of logical consequence**
+**Norm of logical consequence**
 Informal: If one believes the premises of a valid argument, one must believe the conclusion.
 $$
 \text {Meta-language}: \forall s \forall 𝓟_i \forall 𝓟_n Valid(s, 𝓟_i, ..., 𝓟_{n-1} \models 𝓟_n) \wedge Belief(s, 𝓟_i) \rightarrow Belief(s, 𝓟_n)
+$$
+Both the law of non-contradiction and norm of logical consequence are invoked albeit in different forms as a basis of 'correct' reasoning (not logic) by Harman (1986). This has been adapted by (Labukt 2021). I am unaware if this being actually taken serious, but they all make intuitively sense. The law of identity is also could be added as it is self evident that something that is different cannot be itself. Otherwise the law of excluded middle is largely supporting of the law of non-contradiction. Hence, if we cannot hold the belief that it is probable a proposition is either 80% true and 20% false but either 100% or 0% then it follows that we can neither belief both A or B to be true. This would seem to clash with the idea that beliefs come in degrees. Yet, there is a difference in believing something yes/no or expressing and modeling the belief. 
+
+Informal: If the probability of $A$ can only take 1 and 0 $P(A(x)) \in  \{ 0, 1 \}$ (which is not a probability) and the probability of $B$ can only take 0 or 1 $P(B(x)) \in  \{ 0, 1 \}$ which implies that either A or B.
+$$
+\text{Formal:}\ (P(A(x))=1 \ \vee P(A(x))=0) \ \wedge (P(B(x))=1-P(A(x)) ) \rightarrow  A(x)\vee \ B(x)
 $$
 
 ## Deduction, induction and abuction
@@ -778,9 +786,10 @@ In contrast, dispositionalism claims that to believe $P_i$ is to be disposed to 
 ### Knowledge
 
 $$\emptyset$$
-##Truth
 
-##Meaning
+## Truth
+
+## Meaning
 
 ## Objective language and normativity
 
@@ -1567,6 +1576,8 @@ Hinne, Max, Quentin F. Gronau, Don Van Den Bergh, and Eric-Jan Wagenmakers. 2020
 Hoeting, Jennifer A., David Madigan, Adrian E. Raftery, and Chris T. Volinsky. 1999. “Bayesian Model Averaging: A Tutorial.” Statistical Science 14(4):382–417. doi: 10.1214/ss/1009212519.
 
 Kale, Alex, Francis Nguyen, Matthew Kay, and Jessica Hullman. 2019. “Hypothetical Outcome Plots Help Untrained Observers Judge Trends in Ambiguous Data.” IEEE Transactions on Visualization and Computer Graphics 25(1): 892–902. doi: 10.1109/TVCG.2018.2864909.
+
+Labukt, Ivar. 2021. “Is Logic Distinctively Normative?” Erkenntnis 86(4): 1025–43. doi: 10.1007/s10670-019-00142-1.
 
 Lamme, V. 2011. Vrije Wil Bestaat Niet. Amsterdam: Prometheus.
 

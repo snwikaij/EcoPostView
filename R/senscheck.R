@@ -43,7 +43,7 @@ senscheck <- function(mod1, mod0, interval=0.9,
   overlaydf     <- rbind(cbind(Model="M1", mod1$Chains_mu[-5], Est=mod1$Chains_mu$estimate), cbind(Model="M0", mod0$Chains_mu[-5], Est=mod0$Chains_mu$estimate))
   overlaydf     <- overlaydf[overlaydf$parameter != "b0",]
 
-  sens_df_odds  <- cbind(mod1$Chains_mu[-5], odds=log(mod1$Chains_mu$estimate/mod0$Chains_mu$estimate))
+  sens_df_odds  <- suppressWarnings(cbind(mod1$Chains_mu[-5], odds=log(mod1$Chains_mu$estimate/mod0$Chains_mu$estimate)))
   aggr_df_odds  <- aggregate(data=sens_df_odds, odds~parameter+predictor+link+group, function(x) c(maxpost(x), mean(x, na.rm=T), sd(x, na.rm = T), hdi_fun(x, interval)))
   sens_analysis <- setNames(cbind(code=paste(aggr_df_odds[,1], aggr_df_odds[,2],
                                              aggr_df_odds[,3], aggr_df_odds[,4], sep="_"),
@@ -97,9 +97,12 @@ senscheck <- function(mod1, mod0, interval=0.9,
     theme_classic()+
     theme(axis.title.y = element_blank())
 
+  if(is.null(order_group)){lord_group <- length(unique(split_odds$b1$group))}else{lord_group <- length(order_group)}
+  if(is.null(order_predictor)){lord_pred <- length(unique(split_odds$b1$predictor))}else{lord_pred <- length(order_predictor)}
+
   pl3 <- ggplot(split_odds$b1 , aes(x= group, y = predictor, fill = post)) +
     ggplot2::geom_tile()+labs(fill="Shift in posterior positive direction")+
-    facet_wrap(.~link, nrow=length(order_group), ncol=length(order_predictor))+
+    facet_wrap(.~link, nrow=lord_group, ncol=lord_pred)+
     geom_text(aes(label = round(post, 2)), color = "black")+
     ggplot2::scale_fill_gradientn(colors = c("tomato3", "white", "dodgerblue3"),
                                   breaks=seq(0,1,0.2),

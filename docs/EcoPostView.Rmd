@@ -417,6 +417,13 @@ This is not a limitation but rather reflects what occurs in practice: prior info
 
 Admittedly, this is the most demanding phase of the workflow: gathering and extracting data, fitting multiple (G)LMs, defining and implementing priors, assessing potential biases, and optimizing the model to ensure stable and interpretable results. Once complete, presenting the results or making predictions from the fitted models is considerably more straightforward.
 
+Additionally, overlaying the probability density distribution of both models. Gives another way to asses the influence of the priors. It shows posterior density of both mod1 (M1) and mod0 (M0).
+
+```{r, sensitivity overlay, warning=FALSE}
+#Print to overlay the posterior density for only the log model
+print(sens_check$overlay$log)
+```
+
 ## pdplot-function
 
 To visualize posterior results, a common approach is to display point estimates along with credible intervals. However, this method imposes sharp boundaries on a continuous distribution of uncertainty, which may not fully reflect the nature of a posterior probability distribution.
@@ -752,10 +759,10 @@ The classical definition of knowledge as Justified True Belief (JTB)—though lo
 
 If we insist that knowledge must be justified, then we are assuming that a sentence must be either a 'true reflection' or an 'adequate representation' of reality. Hence, the sentence has to stand in relation to something it needs to have *sense*. In such a framework, justification is the relational bridge between information and a particular purpose. But this leads directly to the problem of infinite regress: we must then define what we mean by 'true' and 'adequate', and ensure that these definitions are not themselves subject to the same ambiguities and vagueness. Otherwise, they may be applied inappropriately to cases or conditions to which they do not belong.
 
-Take, for instance, the cliché 'correlation is not causation'.  A a correlation alone does not belong to an objects (case or condition) of causation.  Thus, 'cause' and 'effect' are part of a linguistic framework — a language game, in Wittgensteinian terms. We must define the conditions under which these terms are justified. Pearl’s (2009) work, then, can be viewed as an attempt to formalize the semantic and syntactic structure under which 'cause' and 'effect' are descriptors, but for what exactly? Pearl (2009) refers to the ontological structure of reality: "because causal relationships are ontological, describing objective physical constraints in our world". This would mean 'cause' and 'effect' are physical. However, I could perfectly argue that the properties of an object P of object x interact with the properties Q of object y as in $P(x) \wedge P(y) \rightarrow R(x,y)$, per example precipitating $Ca^{2+}$ salt as $CaCO_3$from water by adding $Na_2CO_3$ via 
+Take, for instance, the cliché 'correlation is not causation'. A correlation alone does not belong to an objects (case or condition) causation.  Thus, 'cause' and 'effect' are part of a linguistic framework — a language game, in Wittgensteinian terms. We must define the conditions under which these terms are justified. Pearl’s (2009) work, then, can be viewed as an attempt to formalize the syntactic structure under which the semantics 'cause' and 'effect' are descriptors, but for what exactly? Pearl (2009) refers to the ontological structure of reality: "because causal relationships are ontological, describing objective physical constraints in our world". This would mean 'cause' and 'effect' are physical. However, I could perfectly argue that the properties of an object P of object x interact with the properties Q of object y as in $P(x) \wedge P(y) \rightarrow R(x,y)$, for example precipitating $Ca^{2+}$ salt as $CaCO_3$from water by adding $Na_2CO_3$ via 
 $$
 Ca^2(aq) + CO_{3}^{2-}(aq) \rightarrow CaCO_3(s)
-$$. 
+$$ 
 The implication sign is than nothing more that a way to describe 'cause' and the effect would be $R(x, y)$. This means 'cause' and 'effect' are linguistic games. We could as well suggest that cause and effect are meta-physical transcendental entities. That are there but cannot be observed by us (like Platonism).
 
 Therefore we need to clarify what 'cause' and 'effect' are: 
@@ -900,7 +907,7 @@ A 'string; of beliefs can be traced from a foundational or "hinge" proposition (
 
 For example, if $A(x) \rightarrow B(x)$ and the valuation $v(A(x))=F$ then logically $A(x) \rightarrow \neg B(x)$. This view reflects what Harman (1986) refers to as the foundational theory of belief revision: a belief in a proposition $𝓟_n$ needs to be supported by another proposition $𝓟_{n-1}$.
 
-It turns out that people do not follow this system most of the time and actually search to minimal reconstruct their believes system  (Harman, 1986).For example, suppose we have $F(x) \rightarrow H(x)$ and $v(F(x))=F$. This leads to $F(x) \rightarrow \neg H(x)$ threatening our belief in $H(x)$. To preserve our believe in $H(x)$ we might adopt a new proposition $G(x) \rightarrow H(x)$, provided it does not conflict with existing beliefs. This is the basis of coherence theory in belief revision (Harman, 1986): people tend to make minimal changes that preserve the overall structure and coherence of their belief system. We can draw parallels to a system van Fraassen (1980) sketches.
+It turns out that people do not follow this system most of the time and actually search to minimal reconstruct their believes system  (Harman, 1986). This is termed the 'maxim of minimal mutilation' (Ferrari and Carrara 2025). For example, suppose we have $F(x) \rightarrow H(x)$ and $v(F(x))=F$. This leads to $F(x) \rightarrow \neg H(x)$ threatening our belief in $H(x)$. To preserve our believe in $H(x)$ we might adopt a new proposition $G(x) \rightarrow H(x)$, provided it does not conflict with existing beliefs. This is the basis of coherence theory in belief revision (Harman, 1986): people tend to make minimal changes that preserve the overall structure and coherence of their belief system. This can also be refered to all. We can draw parallels to a system van Fraassen (1980) sketches.
 
 Consider a practical example. Suppose I believe I am bad at cooking because people dislike my food: $DislikeFood(x) \rightarrow BadCooking(x)$ However, I later realize that some people dislike vegetarian food specifically. In contrast, vegetarians enjoy my cooking. The original belief no longer holds because: $\neg DislikeFood(x) \rightarrow BadCooking(x)$. Therefore I need to revise all my beliefs that follow from my $BadCooking$. According to the foundational theory of belief revision I need to drop the belief I am bad at cooking. According to the coherence theory of belief revision I could rationalize that vegetarians “have no taste,” preserving my original belief. This mirrors the logic shift from $F(x) \rightarrow \neg H(x)$ to $G(x) \rightarrow H(x)$.
 
@@ -1057,7 +1064,36 @@ In most cases the theory and background is often not provided in many cookbooks,
 
 ## Classical statistics and estimation
 
-All statistics focuses on estimating the parameter of interest $\theta$ which in most (G)LMs is denoted as the parameter $\mu$ or $\beta$. For consistency I will use the parameter of interest $\mu$. The population parameter of interest $\mu$ is fixed and unknown. To investigate potential values for $\mu$ we take measurements/samples. The observed measurements or samples ($x$) are realizations of an unknown random variable $X$, where both x and X represents sets $x = \{x_i, \dots, x_n \mid x \in \mathbb{R}\}$ and $X = \{X_i, \dots, X_N \mid X \in \mathbb{R}\}$. Here, $x$ is a realization and $X$ denotes the random variable. It is then assumed that $x$ is originating as randomly identically and independent distributed random variable (iid) from X as in $x\sim X$ or $x \stackrel{\text{iid}}{\sim} N(\mu, \sigma^2)$. Since we do not have $X$ but only a set of realizations we need an estimator for it which it the sample mean $\hat{x}(x)$. Hence, the mean of the random variable $X$ would be $\mu(X)=\frac{X_i,\cdots,X_N}{N}$ and if x are indeed iid $\hat{x}(x)=\frac{x_i,\cdots,x_n}{n}$ would be an estimator for $\mu$. Therefore, the sample mean has certain properties $\mathbb{E}[\hat{x}]$ and $Var(\hat{x})=\frac{\sigma^2}{n}$. Then the weak law of large numbers suggest that the probability of deviation from the population parameter decreases when sample size $n$ increases $\lim_{n\to\infty} P\left(|\hat{X}_n-\mu|\geq \epsilon\right)=0$. This means that according to the central limit theorem $Z_n=\frac{\hat{x}-mu}{\sigma/\sqrt(n)}$ converges to the standard normal under $mu=0$. The probability of observing $Z$ under a long-run of repetitions $P(-1.96\lesssim Z \lesssim 1.96)=0.95$. Similair, the probability of the intervals of $\overline{x}$ to cover $\mu$ in a long-run of repeated experiments at 95% is $1  - c = P(\overline{x} > \mu - 1.96 \cdot \frac{\sigma}{\sqrt{n}}) ~and~  P(\overline{x} < \mu - 1.96 \cdot \frac{\sigma}{\sqrt{n}})$. I visually explain this in this shiny app https://snwikaij.shinyapps.io/shiny/. Furthermore, it is clear that statistics does do nothing with causality in the first place and the focus on error-control and causality starts by satisfying theoretical conditions needed the arrive at believes in these concepts. Hence, error-control and causality start a-priori (Fisher 1949, Pearl 2009, Mayo 2018). Yet, such a focus and framework would, for example be extremely useful if objectivity over repetitions are the goal and favorable. While classical statistics focuses on fixed but unknown parameters, error-control and objectivity of information, Bayesian methods extend this perspective by introducing prior information and viewing parameters as random variables. This shift opens the door to more flexible and informative inference, as explained in the next section.
+All statistics focuses on estimating the parameter of interest $\theta$ which in most (G)LMs is denoted as the parameter $\mu$ or $\beta$. For consistency I will use the parameter of interest $\mu$. 
+
+The population parameter $\mu$ is fixed but unknown. To investigate plausible values for $\mu$, we collect measurements or samples. These observed data points, denoted as $x = {x_1, \dots, x_n}$, are realizations of an underlying random variable $X = {X_1, \dots, X_n}$, where each $X_i \in \mathbb{R}$. We assume that these observations are independently and identically distributed (i.i.d.) from a common distribution.
+
+$$\stackrel{\text{iid}}{\sim} N(\mu, \sigma^2)$$
+
+Since we do not have $X$ but only a set of realizations we need an estimator, which isthe sample mean $\bar{x}(x)$. Hence, the sample mean would be 
+
+$$\bar{x}=\frac{\sum_{i=1}^n(x_i)}{n}$$ 
+
+If x is indeed i.i.d. then $\hat{x}$ would serve as an unbiased estimator for $\mu$. Therefore, the sample mean has certain properties.
+
+$$\mathbb{E}[\bar{x}] \ and \ Var(\bar{x})=\frac{\sigma^2}{\sqrt{n}}$$. 
+
+Then according to the weak law of large numbers suggest that the probability of deviation from the population parameter decreases when sample size $n$ increases till it eventually converges.
+
+$$\lim_{n\to\infty} P\left(|\bar{X}_n-\mu|\geq \epsilon\right)=0$$
+This means that according to the central limit theorem 
+$$Z_n=\frac{\hat{x}-mu}{\sigma/\sqrt(n)}$$
+converges to the standard normal under $mu=0$. The probability of observing $Z$ under a long-run of repetitions
+
+$$P(-1.96\lesssim Z \lesssim 1.96)=0.95$$. 
+
+Similar, the probability of the intervals of $\bar{x}$ to cover $\mu$ in a long-run of repeated experiments at 95% is 
+
+$$1  - c = P(\bar{x} > \mu - 1.96 \cdot \frac{\sigma}{\sqrt{n}}) ~\text{and}~  P(\bar{x} < \mu - 1.96 \cdot \frac{\sigma}{\sqrt{n}})$$. 
+
+A visual explanation of this concept is provided in the following Shiny app: https://snwikaij.shinyapps.io/shiny/. 
+
+Furthermore, it is clear that statistics does do nothing with causality and the focus on error-control. Causality starts by satisfying theoretical conditions needed the arrive at believes in these concepts. Hence, error-control and causality start a-priori (Fisher 1949, Pearl 2009, Mayo 2018). Such a focus and framework is extremely useful if objectivity over repetitions are the goal and favorable. While classical statistics focuses on fixed but unknown parameters, error-control and objectivity of information, Bayesian methods extend this perspective by introducing prior information and viewing parameters as random variables. This shift opens the door to more flexible and informative inference, as explained in the next section.
 
 ## Bayes Theorem and probablistic estimation
 
@@ -1556,6 +1592,8 @@ Csilléry, Katalin, Michael G.B. Blum, Oscar E. Gaggiotti, and Olivier François
 de Groot, W.T. 1998. “Problem-In-Context: A Framework for the Analysis, Explanation and Solution of Environmental Problems.” In Environmental Management in Practice: Vol 1: Instruments for Environmental Management, Oxford: Routledge, 22–43.
 
 Dewey, John. 1997. How We Think. Mineola, N.Y: Dover Publications.
+
+Ferrari, Filippo, and Massimiliano Carrara. 2025. Logic and Science: An Exploration of Logical Anti-Exceptionalism. Cambridge: Cambridge University Press. doi: 10.1017/9781009233897.
 
 Feyerabend, Paul. 1975. Against Method: Outline of an Anarchistic Theory of Knowledge. 4th ed. London and New York: Verso.
 

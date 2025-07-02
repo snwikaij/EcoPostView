@@ -1068,28 +1068,28 @@ All statistics focuses on estimating the parameter of interest $\theta$ which in
 
 The population parameter $\mu$ is fixed but unknown. To investigate plausible values for $\mu$, we collect measurements or samples. These observed data points, denoted as $x = {x_1, \dots, x_n}$, are realizations of an underlying random variable $X = {X_1, \dots, X_n}$, where each $X_i \in \mathbb{R}$. We assume that these observations are independently and identically distributed (i.i.d.) from a common distribution.
 
-$$\stackrel{\text{iid}}{\sim} N(\mu, \sigma^2)$$
+$$X\stackrel{\text{iid}}{\sim} N(\mu, \sigma^2)$$
 
-Since we do not have $X$ but only a set of realizations we need an estimator, which isthe sample mean $\bar{x}(x)$. Hence, the sample mean would be 
+Since we do not have $X$ but only a set of realizations we need an estimator, which is the sample mean $\bar{x}(x)$. Hence, the sample mean would be 
 
 $$\bar{x}=\frac{\sum_{i=1}^n(x_i)}{n}$$ 
 
 If x is indeed i.i.d. then $\hat{x}$ would serve as an unbiased estimator for $\mu$. Therefore, the sample mean has certain properties.
 
-$$\mathbb{E}[\bar{x}] \ and \ Var(\bar{x})=\frac{\sigma^2}{\sqrt{n}}$$. 
+$$\mathbb{E}[\bar{x}]=\mu \ and \ Var(\bar{x})=\frac{\sigma^2}{\sqrt{n}}$$ 
 
 Then according to the weak law of large numbers suggest that the probability of deviation from the population parameter decreases when sample size $n$ increases till it eventually converges.
 
 $$\lim_{n\to\infty} P\left(|\bar{X}_n-\mu|\geq \epsilon\right)=0$$
 This means that according to the central limit theorem 
-$$Z_n=\frac{\hat{x}-mu}{\sigma/\sqrt(n)}$$
-converges to the standard normal under $mu=0$. The probability of observing $Z$ under a long-run of repetitions
+$$Z_n=\frac{\bar{X}_n-\mu}{\sigma/\sqrt(n)}$$
+converges to the normal. The probability of observing $Z$ under a long-run of repetitions
 
 $$P(-1.96\lesssim Z \lesssim 1.96)=0.95$$. 
 
 Similar, the probability of the intervals of $\bar{x}$ to cover $\mu$ in a long-run of repeated experiments at 95% is 
 
-$$1  - c = P(\bar{x} > \mu - 1.96 \cdot \frac{\sigma}{\sqrt{n}}) ~\text{and}~  P(\bar{x} < \mu - 1.96 \cdot \frac{\sigma}{\sqrt{n}})$$. 
+$$1  - c = P(\bar{X}_n > \mu - 1.96 \cdot \frac{\sigma}{\sqrt{n}}) ~\text{and}~  P(\bar{X}_n < \mu - 1.96 \cdot \frac{\sigma}{\sqrt{n}})$$. 
 
 A visual explanation of this concept is provided in the following Shiny app: https://snwikaij.shinyapps.io/shiny/. 
 

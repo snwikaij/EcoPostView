@@ -3,7 +3,7 @@
 export(abctoz)
 export(abmeta)
 export(extrabc)
-export(get_stochastic_BF)
+export(get_BF)
 export(glmmJAGS)
 export(hop)
 export(meta)

@@ -1,4 +1,4 @@
-#' Stochastic Bayes Factors
+#' Get Bayes Factor
 #'
 #' @param Object Model object from the meta function
 #' @param prior_names names to place above the priors in the table
@@ -14,8 +14,8 @@
 #' @importFrom tidyr spread
 #'
 #' @export
-get_stochastic_BF <- function(object, prior_names=NULL){
-  bf <- mod$Chains_podd[!(mod$Chains_podd$predictor) == "NA", ]
+get_BF <- function(object, prior_names=NULL){
+  bf <- object$Chains_podd[!(object$Chains_podd$predictor) == "NA", ]
 
   podds_table <- as.data.frame(table(bf$estimate, paste0(bf$predictor, "_", bf$link, "_", bf$group)))
 
@@ -28,4 +28,20 @@ get_stochastic_BF <- function(object, prior_names=NULL){
   pfrac_table      <- podds_table
   pfrac_table[,-1] <- round(pfrac_table[,-1]/rowSums(pfrac_table[,-1]),3)
 
-  return(list(simulates=podds_table, fraction=pfrac_table))}
+  num_cols <- pfrac_table[,-1]
+  pairs    <- combn(names(num_cols), 2, simplify = FALSE)
+  bf_df <- pfrac_table["Var2"]
+
+  for (pair in pairs) {
+    col1 <- pair[1]
+    col2 <- pair[2]
+
+    bf_name1 <- paste0("BF", col1, "/", col2)
+    bf_name2 <- paste0("BF", col2, "/", col1)
+
+    bf_df[[bf_name1]] <- num_cols[[col1]] / num_cols[[col2]]
+    bf_df[[bf_name2]] <- num_cols[[col2]] / num_cols[[col1]]
+  }
+
+
+  return(list(bayesfactor=bf_df, simulates=podds_table, fraction=pfrac_table))}

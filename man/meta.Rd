@@ -19,6 +19,7 @@ meta(
   prior_mu_se = 10,
   prior_study_var = NULL,
   prior_fam_var = "unif1",
+  fixed_prior = FALSE,
   interval = 0.9,
   get_prior_only = FALSE,
   n_chain = 2,
@@ -64,6 +65,8 @@ assumptions about the between study variance and a large number of levels is pre
 Uniform2 = 'unif2' estimates the between study variance for each individual level. This is useful when one no assumptions wants to make over the between study variance and a large number of studies is present for each level.
 The Exponential = 'exp' estimates the between study variance for each individual level based on the exponential distribution (default='unif1').This is beneficial if only a small number of levels and samples are present. With unif1 or unif2 the intervals can become
 very broad with might be beneficial if one wants to be conservative. However, it can be a disadvantage because that the variability of the parameter gets overly broad (default = 'unif1')}
+
+\item{fixed_prior}{by default the prior weights are treated as stochastically generated from a Dirichlet distribution (fixed_prior=FALSE). It is possible to treat them as fixed (fixed_prior=TRUE). Under fixed conditions all priors are appointed equal prior weights as 1/number of priors.}
 
 \item{interval}{Credibility intervals for the summary (default=0.9)}
 

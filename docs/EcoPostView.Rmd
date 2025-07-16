@@ -3,14 +3,35 @@ title: "EcoPostView: Ecological Posterior View"
 author: Willem (Wim) Kaijser
 output: 
   html_document:
-    theme: cosmo
     toc: true
     toc_float: true
     toc_depth: 4
     number_sections: true 
     highlight: tango
-    css: style.css
 ---
+
+<style>
+.main-container {
+    max-width: 100%;
+}
+
+body {
+    text-align: justify;
+}
+
+/* TOC first level — bigger and bold */
+.tocify .tocify-item.tocify-level-1 {
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+/* TOC second level — bold and slightly smaller */
+.tocify .tocify-item.tocify-level-2 {
+    font-weight: bold;
+    font-size: 1.1em;
+}
+</style>
+
 
 # Overview
 This site reads like an incomplete book or essay. It serves as a way to organize my thoughts and collect fragments of information. The project originally started around the EcoPostView R package, but has since expanded into several loosely connected chapters that explore broader ideas.
@@ -114,7 +135,7 @@ However, in a GLM with, log- or logit-link it is easier to talk about log-linear
 $$log(E(y_{i} \mid x_{i})) = \beta_0 + \beta_1 \cdot x_{i}$$ 
 or logit-linear relations
 $$logit(E(y_{i} \mid x_{i})) = \beta_0 + \beta_1 \cdot x_{i}$$
-In a Generalized Linear Model (GLM), the slope is not a "true" slope in the geometric sense, since the relationship between the response variable (*y*) and predictor variable (*x*) is no longer a straight line.However, the model is still considered linear because the parameters are incorporated linearly in the linear predictor. As such, the terms coefficient or regression coefficient typically refer to these model parameters, denoted as ($\beta$). 
+In a Generalized Linear Model (GLM), the slope is not a "true" slope in the geometric sense, since the relationship between the response variable (*y*) and predictor variable (*x*) is no longer a straight line. However, the model is still considered linear because the parameters are incorporated linearly in the linear predictor. As such, the terms coefficient or regression coefficient typically refer to these model parameters, denoted as ($\beta$). 
 
 In practice, I often prefer to work with elasticity or semi-elasticity coefficients (Wooldridge, 2001), which can offer an interpretable measures in log-linear or logit-linear models. That said, their use is context-dependent and may not always be appropriate. The elasticity coefficient quantifies the percentage change in $y$ associated with a 1% change in $x$. For example, an elasticity of 0.2 implies a 0.2% increase in $y$ for every 1% increase in $x$. In a log-log model: $y$ given 1% in $x$. Hence, for a log-linear model $log(E(y \mid x)) = \beta_0 + \beta_1 \cdot log(x)$
 and thus $\beta_1 = \frac{\log(y)}{\log(x)}$. For the semi-elasticity coefficient (i.e., logit-linear) this only accounts partially and values closer 0 are better interpretable because $logit(E(y \mid x)) = \beta_0 + \beta_1 \cdot log(x)$ and thus $\beta_1 = \frac{logit(y)}{\log(x)}$. This expressed the  change in the log-odds per 1% elasticity 

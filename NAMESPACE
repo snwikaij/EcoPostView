@@ -3,6 +3,7 @@
 export(abctoz)
 export(abmeta)
 export(extrabc)
+export(forest)
 export(get_BF)
 export(glmJAGS)
 export(hop)

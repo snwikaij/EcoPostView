@@ -8,6 +8,11 @@
 #' @description A forest plot that indicates all priors used in the model, all estimates included and the posterior distribution of the pooled
 #' estimate.
 #'
+#' @import ggplot2 scale_color_grey
+#' @import stats quantile
+#' @importFrom ggplot2 theme
+#' @importFrom ggplot2 element_text
+#'
 #' @export
 forest <- function(object, study_names=NULL, interval=0.9, xlab="Estimate"){
 

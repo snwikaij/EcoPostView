@@ -1,7 +1,6 @@
 #' Simple Generalized Linear Models with JAGS
 #'
-#' @param formula Atandard notation y~x
-#' @param random A vector that indicates random effects
+#' @param formula Satandard notation y~x
 #' @param data A dataset
 #' @param family A set of "norm_ident", "norm_log", "gamma_ident", "gamma_log", "pois_ident", "pois_log", "negbinom_ident"
 #' "negbinom_log"
@@ -20,7 +19,7 @@
 #'results <- glmmJAGS(V3~V1+V2, data=df, family = "pois_log")
 #'
 #' @export
-glmmJAGS <- function(formula=NULL, random=NULL, data=NULL, family="norm_ident",
+glmJAGS <- function(formula=NULL, data=NULL, family="norm_ident",
                      prior_mu=0, prior_mu_se=100, prior_dispersion=c(0.001, 0.001)){
 
   argument.call <- match.call()
@@ -38,13 +37,7 @@ if(family=="norm_ident"){
   for(i in 1:ni){
     y[i]    ~ dnorm(mu[i], tau)
 
-    for (r in 1:ri) {
-      mu[i] <- mu[i]+inprod(b0[random[i, r]], rx[i, r])
-    }
-
     mu[i]   <- inprod(bn[],x[i,])}
-
-  for(k in 1:ri) {b0[k] ~ dnorm(prior_mu, prior_mu_se)}
 
   for(j in 1:nx){bn[j] ~ dnorm(prior_mu, 1/prior_mu_se^2)}
 
@@ -60,13 +53,7 @@ if(family=="norm_ident"){
     for(i in 1:ni){
       y[i]    ~ dnorm(mu[i], tau)
 
-      for (r in 1:ri) {
-        log(mu[i]) <- mu[i]+inprod(b0[random[i, r]], rx[i, r])
-      }
-
       mu[i]   <- inprod(bn[],x[i,])}
-
-    for(k in 1:ri) {b0[k] ~ dnorm(prior_mu, 1/prior_mu_se^2)}
 
     for(j in 1:nx) {bn[j] ~ dnorm(prior_mu, 1/prior_mu_se^2)}
 
@@ -183,29 +170,11 @@ parts <- unlist(strsplit(argument[3], "\\+"))
 x     <- as.matrix(data[colnames(data) %in% parts])
 y     <- data[,argument[2]]
 
-############################################
-#random effect formula y~x+...+x+random(r1)#
-############################################
-
-rand_eff <- parts[grepl("random", parts)]
-
-if(length(rand_eff)!=0){
-  names_rand_eff <- sub(".*\\((.*)\\).*", "\\1", rand_eff)
-  rx             <- matrix(1, nrow = nrow(data), ncol = length(rand_eff))
-  random         <- as.matrix(data[colnames(data) %in% names_rand_eff])
-  random         <- apply(random, 2, as.factor)}
-else{
-  rx             <- matrix(1, nrow = nrow(data), ncol = 1)
-  random         <- as.matrix(matrix(1, nrow = nrow(data), ncol = 1))
-  random         <- apply(random, 2, as.factor)}
-
-ri               <- length(rand_eff)
-
 ############################
 #model data in final format#
 ############################
 
-model_list  <- list(y=y, x=x, ni=nrow(x), nx=ncol(x), random=random, rx=rx, ri=ri,
+model_list  <- list(y=y, x=x, ni=nrow(x), nx=ncol(x), rx=rx,
                       prior_mu=prior_mu, prior_mu_se=prior_mu_se, prior_dispersion=prior_dispersion)
 
 output <- jags.parallel(data = model_list, model.file = model,

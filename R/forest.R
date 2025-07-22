@@ -74,7 +74,7 @@ forest <- function(object, study_names=NULL, interval=0.9, xlab="Estimate"){
 
     #plot priors
     pl3 <- ggplot(prior_df, aes(x, y, group=p, col=as.factor(p)))+
-      geom_line()+labs(col="Prior")+scale_color_grey(start = 0.85, end = 0.15)+
+      geom_line()+labs(col="Prior")+ggplot2::scale_color_grey(start = 0.85, end = 0.15)+
       geom_vline(xintercept = 0, lty=2, lwd=0.6, col="tomato3")+
       theme_classic()+
       theme(axis.title.x = element_blank(),

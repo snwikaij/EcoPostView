@@ -484,6 +484,73 @@ For larger datasets with multiple groups and predictor variables, it may be usef
 
 By adjusting these arguments, you can organize the PDDs in a way that facilitates easier interpretation, especially when working with complex models involving numerous predictors and groupings.
 
+## forest-function
+
+A classical way to display the results of a meta-analysis is through a forest plot. These plots show the effect sizes of individual studies along with the pooled effect size. To ensure transparency, the prior distribution should also be included in the forest plot.
+
+It is also possible to perform a formal model comparison using the Bayes Factor, which quantifies the evidence for one model over another. In the example below, regression coefficients for both fish and invertebrates are analyzed. The focus here is on displaying the logit-linear model relating invertebrate evenness to salinity.
+
+We are interested in whether the observed parameters (effect sizes) across studies are more likely under model M1 (e.g., a model assuming a relationship) than under model M0 (a null or weak-effect model). To reflect no prior preference between models, we set fixed_prior = TRUE, which assigns equal prior probabilities to each model. This approach also generalizes to comparisons involving more than two models.
+
+Note that, even when multiple priors are included, only the Bayes Factor comparing prior 1 to prior 2 is displayed in the figure.
+
+The Bayes Factor comparing models 1 and 2 is given by:
+
+$$
+BayesFactor_{12}=\frac{P(Data|M1)}{P(Data|M2)}\cdot\frac{P(M1)}{P(M2)}=\frac{P(Data|M1)}{P(Data|M2)}\cdot\frac{0.5}{0.5}=\frac{P(Data|M1)}{P(Data|M2)}
+$$
+
+In the example below, we focus solely on the model parameter for the logit-linear relationship between salinity and invertebrate evenness. The specific prior model M1 assumes a negative relationship, while M2 assumes no relationship or only an ecologically negligible one. Note that formal model comparison is not always necessary. It is entirely reasonable to interpret model parameters or effect sizes in terms of their ecological relevance. Not all statistical modeling needs to serve as a hypothesis test.
+
+``` {r meta4 BMA, fig.width=8, fig.height=7}
+#Select only salinity from the dataset for invertebrates, logit-link and parameter b1
+salinity_df <- example1[example1$predictor %in% "Salinity"  & example1$group %in% "Invertebrates" & example1$link %in% "logit" & example1$parameter %in% "b1",]
+
+#Get only the priors
+priors <- meta(estimate=salinity_df$est,        
+                    stderr=salinity_df$se,            
+                    parameter=salinity_df$parameter,  
+                    predictor=salinity_df$predictor,  
+                    link_function=salinity_df$link,  
+                    grouping=salinity_df$group,
+                    get_prior_only = T)
+
+#Display the priors (default prior are broad)
+print(priors)
+
+#Generate the alternative model first M1 (H1), because I want to know how more probable the data is generated 
+#under H1 than H0 as P(Data|M1)/P(Data|M0)
+priors$Prior_mu <- -0.3
+priors$Prior_se <- 0.15
+
+#Generate the null model second M2 or (H0)
+priors$Prior_mu2 <- 0
+priors$Prior_se2  <- 0.025
+
+print(priors)
+
+mod3 <- meta(estimate=salinity_df$est,        
+                    stderr=salinity_df$se,            
+                    parameter=salinity_df$parameter,  
+                    predictor=salinity_df$predictor,  
+                    link_function=salinity_df$link,   
+                    grouping=salinity_df$group,
+                    prior_mu=priors[c(2,4)],         
+                    prior_mu_se=priors[c(3,5)],   
+                    fixed_prior = T,                            #Set the prior weights (odds) so each hypothesis gets 50% equal probability.
+                    Nsamp=salinity_df$n, 
+                    method=2,
+                    n_thin=10,                          
+                    n_chain=4)                         
+
+#Generate a figure is more groups are included more plots are generated in order of "mod$summary"
+fig <- forestplot(mod3)
+
+#Display the most aesthetically appealling figure without adjusting the x-axis
+print(fig$figures[[1]])
+
+```
+
 ## hop-function (Hypothetical Outcome Plots)
 
 Hypothetical Outcome Plots (HOPs) are a valuable tool for visualizing how the expected value of a response variable might change in response to variations in a predictor variable, while keeping all other variables constant (Kale et al., 2019).

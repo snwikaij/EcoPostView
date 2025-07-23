@@ -8,13 +8,13 @@
 #' @description A forest plot that indicates all priors used in the model, all estimates included and the posterior distribution of the pooled
 #' estimate.
 #'
-#' @import ggplot2 scale_color_grey
-#' @import stats quantile
 #' @importFrom ggplot2 theme
 #' @importFrom ggplot2 element_text
+#' @importFrom ggplot2 scale_color_grey
+#' @importFrom stats quantile
 #'
 #' @export
-forest <- function(object, study_names=NULL, interval=0.9, xlab="Estimate"){
+forestplot <- function(object, study_names=NULL, interval=0.9, xlab="Estimate"){
 
   #study names
   if(is.null(study_names) || length(object$model$Data$est) != length(study_names)){
@@ -38,8 +38,15 @@ forest <- function(object, study_names=NULL, interval=0.9, xlab="Estimate"){
   post_df  <- split(object$Chains_mu, paste(object$Chains_mu$parameter,object$Chains_mu$predictor,
                                             object$Chains_mu$link, object$Chains_mu$group, sep="_"))
 
+  #select only b1
+  sel_b1 <- which(do.call(rbind.data.frame, lapply(split_df, function(df) unique(df[, 2])))[,1] == "b1")
+
+  post_df     <- post_df[sel_b1]
+  split_df    <- split_df[sel_b1]
+  split_prior <- object$model$Priors[sel_b1,]
+
   #get the bayesfactors
-  if(ncol(object$model$Priors)>3){bf_df <- round(get_BF(object)[[1]][,2],2)}
+  if(ncol(split_prior)>3){bf_df <- round(get_BF(object)[[1]][,2],2)}
 
   #Create all plots
   plots <- lapply(1:length(split_df), function(x){
@@ -59,7 +66,7 @@ forest <- function(object, study_names=NULL, interval=0.9, xlab="Estimate"){
     xlims <- ggplot_build(pl2)$layout$panel_params[[1]]$x.range
 
     #generate lines to display priors
-    prior_df  <- object$model$Priors[x,-1]
+    prior_df  <- split_prior[x,-1]
     mu_seq    <- seq(1, ncol(prior_df)/2, 1)
     se_seq    <- seq((ncol(prior_df)/2+1), ncol(prior_df), 1)
     x_seq     <- seq(xlims[1], xlims[2] , length.out = 300)
@@ -116,3 +123,4 @@ forest <- function(object, study_names=NULL, interval=0.9, xlab="Estimate"){
   })
 
   return(list(figures=plots, data=split_df))}
+

@@ -8,7 +8,6 @@
 #' @param grouping A category (name) for the group as multiple groups can be handled
 #' @param random An argument that needs to be a vector or  matrix of factors of the same number of rows as the estimate
 #' @param method Indicates which adjustment performed 0 (='none'), 1 (='egger') or 2 (='peters')
-#' @param RE An argument indicating if RE or FE should be used (default RE=TRUE)
 #' @param Nsamp A vector with the number of samples for each estimate (only used when method = 2)
 #' @param prior_mu Prior for the mean which can be vector (Bayesian meta-analysis) or matrix (Bayesian meta-analysis with model averaging)
 #' @param prior_mu_se Prior for the se which can be vector or matrix
@@ -32,13 +31,13 @@
 #' @param print_summary If TRUE it prints a summary
 #'
 #' @description
-#' Full Bayesian meta-analytic method using Bayesian Model Averaging, with random-effect (RE), fixed-effect (FE) in combination
-#' with Egger adjustment using inverse of the standard error (1/SE) (Moreno et al., 2009; Stanley  and Doucouliagos, 2013) or Peters adjustment (Moreno et al., 2009) using
-#' the inverse of the sample size (1/N). The full use of the meta function is the combination with pdplot and hop function. Hence it  is used to analyse
+#' Full Bayesian Random-Effect meta-analytic method with the possiblity of using Bayesian Model Averaging. It additionally has the possibility - internally - to adjust
+#' for publication bias with Egger adjustment using the standard error (*SE^2*; Moreno et al., 2009; Stanley  and Doucouliagos, 2013) or Peters adjustment (Moreno et al., 2009) using
+#' the inverse of the sample size (N). The full use of the meta function is the combination with pdplot and hop function. Hence it  is used to analyse
 #' the parameter estimates intercepts (b0) and regression coefficients (b1) on of LM or GLM models applied when the independent
 #' variable is continues.
 #'
-#' This package was especially develop to analyse the  parameters when the independent variable (predictor variable) was log (natural log)
+#' This package was first develop to analyse the  parameters when the independent variable (predictor variable) was log (natural log)
 #' transformed and either the link functions are 'log' or 'logit' are used, or the dependent variable (target or response variable) is log transformed and
 #' 'identity' link is used. Under such conditions the estimate parameter is named the (semi-)elasticity coefficient. The
 #' elasticity coefficient indicates the percentage change in the target variable per 1 percent increase in the predictor variable.
@@ -99,23 +98,23 @@
 #'
 #' @export
 meta <- function(estimate, stderr, parameter=NULL, predictor=NULL,
-                link_function=NULL, grouping=NULL, random=NULL,
-                method=0, RE=TRUE, Nsamp=NULL,
-                prior_mu=0,
-                prior_mu_se=10,
-                prior_study_var=NULL,
-                prior_fam_var="unif1",
-                fixed_prior=FALSE,
-                interval=0.9,
-                get_prior_only = FALSE,
-                n_chain = 2,
-                n_thin = 1,
-                n_seed = 666,
-                n_iter=10000,
-                n_burnin=1000,
-                Rhat_warn = 1.01,
-                Eff_warn = 1000,
-                print_summary=FALSE){
+                 link_function=NULL, grouping=NULL, random=NULL,
+                 moderator=NULL, method=0, Nsamp=NULL,
+                 prior_mu=0,
+                 prior_mu_se=10,
+                 prior_study_var=NULL,
+                 prior_fam_var="unif1",
+                 fixed_prior=FALSE,
+                 interval=0.9,
+                 get_prior_only = FALSE,
+                 n_chain = 2,
+                 n_thin = 1,
+                 n_seed = 666,
+                 n_iter=10000,
+                 n_burnin=1000,
+                 Rhat_warn = 1.01,
+                 Eff_warn = 1000,
+                 print_summary=FALSE){
 
   argument.call <- match.call()
 
@@ -141,13 +140,14 @@ meta <- function(estimate, stderr, parameter=NULL, predictor=NULL,
   if(is.null(nrow(prior_mu)) && length(prior_mu) == 1 &&
      is.null(nrow(prior_mu_se)) && length(prior_mu_se) == 1){
     npw <- 1}else if(length(prior_mu) == length(prior_mu_se) &&
-                is.null(dim(prior_mu)) && is.null(dim(prior_mu_se))){npw <- 1
+                     is.null(dim(prior_mu)) && is.null(dim(prior_mu_se))){npw <- 1
     }else if(is.data.frame(prior_mu) && is.data.frame(prior_mu_se) &&
-                     ncol(prior_mu) == ncol(prior_mu_se)){npw <- ncol(prior_mu)
+             ncol(prior_mu) == ncol(prior_mu_se)){npw <- ncol(prior_mu)
     }else{stop(paste0("The the priors are not nummeric or the priors for prior_mu and prior_mu_se are not of the same dimensions."))}
 
   #If prior weights are fixed and not stochastic npw > 1
   if(fixed_prior==T && npw == 1){stop("The number of priors provided needs to be > 1.")}
+  if(fixed_prior==T){FP <- c(0,1)}else{FP <- c(1,0)}
 
   #If prior mu is given appoint to data
   if(is.numeric(prior_mu) && nrow(prior_mu) == 1 | is.numeric(prior_mu) && is.null(nrow(prior_mu))){
@@ -161,32 +161,41 @@ meta <- function(estimate, stderr, parameter=NULL, predictor=NULL,
   }else if(
     nrow(prior_mu_se) != Ll){stop(paste0("The length of the priors for se (n=", length(prior_mu_se),") is not the same as the length of unique levels (n=", Ll, ")."))}
 
+  #A moderator data frame
+  if(!is.null(moderator) && is.data.frame(moderator)){
+    if(nrow(moderator)!=length(estimate)){stop("Moderator needs to be a numeric data frame or matrix with the same
+                                           length as the estimates")}}
+
+  if(is.null(moderator)){ML <- 1; MP <- 0; moderator <- rep(0, length(estimate))}else if(is.null(dim(moderator))){
+    ML <- 1; MP <- 1; moderator <- as.numeric(moderator)}else{
+      ML <- ncol(moderator); moderator<- apply(moderator, 2, function(x) as.numeric(x))}
+
   #A random effect data frame
   if(!is.null(random) && is.data.frame(random)){
     if(nrow(random)!=length(estimate)){stop("Random  effect  needs to be a data frame or matrix with
                                            factors of same length as the estimates")}}
 
-  if(is.null(random)){RL <- 0; random <- NULL}else if(is.null(dim(random))){
-  RL <- 1; random <- as.factor(random)}else{
-  RL <- ncol(random); random[] <- lapply(random, as.factor); random  <- do.call(cbind, random)}
+  if(is.null(random)){RL <- 1; RP <- 0; random <- as.factor(rep(0, length(estimate)))}else if(is.null(dim(random))){
+    RL <- 1; RP <- 1; random <- as.factor(random)}else{
+      RL <- ncol(random); RP <- 1; random <- apply(random, 2, function(x) as.numeric(factor(x)))}
 
   #Set correction method for bias
   if(all(method != c(0, 1, 2))){
     stop("method needs to be either 0 (='none'), 1 (='egger'), 2 (='peters')")}
+  if(method == 0){AP <- 0}else{AP <- 1}
   if(method == 2){
     if(is.null(Nsamp) | length(Nsamp) != length(estimate)){stop("If method is 'peters' then length of Nsamp needs to be of the same length as
                                              the estimates")}
     Nsamp[is.na(Nsamp)] <- 1}else{Nsamp <- rep(1, length(estimate))}
 
   #Set the type of prior for between study variance 1 (='unif1'), 2 (='unif2'), 2 (='exp')
-  if(RE==T){
-  if(prior_fam_var=="unif1"){prior_fam_var <- c(1, 0, 0)
-   if(is.null(prior_study_var)){prior_study_var <- max(abs(estimate-mean(estimate)))*2}
-  }else if(prior_fam_var=="unif2"){prior_fam_var <- c(0, 1, 0)
+    if(prior_fam_var=="unif1"){prior_fam_var <- c(1, 0, 0)
     if(is.null(prior_study_var)){prior_study_var <- max(abs(estimate-mean(estimate)))*2}
-  }else if(prior_fam_var=="exp"){prior_fam_var <- c(0, 0, 1)
-   if(is.null(prior_study_var)){prior_study_var <- 0.001}
-  }else{stop("Not a correct family choosen for between study variance: 'unif1', 'unif2' or 'exp'")}}
+    }else if(prior_fam_var=="unif2"){prior_fam_var <- c(0, 1, 0)
+    if(is.null(prior_study_var)){prior_study_var <- max(abs(estimate-mean(estimate)))*2}
+    }else if(prior_fam_var=="exp"){prior_fam_var <- c(0, 0, 1)
+    if(is.null(prior_study_var)){prior_study_var <- 0.001}
+    }else{stop("Not a correct family choosen for between study variance: 'unif1', 'unif2' or 'exp'")}
 
   #Place all given data in a list
   mod_data <- list(est=as.numeric(estimate),
@@ -201,558 +210,427 @@ meta <- function(estimate, stderr, parameter=NULL, predictor=NULL,
                    npw=npw,
                    alpha_pw=rep(1, npw),
                    fix_pw=rep(1/npw, npw),
+                   FP=FP,
                    random=random,
                    R=RL,
+                   RP=RP,
+                   moderator=moderator,
+                   M=ML,
+                   MP=MP,
                    prV=prior_fam_var,
-                   method=method)
+                   method=method,
+                   AP=AP)
 
   #If only the prior is needed return
   if(get_prior_only){return(data.frame(Levels=levels(mod_data$level),
                                        Prior_mu=mod_data$Pm,
                                        Prior_se=mod_data$Pe))}else if(get_prior_only == F){
 
-                                    if(fixed_prior==FALSE){
-                                      if(RE==TRUE){
-                                        if(mod_data$npw>1){
-                                          ##1.##RE model with npw>1 and
-                                          ##1.1 no random
-                                          if(mod_data$R==0){
-                                          meta_analysis <- function(){
+                                        if(npw>1){
+                                         if(RL<=1 && ML<=1){
+                                           meta_analysis <- function(){
 
-                                            ##likelihood
-                                            for (i in 1:N){
-                                              est[i]  ~ dnorm(mu2[i], tau2[i])
-                                              mu2[i]  ~ dnorm(mu1[i], tau1[level[i]])
-                                              mu1[i]  <- mu[level[i]] + ifelse(method==0, 0, ifelse(method==1, beta_adjust[level[i]]*se[i]^2, beta_adjust[level[i]]*Nsamp[i]^2))
-                                              tau2[i] <- 1/(se[i]^2)}
+                                           for (i in 1:N) {
+                                             est[i]  ~ dnorm(mu2[i], tau2[i])
+                                             mu2[i]  ~ dnorm(mu1[i], tau1[level[i]])
+                                             mu1[i]  <- mu[level[i]] + beta_random[level[i]] * random[i] + beta_moderator[level[i]] * moderator[i] +
+                                               ifelse(method==0, 0, ifelse(method==1, beta_adjust[level[i]]*se[i]^2, beta_adjust[level[i]]*Nsamp[i]^2))
+                                             tau2[i] <- 1/(se[i]^2)}
 
-                                            resid <- est-mu2
+                                           resid[1:N] <- est[1:N] - mu2[1:N]
 
-                                            ##Stochastic behavior for the weights
-                                            pw[1:npw] ~ ddirch(alpha_pw[1:npw])
+                                           #Prior weights/odds
+                                           pw_stochastic[1:npw] ~ ddirch(alpha_pw[1:npw])
+                                           pw_fixed            <- fix_pw
+                                           pw                  <- FP[1]*pw_stochastic+FP[2]*pw_fixed
 
-                                            #variance as scaling factor over al studies
-                                            sigma1       ~ dunif(0, Ps)
+                                           #All priors
+                                           sigma2 ~ dunif(0, Ps)
 
-                                            ##priors
-                                            for(j in 1:L){
-                                              beta_adjust[j]~ dnorm(0, 1/100^2)
+                                           for (j in 1:L) {
 
-                                              sigma2[j]       ~ dunif(0, Ps)
-                                              tau1a[j]        <- 1/sigma1^2
-                                              tau1b[j]        <- 1/sigma2[j]^2
-                                              tau1c[j]        ~ dexp(Ps)
-                                              tau1[j]         <- tau1a[j]*prV[1]+tau1b[j]*prV[2]+tau1c[j]*prV[3]
+                                             #random effects
+                                               beta_R[j] ~ dnorm(0, 1/1000^2)
+                                               beta_random[j] <- beta_R[j] * RP
 
-                                              for(k in 1:npw){
-                                                mu_M[j,k]    ~ dnorm(Pm[j,k], 1/Pe[j,k]^2)}
-                                                d[j]         ~ dcat(pw[1:npw])
-                                                mu[j]        <- inprod(mu_M[j, 1:npw], d[j] == 1:npw)}
+                                             #Moderator
+                                               beta_M[j] ~ dnorm(0, 1/1000^2)
+                                               beta_moderator[j] <- beta_M[j] * MP
 
-                                            #I2 per level
-                                            for(l in 1:L){
-                                              I2[l] <- (1/tau1[level[l]])/(1/tau2[l]+1/tau1[level[l]])}}}
-                                          ##1.2 only 1 random
-                                          else if(mod_data$R==1){
-                                          meta_analysis <- function(){
+                                             #Bias adjustement
+                                             beta_A[j]      ~ dnorm(0, 1/1000^2)
+                                             beta_adjust[j] <- beta_A[j] * AP
 
-                                              ##likelihood
-                                              for (i in 1:N){
-                                                est[i]  ~ dnorm(mu2[i], tau2[i])
-                                                mu2[i]  ~ dnorm(mu1[i], tau1[level[i]])
-                                                mu1[i]  <- mu[level[i]] + ifelse(method==0, 0, ifelse(method==1, beta_adjust[level[i]]*se[i]^2, beta_adjust[level[i]]*Nsamp[i]^2)) +
-                                                           beta_random[level[i]]*random[i]
-                                                tau2[i] <- 1/(se[i]^2)}
+                                             sigma1[j] ~ dunif(0, Ps)
+                                             tau1a[j] <- 1 / sigma1[j]^2
+                                             tau1b[j] <- 1 / sigma2^2
+                                             tau1c[j] ~ dexp(Ps)
+                                             tau1[j] <- tau1a[j]*prV[1] + tau1b[j]*prV[2] + tau1c[j]*prV[3]
 
-                                              resid <- est-mu2
+                                             for(k in 1:npw){
+                                               mu_M[j,k] ~ dnorm(Pm[j,k], 1/Pe[j,k]^2)}
 
-                                              ##Stochastic behavior for the weights
-                                              pw[1:npw] ~ ddirch(alpha_pw[1:npw])
+                                             d[j]  ~ dcat(pw[1:npw])
+                                             mu[j] <- inprod(mu_M[j, 1:npw], equals(d[j], 1:npw))
+                                             }
 
-                                              #variance as scaling factor over al studies
-                                              sigma1       ~ dunif(0, Ps)
+                                           #I2
+                                           for(l in 1:L) {
+                                             I2[l] <- (1/tau1[level[l]]) / (1/tau2[l] + 1/tau1[level[l]])}
+                                           }
+                                         }else if(RL>1 && ML>1){
+                                           meta_analysis <- function(){
 
-                                              ##priors
-                                              for(j in 1:L){
-                                                beta_random[j] ~ dnorm(0, 1/100^2)
-                                                beta_adjust[j] ~ dnorm(0, 1/100^2)
+                                               for (i in 1:N) {
+                                                 est[i]  ~ dnorm(mu2[i], tau2[i])
+                                                 mu2[i]  ~ dnorm(mu1[i], tau1[level[i]])
+                                                 mu1[i]  <- mu[level[i]] + inprod(beta_random[level[i], 1:R], random[i, 1:R]) + inprod(beta_moderator[level[i], 1:M], moderator[i, 1:M]) +
+                                                   ifelse(method==0, 0, ifelse(method==1, beta_adjust[level[i]]*se[i]^2, beta_adjust[level[i]]*Nsamp[i]^2))
+                                                 tau2[i] <- 1/(se[i]^2)}
 
-                                                sigma2[j]       ~ dunif(0, Ps)
-                                                tau1a[j]        <- 1/sigma1^2
-                                                tau1b[j]        <- 1/sigma2[j]^2
-                                                tau1c[j]        ~ dexp(Ps)
-                                                tau1[j]         <- tau1a[j]*prV[1]+tau1b[j]*prV[2]+tau1c[j]*prV[3]
+                                               resid[1:N] <- est[1:N] - mu2[1:N]
 
-                                                for(k in 1:npw){
-                                                  mu_M[j,k]    ~ dnorm(Pm[j,k], 1/Pe[j,k]^2)}
-                                                d[j]         ~ dcat(pw[1:npw])
-                                                mu[j]        <- inprod(mu_M[j, 1:npw], d[j] == 1:npw)}
+                                               #Prior weights/odds
+                                               pw_stochastic[1:npw] ~ ddirch(alpha_pw[1:npw])
+                                               pw_fixed            <- fix_pw
+                                               pw                  <- FP[1]*pw_stochastic+FP[2]*pw_fixed
 
-                                              #I2 per level
-                                              for(l in 1:L){
-                                                I2[l] <- (1/tau1[level[l]])/(1/tau2[l]+1/tau1[level[l]])}}}
-                                          ##1.3 more than 1 random
-                                          else{
-                                          meta_analysis <- function(){
+                                               #All priors
+                                               sigma2 ~ dunif(0, Ps)
 
-                                              ##likelihood
-                                              for (i in 1:N){
-                                                est[i]  ~ dnorm(mu2[i], tau2[i])
-                                                mu2[i]  ~ dnorm(mu1[i], tau1[level[i]])
-                                                mu1[i]  <- mu[level[i]] +ifelse(method==0, 0, ifelse(method==1, beta_adjust[level[i]]*se[i]^2, beta_adjust[level[i]]*Nsamp[i]^2))+
-                                                  inprod(beta_random[level[i], ], random[i, ])
-                                                tau2[i] <- 1/(se[i]^2)}
+                                               for (j in 1:L) {
 
-                                              resid <- est-mu2
+                                                 #random effects
+                                                 for(r in 1:R){
+                                                   beta_R[j,r]  ~ dnorm(0, 1/1000^2)
+                                                   beta_random[j,r] <- beta_R[j,r] * RP}
 
-                                              ##Stochastic behavior for the weights
-                                              pw[1:npw] ~ ddirch(alpha_pw[1:npw])
+                                                 #Moderator
+                                                 for(m in 1:M){
+                                                   beta_M[j,m] ~ dnorm(0, 1/1000^2)
+                                                   beta_moderator[j,m] <- beta_M[j,m] * MP}
 
-                                              #variance as scaling factor over al studies
-                                              sigma1       ~ dunif(0, Ps)
+                                                 #Bias adjustement
+                                                 beta_A[j]      ~ dnorm(0, 1/1000^2)
+                                                 beta_adjust[j] <- beta_A[j] * AP
 
-                                              ##priors
-                                              for(j in 1:L){
-                                                for(r in 1:R){
-                                                beta_random[j, r]  ~ dnorm(0, 1/100^2)}
-                                                beta_adjust[j]     ~ dnorm(0, 1/100^2)
+                                                 sigma1[j] ~ dunif(0, Ps)
+                                                 tau1a[j] <- 1 / sigma1[j]^2
+                                                 tau1b[j] <- 1 / sigma2^2
+                                                 tau1c[j] ~ dexp(Ps)
+                                                 tau1[j] <- tau1a[j]*prV[1] + tau1b[j]*prV[2] + tau1c[j]*prV[3]
 
-                                                sigma2[j]       ~ dunif(0, Ps)
-                                                tau1a[j]        <- 1/sigma1^2
-                                                tau1b[j]        <- 1/sigma2[j]^2
-                                                tau1c[j]        ~ dexp(Ps)
-                                                tau1[j]         <- tau1a[j]*prV[1]+tau1b[j]*prV[2]+tau1c[j]*prV[3]
+                                                 for(k in 1:npw){
+                                                   mu_M[j,k] ~ dnorm(Pm[j,k], 1/Pe[j,k]^2)}
 
-                                                for(k in 1:npw){
-                                                mu_M[j,k]    ~ dnorm(Pm[j,k], 1/Pe[j,k]^2)}
-                                                d[j]         ~ dcat(pw[1:npw])
-                                                mu[j]        <-inprod(mu_M[j, 1:npw], d[j] == 1:npw)}
+                                                 d[j]  ~ dcat(pw[1:npw])
+                                                 mu[j] <- inprod(mu_M[j, 1:npw], equals(d[j], 1:npw))
+                                               }
 
-                                              #I2 per level
-                                              for(l in 1:L){
-                                                I2[l] <- (1/tau1[level[l]])/(1/tau2[l]+1/tau1[level[l]])}}}}
-                                        else{
-                                          ##2.##RE model with npw=0
-                                          ##1. no random
-                                          if(mod_data$R==0){
-                                          meta_analysis <- function(){
+                                               #I2
+                                               for(l in 1:L) {
+                                                 I2[l] <- (1/tau1[level[l]]) / (1/tau2[l] + 1/tau1[level[l]])}
+                                             }
+                                         }else if(RL>1 && ML<=1){
+                                           meta_analysis <- function(){
 
-                                            ##likelihood
-                                            for (i in 1:N){
-                                              est[i]  ~ dnorm(mu2[i], tau2[i])
-                                              mu2[i]  ~ dnorm(mu1[i], tau1[level[i]])
-                                              mu1[i]  <- mu[level[i]] + ifelse(method==0, 0, ifelse(method==1, beta_adjust[level[i]]*se[i]^2, beta_adjust[level[i]]*Nsamp[i]^2))
-                                              tau2[i] <- 1/(se[i]^2)}
+                                               for (i in 1:N) {
+                                                 est[i]  ~ dnorm(mu2[i], tau2[i])
+                                                 mu2[i]  ~ dnorm(mu1[i], tau1[level[i]])
+                                                 mu1[i]  <- mu[level[i]] + inprod(beta_random[level[i], 1:R], random[i, 1:R]) + beta_moderator[level[i]] * moderator[i] +
+                                                   ifelse(method==0, 0, ifelse(method==1, beta_adjust[level[i]]*se[i]^2, beta_adjust[level[i]]*Nsamp[i]^2))
+                                                 tau2[i] <- 1/(se[i]^2)}
 
-                                            resid <- est-mu2
+                                               resid[1:N] <- est[1:N] - mu2[1:N]
 
-                                            #variance as scaling factor over al studies
-                                            sigma1       ~ dunif(0, Ps)
+                                               #Prior weights/odds
+                                               pw_stochastic[1:npw] ~ ddirch(alpha_pw[1:npw])
+                                               pw_fixed            <- fix_pw
+                                               pw                  <- FP[1]*pw_stochastic+FP[2]*pw_fixed
 
-                                            ##priors
-                                            for(j in 1:L){
-                                              beta_adjust[j]   ~ dnorm(0, 1/100^2)
-                                              mu[j]           ~ dnorm(Pm[j], 1/Pe[j]^2)
+                                               #All priors
+                                               sigma2 ~ dunif(0, Ps)
 
-                                              sigma2[j]       ~ dunif(0, Ps)
-                                              tau1a[j]        <- 1/sigma1^2
-                                              tau1b[j]        <- 1/sigma2[j]^2
-                                              tau1c[j]        ~ dexp(Ps)
-                                              tau1[j]         <- tau1a[j]*prV[1]+tau1b[j]*prV[2]+tau1c[j]*prV[3]
-                                              }
+                                               for (j in 1:L) {
 
-                                            #I2 per level
-                                            for(l in 1:L){
-                                              I2[l] <- (1/tau1[level[l]])/(1/tau2[l]+1/tau1[level[l]])}}}
-                                          ## only 1 random
-                                          else if(mod_data$R==1){
-                                          meta_analysis <- function(){
+                                                 #random effects
+                                                 for(r in 1:R){
+                                                   beta_R[j,r]  ~ dnorm(0, 1/1000^2)
+                                                   beta_random[j,r] <- beta_R[j,r] * RP}
 
-                                              ##likelihood
-                                              for (i in 1:N){
-                                                est[i]  ~ dnorm(mu2[i], tau2[i])
-                                                mu2[i]  ~ dnorm(mu1[i], tau1[level[i]])
-                                                mu1[i]  <- mu[level[i]] + ifelse(method==0, 0, ifelse(method==1, beta_adjust[level[i]]*se[i]^2, beta_adjust[level[i]]*Nsamp[i]^2))+
-                                                           beta_random[level[i]]*random[i]
-                                                tau2[i] <- 1/(se[i]^2)}
+                                                 #Moderator
+                                                 beta_M[j] ~ dnorm(0, 1/1000^2)
+                                                 beta_moderator[j] <- beta_M[j] * MP
 
-                                              resid <- est-mu2
+                                                 #Bias adjustement
+                                                 beta_A[j]      ~ dnorm(0, 1/1000^2)
+                                                 beta_adjust[j] <- beta_A[j] * AP
 
-                                              #variance as scaling factor over al studies
-                                              sigma1       ~ dunif(0, Ps)
+                                                 sigma1[j] ~ dunif(0, Ps)
+                                                 tau1a[j] <- 1 / sigma1[j]^2
+                                                 tau1b[j] <- 1 / sigma2^2
+                                                 tau1c[j] ~ dexp(Ps)
+                                                 tau1[j] <- tau1a[j]*prV[1] + tau1b[j]*prV[2] + tau1c[j]*prV[3]
 
-                                              ##priors
-                                              for(j in 1:L){
-                                                beta_random[j]  ~ dnorm(0, 1/100^2)
-                                                beta_adjust[j]  ~ dnorm(0, 1/100^2)
-                                                mu[j]           ~ dnorm(Pm[j], 1/Pe[j]^2)
+                                                 for(k in 1:npw){
+                                                   mu_M[j,k] ~ dnorm(Pm[j,k], 1/Pe[j,k]^2)}
 
-                                                sigma2[j]       ~ dunif(0, Ps)
-                                                tau1a[j]        <- 1/sigma1^2
-                                                tau1b[j]        <- 1/sigma2[j]^2
-                                                tau1c[j]        ~ dexp(Ps)
-                                                tau1[j]         <- tau1a[j]*prV[1]+tau1b[j]*prV[2]+tau1c[j]*prV[3]
-                                                }
+                                                 d[j]  ~ dcat(pw[1:npw])
+                                                 mu[j] <- inprod(mu_M[j, 1:npw], equals(d[j], 1:npw))
+                                               }
 
-                                              #I2 per level
-                                              for(l in 1:L){
-                                                I2[l] <- (1/tau1[level[l]])/(1/tau2[l]+1/tau1[level[l]])}}}
-                                          ## more than 1 random
-                                          else{
-                                          meta_analysis <- function(){
+                                               #I2
+                                               for(l in 1:L) {
+                                                 I2[l] <- (1/tau1[level[l]]) / (1/tau2[l] + 1/tau1[level[l]])}
+                                             }
+                                         }else if(RL<=1 && ML>1){
+                                           meta_analysis <- function(){
 
-                                              ##likelihood
-                                              for (i in 1:N){
-                                                est[i]  ~ dnorm(mu2[i], tau2[i])
-                                                mu2[i]  ~ dnorm(mu1[i], tau1[level[i]])
-                                                mu1[i]  <- mu[level[i]] +ifelse(method==0, 0, ifelse(method==1, beta_adjust[level[i]]*se[i]^2, beta_adjust[level[i]]*Nsamp[i]^2))+
-                                                  inprod(beta_random[level[i], ], random[i, ])
-                                                tau2[i] <- 1/(se[i]^2)}
+                                             for (i in 1:N) {
+                                               est[i]  ~ dnorm(mu2[i], tau2[i])
+                                               mu2[i]  ~ dnorm(mu1[i], tau1[level[i]])
+                                               mu1[i]  <- mu[level[i]] + beta_random[level[i]] * random[i] +  inprod(beta_moderator[level[i], 1:M], moderator[i, 1:M]) +
+                                                 ifelse(method==0, 0, ifelse(method==1, beta_adjust[level[i]]*se[i]^2, beta_adjust[level[i]]*Nsamp[i]^2))
+                                               tau2[i] <- 1/(se[i]^2)}
 
-                                              resid <- est-mu2
+                                             resid[1:N] <- est[1:N] - mu2[1:N]
 
-                                              #variance as scaling factor over al studies
-                                              sigma1       ~ dunif(0, Ps)
+                                             #Prior weights/odds
+                                             pw_stochastic[1:npw] ~ ddirch(alpha_pw[1:npw])
+                                             pw_fixed            <- fix_pw
+                                             pw                  <- FP[1]*pw_stochastic+FP[2]*pw_fixed
 
-                                              ##priors
-                                              for(j in 1:L){
-                                                for(r in 1:R){
-                                                beta_random[j, r]  ~ dnorm(0, 1/100^2)}
-                                                beta_adjust[j]     ~ dnorm(0, 1/100^2)
-                                                mu[j]              ~ dnorm(Pm[j], 1/Pe[j]^2)
+                                             #All priors
+                                             sigma2 ~ dunif(0, Ps)
 
-                                                sigma2[j]       ~ dunif(0, Ps)
-                                                tau1a[j]        <- 1/sigma1^2
-                                                tau1b[j]        <- 1/sigma2[j]^2
-                                                tau1c[j]        ~ dexp(Ps)
-                                                tau1[j]         <- tau1a[j]*prV[1]+tau1b[j]*prV[2]+tau1c[j]*prV[3]}
+                                             for (j in 1:L) {
 
-                                              #I2 per level
-                                              for(l in 1:L){
-                                                I2[l] <- (1/tau1[level[l]])/(1/tau2[l]+1/tau1[level[l]])}}}}}
-                                      else{
-                                         if(mod_data$npw>1){
-                                             ##3.##FE model with npw>1 and
-                                             ##3.1 no random
-                                             if(mod_data$R==0){
-                                             meta_analysis <- function(){
+                                               #random effects
+                                               beta_R[j] ~ dnorm(0, 1/1000^2)
+                                               beta_random[j] <- beta_R[j] * RP
 
-                                             ##likelihood
-                                             for (i in 1:N){
-                                               est[i]  ~  dnorm(mu1[i], tau1[i])
-                                               mu1[i]  <- mu[level[i]] + ifelse(method==0, 0, ifelse(method==1, beta_adjust[level[i]]*se[i]^2, beta_adjust[level[i]]*Nsamp[i]^2))
-                                               tau1[i] <- 1/(se[i]^2)}
+                                               #Moderator
+                                               for(m in 1:M){
+                                                 beta_M[j,m] ~ dnorm(0, 1/1000^2)
+                                                 beta_moderator[j,m] <- beta_M[j,m] * MP}
 
-                                             resid <- est-mu1
+                                               #Bias adjustement
+                                               beta_A[j]      ~ dnorm(0, 1/1000^2)
+                                               beta_adjust[j] <- beta_A[j] * AP
 
-                                             ##Stochastic behavior for the weights
-                                             pw[1:npw] ~ ddirch(alpha_pw[1:npw])
-
-                                             ##priors
-                                             for(j in 1:L){
-                                               beta_adjust[j]   ~ dnorm(0, 1/100^2)
+                                               sigma1[j] ~ dunif(0, Ps)
+                                               tau1a[j] <- 1 / sigma1[j]^2
+                                               tau1b[j] <- 1 / sigma2^2
+                                               tau1c[j] ~ dexp(Ps)
+                                               tau1[j] <- tau1a[j]*prV[1] + tau1b[j]*prV[2] + tau1c[j]*prV[3]
 
                                                for(k in 1:npw){
-                                                 mu_M[j,k]       ~ dnorm(Pm[j,k], 1/Pe[j,k]^2)}
-                                               d[j]            ~ dcat(pw[1:npw])
-                                               mu[j]           <- inprod(mu_M[j, 1:npw], d[j] == 1:npw)}}}
-                                             ##3.2 only 1 random
-                                             else if(mod_data$R==1){
-                                             meta_analysis <- function(){
+                                                 mu_M[j,k] ~ dnorm(Pm[j,k], 1/Pe[j,k]^2)}
 
-                                                 ##likelihood
-                                                 for (i in 1:N){
-                                                   est[i]  ~  dnorm(mu1[i], tau1[i])
-                                                   mu1[i]  <- mu[level[i]]+ifelse(method==0, 0, ifelse(method==1, beta_adjust[level[i]]*se[i]^2, beta_adjust[level[i]]*Nsamp[i]^2))+
-                                                              beta_random[level[i]]*random[i]
-                                                   tau1[i] <- 1/(se[i]^2)}
+                                               d[j]  ~ dcat(pw[1:npw])
+                                               mu[j] <- inprod(mu_M[j, 1:npw], equals(d[j], 1:npw))
+                                             }
 
-                                                 resid <- est-mu1
+                                             #I2
+                                             for(l in 1:L) {
+                                               I2[l] <- (1/tau1[level[l]]) / (1/tau2[l] + 1/tau1[level[l]])}
+                                           }
+                                         }
+                                        }else{#If npw=1
+                                          if(RL<=1 && ML<=1){
+                                           meta_analysis <- function(){
 
-                                                 ##Stochastic behavior for the weights
-                                                 pw[1:npw] ~ ddirch(alpha_pw[1:npw])
+                                             #Likelihood
+                                             for (i in 1:N) {
+                                               est[i]  ~ dnorm(mu2[i], tau2[i])
+                                               mu2[i]  ~ dnorm(mu1[i], tau1[level[i]])
+                                               mu1[i]  <- mu[level[i]] + beta_random[level[i]] * random[i] + beta_moderator[level[i]] * moderator[i] +
+                                                          ifelse(method==0, 0, ifelse(method==1, beta_adjust[level[i]]*se[i]^2, beta_adjust[level[i]]*Nsamp[i]^2))
+                                               tau2[i] <- 1/(se[i]^2)}
 
-                                                 ##priors
-                                                 for(j in 1:L){
-                                                   beta_random[j]  ~ dnorm(0, 1/100^2)
-                                                   beta_adjust[j]   ~ dnorm(0, 1/100^2)
+                                             resid[1:N] <- est[1:N] - mu2[1:N]
 
-                                                   for(k in 1:npw){
-                                                     mu_M[j,k]       ~ dnorm(Pm[j,k], 1/Pe[j,k]^2)}
-                                                   d[j]            ~ dcat(pw[1:npw])
-                                                   mu[j]           <- inprod(mu_M[j, 1:npw], d[j] == 1:npw)}}}
-                                             ##3.3 more than 1 random
-                                             else{
-                                             meta_analysis <- function(){
+                                             #All priors
+                                             sigma2 ~ dunif(0, Ps)
 
-                                                 ##likelihood
-                                                 for (i in 1:N){
-                                                   est[i]  ~  dnorm(mu1[i], tau1[i])
-                                                   mu1[i]  <- mu[level[i]]+ ifelse(method==0, 0, ifelse(method==1, beta_adjust[level[i]]*se[i]^2, beta_adjust[level[i]]*Nsamp[i]^2))+
-                                                     inprod(beta_random[level[i], ], random[i, ])
-                                                   tau1[i] <- 1/(se[i]^2)}
+                                             for (j in 1:L) {
 
-                                                 resid <- est-mu1
+                                               #random effects
+                                                 beta_R[j] ~ dnorm(0, 1/1000^2)
+                                                 beta_random[j] <- beta_R[j] * RP
 
-                                                 ##Stochastic behavior for the weights
-                                                 pw[1:npw] ~ ddirch(alpha_pw[1:npw])
+                                               #Moderator
+                                                 beta_M[j] ~ dnorm(0, 1/1000^2)
+                                                 beta_moderator[j] <- beta_M[j] * MP
 
-                                                 ##priors
-                                                 for(j in 1:L){
-                                                   for(r in 1:R){
-                                                     beta_random[j, r]  ~ dnorm(0, 1/100^2)}
-                                                     beta_adjust[j]      ~ dnorm(0, 1/100^2)
+                                               #Bias adjustement
+                                               beta_A[j]      ~ dnorm(0, 1/1000^2)
+                                               beta_adjust[j] <- beta_A[j] * AP
 
-                                                   for(k in 1:npw){
-                                                     mu_M[j,k]       ~ dnorm(Pm[j,k], 1/Pe[j,k]^2)}
-                                                   d[j]            ~ dcat(pw[1:npw])
-                                                   mu[j]           <- inprod(mu_M[j, 1:npw], d[j] == 1:npw)}}}}
-                                         else{
-                                             ##4.##FE model with npw=0 and
-                                             ##4.1 no random
-                                             if(mod_data$R==0){
-                                             meta_analysis <- function(){
+                                               mu[j]           ~ dnorm(Pm[j], 1/Pe[j]^2)
 
-                                                 ##likelihood
-                                                 for (i in 1:N){
-                                                   est[i]  ~  dnorm(mu1[i], tau1[i])
-                                                   mu1[i]  <- mu[level[i]] + ifelse(method==0, 0, ifelse(method==1, beta_adjust[level[i]]*se[i]^2, beta_adjust[level[i]]*Nsamp[i]^2))
-                                                   tau1[i] <- 1/(se[i]^2)}
+                                               sigma1[j] ~ dunif(0, Ps)
+                                               tau1a[j] <- 1 / sigma1[j]^2
+                                               tau1b[j] <- 1 / sigma2^2
+                                               tau1c[j] ~ dexp(Ps)
+                                               tau1[j] <- tau1a[j]*prV[1] + tau1b[j]*prV[2] + tau1c[j]*prV[3]}
 
-                                                 resid <- est-mu1
+                                             #I2 heterogenity
+                                             for(l in 1:L) {
+                                               I2[l] <- (1/tau1[level[l]]) / (1/tau2[l] + 1/tau1[level[l]])
+                                             }
+                                           }
+                                          }else if(RL>1 && ML>1){
+                                           meta_analysis <- function(){
 
-                                                 ##priors
-                                                 for(j in 1:L){
-                                                   beta_adjust[j]   ~ dnorm(0, 1/100^2)
-                                                   mu[j]           ~ dnorm(Pm[j], 1/Pe[j]^2)}}}
-                                             ##4.2 only 1 random
-                                             else if(mod_data$R==1){
-                                             meta_analysis <- function(){
+                                             #Likelihood
+                                             for (i in 1:N) {
+                                               est[i]  ~ dnorm(mu2[i], tau2[i])
+                                               mu2[i]  ~ dnorm(mu1[i], tau1[level[i]])
+                                               mu1[i]  <- mu[level[i]] + inprod(beta_random[level[i], 1:R], random[i, 1:R]) + inprod(beta_moderate[level[i], 1:M], moderate[i, 1:M]) +
+                                                 ifelse(method==0, 0, ifelse(method==1, beta_adjust[level[i]]*se[i]^2, beta_adjust[level[i]]*Nsamp[i]^2))
+                                               tau2[i] <- 1/(se[i]^2)}
 
-                                               ##likelihood
-                                               for (i in 1:N){
-                                                 est[i]  ~  dnorm(mu1[i], tau1[i])
-                                                 mu1[i]  <- mu[level[i]]+ifelse(method==0, 0, ifelse(method==1, beta_adjust[level[i]]*se[i]^2, beta_adjust[level[i]]*Nsamp[i]^2)) +
-                                                            beta_random[level[i]]*random[i]
-                                                 tau1[i] <- 1/(se[i]^2)}
+                                             resid[1:N] <- est[1:N] - mu2[1:N]
 
-                                               resid <- est-mu1
+                                             #All priors
+                                             sigma2 ~ dunif(0, Ps)
 
-                                               ##priors
-                                               for(j in 1:L){
-                                                 beta_random[j]  ~ dnorm(0, 1/100^2)
-                                                 beta_adjust[j]   ~ dnorm(0, 1/100^2)
-                                                 mu[j]           ~ dnorm(Pm[j], 1/Pe[j]^2)}}}
-                                             ##4.3 more than 1 random
-                                             else{
-                                             meta_analysis <- function(){
+                                             for (j in 1:L) {
 
-                                                 ##likelihood
-                                                 for (i in 1:N){
-                                                   est[i]  ~  dnorm(mu1[i], tau1[i])
-                                                   mu1[i]  <- mu[level[i]]+ifelse(method==0, 0, ifelse(method==1, beta_adjust[level[i]]*se[i]^2, beta_adjust[level[i]]*Nsamp[i]^2)) +
-                                                     inprod(beta_random[level[i], ], random[i, ])
-                                                   tau1[i] <- 1/(se[i]^2)}
+                                               #random effects
+                                               for(r in 1:R){
+                                                 beta_R[j,r]  ~ dnorm(0, 1/1000^2)
+                                                 beta_random[j,r] <- beta_R[j,r] * RP}
 
-                                                 resid <- est-mu1
+                                               #Moderator
+                                               for(m in 1:M){
+                                                 beta_M[j,m] ~ dnorm(0, 1/1000^2)
+                                                 beta_moderator[j,m] <- beta_M[j,m] * MP}
 
-                                                 ##priors
-                                                 for(j in 1:L){
-                                                   for(r in 1:R){
-                                                   beta_random[j, r]  ~ dnorm(0, 1/100^2)}
-                                                   beta_adjust[j]      ~ dnorm(0, 1/100^2)
-                                                   mu[j]              ~ dnorm(Pm[j], 1/Pe[j]^2)}}}}}}
-                                    else{
-                                      if(RE==TRUE){
-                                          ##1.##RE model with npw>1 and
-                                          ##1.1 no random
-                                          if(mod_data$R==0){
-                                            meta_analysis <- function(){
+                                               #Bias adjustement
+                                               beta_A[j]      ~ dnorm(0, 1/1000^2)
+                                               beta_adjust[j] <- beta_A[j] * AP
 
-                                              ##likelihood
-                                              for (i in 1:N){
+                                               mu[j]           ~ dnorm(Pm[j], 1/Pe[j]^2)
+
+                                               sigma1[j] ~ dunif(0, Ps)
+                                               tau1a[j] <- 1 / sigma1[j]^2
+                                               tau1b[j] <- 1 / sigma2^2
+                                               tau1c[j] ~ dexp(Ps)
+                                               tau1[j] <- tau1a[j]*prV[1] + tau1b[j]*prV[2] + tau1c[j]*prV[3]}
+
+                                             #I2 heterogenity
+                                             for(l in 1:L) {
+                                               I2[l] <- (1/tau1[level[l]]) / (1/tau2[l] + 1/tau1[level[l]])
+                                             }
+                                           }
+                                          }else if(RL>1 && ML<=1){
+                                           meta_analysis <- function(){
+
+                                               #Likelihood
+                                               for (i in 1:N) {
+                                                 est[i]  ~ dnorm(mu2[i], tau2[i])
+                                                 mu2[i]  ~ dnorm(mu1[i], tau1[level[i]])
+                                                 mu1[i]  <- mu[level[i]] + inprod(beta_random[level[i], 1:R], random[i, 1:R]) +  beta_moderator[level[i]] * moderator[i] +
+                                                   ifelse(method==0, 0, ifelse(method==1, beta_adjust[level[i]]*se[i]^2, beta_adjust[level[i]]*Nsamp[i]^2))
+                                                 tau2[i] <- 1/(se[i]^2)}
+
+                                               resid[1:N] <- est[1:N] - mu2[1:N]
+
+                                               #All priors
+                                               sigma2 ~ dunif(0, Ps)
+
+                                               for (j in 1:L) {
+
+                                                 #random effects
+                                                 for(r in 1:R){
+                                                   beta_R[j,r]  ~ dnorm(0, 1/1000^2)
+                                                   beta_random[j,r] <- beta_R[j,r] * RP}
+
+                                                 #Moderator
+                                                 beta_M[j] ~ dnorm(0, 1/1000^2)
+                                                 beta_moderator[j] <- beta_M[j] * MP
+
+                                                 #Bias adjustement
+                                                 beta_A[j]      ~ dnorm(0, 1/1000^2)
+                                                 beta_adjust[j] <- beta_A[j] * AP
+
+                                                 mu[j]           ~ dnorm(Pm[j], 1/Pe[j]^2)
+
+                                                 sigma1[j] ~ dunif(0, Ps)
+                                                 tau1a[j] <- 1 / sigma1[j]^2
+                                                 tau1b[j] <- 1 / sigma2^2
+                                                 tau1c[j] ~ dexp(Ps)
+                                                 tau1[j] <- tau1a[j]*prV[1] + tau1b[j]*prV[2] + tau1c[j]*prV[3]}
+
+                                               #I2 heterogenity
+                                               for(l in 1:L) {
+                                                 I2[l] <- (1/tau1[level[l]]) / (1/tau2[l] + 1/tau1[level[l]])
+                                               }
+                                             }
+                                          }else if(RL<=1 && ML>1){
+                                           meta_analysis <- function(){
+
+                                              #Likelihood
+                                              for (i in 1:N) {
                                                 est[i]  ~ dnorm(mu2[i], tau2[i])
                                                 mu2[i]  ~ dnorm(mu1[i], tau1[level[i]])
-                                                mu1[i]  <- mu[level[i]] + ifelse(method==0, 0, ifelse(method==1, beta_adjust[level[i]]*se[i]^2, beta_adjust[level[i]]*Nsamp[i]^2))
+                                                mu1[i]  <- mu[level[i]] + beta_random[level[i]] * random[i] + inprod(beta_moderate[level[i], 1:M], moderate[i, 1:M]) +
+                                                  ifelse(method==0, 0, ifelse(method==1, beta_adjust[level[i]]*se[i]^2, beta_adjust[level[i]]*Nsamp[i]^2))
                                                 tau2[i] <- 1/(se[i]^2)}
 
-                                              resid <- est-mu2
+                                              resid[1:N] <- est[1:N] - mu2[1:N]
 
-                                              #variance as scaling factor over all studies
-                                              sigma1       ~ dunif(0, Ps)
+                                              #All priors
+                                              sigma2 ~ dunif(0, Ps)
 
-                                              ##priors
-                                              for(j in 1:L){
-                                                beta_adjust[j]~ dnorm(0, 1/100^2)
+                                              for (j in 1:L) {
 
-                                                sigma2[j]       ~ dunif(0, Ps)
-                                                tau1a[j]        <- 1/sigma1^2
-                                                tau1b[j]        <- 1/sigma2[j]^2
-                                                tau1c[j]        ~ dexp(Ps)
-                                                tau1[j]         <- tau1a[j]*prV[1]+tau1b[j]*prV[2]+tau1c[j]*prV[3]
+                                                #random effects
+                                                beta_R[j] ~ dnorm(0, 1/1000^2)
+                                                beta_random[j] <- beta_R[j] * RP
 
-                                                for(k in 1:npw){
-                                                  mu_M[j,k]    ~ dnorm(Pm[j,k], 1/Pe[j,k]^2)}
-                                                d[j]         ~ dcat(fix_pw[1:npw])
-                                                mu[j]        <- inprod(mu_M[j, 1:npw], d[j] == 1:npw)}
+                                                #Moderator
+                                                for(m in 1:M){
+                                                  beta_M[j,m] ~ dnorm(0, 1/1000^2)
+                                                  beta_moderator[j,m] <- beta_M[j,m] * MP}
 
-                                              #I2 per level
-                                              for(l in 1:L){
-                                                I2[l] <- (1/tau1[level[l]])/(1/tau2[l]+1/tau1[level[l]])}}}
-                                          ##1.2 only 1 random
-                                          else if(mod_data$R==1){
-                                            meta_analysis <- function(){
+                                                #Bias adjustement
+                                                beta_A[j]      ~ dnorm(0, 1/1000^2)
+                                                beta_adjust[j] <- beta_A[j] * AP
 
-                                              ##likelihood
-                                              for (i in 1:N){
-                                                est[i]  ~ dnorm(mu2[i], tau2[i])
-                                                mu2[i]  ~ dnorm(mu1[i], tau1[level[i]])
-                                                mu1[i]  <- mu[level[i]] + ifelse(method==0, 0, ifelse(method==1, beta_adjust[level[i]]*se[i]^2, beta_adjust[level[i]]*Nsamp[i]^2)) +
-                                                  beta_random[level[i]]*random[i]
-                                                tau2[i] <- 1/(se[i]^2)}
+                                                mu[j]           ~ dnorm(Pm[j], 1/Pe[j]^2)
 
-                                              resid <- est-mu2
+                                                sigma1[j] ~ dunif(0, Ps)
+                                                tau1a[j] <- 1 / sigma1[j]^2
+                                                tau1b[j] <- 1 / sigma2^2
+                                                tau1c[j] ~ dexp(Ps)
+                                                tau1[j] <- tau1a[j]*prV[1] + tau1b[j]*prV[2] + tau1c[j]*prV[3]}
 
-                                              #variance as scaling factor over all studies
-                                              sigma1       ~ dunif(0, Ps)
-
-                                              ##priors
-                                              for(j in 1:L){
-                                                beta_random[j] ~ dnorm(0, 1/100^2)
-                                                beta_adjust[j] ~ dnorm(0, 1/100^2)
-
-                                                sigma2[j]       ~ dunif(0, Ps)
-                                                tau1a[j]        <- 1/sigma1^2
-                                                tau1b[j]        <- 1/sigma2[j]^2
-                                                tau1c[j]        ~ dexp(Ps)
-                                                tau1[j]         <- tau1a[j]*prV[1]+tau1b[j]*prV[2]+tau1c[j]*prV[3]
-
-                                                for(k in 1:npw){
-                                                  mu_M[j,k]    ~ dnorm(Pm[j,k], 1/Pe[j,k]^2)}
-                                                d[j]         ~ dcat(fix_pw[1:npw])
-                                                mu[j]        <- inprod(mu_M[j, 1:npw], d[j] == 1:npw)}
-
-                                              #I2 per level
-                                              for(l in 1:L){
-                                                I2[l] <- (1/tau1[level[l]])/(1/tau2[l]+1/tau1[level[l]])}}}
-                                          ##1.3 more than 1 random
-                                          else{
-                                            meta_analysis <- function(){
-
-                                              ##likelihood
-                                              for (i in 1:N){
-                                                est[i]  ~ dnorm(mu2[i], tau2[i])
-                                                mu2[i]  ~ dnorm(mu1[i], tau1[level[i]])
-                                                mu1[i]  <- mu[level[i]] +ifelse(method==0, 0, ifelse(method==1, beta_adjust[level[i]]*se[i]^2, beta_adjust[level[i]]*Nsamp[i]^2))+
-                                                  inprod(beta_random[level[i], ], random[i, ])
-                                                tau2[i] <- 1/(se[i]^2)}
-
-                                              resid <- est-mu2
-
-                                              #variance as scaling factor over al studies
-                                              sigma1       ~ dunif(0, Ps)
-
-                                              ##priors
-                                              for(j in 1:L){
-                                                for(r in 1:R){
-                                                  beta_random[j, r]  ~ dnorm(0, 1/100^2)}
-                                                beta_adjust[j]     ~ dnorm(0, 1/100^2)
-
-                                                sigma2[j]       ~ dunif(0, Ps)
-                                                tau1a[j]        <- 1/sigma1^2
-                                                tau1b[j]        <- 1/sigma2[j]^2
-                                                tau1c[j]        ~ dexp(Ps)
-                                                tau1[j]         <- tau1a[j]*prV[1]+tau1b[j]*prV[2]+tau1c[j]*prV[3]
-
-                                                for(k in 1:npw){
-                                                  mu_M[j,k]    ~ dnorm(Pm[j,k], 1/Pe[j,k]^2)}
-                                                d[j]         ~ dcat(fix_pw[1:npw])
-                                                mu[j]        <-inprod(mu_M[j, 1:npw], d[j] == 1:npw)}
-
-                                              #I2 per level
-                                              for(l in 1:L){
-                                                I2[l] <- (1/tau1[level[l]])/(1/tau2[l]+1/tau1[level[l]])}}}}
-                                      else{
-                                          ##3.##FE model with npw>1 and
-                                          ##3.1 no random
-                                          if(mod_data$R==0){
-                                            meta_analysis <- function(){
-
-                                              ##likelihood
-                                              for (i in 1:N){
-                                                est[i]  ~  dnorm(mu1[i], tau1[i])
-                                                mu1[i]  <- mu[level[i]] + ifelse(method==0, 0, ifelse(method==1, beta_adjust[level[i]]*se[i]^2, beta_adjust[level[i]]*Nsamp[i]^2))
-                                                tau1[i] <- 1/(se[i]^2)}
-
-                                              resid <- est-mu1
-
-                                              ##priors
-                                              for(j in 1:L){
-                                                beta_adjust[j]   ~ dnorm(0, 1/100^2)
-
-                                                for(k in 1:npw){
-                                                  mu_M[j,k]       ~ dnorm(Pm[j,k], 1/Pe[j,k]^2)}
-                                                d[j]            ~ dcat(fix_pw[1:npw])
-                                                mu[j]           <- inprod(mu_M[j, 1:npw], d[j] == 1:npw)}}}
-                                          ##3.2 only 1 random
-                                          else if(mod_data$R==1){
-                                            meta_analysis <- function(){
-
-                                              ##likelihood
-                                              for (i in 1:N){
-                                                est[i]  ~  dnorm(mu1[i], tau1[i])
-                                                mu1[i]  <- mu[level[i]]+ifelse(method==0, 0, ifelse(method==1, beta_adjust[level[i]]*se[i]^2, beta_adjust[level[i]]*Nsamp[i]^2))+
-                                                  beta_random[level[i]]*random[i]
-                                                tau1[i] <- 1/(se[i]^2)}
-
-                                              resid <- est-mu1
-
-                                              ##priors
-                                              for(j in 1:L){
-                                                beta_random[j]  ~ dnorm(0, 1/100^2)
-                                                beta_adjust[j]   ~ dnorm(0, 1/100^2)
-
-                                                for(k in 1:npw){
-                                                  mu_M[j,k]       ~ dnorm(Pm[j,k], 1/Pe[j,k]^2)}
-                                                d[j]            ~ dcat(fix_pw[1:npw])
-                                                mu[j]           <- inprod(mu_M[j, 1:npw], d[j] == 1:npw)}}}
-                                          ##3.3 more than 1 random
-                                          else{
-                                            meta_analysis <- function(){
-
-                                              ##likelihood
-                                              for (i in 1:N){
-                                                est[i]  ~  dnorm(mu1[i], tau1[i])
-                                                mu1[i]  <- mu[level[i]]+ ifelse(method==0, 0, ifelse(method==1, beta_adjust[level[i]]*se[i]^2, beta_adjust[level[i]]*Nsamp[i]^2))+
-                                                  inprod(beta_random[level[i], ], random[i, ])
-                                                tau1[i] <- 1/(se[i]^2)}
-
-                                              resid <- est-mu1
-
-                                              ##priors
-                                              for(j in 1:L){
-                                                for(r in 1:R){
-                                                  beta_random[j, r]  ~ dnorm(0, 1/100^2)}
-                                                beta_adjust[j]      ~ dnorm(0, 1/100^2)
-
-                                                for(k in 1:npw){
-                                                  mu_M[j,k]       ~ dnorm(Pm[j,k], 1/Pe[j,k]^2)}
-                                                d[j]            ~ dcat(fix_pw[1:npw])
-                                                mu[j]           <- inprod(mu_M[j, 1:npw], d[j] == 1:npw)}}}
-                                        }}
+                                              #I2 heterogenity
+                                              for(l in 1:L) {
+                                                I2[l] <- (1/tau1[level[l]]) / (1/tau2[l] + 1/tau1[level[l]])
+                                              }
+                                            }
+                                          }
+                                         }
 
                                          #Run the model
                                          model <- R2jags::jags.parallel(data = mod_data,
-                                                                model.file = meta_analysis,
-                                                                parameters.to.save =  c("mu", "d", "I2", "sigma1", "sigma2", "beta_random", "beta_adjust", "resid"),
-                                                                n.chains = n_chain,
-                                                                n.thin = n_thin,
-                                                                jags.seed = n_seed,
-                                                                n.iter = n_iter,
-                                                                n.burnin = n_burnin)
+                                                                        model.file = meta_analysis,
+                                                                        parameters.to.save =  c("mu", "d", "I2", "sigma1", "sigma2", "beta_random", "beta_moderator", "beta_adjust", "resid"),
+                                                                        n.chains = n_chain,
+                                                                        n.thin = n_thin,
+                                                                        jags.seed = n_seed,
+                                                                        n.iter = n_iter,
+                                                                        n.burnin = n_burnin)
 
                                          #Warning messages for bad mixing chains
-                                         if(any(c(model$BUGSoutput$summary[-1,8]>Rhat_warn, model$BUGSoutput$summary[-1,9]<Eff_warn))){warning("The Rhat or/and effective sample size for some >",Rhat_warn," or/and <",Eff_warn,". Chains might not be mixing.")}
+                                         amr       <- c("beta_adjust", "beta_moderator", "beta_random")[c(1*mod_data$AP, 2*mod_data$MP, 3*mod_data$RP)]
+                                         which_par <- c("mu", "sigma1", "sigma2", "I2", amr)
+
+                                         if(any(c(model$BUGSoutput$summary[rownames(model$BUGSoutput$summary) %in% which_par,8]>Rhat_warn, model$BUGSoutput$summary[rownames(model$BUGSoutput$summary) %in% which_par,9]<Eff_warn))){warning("The Rhat or/and effective sample size for some >",Rhat_warn," or/and <",Eff_warn,". Chains might not be mixing.")}
 
                                          #Function to extract chains
                                          extract_chain <- function(chains, data){
@@ -813,26 +691,38 @@ meta <- function(estimate, stderr, parameter=NULL, predictor=NULL,
                                          b1_n          <- as.data.frame(table(mod_data$level))
                                          b1_n          <- setNames(cbind(do.call(rbind.data.frame, strsplit(as.character(b1_n[,1]), "_")), b1_n[,2]), c("parameter", "predictor", "link", "group"))
 
-                                         if(RE==T){
-                                           mcmc_I2       <- extract_chain(model$BUGSoutput$sims.list$I2, mod_data)
-                                           mcmc_I2_b1    <- mcmc_I2[mcmc_I2$parameter!="b0",]
-                                           mcmc_sigma    <- model$BUGSoutput$sims.list$sigma
+                                         mcmc_I2       <- extract_chain(model$BUGSoutput$sims.list$I2, mod_data)
+                                         mcmc_I2_b1    <- mcmc_I2[mcmc_I2$parameter!="b0",]
+                                         mcmc_sigma    <- model$BUGSoutput$sims.list$sigma
 
-                                           i2_summary                    <- aggregate(data=mcmc_I2_b1, estimate~., mean)$estimate
-                                           basic_summary                 <- cbind(basic_summary[c(1:4)], round(unlist(basic_summary$estimate),4), round(i2_summary, 4))
-                                           basic_summary                 <- merge(basic_summary, b1_n, by=c("parameter", "predictor", "link", "group"))
-                                           colnames(basic_summary)[5:11] <- c("map", "mu", "se", "ll", "ul", "I2", "n")}
-                                         else{
-                                           mcmc_I2 <- NULL
-                                           mcmc_sigma <- NULL
-
-                                           basic_summary                 <- cbind(basic_summary[c(1:4)], round(unlist(basic_summary$estimate),4))
-                                           basic_summary                 <- merge(basic_summary, b1_n, by=c("parameter", "predictor", "link", "group"))
-                                           colnames(basic_summary)[5:10] <- c("map", "mu", "se", "ll", "ul", "n")}
+                                         i2_summary                    <- aggregate(data=mcmc_I2_b1, estimate~., mean)$estimate
+                                         basic_summary                 <- cbind(basic_summary[c(1:4)], round(unlist(basic_summary$estimate),4), round(i2_summary, 4))
+                                         basic_summary                 <- merge(basic_summary, b1_n, by=c("parameter", "predictor", "link", "group"))
+                                         colnames(basic_summary)[5:11] <- c("map", "mu", "se", "ll", "ul", "I2", "n")
 
                                          #Extract chains for peese or peters
-                                         if(method!=0){
-                                           mcmc_adjust        <- extract_chain(model$BUGSoutput$sims.list$beta_adjust, mod_data)}else{mcmc_adjust <- NULL}
+                                         if(AP==1){
+                                           mcmc_adjust     <- extract_chain(model$BUGSoutput$sims.list$beta_adjust, mod_data)
+                                           summary_adjust  <- aggregate(data=mcmc_adjust, estimate~., function(x) c(maxpost(x), mean(x), sd(x), hdi_fun(x, level = interval)))
+                                           summary_adjust  <- cbind(summary_adjust[-5], summary_adjust$estimate)
+                                           colnames(summary_adjust)[5:9] <- c("map", "mu", "se", "ll", "ul")
+                                         }else{mcmc_adjust <- NULL; summary_adjust  <- NULL}
+
+                                         #Extract chains for moderator
+                                         if(MP==1){
+                                           mcmc_moderator     <- extract_chain(model$BUGSoutput$sims.list$beta_moderator, mod_data)
+                                           summary_moderator  <- aggregate(data=mcmc_moderator, estimate~., function(x) c(maxpost(x), mean(x), sd(x), hdi_fun(x, level = interval)))
+                                           summary_moderator  <- cbind(summary_moderator[-5], summary_moderator$estimate)
+                                           colnames(summary_moderator)[5:9] <- c("map", "mu", "se", "ll", "ul")
+                                         }else{mcmc_moderator <- NULL; summary_moderator  <- NULL}
+
+                                         #Extract chains for random effect
+                                         if(RP==1){
+                                           mcmc_random     <- extract_chain(model$BUGSoutput$sims.list$beta_random, mod_data)
+                                           summary_random  <- aggregate(data=mcmc_random, estimate~., function(x) c(maxpost(x), mean(x), sd(x), hdi_fun(x, level = interval)))
+                                           summary_random  <- cbind(summary_random[-5], summary_random$estimate)
+                                           colnames(summary_random)[5:9] <- c("map", "mu", "se", "ll", "ul")
+                                        }else{mcmc_random <- NULL; summary_random  <- NULL}
 
                                          #Extract chains for posterior weights
                                          if(mod_data$npw>1){
@@ -846,17 +736,51 @@ meta <- function(estimate, stderr, parameter=NULL, predictor=NULL,
                                            cat("Summary:\n")
                                            print(basic_summary)}
 
-                                         return(invisible(list(Summary=basic_summary,
-                                                     Estimates=split(mcmc_mu, mcmc_mu$parameter),
-                                                     Chains_mu=mcmc_mu,
-                                                     Chains_I2=mcmc_I2,
-                                                     Chains_sigma=mcmc_sigma,
-                                                     Chains_adjust=mcmc_adjust,
-                                                     Chains_podd=mcmc_podd,
-                                                     Residuals=mcmc_mu_resid,
-                                                     N_level=table(mod_data$level),
-                                                     model=list(JAGS_model=model,
-                                                                Data=mod_data, Priors=data.frame(Levels=levels(mod_data$level),
-                                                                                                 Prior_mu=mod_data$Pm,
-                                                                                                 Prior_se=mod_data$Pe)))))}}
+                                         total_summary <- list(Main=basic_summary,
+                                                               Adjust=summary_adjust,
+                                                               Moderator=summary_moderator,
+                                                               Random=summary_random)
 
+                                         total_summary <- total_summary[!sapply(total_summary, is.null)]
+
+                                         tbls <- lapply(names(total_summary), function(name) {
+                                           x <- total_summary[[name]]
+                                           if (!is.null(x)) {
+                                             x$Name <- name
+                                             return(x)
+                                           } else {
+                                             return(NULL)
+                                           } })
+
+                                         tbls <- Filter(Negate(is.null), tbls)
+
+                                         all_cols <- unique(unlist(lapply(tbls, names)))
+
+                                           tbls_aligned <- lapply(tbls, function(df) {
+                                           missing <- setdiff(all_cols, names(df))
+                                           if (length(missing) > 0) {
+                                             for (m in missing) df[[m]] <- NA
+                                           }
+
+                                           df <- df[all_cols]
+                                           df})
+
+                                         total_summary <- do.call(rbind, tbls_aligned)
+
+                                         total_summary <- total_summary[c("Name", setdiff(names(total_summary), "Name"))]
+
+                                         return(invisible(list(Summary=total_summary,
+                                                               Estimates=split(mcmc_mu, mcmc_mu$parameter),
+                                                               Chains_mu=mcmc_mu,
+                                                               Chains_I2=mcmc_I2,
+                                                               Chains_sigma=mcmc_sigma,
+                                                               Chains_adjust=mcmc_adjust,
+                                                               Chains_moderator=mcmc_moderator,
+                                                               Chains_random=mcmc_random,
+                                                               Chains_podd=mcmc_podd,
+                                                               Residuals=mcmc_mu_resid,
+                                                               N_level=table(mod_data$level),
+                                                               model=list(JAGS_model=model,
+                                                                          Data=mod_data, Priors=data.frame(Levels=levels(mod_data$level),
+                                                                                                           Prior_mu=mod_data$Pm,
+                                                                                                           Prior_se=mod_data$Pe)))))}}

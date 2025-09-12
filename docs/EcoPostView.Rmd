@@ -107,7 +107,7 @@ rm(mod_intro)
 
 *Figure 1: Expected evenness of aquatic invertebrates as a function of conductivity and fine sediment fraction within a river reach. The left panel shows the relationship on the response scale, while the right panel presents it on the log scale for improved visualization.*
 
-This package offers tools for ecological statistical modeling, with a strong emphasis on Bayesian methods. While a basic understanding of R is sufficient to use the core functions, a more in-depth theoretical background is provided in chapter 2 for those interested in exploring the underlying concepts. Please note that this is an actively developed R package, and improvements or updates may be introduced over time.
+This package offers tools for ecological statistical modeling, with a strong emphasis on (subjective) Bayesian methods and visualisation. While a basic understanding of R is sufficient to use the core functions, a more in-depth theoretical background is provided in chapter 2 for those interested in exploring the underlying concepts. Please note that this is an actively developed R package, and improvements or updates may be introduced over time.
 
 ## Data and models
 
@@ -591,7 +591,7 @@ log_sal1 <- hop(mod2,                                  #Object from the meta fun
     link_function = "log",                             #Which link function out of log and logit
     ylab="Invertebrate taxonomic richness",            #Give y-axis a name
     xlim=c(-4.6, 0),                                   #Give y-axis a name
-    ylim=c(0, 80),                                     #Set  limits y-axis
+    ylim=c(0, 45),                                     #Set  limits y-axis
     hop_lwd = 0.3)                                     #Set width of the hop lines
 
 #Display the HOPs
@@ -610,7 +610,7 @@ log_sal2 <- hop(mod2,
     link_function = "log",                            
     ylab="Invertebrate taxonomic richness",            
     xlim=c(-4.6, 0),                                      
-    ylim=c(0, 50),                                     
+    ylim=c(0, 20),                                     
     hop_lwd = 0.3,                                    
     exp_axis = T,                                     #Exponentiate the x-axis notations
     round_x_axis = 2,                                 #Round the notation to full integers 

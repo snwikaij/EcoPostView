@@ -159,7 +159,7 @@ pl <- ggplot(data.frame(x=sub_data), aes(x=x))+
           axis.ticks.y = element_blank(),
           axis.text.x = element_text(size = xtext_size, colour = "black"),
           line = element_line(linewidth = .4),
-          plot.margin = unit(c(.1, .1, .1, .1), "mm"))
+          plot.margin = unit(c(0.1, 1.15, 0.1, 1.15), "mm"))
 
 xrange_pl<- ggplot_build(pl)$layout$panel_scales_x[[1]]$range$range
 yrange_pl<- ggplot_build(pl)$layout$panel_scales_y[[1]]$range$range

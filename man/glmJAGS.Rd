@@ -38,6 +38,6 @@ b2=0.1
 
 df$V3 <- rpois(nrow(df), exp(b0+b1*df$V1+b2*df$V2))
 
-results <- glmmJAGS(V3~V1+V2, data=df, family = "pois_log")
+results <- glmJAGS(V3~V1+V2, data=df, family = "pois_log")
 
 }

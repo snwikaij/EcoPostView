@@ -12,8 +12,8 @@ meta(
   link_function = NULL,
   grouping = NULL,
   random = NULL,
+  moderator = NULL,
   method = 0,
-  RE = TRUE,
   Nsamp = NULL,
   prior_mu = 0,
   prior_mu_se = 10,
@@ -48,8 +48,6 @@ meta(
 \item{random}{An argument that needs to be a vector or  matrix of factors of the same number of rows as the estimate}
 
 \item{method}{Indicates which adjustment performed 0 (='none'), 1 (='egger') or 2 (='peters')}
-
-\item{RE}{An argument indicating if RE or FE should be used (default RE=TRUE)}
 
 \item{Nsamp}{A vector with the number of samples for each estimate (only used when method = 2)}
 
@@ -89,13 +87,13 @@ very broad with might be beneficial if one wants to be conservative. However, it
 \item{print_summary}{If TRUE it prints a summary}
 }
 \description{
-Full Bayesian meta-analytic method using Bayesian Model Averaging, with random-effect (RE), fixed-effect (FE) in combination
-with Egger adjustment using inverse of the standard error (1/SE) (Moreno et al., 2009; Stanley  and Doucouliagos, 2013) or Peters adjustment (Moreno et al., 2009) using
-the inverse of the sample size (1/N). The full use of the meta function is the combination with pdplot and hop function. Hence it  is used to analyse
+Full Bayesian Random-Effect meta-analytic method with the possiblity of using Bayesian Model Averaging. It additionally has the possibility - internally - to adjust
+for publication bias with Egger adjustment using the standard error (\emph{SE^2}; Moreno et al., 2009; Stanley  and Doucouliagos, 2013) or Peters adjustment (Moreno et al., 2009) using
+the inverse of the sample size (N). The full use of the meta function is the combination with pdplot and hop function. Hence it  is used to analyse
 the parameter estimates intercepts (b0) and regression coefficients (b1) on of LM or GLM models applied when the independent
 variable is continues.
 
-This package was especially develop to analyse the  parameters when the independent variable (predictor variable) was log (natural log)
+This package was first develop to analyse the  parameters when the independent variable (predictor variable) was log (natural log)
 transformed and either the link functions are 'log' or 'logit' are used, or the dependent variable (target or response variable) is log transformed and
 'identity' link is used. Under such conditions the estimate parameter is named the (semi-)elasticity coefficient. The
 elasticity coefficient indicates the percentage change in the target variable per 1 percent increase in the predictor variable.

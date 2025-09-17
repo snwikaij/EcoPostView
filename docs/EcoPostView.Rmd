@@ -675,17 +675,21 @@ As mentioned, some formal and syntactical logic will be used. This will be mainl
 
 A simple syllogistic argument consisting of two premises.
 
-Major premise  1) $all \ insects \ have \ six \ legs,$ <br>
-Minor  premise  2) $x \ is \ an \ insect,$ <br>
-Conclusion) $\therefore \ x \ has \ six \ legs$ <br>
+$$
+\text{Major premise   1)} \ all \ insects \ have \ six \ legs, \\
+\text{Minor  premise  2)} \ x \ is \ an \ insect, \\
+\text{Conclusion)} \therefore \ x \ has \ six \ legs \\
+$$
 
 The argument above is called **Modus Ponens**, which follows a specific logical structure. In this form, the conclusion is entailed by the premises — that is, the truth of the premises guarantees the truth of the conclusion. Entailment means that in all cases where the premises are true, the conclusion cannot be false. If an argument has this feature, it is considered logically valid.
 
 This argument can be further condensed by abstracting away the content and focusing only on its structure. In this way, the validity of the argument depends solely on the form of the entailment, not on the specific subject matter.
 
-Major premise  1)$all \ P \ are \ Q,$ <br>
-Minor  premise  2)$x \ is \ P,$ <br>
-Conclusion)$therefore \ x \ is \ Q$ <br>
+$$
+\text{Major premise  1)} \ all \ P \ are \ Q, \\
+\text{Minor  premise  2)} x \ is \ P, \\
+Conclusion) \therefore \ x \ is \ Q
+$$
 
 In an argument like the one above, all premises are declarative statements, also known as propositions — sentences that are either True or False, but not both. Each premise typically consists of a subject (or antecedent), a copula (such as is, are, will be, etc.), and a predicate (or consequent). These components express a logical relationship between concepts.
 
@@ -712,10 +716,12 @@ $$Either \ P \vee Q, \neg P \therefore Q$$
 
 **Semantic equivalent structures**
 
-Modus Ponens: $for \ all \ x \ that \ are \ P \ it \ implies \ they \ are \ Q, x \ is \ P \ therefore \ x \ is \ Q$
-Modus Tollens: $for \ all \ x \ that \ are \ P \ it \ implies \ they \ are \ Q, x \ is \ \neg Q \ therefore \ x \ is \ \neg P$
-Hypothetical Syllogism: $for \ all \ x \ that \ are \ P \ it \ implies \ they \ are \ Q, for \ all \ x \ that \ are \ Q \ it \ implies \ they \ are \ Z, \ x \ is \ P \ therefore \ x \ is \ Z$
-Disjunctive Syllogism: $either \ x \ is \ P \ or \ x \ is \ Q, x \ is \neg P \ therefore \ x \ is \ Q$
+$$
+\text{Modus Ponens:} \ for \ all \ x \ that \ are \ P \ it \ implies \ they \ are \ Q, x \ is \ P \ therefore \ x \ is \ Q \\
+\text{Modus Tollens:} \ for \ all \ x \ that \ are \ P \ it \ implies \ they \ are \ Q, x \ is \ \neg Q \ therefore \ x \ is \ \neg P \\
+\text{Hypothetical Syllogism:} \ for \ all \ x \ that \ are \ P \ it \ implies \ they \ are \ Q, for \ all \ x \ that \ are \ Q \ it \ implies \ they \ are \ Z, \ x \ is \ P \ therefore \ x \ is \ Z\\
+\text{Disjunctive Syllogism:} \ either \ x \ is \ P \ or \ x \ is \ Q, x \ is\ \neg P \ therefore \ x \ is \ Q
+$$
 
 An **valid** argument - in the semantic interpretation of validity - in case $p_n$ $p_i$ is true in all interpretations in which $p_1, ..., p_{n-1} ,p_n$ are true. Simplistically, if all propositions are true the conclusion cannot be false. Such a valid argument can be notated as (see also Haack, 1978),
 
@@ -727,10 +733,12 @@ In predicate logic modus ponens is expressed as $\forall(P(x)\rightarrow Q(x))$ 
 
 In predicate logic, the structures can be notated similarly. However, the advantage of predicate logic is the possibility to quantify over variables. The universal quantifier ($\forall$) means "for all," and the existential quantifier ($\exists$) means "some," "at least one," or "few." To quantify over all variables $x$ with a predicate $P(..)$, we write $\forall x P(x)$, which reads as "for all $x$ that have the property $P$." Similarly, for $\exists$, the formula $\exists x P(x)$ reads as "there exists at least one $x$ that has the property $P$."
 
-Modes Ponens: $\forall x(P(x)\rightarrow Q(x)), P(x) \vdash Q(x)$ <br>
-Modes Tollens: $\forall x(P(x)\rightarrow Q(x)), \neg Q(x) \vdash \neg P(x)$ <br>
-Hypotehtical Syllogism: $ \forall x(P(x)\rightarrow Q(x)) \wedge \forall x(Q(x) \rightarrow Z(x)), P(x) \rightarrow Z(x)$ <br>
-Disjunctive Syllogism:$P(x) \vee Q(x), \neg P(x) \vdash Q(x)$ <br>
+$$
+\text{Modes Ponens:} \ \forall x(P(x)\rightarrow Q(x)), P(x) \vdash Q(x)\\
+\text{Modes Tollens:} \ \forall x(P(x)\rightarrow Q(x)), \neg Q(x) \vdash \neg P(x)\\
+\text{Hypotehtical Syllogism:}\ \forall x(P(x)\rightarrow Q(x)) \wedge \forall x(Q(x) \rightarrow Z(x)), P(x) \rightarrow Z(x)\\
+\text{Disjunctive Syllogism:} \ P(x) \vee Q(x), \neg P(x) \vdash Q(x)
+$$ 
 
 ### Epistemic logic
 
@@ -919,7 +927,7 @@ $$\emptyset$$
 
 ## Language Use and Logic
 
-# Empirical sense
+### Empirical sense
 
 Language and the logic of semantics are strongly intertwined and a rational perspective is necessary. Terminology such as validity on soundness have rather strict definitions in logic (Barwise et al. 2002; Haack 1978; Smith 2021) but are not properly used in ecology.
 
@@ -985,7 +993,7 @@ However, this still does not access what we can define as epistemically senseful
 
 The issue is that no one follows $\beta$ because a strict mechanistic falsification in argumentative form is never performed. In most cases we invalidly perform $\alpha$ as if it was probable. Hence, take restoration management if nutrients increase algae blooms occur, there is an algae bloom therefore nutrient increased. Hence, what is applied is affirming the consequent $A \rightarrow B, B \not \models A$. The success of the principle than on the cases in which affirming the consequent turned out to correctly address$A \rightarrow B, B \models A$. In probable terms it is: plausible that if nutrients increase algae blooms occur, there is an algae bloom therefore nutrient increases. This in regard is almost the application of Bayes rule, with exception of the prior: $P(B|A)P(A|B) \cdot P(B)/P(A)$. In this regard we might also fall to a form of frequentism where we accumulate the proportion of successes $A \rightarrow B,  B \models A$ and failures $A \rightarrow B,  B \not \models A$. Thus none of this really in line with Popper as clearly often is suggested when ‘refuting null hypothesis’ (...). In this sense, Popper did focus on mechanistic theories (e.g., evolution theory …) not on hypothesis per se. Hence the Quine-Duhem thesis suggests that even if a hypothesis seems unreasonable often an ‘auxiliary hypothesis’ is invoked when needed to save a theory. In ecology this often happens quite unconvincingly by suggesting it is "context dependent". 
 
-## Objective language and normativity
+### Objective language and normativity
 
 Language and the beliefs shaped by it play a role in sharing information. The objectivity of the language and chosen words conveying the beliefs, intent, status, knowledge and moral and political position of the author. It is therefore used to convey meaning. Broadly there could be three levels of objective uses of language.
 

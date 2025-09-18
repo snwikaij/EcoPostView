@@ -60,16 +60,14 @@ library(ggplot2)
 library(cowplot)
 data("example1")
 
-mod_intro <- meta(estimate=example1$est,         
-                  stderr=example1$se,            
-                  parameter=example1$parameter,  
-                  predictor=example1$predictor,  
-                  link_function=example1$link,   
-                  grouping=example1$group,       
-                  Nsamp=example1$n,
+mod_intro <- meta(estimate=example2$est,         
+                  stderr=example2$se,            
+                  parameter=example2$parameter,  
+                  predictor=example2$predictor,  
+                  link_function=example2$link,   
+                  grouping=example2$group,       
                   n_chain=6,
-                  n_thin=10,
-                  method=2)
+                  n_thin=10)
 
 pl1 <- hop(mod_intro ,                                              
            group = "Invertebrates",                            
@@ -107,9 +105,148 @@ rm(mod_intro)
 
 *Figure 1: Expected evenness of aquatic invertebrates as a function of conductivity and fine sediment fraction within a river reach. The left panel shows the relationship on the response scale, while the right panel presents it on the log scale for improved visualization.*
 
-This package offers tools for ecological statistical modeling, with a strong emphasis on (subjective) Bayesian methods and visualisation. While a basic understanding of R is sufficient to use the core functions, a more in-depth theoretical background is provided in chapter 2 for those interested in exploring the underlying concepts. Please note that this is an actively developed R package, and improvements or updates may be introduced over time.
+This package offers tools for ecological statistical modeling, with a strong emphasis on (subjective) Bayesian methods and visualisation. While a basic understanding of R is sufficient to use the core functions, a more in-depth theoretical background is provided in chapter 3 for those interested in exploring the underlying concepts. Please note that this is an actively developed R package, and improvements or updates may be introduced over time.
 
-## Data and models
+## Data and R-package
+
+To start using this R-package, both JAGS and devtools must be installed. JAGS can be installed from https://sourceforge.net/projects/mcmc-jags/ and devtools can be installed in R via CRAN. The most recent version of the EcoPostView it can be installed from GitHub. Of course, any problems, questions or possible improvements can be directed to me.
+
+```{r setup}
+#install.packages("devtools")
+library(devtools)
+
+#install.github("snwikaij/EcoPostView")
+library(EcoPostView)
+```
+
+## Basic model structures for meta-analysis
+
+The meta function is a random-effect model and the structure is given as
+$$\{\beta_{i}, ..., \beta_{n}\}= \beta_{\text{pooled}} + u_i$$
+It has the option of placing a single or multiple random effect as a vector or matrix using the argument 'random' the structure then becomes then 
+$$\{\beta_{i}, ..., \beta_{n}\} = \beta_{\text{pooled}} + u_i +r_i$$
+Similar, it has the option of placing a single or multiple moderators as a vector or matrix using the argument 'moderator' the structure then becomes then 
+$$\{\beta_{i}, ..., \beta_{n}\} = \beta_{\text{pooled}} + u_i +m_i$$
+
+for a single random effect. It can adjust for the relation between the $se$ and model parameters using the the squared standard error $se^2$ often refered to as Precision-Effect Estimate with Standard Errors or short PEESE (method=1, Stanley and Doucouliagos, 2014). The structure is then 
+$$\{\beta_{i}, ..., \beta_{n}\} = \beta_{\text{pooled}} + u_i + \alpha_{i} \cdot se^2$$ 
+or inverse of the sample size $1/n$ (method=2, the latter option is performed below) with the structure 
+$$\{\beta_{i}, ..., \beta_{n}\} = \beta_{\text{pooled}} + u_i + \alpha_{i} \cdot \left(\frac{1}{n}\right)$$ 
+Of course if bias is considered neglect non can be performed (method=0). I still would like to include a third 4th option to utilize Robust Bayesian Model Averaging (RoBMA: Maier et al. 2023). But this sometimes adjust extremely when including $se^2$ and therefore I left this option open for now.
+
+## Meta-analysis over standardized effect sizes
+
+### The meta-function
+
+Meta-analysis is often performed using standardized effect sizes (SES). While I do not endorse this practice, I believe it offers limited benefits for field ecology, applied ecology, and the generalization of real-world ecological relations (Baguley, 2009; Tukey, 1969). Therefore, I will provide a brief introduction to meta-analysis and demonstrate how bias correction methods perform. To illustrate this, I will compare the results with those obtained using my preferred metafor package in R.
+
+```{r, bias adjustment and metafor}
+#First run and check standard output for metafor
+library(metafor)
+data("example1")
+
+#Run metafor
+standard_metafor <- metafor::rma(yi=example1$est, sei=example1$se)
+
+#Run EcoPostView
+standard_meta    <- meta(estimate=example1$est, stderr=example1$se)
+
+#Results metafor
+print(standard_metafor)
+
+#Results EcoPostView
+print(standard_meta$Summary)
+
+```
+
+Both the metafor and EcoPostView packages yield similar means (-0.22) and standard errors. This suggests that, in many cases, not specifying priors may be uninformative. 
+
+### Check for bias
+
+We can further assess the models performance by examining the bias through the residuals.
+
+```{r plot metafor and EcoPostView, fig.width=8, fig.height=4}
+par(mfrow=c(1,2))
+plot(1/example1$se, resid(standard_metafor), 
+     xlab = "1/se", ylab="Residuals", main="metafor")
+abline(a=0, b=0, col="red", lty=2)
+
+plot(1/example1$se, standard_meta$Residuals, 
+     xlab = "1/se", ylab="Posterior mean residuals", main="EcoPostView")
+abline(a=0, b=0, col="red", lty=2)
+```
+
+Both functions reveal a clear diagonal pattern, which is nearly identical in both cases. However, the posterior means are pulled closer to the overall mean (a phenomenon known as shrinkage) for estimates with weaker standard errors. This bias can also be assessed using the rescheck function from EcoPostView
+
+```{r plot rescheck function, fig.width=8, warning=FALSE, fig.height=4}
+#Use the residual check function within EcoPostView
+res_bias <- rescheck(standard_meta)
+
+print(res_bias$bias_se)
+```
+
+This bias is clearly a result of excluding or selectively retaining 'significant' results, often through practices such as manually dropping 'non-significant' variables or using stepwise model selection methods like forward/backward AIC or BIC (Gelman & Loken, 2013). These practices can lead to a significant overestimation of the parameter (or 'effect size'). 
+
+### Bias adjustment
+
+This bias can be corrected using Method 1 presented by Stanley and Doucouliagos (2014).
+
+```{r adjusting bias via Eggers approach, fig.width=7.8, fig.height=4, warning=FALSE}
+#Run EcoPostView (increased the chain thinning interval and number of iterations to improve mixing)
+adjusted_meta    <- meta(estimate=example1$est, stderr=example1$se, method = 1, 
+                         n_thin = 5, 
+                         n_iter = 30000)
+
+print(adjusted_meta$Summary)
+
+res_bias2 <- rescheck(adjusted_meta)
+print(res_bias2$bias_se)
+```
+
+In the method outlined above, the bias has been adjusted (not removed), resulting in a much lower pooled estimate. This adjustment allows for a clearer assessment of the relationship between the standard errors by examining the residuals. While this is commonly done using funnel plots, it can also be done by directly checking the residuals.
+
+However, the adjustment should only be applied when clear patterns of bias are present, as it can lead to over-corrections even when no bias is evident. That said, it is highly effective when a bias is present in the data. In the future, I aim to incorporate additional methods to better assess the strength of any bias.
+
+### Exploring the bias pattern
+
+The bias displayed in this example is extreme, and in such cases, it may be beneficial to further explore the nature of the bias to determine if a 'publication gap' exists. This gap can be highlighted by examining the z-distribution derived from the p-value. Normally, the p-value is derived from the z-value, but when a clear gap is visible (as observed in Zwet & Cator, 2021), we should be able to model the absolute z-value as a mixture of two half-normal distributions - one truncated at 0 and the other at 1.96. Since the likelihood of such a mixture is challenging to estimate, I employ an Approximate Bayesian Computation (ABC) algorithm based on rejection sampling (ABC-rejection). This method is further described in Csilléry et al. (2010) and Hartig et al. (2011), and the model is formally presented in the theoretical section.
+
+```{r exploring bias with ABC-rejection, fig.width=7.8, fig.height=4, warning=FALSE}
+#From the dataset calculate the p-value from the effect-sizes and standard errors
+pvalues <- ptoz(estimate=example1$est, stderr=example1$se)
+
+#run the ABC-rejection model
+result_abc  <- abctoz(p=pvalues$data$p, nsim = 250000)
+
+#Extract the information from the results based on a selected threshold
+extract_abc <- extrabc(result_abc, dist_threshold = 0.052)
+
+#Plot the histogram of the z-values with the simulated density lines of the posterior
+plot(extract_abc$hist)
+```
+
+Based on the distribution of z-values, we can clearly observe that values where |z|>1.96 are more frequently published than those with lower absolute values. This would be reasonable if no publication gap existed; however, the sharp boundary at |z| > 1.96 suggests otherwise. The z-values can be reasonably modeled, and the model appears to fit the data well, with an R-squared typically above 0.6–0.7, which is considered acceptable. Additionally, the density curves align well with the histogram, further supporting the model's fit.
+
+The proportion of observations explained by the censored component of the model is 0.76 (76%). This does not imply that 76% of the data is censored, but rather that the model's censored component captures a substantial portion of the observed pattern. The goal here is to determine whether the model provides a good fit to the data under the assumption of selective reporting. If the residuals suggest severe bias, this model fit offers additional information of a selection process at play.
+
+To ensure the robustness of the results, one should verify that the model fit remains adequate and that the number of accepted simulations is heuristically sufficient (typically > 100).
+
+### Including a moderator
+
+Inclusion of a moderator is possible as well. The estimated parameter of the relation between the moderator and the effect-sizes is given in the summary output.
+
+```{r, moderator adjustment and meta}
+#Run EcoPostView with moderator
+standard_meta    <- meta(estimate=example1$est, stderr=example1$se, moderator=example1$mod)
+
+#Results EcoPostView
+print(standard_meta$Summary)
+
+```
+
+## Meta-analysis over (Generalized) Linear Models (G)LMs
+
+### Data and models
 
 The information required for a meta-analytic approach can often be extracted from figures, tables, datasets, or combinations of these sources. However, such information is rarely used in a consistent or standardized way. Put simply, multiple datasets are needed on which (G)LMs can be fitted (see Kaijser et al., ...). This process often reveals that ecological data is noisy, potentially biased, and exhibits considerable heterogeneity across studies.
 
@@ -117,7 +254,7 @@ These challenges pose difficulties for drawing causal inferences or controlling 
 
 This data can be used to make probabilistic statements, generate predictions, and estimate the a priori power required to design future studies that do focus on error control or causal inference. The purpose of this package is to enable such posterior analysis—allowing users to generalize ecological effects from the literature, visualize emerging patterns, and make informed predictions.
 
-## (Generalized) Linear Models (G)LMs and extracting data
+### (G)LMs and extracting data
 
 To use this package effectively, data is required, and (G)LMs need to be fitted to that data. This (meta-)data can be obtained from figures (e.g., using tools like WebPlotDigitizer), tables (e.g., by converting PDFs to Excel files), datasets, or combinations of these sources (see Kaijser et al., ...).
 
@@ -151,51 +288,28 @@ I use the 'unofficial expressions' for *b0* and *b1*, due to the reference in th
 $$g(E(y_{i} \mid x_{ij})) = \sum_{j=1}^{j} \beta_j \cdot x_{ij}$$
 Where $x_{ij}$ refers to the $j$ the predictor variable (e.g., salinity is $j$=1 and light is $j$=2) and $i$ is the $i$-th observation. This expression will later be utilized in the explanation of the visualization.
 
-## Data and R-package
-
-To start using this R-package, both JAGS and devtools must be installed. JAGS can be installed from https://sourceforge.net/projects/mcmc-jags/ and devtools can be installed in R via CRAN. The most recent version of the EcoPostView it can be installed from GitHub. Of course, any problems, questions or possible improvements can be directed to me.
-
-```{r setup}
-#install.packages("devtools")
-library(devtools)
-
-#install.github("snwikaij/EcoPostView")
-library(EcoPostView)
-```
+### The meta-function
 
 At this stage, we assume that multiple (G)LMs have been fitted. From these models, the parameter estimates and their standard errors have been extracted and compiled into a dataset. For each estimate, it is useful to record relevant metadata including the source (e.g., DOI), the type of predictor variable (e.g., conductivity), group of the response type (e.g., benthic-invertebrates), link-function and if the model parameters is the intercept *b0* or a regression coefficient *b1*. When models include multiple predictor variables, all corresponding regression coefficients are denoted as *b1*, distinguishing them from the intercept *b0*. The example below in R demonstrates the expected structure of this data frame.
 
 ```{r data}
-data(example1)
-head(example1)
+data(example2)
+head(example2)
 
 ```
 
 In the example above, the **est** column contains the estimated model parameters, while the **se** column holds the standard error of those estimates. The **group** column can represent an organism group, specific species, or taxon (or any other category you wish to use for grouping). The **predictor** column denotes the specific predictor variable, and the **parameter** column indicates whether the estimate corresponds to the intercept (*b1*) or a regression coefficient (*b1*). The link column specifies the link function used in the model. Additionally, it is recommended to include the sample size (**n**) in your dataset to adjust for 'small-sample effects' if needed (Peters et al., 2006; Moreno et al., 2009).
 
-## Basic model structures for meta-analysis
-
-The meta function can include a random effect, by setting the argument RE=TRUE (default is TRUE). The  structure is then 
-$$\{\beta_{i}, ..., \beta_{n}\}= \beta_{\text{pooled}} + u_i$$
-It has the option of placing a single or multiple random effect as a vector or matrix using the argument 'random' the structure then becomes then 
-$$\{\beta_{i}, ..., \beta_{n}\} = \beta_{\text{pooled}} + u_i +r_i$$
-for a single random effect. It can adjust for the relation between the $se$ and model parameters using the the squared standard error $se^2$ often refered to as Precision-Effect Estimate with Standard Errors or short PEESE (method=1, Stanley and Doucouliagos, 2014). The structure is then 
-$$\{\beta_{i}, ..., \beta_{n}\} = \beta_{\text{pooled}} + u_i + \alpha_{i} \cdot se^2$$ 
-or inverse of the sample size $1/n$ (method=2, the latter option is performed below) with the structure 
-$$\{\beta_{i}, ..., \beta_{n}\} = \beta_{\text{pooled}} + u_i + \alpha_{i} \cdot \left(\frac{1}{n}\right)$$ 
-Of course if bias is considered neglect non can be performed (method=0). I still would like to include a third 4th option to utilize Robust Bayesian Model Averaging (RoBMA: Maier et al. 2023). But this sometimes adjust extremely when including $se^2$ and therefore I left this option open for now.
-
-## The meta-function
 The meta-function can be applied over the example data via the following argument.
 
 ```{r meta1}
-mod1 <- meta(estimate=example1$est,         #Model estimate
-             stderr=example1$se,            #Standard error of the model estimate
-             parameter=example1$parameter,  #Model parameter (b0 or b1)
-             predictor=example1$predictor,  #Predictor variable  (independent variable)
-             link_function=example1$link,   #Link function
-             grouping=example1$group,       #Group
-             Nsamp=example1$n,              #Sample size (optional, for adjustment 2=Peters (1/n)),
+mod1 <- meta(estimate=example2$est,         #Model estimate
+             stderr=example2$se,            #Standard error of the model estimate
+             parameter=example2$parameter,  #Model parameter (b0 or b1)
+             predictor=example2$predictor,  #Predictor variable  (independent variable)
+             link_function=example2$link,   #Link function
+             grouping=example2$group,       #Group
+             Nsamp=example2$n,              #Sample size (optional, for adjustment 2=Peters (1/n)),
              method=2)                      #Adjustment method (0=none, 1=Egger's (1/se), 2=Peters (1/n))
 ```
 
@@ -207,92 +321,7 @@ Most of these issues can be addressed by thinning the chains, increasing the num
 
 To prevent the warning from being raised, you can lower the threshold for the Eff_warn parameter (e.g., Eff_warn = 500).
 
-## Standard meta-analysis
-
-Meta-analysis is often performed using standardized effect sizes (SES). While I do not endorse this practice, I believe it offers limited benefits for field ecology, applied ecology, and the generalization of real-world ecological relations (Baguley, 2009; Tukey, 1969). Therefore, I will provide a brief introduction to meta-analysis and demonstrate how bias correction methods perform. To illustrate this, I will compare the results with those obtained using my preferred metafor package in R.
-
-```{r, bias adjustment and metafor}
-#First run and check standard output for metafor
-library(metafor)
-data("example3")
-
-#Run metafor
-standard_metafor <- metafor::rma(yi=example3$est, sei=example3$se)
-
-#Run EcoPostView
-standard_meta    <- meta(estimate=example3$est, stderr=example3$se)
-
-#Results metafor
-print(standard_metafor)
-
-#Results EcoPostView
-print(standard_meta$Summary)
-
-```
-
-Both the metafor and EcoPostView packages yield similar means (-0.22) and standard errors. This suggests that, in many cases, not specifying priors may be uninformative. However, we can further assess the models performance by examining the bias through the residuals.
-
-```{r plot metafor and EcoPostView, fig.width=8, fig.height=4}
-par(mfrow=c(1,2))
-plot(1/example3$se, resid(standard_metafor), 
-     xlab = "1/se", ylab="Residuals", main="metafor")
-abline(a=0, b=0, col="red", lty=2)
-
-plot(1/example3$se, standard_meta$Residuals, 
-     xlab = "1/se", ylab="Posterior mean residuals", main="EcoPostView")
-abline(a=0, b=0, col="red", lty=2)
-```
-
-Both functions reveal a clear diagonal pattern, which is nearly identical in both cases. However, the posterior means are pulled closer to the overall mean (a phenomenon known as shrinkage) for estimates with weaker standard errors. This bias can also be assessed using the rescheck function from EcoPostView
-
-```{r plot rescheck function, fig.width=8, warning=FALSE, fig.height=4}
-#Use the residual check function within EcoPostView
-res_bias <- rescheck(standard_meta)
-
-print(res_bias$bias_se)
-```
-
-This bias is clearly a result of excluding or selectively retaining 'significant' results, often through practices such as manually dropping 'non-significant' variables or using stepwise model selection methods like forward/backward AIC or BIC (Gelman & Loken, 2013). These practices can lead to a significant overestimation of the parameter (or 'effect size'). This bias can be corrected using Method 1 presented by Stanley and Doucouliagos (2014).
-
-```{r adjusting bias via Eggers approach, fig.width=7.8, fig.height=4, warning=FALSE}
-#Run EcoPostView (increased the chain thinning interval and number of iterations to improve mixing)
-adjusted_meta    <- meta(estimate=example3$est, stderr=example3$se, method = 1, 
-                         n_thin = 5, 
-                         n_iter = 30000)
-
-print(adjusted_meta$Summary)
-
-res_bias2 <- rescheck(adjusted_meta)
-print(res_bias2$bias_se)
-```
-
-In the method outlined above, the bias has been adjusted (not removed), resulting in a much lower pooled estimate. This adjustment allows for a clearer assessment of the relationship between the standard errors by examining the residuals. While this is commonly done using funnel plots, it can also be done by directly checking the residuals.
-
-However, the adjustment should only be applied when clear patterns of bias are present, as it can lead to over-corrections even when no bias is evident. That said, it is highly effective when a bias is present in the data. In the future, I aim to incorporate additional methods to better assess the strength of any bias.
-
-The bias displayed in this example is extreme, and in such cases, it may be beneficial to further explore the nature of the bias to determine if a 'publication gap' exists. This gap can be highlighted by examining the z-distribution derived from the p-value. Normally, the p-value is derived from the z-value, but when a clear gap is visible (as observed in Zwet & Cator, 2021), we should be able to model the absolute z-value as a mixture of two half-normal distributions - one truncated at 0 and the other at 1.96. Since the likelihood of such a mixture is challenging to estimate, I employ an Approximate Bayesian Computation (ABC) algorithm based on rejection sampling (ABC-rejection). This method is further described in Csilléry et al. (2010) and Hartig et al. (2011), and the model is formally presented in the theoretical section.
-
-```{r exploring bias with ABC-rejection, fig.width=7.8, fig.height=4, warning=FALSE}
-#From the dataset calculate the p-value from the effect-sizes and standard errors
-pvalues <- ptoz(estimate=example3$est, stderr=example3$se)
-
-#run the ABC-rejection model
-result_abc  <- abctoz(p=pvalues$data$p, nsim = 250000)
-
-#Extract the information from the results based on a selected threshold
-extract_abc <- extrabc(result_abc, dist_threshold = 0.052)
-
-#Plot the histogram of the z-values with the simulated density lines of the posterior
-plot(extract_abc$hist)
-```
-
-Based on the distribution of z-values, we can clearly observe that values where |z|>1.96 are more frequently published than those with lower absolute values. This would be reasonable if no publication gap existed; however, the sharp boundary at |z| > 1.96 suggests otherwise. The z-values can be reasonably modeled, and the model appears to fit the data well, with an R-squared typically above 0.6–0.7, which is considered acceptable. Additionally, the density curves align well with the histogram, further supporting the model's fit.
-
-The proportion of observations explained by the censored component of the model is 0.76 (76%). This does not imply that 76% of the data is censored, but rather that the model's censored component captures a substantial portion of the observed pattern. The goal here is to determine whether the model provides a good fit to the data under the assumption of selective reporting. If the residuals suggest severe bias, this model fit offers additional information of a selection process at play.
-
-To ensure the robustness of the results, one should verify that the model fit remains adequate and that the number of accepted simulations is heuristically sufficient (typically > 100).
-
-### Setting priors
+#### Setting priors
 
 A key advantage of the Bayesian approach is the ability to incorporate prior information, thereby explicitly shifting the posterior estimates toward more plausible values for the pooled model parameter. To define a single prior for each relation and parameter, a specific structure is required. By default, model parameters are assumed to follow a normal (Gaussian) distribution with a mean ($\mu$, `prior_mu`) of 0 and a standard deviation ($\sigma$, `prior_mu_se`) of 0.5. At present, the prior distribution for model parameters is limited to the normal distribution. The prior for the residual standard deviation ($\sigma$) is defined as a uniform distribution, with the upper bound (`prior_sigma_max`) set to 5 by default.
 
@@ -301,20 +330,20 @@ As discussed in Section, I often prefer to work heuristically with elasticity or
 Users can specify their own prior values for both the mean and standard deviation. To obtain a structured overview of the required prior inputs, set `get_prior_only = TRUE`. This will return a data frame containing a level column, as well as columns for the prior mean ($\mu$) and standard deviation ($se$). These values can then be tailored to the specific context of the analysis using available prior information. Details on how to incorporate this prior data frame into your model are provided later.
 
 ``` {r meta2 example priors}
-only_priors <- meta(estimate=example1$est,        
-                    stderr=example1$se,            
-                    parameter=example1$parameter,  
-                    predictor=example1$predictor,  
-                    link_function=example1$link,   
-                    grouping=example1$group,       
-                    Nsamp=example1$n,            
+only_priors <- meta(estimate=example2$est,        
+                    stderr=example2$se,            
+                    parameter=example2$parameter,  
+                    predictor=example2$predictor,  
+                    link_function=example2$link,   
+                    grouping=example2$group,       
+                    Nsamp=example2$n,            
                     method=2,
                     get_prior_only=TRUE) #Only show the structure of the priors
 
 print(only_priors)
 ```
 
-### Setting multiple priors for Bayesian Model Averaging
+#### Setting multiple priors for Bayesian Model Averaging
 
 An important advantage of the Bayesian framework is the ability to incorporate multiple prior distributions ($k$), enabling Bayesian Model Averaging (BMA; Hoeting et al., 1999; Hinne et al., 2020). This approach allows one to represent multiple plausible scenarios that could have explained the observed data, and to average over these competing models based on their relative credibility.
 
@@ -328,21 +357,21 @@ In the example below, I illustrate this approach using priors with varying value
 data("example2")
 print(example2)
 
-mod2 <- meta(estimate=example1$est,        
-                    stderr=example1$se,            
-                    parameter=example1$parameter,  
-                    predictor=example1$predictor,  
-                    link_function=example1$link,   
-                    grouping=example1$group,
-                    prior_mu=example2[c(2,4,6)],          #prior for the mean
-                    prior_mu_se=example2[c(3,5,7)],       #prior for the standard error of the mean
-                    Nsamp=example1$n,            
+mod2 <- meta(estimate=example2$est,        
+                    stderr=example2$se,            
+                    parameter=example2$parameter,  
+                    predictor=example2$predictor,  
+                    link_function=example2$link,   
+                    grouping=example2$group,
+                    prior_mu=example3[c(2,4,6)],          #prior for the mean
+                    prior_mu_se=example3[c(3,5,7)],       #prior for the standard error of the mean
+                    Nsamp=example2$n,            
                     method=2,
                     n_thin=10,                            #thinning the chains
                     n_chain=4)                            #changing the number of chains from 2 to 4
 
 #Display the summarized results
-mod2$Summary
+print(mod2$Summary)
 ```
 
 The results of the meta-analysis are summarized in a table that includes the Maximum A Posteriori (MAP) estimates, the posterior mean ($\mu$), standard error ($se$), and the High Density Interval (HDI), which by default is set to 90%. Additionally, the heterogeneity among studies is quantified using the $I^2$ statistic.
@@ -381,7 +410,7 @@ print(res_mod2$bias_se_predictor)
 
 The dotted red line should approximately overlay the solid blue line, which represents the expected relationship with an intercept and slope of 0. However, small sample sizes can substantially influence the slope of the red line, potentially leading to misleading inferences. When clear bias is detected, it is advisable to either apply a bias correction method or specify stronger priors to mitigate the consequences.
 
-## senscheck-function and prior sensitivity
+### senscheck-function and prior sensitivity
 
 Sensitivity checks play an important role in assessing the robustness of model results. For simpler models with highly informative data, these checks may not always be necessary. However, one cannot assume that identical results would be obtained in a subsequent study under different conditions. Consequently, drawing strong conclusions based solely on whether an interval includes zero is arbitrary and often misleading.
 
@@ -395,15 +424,15 @@ In the earlier example, mod2 was treated as mod1. A corresponding weakly informe
 
 ```{r, sensitivity check, fig.width=8, fig.height=4, warning=FALSE}
 #Create a model with minimal prior information
-mod0 <- meta(estimate=example1$est,        
-                    stderr=example1$se,            
-                    parameter=example1$parameter,  
-                    predictor=example1$predictor,  
-                    link_function=example1$link,   
-                    grouping=example1$group,
+mod0 <- meta(estimate=example2$est,        
+                    stderr=example2$se,            
+                    parameter=example2$parameter,  
+                    predictor=example2$predictor,  
+                    link_function=example2$link,   
+                    grouping=example2$group,
                     prior_mu=0,                           #prior for the mean
                     prior_mu_se=100,                      #prior for the standard error of the mean
-                    Nsamp=example1$n,            
+                    Nsamp=example2$n,            
                     method=2,
                     n_thin=10,
                     n_chain=4)
@@ -445,7 +474,7 @@ Additionally, overlaying the probability density distribution of both models. Gi
 print(sens_check$overlay$log)
 ```
 
-## pdplot-function
+### pdplot-function
 
 To visualize posterior results, a common approach is to display point estimates along with credible intervals. However, this method imposes sharp boundaries on a continuous distribution of uncertainty, which may not fully reflect the nature of a posterior probability distribution.
 
@@ -484,7 +513,7 @@ For larger datasets with multiple groups and predictor variables, it may be usef
 
 By adjusting these arguments, you can organize the PDDs in a way that facilitates easier interpretation, especially when working with complex models involving numerous predictors and groupings.
 
-## forest-function
+### forest-function
 
 A classical way to display the results of a meta-analysis is through a forest plot. These plots show the effect sizes of individual studies along with the pooled effect size. To ensure transparency, the prior distribution should also be included in the forest plot.
 
@@ -504,7 +533,7 @@ In the example below, we focus solely on the model parameter for the logit-linea
 
 ``` {r meta4 BMA, fig.width=8, fig.height=7}
 #Select only salinity from the dataset for invertebrates, logit-link and parameter b1
-salinity_df <- example1[example1$predictor %in% "Salinity"  & example1$group %in% "Invertebrates" & example1$link %in% "logit" & example1$parameter %in% "b1",]
+salinity_df <- example2[example2$predictor %in% "Salinity"  & example2$group %in% "Invertebrates" & example2$link %in% "logit" & example2$parameter %in% "b1",]
 
 #Get only the priors
 priors <- meta(estimate=salinity_df$est,        
@@ -546,12 +575,12 @@ mod3 <- meta(estimate=salinity_df$est,
 #Generate a figure is more groups are included more plots are generated in order of "mod$summary"
 fig <- forestplot(mod3)
 
-#Display the most aesthetically appealling figure without adjusting the x-axis
+#Display the most aesthetically appealing figure without adjusting the x-axis
 print(fig$figures[[1]])
 
 ```
 
-## hop-function (Hypothetical Outcome Plots)
+### hop-function (Hypothetical Outcome Plots)
 
 Hypothetical Outcome Plots (HOPs) are a valuable tool for visualizing how the expected value of a response variable might change in response to variations in a predictor variable, while keeping all other variables constant (Kale et al., 2019).
 
@@ -620,7 +649,7 @@ log_sal2 <- hop(mod2,
 print(log_sal2)
 ```
 
-## hop function (and Partial Dependency Plots)
+### hop function (and Partial Dependency Plots)
 
 When multiple predictors are included in the dataset, it is possible to visualize the effect of a change in one predictor while holding the other predictors constant. This can be achieved by creating Partial Dependency Plots (PDPs), which show how the predicted response variable changes as a particular predictor varies, keeping other predictors fixed.
 
@@ -649,7 +678,7 @@ print(log_sal3)
 
 This part is still under construction.
 
-# Authenticity and reasons to believe
+# Epistemic authenticity and reasons to believe
 
 ## Introduction
 

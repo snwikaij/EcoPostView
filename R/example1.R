@@ -2,5 +2,5 @@
 #'
 #' @name example1
 #' @docType data
-#' @keywords salinity and oxygen
+#' @keywords  estimates standard error
 NULL

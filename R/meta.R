@@ -114,7 +114,7 @@ meta <- function(estimate, stderr, parameter=NULL, predictor=NULL,
                  n_burnin=1000,
                  Rhat_warn = 1.01,
                  Eff_warn = 1000,
-                 print_summary=FALSE){
+                 print_summary=TRUE){
 
   argument.call <- match.call()
 

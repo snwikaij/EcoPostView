@@ -7,6 +7,6 @@
 \description{
 This example dataset 1 for the meta-analysis
 }
-\keyword{and}
-\keyword{oxygen}
-\keyword{salinity}
+\keyword{error}
+\keyword{estimates}
+\keyword{standard}

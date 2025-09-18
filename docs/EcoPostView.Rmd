@@ -573,7 +573,7 @@ mod3 <- meta(estimate=salinity_df$est,
                     n_chain=4)                         
 
 #Generate a figure is more groups are included more plots are generated in order of "mod$summary"
-fig <- forestplot(mod3)
+fig <- forestplot(mod3, xlimit = c(-2.5, 1.5))
 
 #Display the most aesthetically appealing figure without adjusting the x-axis
 print(fig$figures[[1]])

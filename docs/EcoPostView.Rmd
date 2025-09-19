@@ -107,7 +107,7 @@ rm(mod_intro)
 
 This package offers tools for ecological statistical modeling, with a strong emphasis on (subjective) Bayesian methods and visualisation. While a basic understanding of R is sufficient to use the core functions, a more in-depth theoretical background is provided in chapter 3 for those interested in exploring the underlying concepts. Please note that this is an actively developed R package, and improvements or updates may be introduced over time.
 
-## Data and R-package
+## The R-package
 
 To start using this R-package, both JAGS and devtools must be installed. JAGS can be installed from https://sourceforge.net/projects/mcmc-jags/ and devtools can be installed in R via CRAN. The most recent version of the EcoPostView it can be installed from GitHub. Of course, any problems, questions or possible improvements can be directed to me.
 
@@ -134,7 +134,7 @@ or inverse of the sample size $1/n$ (method=2, the latter option is performed be
 $$\{\beta_{i}, ..., \beta_{n}\} = \beta_{\text{pooled}} + u_i + \alpha_{i} \cdot \left(\frac{1}{n}\right)$$ 
 Of course if bias is considered neglect non can be performed (method=0). I still would like to include a third 4th option to utilize Robust Bayesian Model Averaging (RoBMA: Maier et al. 2023). But this sometimes adjust extremely when including $se^2$ and therefore I left this option open for now.
 
-## Meta-analysis over standardized effect sizes
+## Meta-analysis on standardized fffect sizes
 
 ### The meta-function
 
@@ -244,7 +244,7 @@ print(standard_meta$Summary)
 
 ```
 
-## Meta-analysis over (Generalized) Linear Models (G)LMs
+## Meta-analysis on (Generalized) Linear Models (G)LMs
 
 ### Data and models
 
@@ -343,7 +343,7 @@ only_priors <- meta(estimate=example2$est,
 print(only_priors)
 ```
 
-#### Setting multiple priors for Bayesian Model Averaging
+#### Setting multiple priors for bayesian model averaging
 
 An important advantage of the Bayesian framework is the ability to incorporate multiple prior distributions ($k$), enabling Bayesian Model Averaging (BMA; Hoeting et al., 1999; Hinne et al., 2020). This approach allows one to represent multiple plausible scenarios that could have explained the observed data, and to average over these competing models based on their relative credibility.
 
@@ -785,7 +785,7 @@ $\hat{B}_a(p)$: Indicates the modal operator for "moral agent $a$ considers they
 $\hat{O}_a(p)$: Indicates the modal operator for "moral agent $a$ considers it ought to $p$."<br>
 $\hat{J}_a(p)$: Indicates the modal operator for "moral agent $a$ is justified to assert $p$."<br>
 
-## Reasons, Logic and rules
+## Reasoning, logic and rules
 
 There exist some rules (axioms) of logic that are self evident. There are no clear rules of reasoning as far as I am aware. Of course there are 'laws' in logic that can be derived from within the object language. There some *normative?) rules of rationality that make intuitively sense if one is aware of them. Yet, it remains unclear if we actually use them. I will lay them out here for further support. This does not mean they are not normative, but they will be useful down the line.
 
@@ -954,7 +954,7 @@ In contrast, dispositionalism claims that to believe $P_i$ is to be disposed to 
 
 $$\emptyset$$
 
-## Language Use and Logic
+## Language use and logic
 
 ### Empirical sense
 
@@ -1373,9 +1373,9 @@ A visual explanation of this concept is provided in the following Shiny app: htt
 
 Furthermore, it is clear that statistics does do nothing with causality and the focus on error-control. Causality starts by satisfying theoretical conditions needed the arrive at believes in these concepts. Hence, error-control and causality start a-priori (Fisher 1949, Pearl 2009, Mayo 2018). Such a focus and framework is extremely useful if objectivity over repetitions are the goal and favorable. While classical statistics focuses on fixed but unknown parameters, error-control and objectivity of information, Bayesian methods extend this perspective by introducing prior information and viewing parameters as random variables. This shift opens the door to more flexible and informative inference, as explained in the next section.
 
-## Bayes Theorem and probablistic estimation
+## Bayes theorem and probablistic estimation
 
-### Bayes Theorem
+### Bayes theorem
 
 Informally Bayes Theorem would be notated $\text{Posterior}\, \text{probability} = \frac{\text{Likelihood} \cdot \text{Prior}}{\text{Evidence}}$. More formally Bayes theorem is often notated with A and B where P indicates probability and '|' given or conditional on. $P(A|B) = \frac{P(B|A) \cdot P(A)}{P(B)}$.Other expression such as $P(\theta|Data, Info) = \frac{P(Data|\theta) \cdot P(\theta|info)}{P(Data)}$ are to highlight that the posterior describes the information of that conditional on the prior information that is given in there.
 
@@ -1426,7 +1426,7 @@ $$
 P(A|B) = \frac{P(B|A) \cdot P(A)}{P(B)}
 $$
 
-### Bayes Theorem in use
+### Bayes theorem in use
 
 The previous expression can help us with answer simple questions. Assume that there is a likelihood of 0.7 $P(Species|<Threshold)$ that a species if found below a certain threshold. Furthermore, we also know that that the environment will only be found 0.3 or 30% of the time as $P(<Threshold)$.How probable would it then be we are below the threshold if we observe the species $P(<Threshold|Species)$? 
 

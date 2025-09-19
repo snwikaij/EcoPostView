@@ -67,7 +67,8 @@ mod_intro <- meta(estimate=example2$est,
                   link_function=example2$link,   
                   grouping=example2$group,       
                   n_chain=6,
-                  n_thin=10)
+                  n_thin=10,
+                  print_summary=F)
 
 pl1 <- hop(mod_intro ,                                              
            group = "Invertebrates",                            
@@ -225,11 +226,11 @@ extract_abc <- extrabc(result_abc, dist_threshold = 0.052)
 plot(extract_abc$hist)
 ```
 
-Based on the distribution of z-values, we can clearly observe that values where |z|>1.96 are more frequently published than those with lower absolute values. This would be reasonable if no publication gap existed; however, the sharp boundary at |z| > 1.96 suggests otherwise. The z-values can be reasonably modeled, and the model appears to fit the data well, with an R-squared typically above 0.6–0.7, which is considered acceptable. Additionally, the density curves align well with the histogram, further supporting the model's fit.
+Based on the distribution of z-values, we can clearly observe that values where |z|>1.96 are more frequently published than those with lower absolute values. If no publication gap existed this would be reason to believe the data could serve as decent evidence against a null model in the frequentist framework. However, the sharp boundary at |z| > 1.96 suggests a selection bias. Furthermore, the z-values can be reasonably modeled, and the model appears to fit the data well, with an R-squared 0.92. From a heuristic perspective an R-squared above 0.6–0.7 can be considered acceptable. Additionally, the density curves align well with the histogram, further supporting the model's fit.
 
 The proportion of observations explained by the censored component of the model is 0.76 (76%). This does not imply that 76% of the data is censored, but rather that the model's censored component captures a substantial portion of the observed pattern. The goal here is to determine whether the model provides a good fit to the data under the assumption of selective reporting. If the residuals suggest severe bias, this model fit offers additional information of a selection process at play.
 
-To ensure the robustness of the results, one should verify that the model fit remains adequate and that the number of accepted simulations is heuristically sufficient (typically > 100).
+To ensure the robustness of the results, one should verify that the model fit remains adequate and that the number of accepted simulations is  sufficient (typically > 100).
 
 ### Including a moderator
 

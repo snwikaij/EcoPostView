@@ -781,11 +781,6 @@ $B_a(p)$: Indicates the modal operator for "moral agent $a$ believes $p$."<br>
 $O_a(p)$: Indicates the modal operator for "moral agent $a$ ought to $p$."<br>
 $J_a(p)$: Indicates the modal operator for "moral agent $a$ is justified to assert $p$." <br>
 
-$\hat{K}_a(p)$: Indicates the modal operator for "moral agent $a$ considers they know $p$."<br>
-$\hat{B}_a(p)$: Indicates the modal operator for "moral agent $a$ considers they believe $p$."<br>
-$\hat{O}_a(p)$: Indicates the modal operator for "moral agent $a$ considers it ought to $p$."<br>
-$\hat{J}_a(p)$: Indicates the modal operator for "moral agent $a$ is justified to assert $p$."<br>
-
 ## Reasoning, logic and rules
 
 There exist some rules (axioms) of logic that are self evident. There are no clear rules of reasoning as far as I am aware. Of course there are 'laws' in logic that can be derived from within the object language. There some *normative?) rules of rationality that make intuitively sense if one is aware of them. Yet, it remains unclear if we actually use them. I will lay them out here for further support. This does not mean they are not normative, but they will be useful down the line.
@@ -1007,8 +1002,8 @@ Since affirming the consequent is fallacious and not valid only $\beta$ remains.
 **Problem of induction**: after observing only a few (objects $x$) swans that are white ($Q$) it is concluded all swans are white. Since it is assumed at least one case can show the invalidity of this argument to search for ~B is the most efficient.
 
 $$
-\neg B:=\{(P(x)\rightarrow Q(x)) \models \forall(P(x) \rightarrow Q(x)) \}\\
-\exists x(P(x) \rightarrow \neg Q(x) \not \models \forall(P(x) \rightarrow Q(x)))
+\neg B:=\{(P(x)\rightarrow Q(x)) \models \forall(P(x) \rightarrow Q(x)), \\
+\exists x(P(x) \rightarrow \neg Q(x) \not \models \forall(P(x) \rightarrow Q(x))) \}
 $$
 
 It is unreasonable to assume that all swans are white, because what valid rule exists to extend this to all swans?
@@ -1805,15 +1800,15 @@ z_adj <- abs(qnorm(errint/2))/abs(qnorm(cint/2))
 
 set.seed(3)
 for(i in 1:nrow(postset)){
-xsamp <- rnorm(25, theta, 5)
-if(i==1){
-post  <- postvals(mean(xsamp), sd(xsamp)/sqrt(length(xsamp)), 0, 5)
-}else{
-post  <- postvals(mean(xsamp), sd(xsamp)/sqrt(length(xsamp)), post[1], post[2])}
-postset[i,] <- c(i, post, post[1]-post[2]*abs(qnorm(cint/2))*z_adj, post[1]+post[2]*abs(qnorm(cint/2))*z_adj)
-
-fse <- sd(xsamp)/sqrt(length(xsamp))
-freqset[i,] <- c(i, mean(xsamp), fse,  mean(xsamp)-fse*abs(qnorm(cint/2))*z_adj,  mean(xsamp)+fse*abs(qnorm(cint/2))*z_adj)}
+  xsamp <- rnorm(25, theta, 5)
+  if(i==1){
+    post  <- postvals(mean(xsamp), sd(xsamp)/sqrt(length(xsamp)), 0, 5)
+  }else{
+    post  <- postvals(mean(xsamp), sd(xsamp)/sqrt(length(xsamp)), post[1], post[2])}
+  postset[i,] <- c(i, post, post[1]-post[2]*abs(qnorm(cint/2))*z_adj, post[1]+post[2]*abs(qnorm(cint/2))*z_adj)
+  
+  fse <- sd(xsamp)/sqrt(length(xsamp))
+  freqset[i,] <- c(i, mean(xsamp), fse,  mean(xsamp)-fse*abs(qnorm(cint/2))*z_adj,  mean(xsamp)+fse*abs(qnorm(cint/2))*z_adj)}
 
 postset <- setNames(as.data.frame(postset), c("iter", "mu", "se", "ll", "ul"))
 
@@ -1826,14 +1821,13 @@ p1 <- ggplot(postset, aes(iter, mu))+
 freqset <- setNames(as.data.frame(freqset), c("iter", "mu", "se", "ll", "ul"))
 
 p2 <- ggplot(freqset, aes(iter, mu))+
-  geom_line()+ylab("")+xlab("Study")+
+  geom_point()+ylab("")+xlab("Study")+
   geom_hline(yintercept = 0.5, col="tomato3", lty=2, lwd=0.2)+
-  geom_ribbon(aes(ymin = ll, ymax = ul), fill = "grey70", alpha=0.2)+
+  geom_errorbar(aes(ymin=ll, ymax=ul), width=0)+
   theme_classic()
 
 sequpdate <- cowplot::plot_grid(p1, p2, ncol=2)
 print(sequpdate)
-rm(sequpdate)
 ```
 
 *Figure 2: Sequential updating with credibility intervals on the left panel and a long-run of means with confidence intervals on the right The left panel.*

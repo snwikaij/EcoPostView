@@ -1,4 +1,4 @@
-#' Empirical Bayesian Meta Analysis an analytical approach
+#' Empirical Bayesian Meta Analysis
 #'
 #' @param estimate A vector containing the effect-size
 #' @param stderr A vector containing the standard error
@@ -8,6 +8,10 @@
 #' @param tau_2 The method used to estimate tau^2 either a heuristic method 'HE0' or
 #' 'DSL'=DerSimonian and Laird method (default = DSL).
 #' @param interval Credibility intervals for the summary (default=0.9)
+#' @param interval_type The given se and ci are either prediction intervals ('PI') or
+#' confidence intervals ('CI'). Since this function underlies the PPMN function I found it easier
+#' to have PI as the default. When 'PI' the se is the predictive SD and the ll and ul are the predictive
+#' intervals. If 'CI' se is the SEM and the ll and ull the CI intervals.
 #' @param RE An argument indicating if RE or FE should be used (default RE=TRUE)
 #'
 #' @description
@@ -21,10 +25,10 @@
 #' \eqn{\tau^2 = \max\left(0, \frac{1}{n} \sum_{i=1}^{n} (\hat{\theta_i} - \theta_{\text{pooled}})^2 - \frac{\sum_{i=1}^{n} (w_i \cdot se_i)}{\sum_{i=1}^{n} w_i} \right)}
 #' However, HE will create wider intervals over the estimate under smaller sample sizes. Yet, by default DSL is still
 #' preferred.
-#'
+#
 #' @export
 abmeta <- function(estimate, stderr, prior_mu=0, prior_mu_se=1000, prior_weights=NULL,
-                   tau_2="DSL", interval=0.9, RE=T, warnings=F) {
+                   a=-Inf, b=Inf, tau_2="DSL", interval=0.9, interval_type="CI", RE=T, warnings=F) {
 
   #Give warning if estimate length is 1
   if(length(estimate) == 1){RE <- F;   if(warnings==T){warning("Number of estimates is 1 then RE is automatically set to FALSE.")}}
@@ -39,19 +43,47 @@ abmeta <- function(estimate, stderr, prior_mu=0, prior_mu_se=1000, prior_weights
   #Assign equal weights to the priors 1/2
   if(is.null(prior_weights)){prior_weights <- rep(1/length(prior_mu), length(prior_mu))}
 
+  #For a and b
+  if(length(a)>1 || length(b)>1){stop("Vector of truncation limits can only have a length of 1.")}
+
   #Analytical posterior based on conjugation
-  postvals <- function(data_mu, data_sigma, prior_mu, prior_sigma){
+  postvals <- function(data_mu, data_sigma, prior_mu, prior_sigma, a=-Inf, b=Inf){
 
-    post_mu <- (prior_mu/prior_sigma^2+sum(data_mu / data_sigma^2))/
-      (1/prior_sigma^2+sum(1/data_sigma^2))
+    #Mean posterior
+    post_mu <- (prior_mu/prior_sigma^2 + sum(data_mu/data_sigma^2))/
+      (1/prior_sigma^2 + sum(1/data_sigma^2))
 
-    post_sigma <- sqrt(1/((1/prior_sigma^2)+sum(1/data_sigma^2)))
+    #Sd posterior
+    post_sigma <- sqrt(1/(1/prior_sigma^2+sum(1/data_sigma^2)))
 
-    return(c(mu = post_mu, sigma = post_sigma))}
+    #Truncation
+    if(!is.infinite(a) || !is.infinite(b)) {
+      alpha <- (a-post_mu)/post_sigma
+      beta  <- (b-post_mu)/post_sigma
+      Z     <- pnorm(beta)-pnorm(alpha)
+
+      if(Z <= .Machine$double.eps) {
+        stop("Truncated posterior has negligible denstity within a and b.")
+      } else {
+        phi_a <- dnorm(alpha)
+        phi_b <- dnorm(beta)
+
+        mu_trunc  <- post_mu+post_sigma*(phi_a-phi_b)/Z
+        var_trunc <- post_sigma^2 * (1 +
+                                       if(is.finite(alpha)) alpha * phi_a / Z else 0 -
+                                       if(is.finite(beta))  beta * phi_b / Z else 0 -
+                                       ((phi_a - phi_b)/Z)^2)
+        post_mu    <- mu_trunc
+        post_sigma <- sqrt(var_trunc)
+      }
+    }
+
+    return(c(mu = post_mu, sigma = post_sigma))
+  }
 
   #Loop over all priors
   posteriors <- sapply(1:length(prior_mu), function(k){
-    postvals(estimate, stderr, prior_mu[k], prior_mu_se[k])})
+    postvals(estimate, stderr, prior_mu[k], prior_mu_se[k], a, b)})
 
   #Extract posterior
   post_mu    <- posteriors["mu", ]
@@ -88,27 +120,22 @@ abmeta <- function(estimate, stderr, prior_mu=0, prior_mu_se=1000, prior_weights
 
     #Calculate the  BMA
     pooled <- sum(prior_weights*post_mu)
-    se     <- sqrt(sum(prior_weights*(post_se^2+post_mu^2))-pooled^2)}
 
-  #Compute marginal likelihood for BMA
-  logmarglike_m1 <- sapply(1:length(prior_mu), function(k) {
-    dnorm(pooled, mean=prior_mu[k], sd=sqrt(prior_mu_se[k]^2+se^2), log=TRUE)})
+    #Calculate SE
+    se  <- sqrt(sum(prior_weights*(post_se^2+post_mu^2))-pooled^2)
 
-  #sum log marginal likelihood
-  logmarglike_m1 <- log(sum(prior_weights*exp(logmarglike_m1)))
-
-  #marginal likelihood under null model same se
-  logmarglike_m0 <- dnorm(pooled, mean = 0, sd = se, log = TRUE)
-
-  #Bayes Factor
-  BF10 <- exp(logmarglike_m1-logmarglike_m0)
+    #Calculate PI
+    if (interval_type=="PI"){
+    se  <- sqrt(se^2+tau2)}
+  }
 
   #Simple ETI intervals because its is normal ETI is HDI
-  ci <- pooled + se * c(-1, 1) * qnorm(interval + ((1 - interval) / 2))
+  ci    <- pooled+se*c(-1, 1)*qnorm(interval+((1-interval)/2))
 
   if(RE==T){
-    results <- c(mu=as.numeric(pooled), se=as.numeric(se), ll=ci[1], ul=ci[2], tau2=tau2, "BF10"=BF10)
+      results <- c(mu=as.numeric(pooled), se=as.numeric(se), ll=ci[1], ul=ci[2], tau2=tau2, a=a, b=b, n=length(estimate))
   }else{
-    results <- c(mu=as.numeric(pooled), se=as.numeric(se), ll=ci[1], ul=ci[2], "BF10"=BF10)}
+      results <- c(mu=as.numeric(pooled), se=as.numeric(se), ll=ci[1], ul=ci[2], tau2=0, a=a, b=b, n=length(estimate))
+  }
 
   return(round(results, 4))}

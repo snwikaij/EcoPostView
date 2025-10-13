@@ -29,6 +29,7 @@ abctoz <- function(p, operator=NULL,
                    min_dens_steps=20,
                    seed=1){
 
+
   #number of samples and prior array
   nz               <- length(p)
 
@@ -108,4 +109,4 @@ abctoz <- function(p, operator=NULL,
 
   if(!is.null(operator)){zvals <- simulations}else{zvals <- z}
 
-  return(invisible(list(iterations=priors, data=zvals, raw_data=qnorm(1 - p/2), simulations=sim_list)))}
+  return(invisible(list(iterations=priors, data_z=zvals, data_p=p, raw_data=qnorm(1 - p/2), simulations=sim_list)))}

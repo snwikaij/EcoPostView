@@ -66,9 +66,6 @@ abctoz <- function(p, operator=NULL,
   #store simulations
   sim_list     <- vector("list", nsim)
 
-  #create some free space
-  gc()
-
   #set cores to use (minus one for safety)
   n_cores <- parallel::detectCores() - 1
   cl      <- parallel::makeCluster(n_cores)
@@ -98,7 +95,6 @@ abctoz <- function(p, operator=NULL,
     n_dens      <- length(xlen)-sum(is.na(sim_density))
 
     #calulcate distance
-    dsim        <- approx(density(sim_vals)$x, density(sim_vals)$y, xout = xlen)$y
     if(n_dens<20){dist <- Inf}else{dist <- sum(abs(dval-dsim), na.rm = T)/n_dens}
 
     list(simulations=sim_vals, distance=dist, imputed_z=imputed_z)}
@@ -109,4 +105,4 @@ abctoz <- function(p, operator=NULL,
 
   if(!is.null(operator)){zvals <- simulations}else{zvals <- z}
 
-  return(invisible(list(iterations=priors, data_z=zvals, data_p=p, raw_data=qnorm(1 - p/2), simulations=sim_list)))}
+  return(invisible(list(iterations=priors, data_z=zvals, data_p=p, operator=operator, raw_data=qnorm(1 - p/2), simulations=sim_list)))}

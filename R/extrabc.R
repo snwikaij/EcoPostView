@@ -4,6 +4,9 @@
 #' @param dist_threshold A threshold to accept the number of iterations
 #' @param interval Interval level
 #' @param n_dens Number of density curves to generate
+#' @param line_position the position of the vertical line in the histogram
+#' @param bin_limit the limit to which the bins in the histogram extend
+#' @param bin_width the width of the bins in the histogram
 #' @param xpos Values for position of text along x-axis
 #' @param ypos_lim A value in fraction of the maximum density that indicates limits of the y-axis
 #' @param alpha_dens Transparency of the density lines
@@ -31,9 +34,11 @@
 #' @importFrom ggplot2 scale_alpha
 #'
 #' @export
-extrabc <- function(obj, dist_threshold=NULL,
+extrabc <- function(obj, dist_threshold=NULL, warning=50,
                     interval=0.9, n_dens=100,
-                    xpos=6, ypos_lim=0.99, alpha_dens=0.3){
+                    line_position=4.41,
+                    bin_limit=6, bin_width=0.5,
+                    xpos=11, ypos_lim=0.99, alpha_dens=0.3){
 
   #Extract the posterior by threshold distance
   priors           <- obj$iterations
@@ -61,6 +66,8 @@ extrabc <- function(obj, dist_threshold=NULL,
 
   accepted         <- which(abs(priors$distance)<dist_threshold)}else{
   accepted         <- which(abs(priors$distance)<dist_threshold)}
+
+  if(length(accepted)<warning){warning(paste0("The number of accepted prior values is <", warning))}
 
   #Posterior accepted values
   posterior        <- priors[accepted,]
@@ -108,9 +115,9 @@ extrabc <- function(obj, dist_threshold=NULL,
   #create n_dens density lines
   densline <- vector("list", nrow(posterior))
 
-  if(!is.list(obj$data)){
+  if(!is.list(obj$data_z)){
     #Create a density curve for the data
-    zdens <- data.frame(x=density(obj$data, bw=0.2)$x, y=density(obj$data, bw=0.2)$y)
+    zdens <- data.frame(x=density(obj$data_z, bw=0.2)$x, y=density(obj$data_z, bw=0.2)$y)
     zdens <- zdens[zdens$x>0,]}else{mu_data_dens <- vector("list", nrow(posterior))}
 
   #vec for estimated values
@@ -122,8 +129,8 @@ extrabc <- function(obj, dist_threshold=NULL,
     sim_dens <- density(x, bw=0.1)
     dens_df  <- data.frame(i=i, x=sim_dens$x, y=sim_dens$y)
 
-    if(is.list(obj$data)){
-      zd        <- obj$data[[accepted[i]]]
+    if(is.list(obj$data_z)){
+      zd        <- obj$data_z[[accepted[i]]]
       sim_densz <- density(zd, bw=0.1)
       densz_df  <- data.frame(i=i, x=sim_densz$x, y=sim_densz$y)
 
@@ -160,23 +167,64 @@ extrabc <- function(obj, dist_threshold=NULL,
   se_stat <- round(apply(est_array, 2, function(x) sd(x, na.rm = T)),2)
   n_accept<- nrow(est_array)
   lab     <- paste0(c("R-squared=", "mean(Z)=", "sd(Z)=", "Censored=", "Threshold=", "Accepted="), c(mu_stat, n_accept), " (SE=", c(se_stat, NA), ")\n",  collapse = "")
-
+  lab     <- sub(" \\(SE=NA\\)(\\n)?$", "", lab)
 
   mean_max <- mean(aggregate(data=densline, y~i, max)[,2])
   sd_max   <- sd(aggregate(data=densline, y~i, max)[,2])
 
-  #Plot the histogram
-  plhist <- ggplot(data.frame(z=obj$raw_data), aes(z))+xlim(0, 10)+
-    xlab("z-value")+
-    geom_vline(xintercept = 1.96, lty=2, lwd=0.2)+
-    geom_histogram(col="black", fill="grey70",
-                   alpha=0.2, position="identity",
-                   binwidth = 0.25,
-                   boundary = 0, closed = "left")+
-    xlab("z-value") +
-    ylab("Count") +
-    theme_classic() +
-    scale_alpha(guide = 'none')
+  catp <- function(x, p) {
+
+    if(p == 0){p <- 0.0001}
+    if(p == 1){p <- 0.9999}
+
+    if (is.na(x)) {
+      return(qnorm(1 - p/2))
+    } else if (x == "<") { p <- runif(1, 0, p)
+    } else if (x == ">"){ p <- runif(1, p, 1)}
+
+    return(qnorm(1 - p/2))}
+
+  if(!is.null(obj$operator)){
+  z_list <- list()
+
+  for(j in 1:1000){
+
+    z_vec <- as.data.frame(matrix(NA, ncol = 3, nrow = length(obj$data_p)))
+
+    for (i in 1:length(obj$data_p)){
+      z_vec[i,] <- cbind(obj$operator[i], catp(obj$operator[i], obj$data_p[i]), NA)}
+
+    z_vec[,3]   <- cut(as.numeric(z_vec[,2]), seq(0, bin_limit, bin_width))
+    z_vec       <- as.data.frame(table(z_vec$V3, z_vec$V1))
+    z_list[[j]] <- z_vec}
+
+  long_df           <- do.call(rbind.data.frame, z_list)
+  colnames(long_df) <- c("bin", "operator", "count")
+  df_bins           <- aggregate(data=long_df, count~bin+operator, mean)
+
+  plhist <- ggplot(df_bins, aes(x = bin, y = count, fill = operator)) +
+    geom_bar(stat = "identity", col="black", width = 1) + scale_fill_grey(start = 0.85, end = 0.15)+
+    theme_classic()+xlab("z-value")+geom_vline(xintercept=line_position, lty=2, col="tomato3", lwd=0.8)+
+    theme(axis.text.x = element_text(hjust=1, angle=45))
+
+  #maximum value histogram
+  max_hist <- max(ggplot_build(plhist)$data[[1]]$ymax)
+
+  #adjustment factor
+  adj_factor <- max_hist/mean_max
+
+  built <- ggplot_build(plhist)
+
+  densline$scale_x <- (densline$x+built$data[[1]]$xmin[1])*mean(abs(built$data[[1]]$xmin-built$data[[1]]$xmax))/bin_width
+
+  plhist <- plhist+geom_line(data=densline, aes(x = scale_x, y = y*adj_factor, group = as.factor(i)), alpha = alpha_dens, color = "grey30", inherit.aes = F)+
+    ylim(0, ymax_hist)+annotate("text", x = xpos, y = max_hist/2, label = lab)
+
+  }else{
+  plhist <- ggplot(data.frame(z=obj$raw_data), aes(z)) +
+    geom_histogram(stat = "identity", col="black", binwidth = bin_width, fill="grey70")
+    theme_classic()+xlab("z-value")+geom_vline(xintercept=line_position, lty=2, col="tomato3", lwd=0.8)+
+    theme(axis.text.x = element_text(hjust=1, angle=45))
 
   #maximum value histogram
   max_hist   <- max(ggplot_build(plhist)$data[[2]]$ymax)
@@ -189,15 +237,17 @@ extrabc <- function(obj, dist_threshold=NULL,
 
   #final figures
   plhist <- plhist+geom_line(data=densline, aes(x = x, y = y*adj_factor, group = as.factor(i)), alpha = alpha_dens, color = "grey30", inherit.aes = F)+
-    ylim(0, ymax_hist)+annotate("text", x = xpos, y = ymax_hist/2, label = lab)
+    ylim(0, ymax_hist)+annotate("text", x = xpos, y = ymax_hist/2, label = lab)}
 
-  if(is.list(obj$data)){
+
+  if(is.list(obj$data_z)){
     zmu <- do.call(rbind, mu_data_dens)
     zmu <- aggregate(data=zmu, zmu[,2]~zmu[,1], function(x) mean(x, na.rm=T))
     zmu <- setNames(zmu, c("x", "y"))}else{zmu <- zdens}
 
   ylimit <- quantile(densline$y,ypos_lim)
-  ypos <- quantile(densline$y,.95)
+  ypos   <- quantile(densline$y,.95)
+
   #Plot the histogram
   pldens <- ggplot(densline, aes(x, y, group = as.factor(i)))+xlim(0, 10)+
     xlab("z-value")+annotate("text", x = xpos, y = ypos, label = lab)+ylim(0,ylimit)+

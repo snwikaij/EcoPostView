@@ -208,7 +208,10 @@ extrabc <- function(obj, dist_threshold=NULL, warning=50,
     theme(axis.text.x = element_text(hjust=1, angle=45))
 
   #maximum value histogram
-  max_hist <- max(ggplot_build(plhist)$data[[1]]$ymax)
+  max_hist   <- max(ggplot_build(plhist)$data[[1]]$ymax)
+
+  #maximum range for histogram
+  ymax_hist  <- max_hist+max_hist*sd_max
 
   #adjustment factor
   adj_factor <- max_hist/mean_max
@@ -222,7 +225,7 @@ extrabc <- function(obj, dist_threshold=NULL, warning=50,
 
   }else{
   plhist <- ggplot(data.frame(z=obj$raw_data), aes(z)) +
-    geom_histogram(stat = "identity", col="black", binwidth = bin_width, fill="grey70")
+    geom_histogram(stat = "identity", col="black", binwidth = bin_width, fill="grey70", boundary = 0, closed = "left")+
     theme_classic()+xlab("z-value")+geom_vline(xintercept=line_position, lty=2, col="tomato3", lwd=0.8)+
     theme(axis.text.x = element_text(hjust=1, angle=45))
 
@@ -230,7 +233,7 @@ extrabc <- function(obj, dist_threshold=NULL, warning=50,
   max_hist   <- max(ggplot_build(plhist)$data[[2]]$ymax)
 
   #maximum range for histogram
-  ymax_hist <- max_hist+max_hist*sd_max
+  ymax_hist  <- max_hist+max_hist*sd_max
 
   #adjustment factor
   adj_factor <- max_hist/mean_max

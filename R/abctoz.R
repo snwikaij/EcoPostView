@@ -95,7 +95,7 @@ abctoz <- function(p, operator=NULL,
     n_dens      <- length(xlen)-sum(is.na(sim_density))
 
     #calulcate distance
-    if(n_dens<20){dist <- Inf}else{dist <- sum(abs(dval-dsim), na.rm = T)/n_dens}
+    if(n_dens<20){dist <- Inf}else{dist <- sum(abs(dval-sim_density), na.rm = T)/n_dens}
 
     list(simulations=sim_vals, distance=dist, imputed_z=imputed_z)}
 

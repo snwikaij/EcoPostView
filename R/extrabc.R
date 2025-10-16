@@ -36,9 +36,9 @@
 #' @export
 extrabc <- function(obj, dist_threshold=NULL, warning=50,
                     interval=0.9, n_dens=100,
-                    line_position=4.41,
+                    line_position=4.41, lab_size=4,
                     bin_limit=6, bin_width=0.5,
-                    xpos=11, ypos_lim=0.99, alpha_dens=0.3){
+                    xpos=10, ypos_lim=0.99, alpha_dens=0.3){
 
   #Extract the posterior by threshold distance
   priors           <- obj$iterations
@@ -219,9 +219,10 @@ extrabc <- function(obj, dist_threshold=NULL, warning=50,
   built <- ggplot_build(plhist)
 
   densline$scale_x <- (densline$x+built$data[[1]]$xmin[1])*mean(abs(built$data[[1]]$xmin-built$data[[1]]$xmax))/bin_width
+  densline         <-  densline[densline$scale_x < (bin_limit/bin_width),]
 
   plhist <- plhist+geom_line(data=densline, aes(x = scale_x, y = y*adj_factor, group = as.factor(i)), alpha = alpha_dens, color = "grey30", inherit.aes = F)+
-    ylim(0, ymax_hist)+annotate("text", x = xpos, y = max_hist/2, label = lab)
+    ylim(0, ymax_hist)+annotate("text", x = xpos, y = max_hist/1.5, label = lab, size=lab_size)
 
   }else{
   plhist <- ggplot(data.frame(z=obj$raw_data), aes(z)) +
@@ -240,7 +241,7 @@ extrabc <- function(obj, dist_threshold=NULL, warning=50,
 
   #final figures
   plhist <- plhist+geom_line(data=densline, aes(x = x, y = y*adj_factor, group = as.factor(i)), alpha = alpha_dens, color = "grey30", inherit.aes = F)+
-    ylim(0, ymax_hist)+annotate("text", x = xpos, y = ymax_hist/2, label = lab)}
+    ylim(0, ymax_hist)+annotate("text", x = xpos, y = ymax_hist/2, label = lab, size=lab_size)}
 
 
   if(is.list(obj$data_z)){

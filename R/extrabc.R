@@ -36,7 +36,7 @@
 #' @export
 extrabc <- function(obj, dist_threshold=NULL, warning=50,
                     interval=0.9, n_dens=100,
-                    line_position=4.41, lab_size=4,
+                    line_position1=4.41, lab_size=4,
                     bin_limit=6, bin_width=0.5,
                     xpos=10, ypos_lim=0.99, alpha_dens=0.3){
 
@@ -67,7 +67,7 @@ extrabc <- function(obj, dist_threshold=NULL, warning=50,
   accepted         <- which(abs(priors$distance)<dist_threshold)}else{
   accepted         <- which(abs(priors$distance)<dist_threshold)}
 
-  if(length(accepted)<warning){warning(paste0("The number of accepted prior values is <", warning))}
+  if(length(accepted)<warning){warning(paste0("The number of accepted prior values is <", warning, ", the posterior might be unstable"))}
 
   #Posterior accepted values
   posterior        <- priors[accepted,]
@@ -225,13 +225,15 @@ extrabc <- function(obj, dist_threshold=NULL, warning=50,
     ylim(0, ymax_hist)+annotate("text", x = xpos, y = max_hist/1.5, label = lab, size=lab_size)
 
   }else{
-  plhist <- ggplot(data.frame(z=obj$raw_data), aes(z)) +
-    geom_histogram(stat = "identity", col="black", binwidth = bin_width, fill="grey70", boundary = 0, closed = "left")+
-    theme_classic()+xlab("z-value")+geom_vline(xintercept=line_position, lty=2, col="tomato3", lwd=0.8)+
-    theme(axis.text.x = element_text(hjust=1, angle=45))
+  plhist <-   ggplot(data.frame(z = obj$raw_data), aes(x = z)) +
+    geom_histogram(col = "black", fill = "grey70", binwidth = bin_width, boundary = 0, closed = "left") +
+    theme_classic() +
+    xlab("z-value") + ylab("count")+
+    geom_vline(xintercept = 1.96, lty = 2, col = "tomato3", lwd = 0.8) +
+    theme(axis.text.x = element_text(hjust = 1, angle = 45))
 
   #maximum value histogram
-  max_hist   <- max(ggplot_build(plhist)$data[[2]]$ymax)
+  max_hist   <- max(ggplot_build(plhist)$data[[1]]$ymax)
 
   #maximum range for histogram
   ymax_hist  <- max_hist+max_hist*sd_max
@@ -250,7 +252,7 @@ extrabc <- function(obj, dist_threshold=NULL, warning=50,
     zmu <- setNames(zmu, c("x", "y"))}else{zmu <- zdens}
 
   ylimit <- quantile(densline$y,ypos_lim)
-  ypos   <- quantile(densline$y,.95)
+  ypos   <- quantile(densline$y,.8)
 
   #Plot the histogram
   pldens <- ggplot(densline, aes(x, y, group = as.factor(i)))+xlim(0, 10)+

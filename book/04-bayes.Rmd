@@ -1,0 +1,513 @@
+# Bayes and empirical Bayes
+
+In most cases the theory and background is often not provided in many cookbooks, this makes it impossible to interpreted, criticize our results. This section introduces some theory. However, if you are already familiar with it or find it too technical, feel free to skip it.
+
+## Classical statistics and estimation
+
+All statistics focuses on estimating the parameter of interest $\theta$ which in most (G)LMs is denoted as the parameter $\mu$ or $\beta$. For consistency I will use the parameter of interest $\mu$. 
+
+The population parameter $\mu$ is fixed but unknown. To investigate plausible values for $\mu$, we collect measurements or samples. These observed data points, denoted as $x = {x_1, \dots, x_n}$, are realizations of an underlying random variable $X = {X_1, \dots, X_n}$, where each $X_i \in \mathbb{R}$. We assume that these observations are independently and identically distributed (i.i.d.) from a common distribution.
+
+$$X\stackrel{\text{iid}}{\sim} N(\mu, \sigma^2)$$
+
+Since we do not have $X$ but only a set of realizations we need an estimator, which is the sample mean $\bar{x}(x)$. Hence, the sample mean would be 
+
+$$\bar{x}=\frac{\sum_{i=1}^n(x_i)}{n}$$ 
+
+If x is indeed i.i.d. then $\hat{x}$ would serve as an unbiased estimator for $\mu$. Therefore, the sample mean has certain properties.
+
+$$\mathbb{E}[\bar{x}]=\mu \ and \ Var(\bar{x})=\frac{\sigma^2}{\sqrt{n}}$$ 
+
+Then according to the weak law of large numbers suggest that the probability of deviation from the population parameter decreases when sample size $n$ increases till it eventually converges.
+
+$$\lim_{n\to\infty} P\left(|\bar{X}_n-\mu|\geq \epsilon\right)=0$$
+This means that according to the central limit theorem 
+$$Z_n=\frac{\bar{X}_n-\mu}{\sigma/\sqrt(n)}$$
+converges to the normal. The probability of observing $Z$ under a long-run of repetitions
+
+$$P(-1.96\lesssim Z \lesssim 1.96)=0.95$$. 
+
+Similar, the probability of the intervals of $\bar{x}$ to cover $\mu$ in a long-run of repeated experiments at 95% is 
+
+$$1  - c = P(\bar{X}_n > \mu - 1.96 \cdot \frac{\sigma}{\sqrt{n}}) ~\text{and}~  P(\bar{X}_n < \mu - 1.96 \cdot \frac{\sigma}{\sqrt{n}})$$. 
+
+A visual explanation of this concept is provided in the following Shiny app: https://snwikaij.shinyapps.io/shiny/. 
+
+Furthermore, it is clear that statistics does do nothing with causality and the focus on error-control. Causality starts by satisfying theoretical conditions needed the arrive at believes in these concepts. Hence, error-control and causality start a-priori (Fisher 1949, Pearl 2009, Mayo 2018). Such a focus and framework is extremely useful if objectivity over repetitions are the goal and favorable. While classical statistics focuses on fixed but unknown parameters, error-control and objectivity of information, Bayesian methods extend this perspective by introducing prior information and viewing parameters as random variables. This shift opens the door to more flexible and informative inference, as explained in the next section.
+
+## Bayes theorem and probablistic estimation
+
+### Bayes theorem
+
+Informally Bayes Theorem would be notated $\text{Posterior}\, \text{probability} = \frac{\text{Likelihood} \cdot \text{Prior}}{\text{Evidence}}$. More formally Bayes theorem is often notated with A and B where P indicates probability and '|' given or conditional on. $P(A|B) = \frac{P(B|A) \cdot P(A)}{P(B)}$.Other expression such as $P(\theta|Data, Info) = \frac{P(Data|\theta) \cdot P(\theta|info)}{P(Data)}$ are to highlight that the posterior describes the information of that conditional on the prior information that is given in there.
+
+The derivation of Bayes theorem relies on the axioms probability theory.
+
+**Premise 1)**
+
+$$
+P(A | B) = \frac{P(A \cap B)}{P(B)}
+$$
+similarly
+
+$$
+P(B |A) = \frac{P(B \cap A)}{P(B)}
+$$
+**Premise 2)**
+
+Also, the joint probability, expressed as a set-theoretic relationship on $z$, indicates that element of both sets are the same.
+
+$$
+z = \{x : x \in A \cap B : x \in B \cap A\}
+$$
+thus
+
+$$
+P(A \cap B) = P(B \cap A)
+$$
+**Premise 3)**
+
+In accordance with the previous
+
+$$
+P(A| B) \cdot P(A) = P(A \cap B)
+$$
+and
+
+$$
+P(B | A) \cdot P(B) = P(B \cap A)
+$$
+**Conclusion)**
+
+Therefore
+
+$$
+P(A | B) \cdot P(A) = P(B | A) \cdot P(B)
+$$
+$$
+P(A|B) = \frac{P(B|A) \cdot P(A)}{P(B)}
+$$
+
+### Bayes theorem in use
+
+The previous expression can help us with answer simple questions. Assume that there is a likelihood of 0.7 $P(Species|<Threshold)$ that a species if found below a certain threshold. Furthermore, we also know that that the environment will only be found 0.3 or 30% of the time as $P(<Threshold)$.How probable would it then be we are below the threshold if we observe the species $P(<Threshold|Species)$? 
+
+$$
+P(Species|<Threshold) = 0.7\\
+P(<Threshold) = 0.3\\
+P(<Threshold|Species) = ?\\
+$$
+
+Expressing this in Bayes theorem would result in
+
+$$
+P(<Threshold|Species)=\frac{P(<Threshold|Species)\cdot P(Species) }{P(<Threshold)}
+$$
+
+The only thing still required is $P(Species)$ often called the 'evidence'. Yet, this evidence is simply the total probability of observing a species, below and above the threshold. For this we can assume that this is the reverse of the $P(Species|<Threshold)$ and $P(<Threshold)$
+
+$$
+P(Species)=[P(<Threshold|Species)\cdot P(Species)] + [(1-P(<Threshold|Species))\cdot(1-P(Species))]\\
+0.42=[0.7\cdot0.3]+[0.3\cdot0.7]
+$$
+
+Then it is simply filling in the blanks
+
+$$
+P(<Threshold|Species)=\frac{P(<Threshold|Species)\cdot P(<Threshold) }{P(Species)}=\frac{0.7\cdot0.3}{0.42}=0.5
+$$
+
+The answer not very satisfying as the probability is simply a 'coin toss'. This could be improved if we would introduce more species with the same indicative potential.
+
+$$
+P(<Threshold|Species)=\frac{P(<Threshold|Species)\cdot P(<Threshold) }{P(Species)}=\frac{(0.7^2*0.3)}{[(0.7^2*0.3)+(1-0.7)^2*(1-0.3)]}=0.7
+$$
+We would need around five species to get an indicative potential of >0.95 (it would be 0.97).
+
+### Bayes theorem and conjugate priors
+
+The previous example works for simpler approximations yet if we want to derive an interval for a particular parameter $\theta$ then we can approach this analytically using conjugate priors. Where a prior is conjugate to a likelihood if the resulting posterior is in the same family as the prior.
+
+As introduced, in statistics and estimation is about finding out the value for $\theta$ which is assumed be $\mu$. Where in the frequentist framework this is considered fixed and unknown, this is in the Bayesian framework considered to be random 'and approximately' known. Of course also in the Bayesian framework samples $x$ are taken. Assume that we already know something about $\mu$ then it is possible to restrict to exclude unreasonable values or for the information we have on $\mu$ to more acceptable values.
+
+$$
+P(\mu|Data) = \frac{P(Data|\mu) \cdot P(\mu)}{P(Data)}
+$$
+
+For a simple mean and variance an analytical approach can be used to derive the posterior given the likelihood and prior via the following equations.
+
+$$\mu_{posterior} =\frac{\frac{\mu_{prior} }{\sigma_{prior}^2} + \frac{\hat{x}_{data} }{\sigma_{data}^2}}{
+\frac{1}{\sigma_{prior}^2} + \frac{1}{\sigma_{data}^2}}
+\\
+\sigma_{posterior}=\sqrt{\frac{1}{\frac{1}{\sigma_{prior}^2}+\frac{1}{\sigma_{data}^2}}}$$
+
+**Derivation:**
+
+**Premise 1)**
+
+Bayes rule can be simplified to
+$$P(\mu|Data) \propto P(Data|\mu) \cdot P(\mu)
+\\
+N(\mu_{posterior}, \sigma_{posterior}^2)=N(\mu_{sample}, \sigma_{sample}^2)\cdot N(\mu_{prior}, \sigma_{prior}^2)$$
+
+**Premise 2)**
+
+The PDF for the normal distribution is
+$$f(x)=\frac{1}{2\cdot \sqrt{\sigma \pi}}\cdot exp(-\frac{1}{2}(\frac{x-\mu}{\sigma})^2)$$
+
+**Premise 3)**
+
+$$Prior: P(\mu_{prior})=\frac{1}{2\cdot \sqrt{\sigma_{prior} \pi}}\cdot exp(-\frac{1}{2}(\frac{\theta-\mu_{prior}}{\sigma_{prior}})^2)
+\\
+Likelihood: P(Data|\mu_{sample})=\frac{1}{2\cdot \sqrt{\sigma_{sample} \pi}}\cdot exp(-\frac{1}{2}(\frac{\mu_{sample}-\theta}{\sigma_{sample}})^2)
+$$
+
+**Premise 4)**
+
+Both $\frac{1}{2\cdot \sqrt{\sigma_{prior} \pi}}$ and $\frac{1}{2\cdot \sqrt{\sigma_{sample} \pi}}$ are scalars and can be left out of the equation.
+
+**Premise 5)**
+
+Since both exponent have the same base we can add the exponent $$(a^2+b^2=a^{2+2})$$ 
+resulting in
+
+$$exp(-\frac{1}{2}\cdot[(\frac{\theta-\mu_{prior}}{\sigma_{prior}})^2+(\frac{\mu_{sample}-\theta}{\sigma_{sample}})^2]$$
+
+After which brackets can be moved
+$$exp(-\frac{1}{2}\cdot[\frac{(\theta-\mu_{prior})^2}{\sigma_{prior}^2}+\frac{(\mu_{sample}-\theta)^2}{\sigma_{sample}^2}])$$
+
+**Premise 6)**
+
+Expanding the brackets terms
+
+$$(a^2+b^2)=(a-b)\cdot(a-b)=a^2-ab-ab+b^2=a^2-2ab+b^2$$
+This means 
+$$(\theta-\mu_{prior})^2=\theta^2-2\theta\mu_{prior}+\mu_{prior}^2$$ 
+and
+$$(\mu_{sample}-\theta)^2=\mu_{sample}^2-2\mu_{sample}\theta+\mu_{sample}^2$$ 
+which can be replaced in premise 5
+$$exp(-\frac{1}{2}\cdot[\frac{\theta^2-2\theta\mu_{prior}+\mu_{prior}^2}{\sigma_{prior}^2}+\frac{\mu_{sample}^2-2\mu_{sample}\theta+\mu_{sample}^2}{\sigma_{sample}^2}])$$
+
+**Premise 7)**
+
+Separating each term by dividing by $\sigma_{prior}^2$ and $\sigma_{sample}^2$
+
+$$exp(-\frac{1}{2}\cdot\frac{\theta^2}{\sigma_{prior}^2}+\frac{-2\theta\mu_{prior}}{\sigma_{prior}^2}+\frac{\mu_{prior}^2}{\sigma_{prior}^2}+
+\frac{\mu_{sample}^2}{\sigma_{sample}^2}+\frac{-2\mu_{sample}\theta}{\sigma_{sample}^2}+\frac{\mu_{sample}^2}{\sigma_{sample}^2})$$
+
+**Premise 8)**
+
+Group each term by the nominator
+
+$$\frac{\theta^2}{\sigma_{prior}^2}+\frac{-2\theta\mu_{prior}}{\sigma_{prior}^2}+\frac{\mu_{prior}^2}{\sigma_{prior}^2}+
+\frac{\mu_{sample}^2}{\sigma_{sample}^2}+\frac{-2\mu_{sample}\theta}{\sigma_{sample}^2}+\frac{\mu_{sample}^2}{\sigma_{sample}^2}=
+\\
+\theta^2(\frac{1}{\sigma_{prior}^2}+\frac{1}{\sigma_{sample}^2})+
+-2\theta(\frac{\mu_{prior}}{\sigma_{prior}^2}+\frac{\mu_{sample}}{\sigma_{sample}^2})
++(\frac{\mu_{prior}^2}{\sigma_{prior}^2}+\frac{\mu_{sample}^2}{\sigma_{sample}^2})
+$$
+Since the last group is not dependent on $\theta$ it is not in our focus
+$$
+exp(-\frac{1}{2}\cdot[\frac{\theta^2}{\sigma_{prior}^2}+\frac{-2\theta\mu_{prior}}{\sigma_{prior}^2}+\frac{\mu_{prior}^2}{\sigma_{prior}^2}+
+\frac{\mu_{sample}^2}{\sigma_{sample}^2}+\frac{-2\mu_{sample}\theta}{\sigma_{sample}^2}+\frac{\mu_{sample}^2}{\sigma_{sample}^2}=
+\\
+exp(-\frac{1}{2}\cdot\theta^2(\frac{1}{\sigma_{prior}^2}+\frac{1}{\sigma_{sample}^2})+
+-2\theta(\frac{\mu_{prior}}{\sigma_{prior}^2}+\frac{\mu_{sample}}{\sigma_{sample}^2})
++not\ dependent\ on\ \theta])
+$$
+
+**Premise 9)**
+
+The goal is to derive $P(\mu|Data)$ from $P(\mu|Data) \propto P(Data|\mu) \cdot P(\mu)$ An the general exponential form of the normal distribution is given in Premise 2 and the premises 6, 7 and 9 lead to
+$$\frac{1}{2}\cdot \theta^2 (\frac{1}{\sigma^2})+\theta(\frac{\mu}{\sigma^2})+C=
+\\
+\frac{1}{2}\cdot\theta^2A+\theta B+C$$
+the general exponential form for the normal distribution is always $\frac{1}{2}\cdot\theta^2A+\theta B+C$ meaning that $A=\frac{1}{\sigma^2}$ and $B=\frac{\mu}{\sigma^2}$ and to obtain the standard deviation $A$ needs to be re-arranged to $\sigma = \sqrt{\frac{1}{A}}$ and to obtain the mean $\mu=\frac{B}{A}=\frac{\frac{\mu}{\sigma^2}}{\frac{1}{\sigma^2}}$
+
+**Conclusion)**
+
+In Premise 8
+$$
+exp(-\frac{1}{2}\cdot\theta^2(\frac{1}{\sigma_{prior}^2}+\frac{1}{\sigma_{sample}^2})+
+-2\theta(\frac{\mu_{prior}}{\sigma_{prior}^2}+\frac{\mu_{sample}}{\sigma_{sample}^2})+C)
+$$
+In Premise 9
+$$
+\sigma = \sqrt{\frac{1}{A}}, A=\frac{1}{\sigma^2}\\
+\mu=\frac{B}{A}=\frac{\frac{\mu}{\sigma^2}}{\frac{1}{\sigma^2}}
+$$
+Which implies that
+$$
+\sigma_{posterior}=\sqrt{\frac{1}{\frac{1}{\sigma_{prior}^2}+\frac{1}{\sigma_{sample}^2}}}\\
+\mu_{posterior}=\frac{\frac{\mu_{prior}}{\sigma_{prior}^2} + \frac{\mu_{sample}}{\sigma_{sample}^2}}{\frac{1}{\sigma_{prior}^2} + \frac{1}{\sigma_{sample}^2}}
+$$
+Another way to obtain the posterior including the sample size is via:
+$$\mu_{posterior}=\frac{\frac{\mu_{prior}}{\sigma_{prior}^2}+\mu_{sample}*\frac{n}{\sigma_{sample}^2}}
+{\frac{1}{\sigma_{prior}^2}+\frac{n}{\sigma_{sample}^2}}$$
+
+**Derivation:**
+
+**Premise 1)**
+
+$$
+Prior: P(\mu_{prior})=\frac{1}{2\cdot \sqrt{\sigma_{prior} \pi}}\cdot exp(-\frac{1}{2}(\frac{\theta-\mu_{prior}}{\sigma_{prior}})^2)
+\\
+Likelihood: P(Data|\mu_{sample})=\prod_{i=1}^n \frac{1}{2\cdot \sqrt{\sigma_{sample} \pi}}\cdot exp(-\frac{1}{2}(\frac{x_i-\theta}{\sigma_{sample}})^2)
+$$
+
+**Premise 2)**
+
+Both $\frac{1}{2\cdot \sqrt{\sigma_{prior} \pi}}$ and $\frac{1}{2\cdot \sqrt{\sigma_{sample} \pi}}$ are scalars and can be left out of the equation.
+
+**Premise 3)**
+
+The likelihood is the product of $n$>1 random variables
+$exp(a)\cdot exp(b) = exp(a+b)$ thus $exp(a_i)\cdot, ...,\cdot exp(a_n)=exp(\sum_{i=1}^n(a_i))$.
+
+$$
+exp(\sum_{i=1}^n-\frac{1}{2}\cdot(\frac{x_i-\theta}{\sigma_{sample}})^2)=exp(-\frac{1}{2}\cdot\sum_{i=1}^n(\frac{x_i-\theta}{\sigma_{sample}})^2)
+$$
+**Premise 4)**
+
+As in premise 6 of the previous derivation we expand all terms and ignore terms independent of $\theta$.
+
+$$
+\sum_{i=1}^n(x_i-\theta)=\sum_{i=1}^nx_i^2-2x_i\cdot \theta +\theta^2
+=\sum_{i=1}^nx_i-\sum_{i=1}^n2x_i\cdot\theta+\sum_{i=1}^n\theta^2=
+\sum_{i=1}^nx_i-2\theta\sum_{i=1}^nx_i+\sum_{i=1}^n\theta^2=
+-2\theta\sum_{i=1}^nx_i+n\theta^2
+$$
+
+**Premise 5)**
+
+Substitute the expression back into the equation.
+
+$$
+exp(\frac{1}{2}\cdot[\frac{-2\theta\sum_{i=1}^nx_i+n\theta^2}{\sigma^2_{sample}}])
+$$
+
+**Premise 6)**
+
+The posterior can then be rewritten as $P(\mu|Data) \propto P(Data|\mu) \cdot P(\mu)$
+
+$$
+exp(\frac{1}{2}\cdot[\frac{-2\theta\sum_{i=1}^nx_i+n\theta^2}{\sigma^2_{sample}}])
+*exp(-\frac{1}{2}\cdot(\frac{\theta-\mu_{prior}}{\sigma^2_{prior}})^2)=\\
+exp(\frac{1}{2}\cdot[\frac{-2\theta\sum_{i=1}^nx_i+n\theta^2}{\sigma^2_{sample}}+\frac{\theta-\mu_{prior}}{\sigma^2_{prior}})^2])
+$$
+
+**Premise 7)**
+
+Expanding the term of the nominator in the prior and substitute it back in the previous equation.
+$$
+(\theta-\mu_{prior})^2=\theta^2-2\theta\mu_{prior}+\mu_{prior}^2
+\\
+\frac{\theta^2}{\sigma_{prior}^2}+\frac{-2\theta\mu_{prior}}{\sigma_{prior}^2}+\frac{\mu_{prior}^2}{\sigma_{prior}^2}
+\\
+exp(-\frac{1}{2}\cdot[\frac{\theta^2}{\sigma_{prior}^2}+\frac{-2\theta\mu_{prior}}{\sigma_{prior}^2}+\frac{\mu_{prior}^2}{\sigma_{prior}^2}+
+\frac{-2\theta\sum_{i=1}^nx_i+n\theta^2}{\sigma^2_{sample}}])
+$$
+
+**Premise 8)**
+
+Expand the last term and divide by $\sigma^2_{sample}$
+
+$$
+exp(-\frac{1}{2}\cdot[\frac{\theta^2}{\sigma_{prior}^2}+\frac{-2\theta\mu_{prior}}{\sigma_{prior}^2}+\frac{\mu_{prior}^2}{\sigma_{prior}^2}-
+\frac{2\theta\sum_{i=1}^nx_i}{\sigma^2_{sample}}+\frac{n\theta^2}{\sigma^2_{sample}}])
+$$
+
+**Premise 9)**
+
+Group each term by its nominator
+
+$$
+exp(-\frac{1}{2}\cdot\theta^2(\frac{1}{\sigma_{prior}^2}+\frac{n}{\sigma_{sample}^2})+
+-2\theta(\frac{\mu_{prior}}{\sigma_{prior}^2}+\frac{\sum_{i=1}^nx_i}{\sigma_{sample}^2})
++not\ dependent\ on\ \theta])$$
+
+Since: $\sum_{i=1}^nx_i=\mu_{sample}\cdot n$
+
+$$
+exp(-\frac{1}{2}\cdot\theta^2(\frac{1}{\sigma_{prior}^2}+\frac{n}{\sigma_{sample}^2})+
+-2\theta(\frac{\mu_{prior}}{\sigma_{prior}^2}+\frac{\mu_{sample}\cdot n}{\sigma_{sample}^2})
++not\ dependent\ on\ \theta])
+$$
+
+**Conclusion)**
+
+From the steps 8 and 9 in the previous derivation we arive at
+
+$$
+\sigma_{posterior}=\sqrt{\frac{1}{\frac{1}{\sigma_{prior}^2}+\frac{n}{\sigma_{sample}^2}}}\\
+\mu_{posterior}=\frac{\frac{\mu_{prior}}{\sigma_{prior}^2} + \frac{\mu_{sample}\cdot n}{\sigma_{sample}^2}}{\frac{1}{\sigma_{prior}^2} + \frac{n}{\sigma_{sample}^2}}
+$$
+
+As might be clear this is less computational heavy than MCMC methods. For more then two parameter such an analytically approach becomes more cumbersome. And, if conjugacy is not satisfied no closed form solution is available. In this regards, Laplacian approximation is also computational easy. Yet, the equation clearly formulate the idea what happens in Bayes theorem.
+
+### Approximate Bayesian Computation with rejection sampling
+
+Approximate Bayesian Computation with rejection sampling (ABC-rejection) is a computationally expensive method for approximating the posterior distribution. However, when the number of parameters is relatively small, the posterior can still be approximated quite well. ABC-rejection is especially useful when the likelihood function cannot be computed or approximated accurately.
+
+One example is the use of ABC to explore potential bias in the EcoPostView package. In a simplified case, assuming both the prior and the data-generating model are normally distributed, the ABC-rejection algorithm begins by simulating a parameter from the prior distribution.
+
+$$
+\mu_{i}^*\sim N(\mu_{prior},\sigma_{prior}^2) \\
+\sigma_{i}^{2*}\sim Exp(rate)
+$$
+
+The asterisk ($^*$) denotes that these parameters are temporary, and this will become important later.Next, a data-generating model is used to simulate data based on these temporary parameters. We assume the observed data is approximately normally distributed, though any model could be used. For each simulation, we generate $n_{data}$ values.
+
+$$
+x_{i}\sim N(\mu^*, \sigma^{2*})
+$$
+
+Depending on the parameter of interest (e.g., $\mu$, $\sigma$, mode, or median), a summary statistic is computed from the simulated data. In this example, we focus on estimating $\mu$.
+
+$$
+\hat{x}_{sim, i}=\frac{\sum_{i=1}^n(x_i, ..., x_n)}{n_{data}}
+$$
+
+Each simulated mean $\hat{x}_{sim, i}$ (typically out of 100,000 simulations) is compared to the observed mean $\hat{x}_{data}$ using the Euclidean distance.
+
+$$
+E_{i}=\sqrt{(\hat{x}_{sim, i} - \hat{x}_{data})^2}
+$$
+
+A tolerance threshold is then selected to determine which simulated values are accepted. Simulations with $E_i > tolerance$ are rejected, while those with $E_i \leq tolerance$ are retained. While a tolerance of zero would yield the most accurate posterior, it would typically result in rejecting all simulations. On the other hand, setting the tolerance too high would allow in too many poor matches.
+
+Each accepted simulation corresponds to an accepted pair of simulated parameters $\mu_{i}^*, \sigma_{i}^{2}*$. Since all $\mu_{i}^*$ were originally drawn from the prior, the subset of accepted values approximates the posterior distribution of $\mu$.
+
+## Introduction to Bayesian Model Averaging (BMA)
+
+Instead of $P$ the function '$f$' are used this to highlight that the probability is a mapping function. A mapping function being a 'rule' that maps $x$ to $y$ and so $y=f(x)$.
+$$
+f(\beta \mid Data, Info) = 
+\frac{f(Data \mid \beta) \cdot f(\beta \mid Info)}
+{\int f(Data \mid \beta) \cdot f(\beta \mid Info)}
+$$
+The integral in the denominator is used to scale the posterior probability to one. This expression is sometimes simplified to
+$$f(\beta \mid Data, Info) = f(Data \mid \beta) \propto f(\beta \mid Info)$$
+Where the $\propto$ symbol indicates 'proportional to' highlighting the idea of exchangeability. Therefore, the posterior is nothing more than a function that describes the probability $y$ as a function of $\beta$ conditional on $Data$ and $Info$ ($y=f(\beta \mid Data, Info)$). This cannot be solely conditional on the $Data$ as the $Data$ is not uncertain our information/believe is uncertain about a none existing object $\beta$ (unless Platonism is true). 
+
+In the previous part a single prior model was used. Bayesian Model Averaging (BMA) has the advantages that it allows multiple ($k$) functions to be utilized as prior. I specifically choose the use of $f$ so multiple priors as $f_k$ in the equation below can be seen nothing more as multiple functions (or models). This in my opinion makes it easier to see that there is only optimized between multiple functions. It sound weird to say to optimize between probabilities.
+Hence, multiple possible scenarios that could have been responsible for $\beta$ can be introduced as below.
+$$
+f(\beta \mid Data,Info) = \frac{f(Data \mid \beta) \cdot f_k(\beta \mid Info)}{\int \left( \sum_{k=1}^{k} f(Data \mid \beta) \cdot f_k(\beta \mid Info) \right)}
+$$
+Now it should be clear that each $\beta$ contained within $g(E(y \mid x_{ij})) = \sum_{j=1}^{v} \beta_j \cdot x_{ij}$ is being restricted by the prior models. While in frequentism it is unrestricted and 'complete indifference' towards the  possibility of $\beta$. All these methods can be used in a meta-analysis.
+
+## Meta-analysis
+
+A standard meta-analysis uses a measure of location (mean) and scale (precision) to estimate a pooled value based on all parameters. For a fixed meta-analysis the pooled parameter is derived via the following equation.
+$$\theta_{pooled} = \frac{\sum_{i=1}^{k}(\theta_i\cdot w_i)}{\sum_{k=1}^kw_i}$$
+$\theta_i$ is the extracted effect-size for a study $i$. The $w_i$ is the weight per study $i$ for allk $k$ studies, derived from the precision $1/se_i^2$ via the equation below.
+$$w_i = \frac{1}{se_i^2}$$
+The standard error for the pooled effect-size can then be derived via the formula given below.
+
+$$se(\theta_{pooled})=\frac{1}{\sqrt\sum_{i=1}^{k}(w_i)}$$
+For a random-effect meta-analysis the variance between studies is separately modeled. In the metafor package REML or (Restricted Maximum Likelihood) is used to estimate this between study variance. However it is also possible using the DerSimonian and Laird method.
+$$
+\tau^2=max(0, \frac{Q-(k-1)}{\sum_{i=1}^{k}\frac{1}{w_i}-\frac{\sum_{i=1}^{k}1/w_i^2}{\sum_{i=1}^{k}1/w_i}})\
+\\
+w^*_i=\frac{1}{(\frac{1}{w_i}+\tau^2)}
+\\
+\theta_{pooled} = \frac{\sum_{i=1}^{k}(\theta_i\cdot w^*_i)}{\sum_{i=1}^{k}(w^*_i)}
+\\
+se(\theta_{pooled})=\frac{1}{\sqrt(\sum_{i=1}^{k}w^*_i)}
+$$
+If we now go back to how we analytically derived the posterior we can devise a function that can analytically perform a fixed effect meta-analysis with ease. I have placed this in a function called 'abmeta'. In in simple cases it approximates the results of metafor and the meta function inf EcoPostView relatively well. Of course the variance component slightly differs with that from metafor and the 'meta' function due to the different method of estimation.
+
+## BMA and meta-analysis
+
+In a meta-analysis we do not talk about $\beta$ but about a set of estimates $\beta=\{\beta_{i}, ..., \beta_{n}\}$ meaning that $f(Meta-data\mid\{\beta_{i}, ..., \beta_{n}\})$. Hereby the flexibility allows that these estimates are either likelihood estimates ($\hat{\beta}$) or  posterior estimates ($\beta$). and we end up with an expression that should capture the inference to an underlying pooled model parameter.
+$$
+f(\beta_{poolded} \mid Meta-data,Info) = \frac{f(Meta-data \mid \{\beta_{i}, ..., \beta_{n}\}) \cdot f_k(\beta_{pooled} \mid Info)}{\int \left( \sum_{k=1}^{m} f(Meta-data \mid \{\beta_{i}, ..., \beta_{n}\}) \cdot f_k(\beta_{pooled} \mid Info) \right)}
+$$
+Assuming the pooled parameter $\beta_pooled$is derived the equation layed out before the variance of the pooled parameter can be analytically derived as given by Hoeting et al. (1999):
+
+$$
+SE(\beta_{pooled}) = \sqrt{\sum^m_{k=1}( w_{prior} \cdot (\beta_k^2+SE(\beta_k)^2))-\beta_{pooled}^2}\\
+$$
+
+## Sequential updating
+
+Bayesian sequential updating refers to the practice of re-using the derived posterior of a previous model as the prior for the new model. For this the assumption of conditional independence between the the datasets is assumed. The parameter of interest is $\theta$ based on a dataset $Data_1$ and we derive the posterior. 
+$$P(\theta|Data_1) = \frac{P(Data_1|\theta) \cdot P(\theta)}{P(Data_1)}$$
+The next would be 
+$$P(\theta|Data_1, Data_2) = \frac{P(Data_2|\theta) \cdot P(\theta|Data_1)}{P(Data_2)}$$ 
+till $$P(\theta|Data_n) = \frac{P(Data_n|\theta) \cdot P(\theta|Data_1,\cdots,Data_{n-1})}{P(Data_n)}$$
+
+For example, we would like to know what $\mu$ from a population of interest. Our example population has $\mu=0.5$, $\sigma=5$ and each study would have an error of $\alpha = 40\%$ when when we assume $\alpha=5\%$ (meaning that our heterogeneity is larger than expected). Our first prior starts with $N(0, 5)$ after which the posterior of previous is sequentially re-used visually represented in Fig. 2a below. Where more studies increase the precision of the estimated posterior. 
+
+If the focus lies on objectivity and the error control over the different studies and assume iid then the curve between studies would follow that of Fig. 2b below. 
+
+In a less formal way is the Bayesian framework more focused on transfer of information an precision. On the other hand the frequentist framework is more interested in objectivity, consistency and error among studies.
+
+```{r sequential updating,  fig.width=8, fig.height=4, echo=F, warning=FALSE}
+
+library(ggplot2)
+
+postvals <- function(mu_data, sigma_data, mu_prior, sigma_prior){
+  
+  post_mu <- (mu_prior / sigma_prior^2 + mu_data /sigma_data^2) / (1 / sigma_prior^2 + 1 / sigma_data^2)
+  post_sigma <- sqrt(1/(1 / sigma_prior^2 + 1 / sigma_data^2))
+  
+  c(mu=post_mu, sigma=post_sigma)}
+
+nsim <- 100
+cint <- 0.05
+errint <- 0.4
+theta  <- 0.5
+postset <- array(NA, dim=c(nsim, 5))
+freqset <- array(NA, dim=c(nsim, 5))
+
+z_adj <- abs(qnorm(errint/2))/abs(qnorm(cint/2))
+
+set.seed(3)
+for(i in 1:nrow(postset)){
+  xsamp <- rnorm(25, theta, 5)
+  if(i==1){
+    post  <- postvals(mean(xsamp), sd(xsamp)/sqrt(length(xsamp)), 0, 5)
+  }else{
+    post  <- postvals(mean(xsamp), sd(xsamp)/sqrt(length(xsamp)), post[1], post[2])}
+  postset[i,] <- c(i, post, post[1]-post[2]*abs(qnorm(cint/2))*z_adj, post[1]+post[2]*abs(qnorm(cint/2))*z_adj)
+  
+  fse <- sd(xsamp)/sqrt(length(xsamp))
+  freqset[i,] <- c(i, mean(xsamp), fse,  mean(xsamp)-fse*abs(qnorm(cint/2))*z_adj,  mean(xsamp)+fse*abs(qnorm(cint/2))*z_adj)}
+
+postset <- setNames(as.data.frame(postset), c("iter", "mu", "se", "ll", "ul"))
+
+p1 <- ggplot(postset, aes(iter, mu))+
+  geom_line()+ylab("µ")+xlab("Study")+
+  geom_hline(yintercept = 0.5, col="tomato3", lty=2, lwd=0.2)+
+  geom_ribbon(aes(ymin = ll, ymax = ul), fill = "grey70", alpha=0.2)+
+  theme_classic()
+
+freqset <- setNames(as.data.frame(freqset), c("iter", "mu", "se", "ll", "ul"))
+
+p2 <- ggplot(freqset, aes(iter, mu))+
+  geom_point()+ylab("")+xlab("Study")+
+  geom_hline(yintercept = 0.5, col="tomato3", lty=2, lwd=0.2)+
+  geom_errorbar(aes(ymin=ll, ymax=ul), width=0)+
+  theme_classic()
+
+sequpdate <- cowplot::plot_grid(p1, p2, ncol=2)
+print(sequpdate)
+```
+
+*Figure 2: Sequential updating with credibility intervals on the left panel and a long-run of means with confidence intervals on the right The left panel.*
+
+## A short reflection on uncertainty
+
+I do not believe statistics reflects uncertainty about events; rather, it reflects the information in the data under a particular model or the uncertainty about our belief in a parameter ($\theta, \beta, \mu$, etc.). The later concept is often vague and confusing because, if one assumes the parameter does not exist independently of the mind, then what exactly is uncertain - our belief? The claim to 'objective probability' is already compromised by the assumption that the parameter is objective. However, if the parameter does not exist outside the mind, the meaning of 'objective' in this context becomes questionable.
+
+When people refer to objectivity, they often mean that the data itself is the most 'objective' part of the process. However, if some conditions are not met, such as (1) the data is not randomly sampled from a population of interest, (2) the model is not pre-selected in advance, (3) a sufficiently large sample size is not chosen based on the model, and (4) confounding variables are present, then even the data cannot be considered truly objective unless these limitations are explicitly acknowledged. Moreover, model selection procedures further contaminate the objectivity of the data, meaning that the estimated model parameters no longer fully reflect the objectivity of the data which is often implied in our conclusions (Gelman and Loken, 2013; Tong, 2019).
+
+In Bayesian updating, the prior reflects the extent to which we want to sacrifice over the objectivity of the likelihood by using information which cannot be formalized into the likelihood. This is captured by the relationship $f(\theta \mid Data, Info) = f(Data \mid \theta) \propto f(\theta \mid Info)$
+
+The posterior, therefore, is merely the weighted combination of the prior and likelihood. It represents the relationship (e.g., $0.25$ as $0.5 \cdot 0.5$) between the prior and the likelihood. There is no invalidity in a logical argument such as:(Premise 1.) All unicorns are orange. (Premise 2.) I have a unicorn. (Conclusion) Therefore, my unicorn is orange.
+
+While this argument may be unsound — because unicorns do not exist — the reasoning itself is not flawed. The issue lies with the premises, not the structure of the argument. Hence, Uncertainty does not exist in the 'real' world; it resides solely in our minds. We cannot be 'wrong' or 'correct' about $f(\beta \mid \text{Data, Info})$ because it does not exist as a tangible entity. Even if it did, its existence would have no impact on reality because uncertainty is unrelated to the way reality operates. In the real world, events either occur or they do not. If my unicorn does not exist, I will never see it, and it was never orange in the first place.
+
+We should also avoid treating models as a definitive representation of reality. Models are tools that convey information and serve as pragmatic instruments. The the model itself is not the result, the strength of the results relies on the argument, and how well the premises within the argument are clarified and supported by the model.

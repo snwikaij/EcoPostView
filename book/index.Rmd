@@ -1,0 +1,42 @@
+---
+title: "EcoPostView: Ecological Posterior View"
+author: Willem (Wim) Kaijser
+output: 
+  bookdown::gitbook:
+    toc_depth: 4
+    number_sections: true
+    highlight: tango
+---
+<style>
+.main-container {
+  max-width: 100%;
+}
+
+body {
+  text-align: justify;
+}
+
+.outline-block {
+  border: 2px solid #333;
+  padding: 1em;
+  margin: 1em 0;
+  border-radius: 6px;
+  background-color: #fafafa;
+}
+</style>
+
+```{r setup_1, include = FALSE}
+library(EcoPostView)
+```
+
+# Overview
+
+This site reads like an incomplete book or essay. It serves as a way to organize my thoughts and collect fragments of information. The project originally started around the EcoPostView R package, but has since expanded into several loosely connected chapters that explore broader ideas.
+
+On the left, you will find these chapters in the drop down menu. They begin with an explorations of the EcoPostView package, move through topics or reasoning, logic and belief some topics in and end with a chapter on statistics (focused empirical Bayes). The order is mixed: where a logical structure would start with abstract foundations and move toward application, here it begins with practice. Many readers will find it easier to start with the R functions and skip the more abstract chapters. That is completely fine — the site is meant to support that kind of entry point.
+
+The reversed order reflects something about how we come to understand the world. We often begin with practice, then build frameworks around our experiences. But if we trace our tools and methods back far enough, we find ourselves dealing with metaphysical questions - about language, logic, and what we believe about reality. Reasoning, in my opinion, is not about discovering truth directly, but about trying to contain or express it through propositions. The point is not to assume these propositions are true, but to see what follows if we treat them as if they were.
+
+Ideally, one might begin with reasoning and logic, then move through statistical ideas, and finally arrive at practical application. But going in reverse — from code and data to abstract beliefs - it might even be confronting. These themes can feel more existential than scientific, but the boundary between those categories is itself unclear to me (Bárdos and Tuboly 2025; Heidegger 1929; Laudan 1983; Popper 1968).
+
+This site is still a work in progress — a kind of evolving rather than a polished presentation.

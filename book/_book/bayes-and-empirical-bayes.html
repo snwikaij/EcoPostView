@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>5 Bayes and empirical Bayes | EcoPostView: Ecological Posterior View</title>
+  <meta name="description" content="5 Bayes and empirical Bayes | EcoPostView: Ecological Posterior View" />
+  <meta name="generator" content="bookdown 0.43 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="5 Bayes and empirical Bayes | EcoPostView: Ecological Posterior View" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="5 Bayes and empirical Bayes | EcoPostView: Ecological Posterior View" />
+  
+  
+  
+
+<meta name="author" content="Willem (Wim) Kaijser" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="epistemic-authenticity.html"/>
+<link rel="next" href="references.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  background-color: #f8f8f8; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ef2929; } /* Alert */
+code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #204a87; } /* Attribute */
+code span.bn { color: #0000cf; } /* BaseN */
+code span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4e9a06; } /* Char */
+code span.cn { color: #8f5902; } /* Constant */
+code span.co { color: #8f5902; font-style: italic; } /* Comment */
+code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code span.dt { color: #204a87; } /* DataType */
+code span.dv { color: #0000cf; } /* DecVal */
+code span.er { color: #a40000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #0000cf; } /* Float */
+code span.fu { color: #204a87; font-weight: bold; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code span.ot { color: #8f5902; } /* Other */
+code span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code span.sc { color: #ce5c00; font-weight: bold; } /* SpecialChar */
+code span.ss { color: #4e9a06; } /* SpecialString */
+code span.st { color: #4e9a06; } /* String */
+code span.va { color: #000000; } /* Variable */
+code span.vs { color: #4e9a06; } /* VerbatimString */
+code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Overview</a></li>
+<li class="chapter" data-level="2" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>2</b> Introduction</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="introduction.html"><a href="introduction.html#r-package-installation"><i class="fa fa-check"></i><b>2.1</b> R-package installation</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="meta-analysis-over-effect-sizes-and-model-parameters.html"><a href="meta-analysis-over-effect-sizes-and-model-parameters.html"><i class="fa fa-check"></i><b>3</b> Meta-analysis over effect-sizes and model parameters</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="meta-analysis-over-effect-sizes-and-model-parameters.html"><a href="meta-analysis-over-effect-sizes-and-model-parameters.html#basic-model-structures-for-meta-analysis"><i class="fa fa-check"></i><b>3.1</b> Basic model structures for meta-analysis</a></li>
+<li class="chapter" data-level="3.2" data-path="meta-analysis-over-effect-sizes-and-model-parameters.html"><a href="meta-analysis-over-effect-sizes-and-model-parameters.html#meta-analysis-on-standardized-effect-sizes"><i class="fa fa-check"></i><b>3.2</b> Meta-analysis on standardized effect sizes</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="meta-analysis-over-effect-sizes-and-model-parameters.html"><a href="meta-analysis-over-effect-sizes-and-model-parameters.html#the-meta-function"><i class="fa fa-check"></i><b>3.2.1</b> The meta-function</a></li>
+<li class="chapter" data-level="3.2.2" data-path="meta-analysis-over-effect-sizes-and-model-parameters.html"><a href="meta-analysis-over-effect-sizes-and-model-parameters.html#check-for-bias"><i class="fa fa-check"></i><b>3.2.2</b> Check for bias</a></li>
+<li class="chapter" data-level="3.2.3" data-path="meta-analysis-over-effect-sizes-and-model-parameters.html"><a href="meta-analysis-over-effect-sizes-and-model-parameters.html#bias-adjustment"><i class="fa fa-check"></i><b>3.2.3</b> Bias adjustment</a></li>
+<li class="chapter" data-level="3.2.4" data-path="meta-analysis-over-effect-sizes-and-model-parameters.html"><a href="meta-analysis-over-effect-sizes-and-model-parameters.html#exploring-the-bias-pattern"><i class="fa fa-check"></i><b>3.2.4</b> Exploring the bias pattern</a></li>
+<li class="chapter" data-level="3.2.5" data-path="meta-analysis-over-effect-sizes-and-model-parameters.html"><a href="meta-analysis-over-effect-sizes-and-model-parameters.html#including-a-moderator"><i class="fa fa-check"></i><b>3.2.5</b> Including a moderator</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="meta-analysis-over-effect-sizes-and-model-parameters.html"><a href="meta-analysis-over-effect-sizes-and-model-parameters.html#meta-analysis-on-generalized-linear-models-glms"><i class="fa fa-check"></i><b>3.3</b> Meta-analysis on (Generalized) Linear Models (G)LMs</a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="meta-analysis-over-effect-sizes-and-model-parameters.html"><a href="meta-analysis-over-effect-sizes-and-model-parameters.html#data-and-models"><i class="fa fa-check"></i><b>3.3.1</b> Data and models</a></li>
+<li class="chapter" data-level="3.3.2" data-path="meta-analysis-over-effect-sizes-and-model-parameters.html"><a href="meta-analysis-over-effect-sizes-and-model-parameters.html#glms-and-extracting-data"><i class="fa fa-check"></i><b>3.3.2</b> (G)LMs and extracting data</a></li>
+<li class="chapter" data-level="3.3.3" data-path="meta-analysis-over-effect-sizes-and-model-parameters.html"><a href="meta-analysis-over-effect-sizes-and-model-parameters.html#the-meta-function-1"><i class="fa fa-check"></i><b>3.3.3</b> The meta-function</a>
+<ul>
+<li class="chapter" data-level="3.3.3.1" data-path="meta-analysis-over-effect-sizes-and-model-parameters.html"><a href="meta-analysis-over-effect-sizes-and-model-parameters.html#setting-priors"><i class="fa fa-check"></i><b>3.3.3.1</b> Setting priors</a></li>
+<li class="chapter" data-level="3.3.3.2" data-path="meta-analysis-over-effect-sizes-and-model-parameters.html"><a href="meta-analysis-over-effect-sizes-and-model-parameters.html#setting-multiple-priors-for-bayesian-model-averaging"><i class="fa fa-check"></i><b>3.3.3.2</b> Setting multiple priors for bayesian model averaging</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3.4" data-path="meta-analysis-over-effect-sizes-and-model-parameters.html"><a href="meta-analysis-over-effect-sizes-and-model-parameters.html#rescheck-function-and-bias"><i class="fa fa-check"></i><b>3.3.4</b> rescheck-function and bias</a></li>
+<li class="chapter" data-level="3.3.5" data-path="meta-analysis-over-effect-sizes-and-model-parameters.html"><a href="meta-analysis-over-effect-sizes-and-model-parameters.html#senscheck-function-and-prior-sensitivity"><i class="fa fa-check"></i><b>3.3.5</b> senscheck-function and prior sensitivity</a></li>
+<li class="chapter" data-level="3.3.6" data-path="meta-analysis-over-effect-sizes-and-model-parameters.html"><a href="meta-analysis-over-effect-sizes-and-model-parameters.html#pdplot-function"><i class="fa fa-check"></i><b>3.3.6</b> pdplot-function</a></li>
+<li class="chapter" data-level="3.3.7" data-path="meta-analysis-over-effect-sizes-and-model-parameters.html"><a href="meta-analysis-over-effect-sizes-and-model-parameters.html#forest-function"><i class="fa fa-check"></i><b>3.3.7</b> forest-function</a></li>
+<li class="chapter" data-level="3.3.8" data-path="meta-analysis-over-effect-sizes-and-model-parameters.html"><a href="meta-analysis-over-effect-sizes-and-model-parameters.html#hop-function-hypothetical-outcome-plots"><i class="fa fa-check"></i><b>3.3.8</b> hop-function (Hypothetical Outcome Plots)</a></li>
+<li class="chapter" data-level="3.3.9" data-path="meta-analysis-over-effect-sizes-and-model-parameters.html"><a href="meta-analysis-over-effect-sizes-and-model-parameters.html#hop-function-and-partial-dependency-plots"><i class="fa fa-check"></i><b>3.3.9</b> hop function (and Partial Dependency Plots)</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="epistemic-authenticity.html"><a href="epistemic-authenticity.html"><i class="fa fa-check"></i><b>4</b> Epistemic authenticity</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="epistemic-authenticity.html"><a href="epistemic-authenticity.html#introduction-1"><i class="fa fa-check"></i><b>4.1</b> Introduction</a></li>
+<li class="chapter" data-level="4.2" data-path="epistemic-authenticity.html"><a href="epistemic-authenticity.html#predicate-and-epistemic-logic"><i class="fa fa-check"></i><b>4.2</b> Predicate and epistemic logic</a>
+<ul>
+<li class="chapter" data-level="4.2.1" data-path="epistemic-authenticity.html"><a href="epistemic-authenticity.html#syllogism-and-propositional-logic"><i class="fa fa-check"></i><b>4.2.1</b> Syllogism and propositional logic</a></li>
+<li class="chapter" data-level="4.2.2" data-path="epistemic-authenticity.html"><a href="epistemic-authenticity.html#predicate-logic"><i class="fa fa-check"></i><b>4.2.2</b> Predicate logic</a></li>
+<li class="chapter" data-level="4.2.3" data-path="epistemic-authenticity.html"><a href="epistemic-authenticity.html#epistemic-logic"><i class="fa fa-check"></i><b>4.2.3</b> Epistemic logic</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="epistemic-authenticity.html"><a href="epistemic-authenticity.html#reasoning-logic-and-rules"><i class="fa fa-check"></i><b>4.3</b> Reasoning, logic and rules</a></li>
+<li class="chapter" data-level="4.4" data-path="epistemic-authenticity.html"><a href="epistemic-authenticity.html#deduction-induction-and-abuction"><i class="fa fa-check"></i><b>4.4</b> Deduction, induction and abuction</a></li>
+<li class="chapter" data-level="4.5" data-path="epistemic-authenticity.html"><a href="epistemic-authenticity.html#belief-information-and-facts"><i class="fa fa-check"></i><b>4.5</b> Belief, information and facts</a>
+<ul>
+<li class="chapter" data-level="4.5.1" data-path="epistemic-authenticity.html"><a href="epistemic-authenticity.html#sense-and-experience"><i class="fa fa-check"></i><b>4.5.1</b> Sense and experience</a></li>
+<li class="chapter" data-level="4.5.2" data-path="epistemic-authenticity.html"><a href="epistemic-authenticity.html#representation-and-exprience-of-beliefs"><i class="fa fa-check"></i><b>4.5.2</b> Representation and exprience of beliefs</a></li>
+<li class="chapter" data-level="4.5.3" data-path="epistemic-authenticity.html"><a href="epistemic-authenticity.html#belief"><i class="fa fa-check"></i><b>4.5.3</b> Belief</a></li>
+<li class="chapter" data-level="4.5.4" data-path="epistemic-authenticity.html"><a href="epistemic-authenticity.html#belief-and-information"><i class="fa fa-check"></i><b>4.5.4</b> Belief and information</a></li>
+<li class="chapter" data-level="4.5.5" data-path="epistemic-authenticity.html"><a href="epistemic-authenticity.html#knowledge"><i class="fa fa-check"></i><b>4.5.5</b> Knowledge</a></li>
+</ul></li>
+<li class="chapter" data-level="4.6" data-path="epistemic-authenticity.html"><a href="epistemic-authenticity.html#language-use-and-logic"><i class="fa fa-check"></i><b>4.6</b> Language use and logic</a>
+<ul>
+<li class="chapter" data-level="4.6.1" data-path="epistemic-authenticity.html"><a href="epistemic-authenticity.html#empirical-sense"><i class="fa fa-check"></i><b>4.6.1</b> Empirical sense</a></li>
+<li class="chapter" data-level="4.6.2" data-path="epistemic-authenticity.html"><a href="epistemic-authenticity.html#objective-language-and-normativity"><i class="fa fa-check"></i><b>4.6.2</b> Objective language and normativity</a></li>
+</ul></li>
+<li class="chapter" data-level="4.7" data-path="epistemic-authenticity.html"><a href="epistemic-authenticity.html#truth"><i class="fa fa-check"></i><b>4.7</b> Truth</a></li>
+<li class="chapter" data-level="4.8" data-path="epistemic-authenticity.html"><a href="epistemic-authenticity.html#cogency-of-arguments"><i class="fa fa-check"></i><b>4.8</b> Cogency of arguments</a></li>
+<li class="chapter" data-level="4.9" data-path="epistemic-authenticity.html"><a href="epistemic-authenticity.html#belief-structure-of-reasoning"><i class="fa fa-check"></i><b>4.9</b> Belief structure of reasoning</a></li>
+<li class="chapter" data-level="4.10" data-path="epistemic-authenticity.html"><a href="epistemic-authenticity.html#skepticism"><i class="fa fa-check"></i><b>4.10</b> Skepticism</a>
+<ul>
+<li class="chapter" data-level="4.10.1" data-path="epistemic-authenticity.html"><a href="epistemic-authenticity.html#first-line-of-attack"><i class="fa fa-check"></i><b>4.10.1</b> First line of attack</a></li>
+<li class="chapter" data-level="4.10.2" data-path="epistemic-authenticity.html"><a href="epistemic-authenticity.html#mode-of-disagreement"><i class="fa fa-check"></i><b>4.10.2</b> Mode of disagreement</a></li>
+<li class="chapter" data-level="4.10.3" data-path="epistemic-authenticity.html"><a href="epistemic-authenticity.html#mode-of-hypothesis"><i class="fa fa-check"></i><b>4.10.3</b> Mode of hypothesis</a></li>
+<li class="chapter" data-level="4.10.4" data-path="epistemic-authenticity.html"><a href="epistemic-authenticity.html#mode-of-circularity"><i class="fa fa-check"></i><b>4.10.4</b> Mode of circularity</a></li>
+<li class="chapter" data-level="4.10.5" data-path="epistemic-authenticity.html"><a href="epistemic-authenticity.html#mode-of-infinite-regress"><i class="fa fa-check"></i><b>4.10.5</b> Mode of infinite regress</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="bayes-and-empirical-bayes.html"><a href="bayes-and-empirical-bayes.html"><i class="fa fa-check"></i><b>5</b> Bayes and empirical Bayes</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="bayes-and-empirical-bayes.html"><a href="bayes-and-empirical-bayes.html#classical-statistics-and-estimation"><i class="fa fa-check"></i><b>5.1</b> Classical statistics and estimation</a></li>
+<li class="chapter" data-level="5.2" data-path="bayes-and-empirical-bayes.html"><a href="bayes-and-empirical-bayes.html#bayes-theorem-and-probablistic-estimation"><i class="fa fa-check"></i><b>5.2</b> Bayes theorem and probablistic estimation</a>
+<ul>
+<li class="chapter" data-level="5.2.1" data-path="bayes-and-empirical-bayes.html"><a href="bayes-and-empirical-bayes.html#bayes-theorem"><i class="fa fa-check"></i><b>5.2.1</b> Bayes theorem</a></li>
+<li class="chapter" data-level="5.2.2" data-path="bayes-and-empirical-bayes.html"><a href="bayes-and-empirical-bayes.html#bayes-theorem-in-use"><i class="fa fa-check"></i><b>5.2.2</b> Bayes theorem in use</a></li>
+<li class="chapter" data-level="5.2.3" data-path="bayes-and-empirical-bayes.html"><a href="bayes-and-empirical-bayes.html#bayes-theorem-and-conjugate-priors"><i class="fa fa-check"></i><b>5.2.3</b> Bayes theorem and conjugate priors</a></li>
+<li class="chapter" data-level="5.2.4" data-path="bayes-and-empirical-bayes.html"><a href="bayes-and-empirical-bayes.html#approximate-bayesian-computation-with-rejection-sampling"><i class="fa fa-check"></i><b>5.2.4</b> Approximate Bayesian Computation with rejection sampling</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="bayes-and-empirical-bayes.html"><a href="bayes-and-empirical-bayes.html#introduction-to-bayesian-model-averaging-bma"><i class="fa fa-check"></i><b>5.3</b> Introduction to Bayesian Model Averaging (BMA)</a></li>
+<li class="chapter" data-level="5.4" data-path="bayes-and-empirical-bayes.html"><a href="bayes-and-empirical-bayes.html#meta-analysis"><i class="fa fa-check"></i><b>5.4</b> Meta-analysis</a></li>
+<li class="chapter" data-level="5.5" data-path="bayes-and-empirical-bayes.html"><a href="bayes-and-empirical-bayes.html#bma-and-meta-analysis"><i class="fa fa-check"></i><b>5.5</b> BMA and meta-analysis</a></li>
+<li class="chapter" data-level="5.6" data-path="bayes-and-empirical-bayes.html"><a href="bayes-and-empirical-bayes.html#sequential-updating"><i class="fa fa-check"></i><b>5.6</b> Sequential updating</a></li>
+<li class="chapter" data-level="5.7" data-path="bayes-and-empirical-bayes.html"><a href="bayes-and-empirical-bayes.html#a-short-reflection-on-uncertainty"><i class="fa fa-check"></i><b>5.7</b> A short reflection on uncertainty</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i><b>6</b> References</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">EcoPostView: Ecological Posterior View</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="bayes-and-empirical-bayes" class="section level1 hasAnchor" number="5">
+<h1><span class="header-section-number">5</span> Bayes and empirical Bayes<a href="bayes-and-empirical-bayes.html#bayes-and-empirical-bayes" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>In most cases the theory and background is often not provided in many cookbooks, this makes it impossible to interpreted, criticize our results. This section introduces some theory. However, if you are already familiar with it or find it too technical, feel free to skip it.</p>
+<div id="classical-statistics-and-estimation" class="section level2 hasAnchor" number="5.1">
+<h2><span class="header-section-number">5.1</span> Classical statistics and estimation<a href="bayes-and-empirical-bayes.html#classical-statistics-and-estimation" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>All statistics focuses on estimating the parameter of interest <span class="math inline">\(\theta\)</span> which in most (G)LMs is denoted as the parameter <span class="math inline">\(\mu\)</span> or <span class="math inline">\(\beta\)</span>. For consistency I will use the parameter of interest <span class="math inline">\(\mu\)</span>.</p>
+<p>The population parameter <span class="math inline">\(\mu\)</span> is fixed but unknown. To investigate plausible values for <span class="math inline">\(\mu\)</span>, we collect measurements or samples. These observed data points, denoted as <span class="math inline">\(x = {x_1, \dots, x_n}\)</span>, are realizations of an underlying random variable <span class="math inline">\(X = {X_1, \dots, X_n}\)</span>, where each <span class="math inline">\(X_i \in \mathbb{R}\)</span>. We assume that these observations are independently and identically distributed (i.i.d.) from a common distribution.</p>
+<p><span class="math display">\[X\stackrel{\text{iid}}{\sim} N(\mu, \sigma^2)\]</span></p>
+<p>Since we do not have <span class="math inline">\(X\)</span> but only a set of realizations we need an estimator, which is the sample mean <span class="math inline">\(\bar{x}(x)\)</span>. Hence, the sample mean would be</p>
+<p><span class="math display">\[\bar{x}=\frac{\sum_{i=1}^n(x_i)}{n}\]</span></p>
+<p>If x is indeed i.i.d. then <span class="math inline">\(\hat{x}\)</span> would serve as an unbiased estimator for <span class="math inline">\(\mu\)</span>. Therefore, the sample mean has certain properties.</p>
+<p><span class="math display">\[\mathbb{E}[\bar{x}]=\mu \ and \ Var(\bar{x})=\frac{\sigma^2}{\sqrt{n}}\]</span></p>
+<p>Then according to the weak law of large numbers suggest that the probability of deviation from the population parameter decreases when sample size <span class="math inline">\(n\)</span> increases till it eventually converges.</p>
+<p><span class="math display">\[\lim_{n\to\infty} P\left(|\bar{X}_n-\mu|\geq \epsilon\right)=0\]</span>
+This means that according to the central limit theorem
+<span class="math display">\[Z_n=\frac{\bar{X}_n-\mu}{\sigma/\sqrt(n)}\]</span>
+converges to the normal. The probability of observing <span class="math inline">\(Z\)</span> under a long-run of repetitions</p>
+<p><span class="math display">\[P(-1.96\lesssim Z \lesssim 1.96)=0.95\]</span>.</p>
+<p>Similar, the probability of the intervals of <span class="math inline">\(\bar{x}\)</span> to cover <span class="math inline">\(\mu\)</span> in a long-run of repeated experiments at 95% is</p>
+<p><span class="math display">\[1  - c = P(\bar{X}_n &gt; \mu - 1.96 \cdot \frac{\sigma}{\sqrt{n}}) ~\text{and}~  P(\bar{X}_n &lt; \mu - 1.96 \cdot \frac{\sigma}{\sqrt{n}})\]</span>.</p>
+<p>A visual explanation of this concept is provided in the following Shiny app: <a href="https://snwikaij.shinyapps.io/shiny/" class="uri">https://snwikaij.shinyapps.io/shiny/</a>.</p>
+<p>Furthermore, it is clear that statistics does do nothing with causality and the focus on error-control. Causality starts by satisfying theoretical conditions needed the arrive at believes in these concepts. Hence, error-control and causality start a-priori (Fisher 1949, Pearl 2009, Mayo 2018). Such a focus and framework is extremely useful if objectivity over repetitions are the goal and favorable. While classical statistics focuses on fixed but unknown parameters, error-control and objectivity of information, Bayesian methods extend this perspective by introducing prior information and viewing parameters as random variables. This shift opens the door to more flexible and informative inference, as explained in the next section.</p>
+</div>
+<div id="bayes-theorem-and-probablistic-estimation" class="section level2 hasAnchor" number="5.2">
+<h2><span class="header-section-number">5.2</span> Bayes theorem and probablistic estimation<a href="bayes-and-empirical-bayes.html#bayes-theorem-and-probablistic-estimation" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="bayes-theorem" class="section level3 hasAnchor" number="5.2.1">
+<h3><span class="header-section-number">5.2.1</span> Bayes theorem<a href="bayes-and-empirical-bayes.html#bayes-theorem" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Informally Bayes Theorem would be notated <span class="math inline">\(\text{Posterior}\, \text{probability} = \frac{\text{Likelihood} \cdot \text{Prior}}{\text{Evidence}}\)</span>. More formally Bayes theorem is often notated with A and B where P indicates probability and ‘|’ given or conditional on. <span class="math inline">\(P(A|B) = \frac{P(B|A) \cdot P(A)}{P(B)}\)</span>.Other expression such as <span class="math inline">\(P(\theta|Data, Info) = \frac{P(Data|\theta) \cdot P(\theta|info)}{P(Data)}\)</span> are to highlight that the posterior describes the information of that conditional on the prior information that is given in there.</p>
+<p>The derivation of Bayes theorem relies on the axioms probability theory.</p>
+<p><strong>Premise 1)</strong></p>
+<p><span class="math display">\[
+P(A | B) = \frac{P(A \cap B)}{P(B)}
+\]</span>
+similarly</p>
+<p><span class="math display">\[
+P(B |A) = \frac{P(B \cap A)}{P(B)}
+\]</span>
+<strong>Premise 2)</strong></p>
+<p>Also, the joint probability, expressed as a set-theoretic relationship on <span class="math inline">\(z\)</span>, indicates that element of both sets are the same.</p>
+<p><span class="math display">\[
+z = \{x : x \in A \cap B : x \in B \cap A\}
+\]</span>
+thus</p>
+<p><span class="math display">\[
+P(A \cap B) = P(B \cap A)
+\]</span>
+<strong>Premise 3)</strong></p>
+<p>In accordance with the previous</p>
+<p><span class="math display">\[
+P(A| B) \cdot P(A) = P(A \cap B)
+\]</span>
+and</p>
+<p><span class="math display">\[
+P(B | A) \cdot P(B) = P(B \cap A)
+\]</span>
+<strong>Conclusion)</strong></p>
+<p>Therefore</p>
+<p><span class="math display">\[
+P(A | B) \cdot P(A) = P(B | A) \cdot P(B)
+\]</span>
+<span class="math display">\[
+P(A|B) = \frac{P(B|A) \cdot P(A)}{P(B)}
+\]</span></p>
+</div>
+<div id="bayes-theorem-in-use" class="section level3 hasAnchor" number="5.2.2">
+<h3><span class="header-section-number">5.2.2</span> Bayes theorem in use<a href="bayes-and-empirical-bayes.html#bayes-theorem-in-use" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The previous expression can help us with answer simple questions. Assume that there is a likelihood of 0.7 <span class="math inline">\(P(Species|&lt;Threshold)\)</span> that a species if found below a certain threshold. Furthermore, we also know that that the environment will only be found 0.3 or 30% of the time as <span class="math inline">\(P(&lt;Threshold)\)</span>.How probable would it then be we are below the threshold if we observe the species <span class="math inline">\(P(&lt;Threshold|Species)\)</span>?</p>
+<p><span class="math display">\[
+P(Species|&lt;Threshold) = 0.7\\
+P(&lt;Threshold) = 0.3\\
+P(&lt;Threshold|Species) = ?\\
+\]</span></p>
+<p>Expressing this in Bayes theorem would result in</p>
+<p><span class="math display">\[
+P(&lt;Threshold|Species)=\frac{P(&lt;Threshold|Species)\cdot P(Species) }{P(&lt;Threshold)}
+\]</span></p>
+<p>The only thing still required is <span class="math inline">\(P(Species)\)</span> often called the ‘evidence’. Yet, this evidence is simply the total probability of observing a species, below and above the threshold. For this we can assume that this is the reverse of the <span class="math inline">\(P(Species|&lt;Threshold)\)</span> and <span class="math inline">\(P(&lt;Threshold)\)</span></p>
+<p><span class="math display">\[
+P(Species)=[P(&lt;Threshold|Species)\cdot P(Species)] + [(1-P(&lt;Threshold|Species))\cdot(1-P(Species))]\\
+0.42=[0.7\cdot0.3]+[0.3\cdot0.7]
+\]</span></p>
+<p>Then it is simply filling in the blanks</p>
+<p><span class="math display">\[
+P(&lt;Threshold|Species)=\frac{P(&lt;Threshold|Species)\cdot P(&lt;Threshold) }{P(Species)}=\frac{0.7\cdot0.3}{0.42}=0.5
+\]</span></p>
+<p>The answer not very satisfying as the probability is simply a ‘coin toss’. This could be improved if we would introduce more species with the same indicative potential.</p>
+<p><span class="math display">\[
+P(&lt;Threshold|Species)=\frac{P(&lt;Threshold|Species)\cdot P(&lt;Threshold) }{P(Species)}=\frac{(0.7^2*0.3)}{[(0.7^2*0.3)+(1-0.7)^2*(1-0.3)]}=0.7
+\]</span>
+We would need around five species to get an indicative potential of &gt;0.95 (it would be 0.97).</p>
+</div>
+<div id="bayes-theorem-and-conjugate-priors" class="section level3 hasAnchor" number="5.2.3">
+<h3><span class="header-section-number">5.2.3</span> Bayes theorem and conjugate priors<a href="bayes-and-empirical-bayes.html#bayes-theorem-and-conjugate-priors" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The previous example works for simpler approximations yet if we want to derive an interval for a particular parameter <span class="math inline">\(\theta\)</span> then we can approach this analytically using conjugate priors. Where a prior is conjugate to a likelihood if the resulting posterior is in the same family as the prior.</p>
+<p>As introduced, in statistics and estimation is about finding out the value for <span class="math inline">\(\theta\)</span> which is assumed be <span class="math inline">\(\mu\)</span>. Where in the frequentist framework this is considered fixed and unknown, this is in the Bayesian framework considered to be random ‘and approximately’ known. Of course also in the Bayesian framework samples <span class="math inline">\(x\)</span> are taken. Assume that we already know something about <span class="math inline">\(\mu\)</span> then it is possible to restrict to exclude unreasonable values or for the information we have on <span class="math inline">\(\mu\)</span> to more acceptable values.</p>
+<p><span class="math display">\[
+P(\mu|Data) = \frac{P(Data|\mu) \cdot P(\mu)}{P(Data)}
+\]</span></p>
+<p>For a simple mean and variance an analytical approach can be used to derive the posterior given the likelihood and prior via the following equations.</p>
+<p><span class="math display">\[\mu_{posterior} =\frac{\frac{\mu_{prior} }{\sigma_{prior}^2} + \frac{\hat{x}_{data} }{\sigma_{data}^2}}{
+\frac{1}{\sigma_{prior}^2} + \frac{1}{\sigma_{data}^2}}
+\\
+\sigma_{posterior}=\sqrt{\frac{1}{\frac{1}{\sigma_{prior}^2}+\frac{1}{\sigma_{data}^2}}}\]</span></p>
+<p><strong>Derivation:</strong></p>
+<p><strong>Premise 1)</strong></p>
+<p>Bayes rule can be simplified to
+<span class="math display">\[P(\mu|Data) \propto P(Data|\mu) \cdot P(\mu)
+\\
+N(\mu_{posterior}, \sigma_{posterior}^2)=N(\mu_{sample}, \sigma_{sample}^2)\cdot N(\mu_{prior}, \sigma_{prior}^2)\]</span></p>
+<p><strong>Premise 2)</strong></p>
+<p>The PDF for the normal distribution is
+<span class="math display">\[f(x)=\frac{1}{2\cdot \sqrt{\sigma \pi}}\cdot exp(-\frac{1}{2}(\frac{x-\mu}{\sigma})^2)\]</span></p>
+<p><strong>Premise 3)</strong></p>
+<p><span class="math display">\[Prior: P(\mu_{prior})=\frac{1}{2\cdot \sqrt{\sigma_{prior} \pi}}\cdot exp(-\frac{1}{2}(\frac{\theta-\mu_{prior}}{\sigma_{prior}})^2)
+\\
+Likelihood: P(Data|\mu_{sample})=\frac{1}{2\cdot \sqrt{\sigma_{sample} \pi}}\cdot exp(-\frac{1}{2}(\frac{\mu_{sample}-\theta}{\sigma_{sample}})^2)
+\]</span></p>
+<p><strong>Premise 4)</strong></p>
+<p>Both <span class="math inline">\(\frac{1}{2\cdot \sqrt{\sigma_{prior} \pi}}\)</span> and <span class="math inline">\(\frac{1}{2\cdot \sqrt{\sigma_{sample} \pi}}\)</span> are scalars and can be left out of the equation.</p>
+<p><strong>Premise 5)</strong></p>
+<p>Since both exponent have the same base we can add the exponent <span class="math display">\[(a^2+b^2=a^{2+2})\]</span>
+resulting in</p>
+<p><span class="math display">\[exp(-\frac{1}{2}\cdot[(\frac{\theta-\mu_{prior}}{\sigma_{prior}})^2+(\frac{\mu_{sample}-\theta}{\sigma_{sample}})^2]\]</span></p>
+<p>After which brackets can be moved
+<span class="math display">\[exp(-\frac{1}{2}\cdot[\frac{(\theta-\mu_{prior})^2}{\sigma_{prior}^2}+\frac{(\mu_{sample}-\theta)^2}{\sigma_{sample}^2}])\]</span></p>
+<p><strong>Premise 6)</strong></p>
+<p>Expanding the brackets terms</p>
+<p><span class="math display">\[(a^2+b^2)=(a-b)\cdot(a-b)=a^2-ab-ab+b^2=a^2-2ab+b^2\]</span>
+This means
+<span class="math display">\[(\theta-\mu_{prior})^2=\theta^2-2\theta\mu_{prior}+\mu_{prior}^2\]</span>
+and
+<span class="math display">\[(\mu_{sample}-\theta)^2=\mu_{sample}^2-2\mu_{sample}\theta+\mu_{sample}^2\]</span>
+which can be replaced in premise 5
+<span class="math display">\[exp(-\frac{1}{2}\cdot[\frac{\theta^2-2\theta\mu_{prior}+\mu_{prior}^2}{\sigma_{prior}^2}+\frac{\mu_{sample}^2-2\mu_{sample}\theta+\mu_{sample}^2}{\sigma_{sample}^2}])\]</span></p>
+<p><strong>Premise 7)</strong></p>
+<p>Separating each term by dividing by <span class="math inline">\(\sigma_{prior}^2\)</span> and <span class="math inline">\(\sigma_{sample}^2\)</span></p>
+<p><span class="math display">\[exp(-\frac{1}{2}\cdot\frac{\theta^2}{\sigma_{prior}^2}+\frac{-2\theta\mu_{prior}}{\sigma_{prior}^2}+\frac{\mu_{prior}^2}{\sigma_{prior}^2}+
+\frac{\mu_{sample}^2}{\sigma_{sample}^2}+\frac{-2\mu_{sample}\theta}{\sigma_{sample}^2}+\frac{\mu_{sample}^2}{\sigma_{sample}^2})\]</span></p>
+<p><strong>Premise 8)</strong></p>
+<p>Group each term by the nominator</p>
+<p><span class="math display">\[\frac{\theta^2}{\sigma_{prior}^2}+\frac{-2\theta\mu_{prior}}{\sigma_{prior}^2}+\frac{\mu_{prior}^2}{\sigma_{prior}^2}+
+\frac{\mu_{sample}^2}{\sigma_{sample}^2}+\frac{-2\mu_{sample}\theta}{\sigma_{sample}^2}+\frac{\mu_{sample}^2}{\sigma_{sample}^2}=
+\\
+\theta^2(\frac{1}{\sigma_{prior}^2}+\frac{1}{\sigma_{sample}^2})+
+-2\theta(\frac{\mu_{prior}}{\sigma_{prior}^2}+\frac{\mu_{sample}}{\sigma_{sample}^2})
++(\frac{\mu_{prior}^2}{\sigma_{prior}^2}+\frac{\mu_{sample}^2}{\sigma_{sample}^2})
+\]</span>
+Since the last group is not dependent on <span class="math inline">\(\theta\)</span> it is not in our focus
+<span class="math display">\[
+exp(-\frac{1}{2}\cdot[\frac{\theta^2}{\sigma_{prior}^2}+\frac{-2\theta\mu_{prior}}{\sigma_{prior}^2}+\frac{\mu_{prior}^2}{\sigma_{prior}^2}+
+\frac{\mu_{sample}^2}{\sigma_{sample}^2}+\frac{-2\mu_{sample}\theta}{\sigma_{sample}^2}+\frac{\mu_{sample}^2}{\sigma_{sample}^2}=
+\\
+exp(-\frac{1}{2}\cdot\theta^2(\frac{1}{\sigma_{prior}^2}+\frac{1}{\sigma_{sample}^2})+
+-2\theta(\frac{\mu_{prior}}{\sigma_{prior}^2}+\frac{\mu_{sample}}{\sigma_{sample}^2})
++not\ dependent\ on\ \theta])
+\]</span></p>
+<p><strong>Premise 9)</strong></p>
+<p>The goal is to derive <span class="math inline">\(P(\mu|Data)\)</span> from <span class="math inline">\(P(\mu|Data) \propto P(Data|\mu) \cdot P(\mu)\)</span> An the general exponential form of the normal distribution is given in Premise 2 and the premises 6, 7 and 9 lead to
+<span class="math display">\[\frac{1}{2}\cdot \theta^2 (\frac{1}{\sigma^2})+\theta(\frac{\mu}{\sigma^2})+C=
+\\
+\frac{1}{2}\cdot\theta^2A+\theta B+C\]</span>
+the general exponential form for the normal distribution is always <span class="math inline">\(\frac{1}{2}\cdot\theta^2A+\theta B+C\)</span> meaning that <span class="math inline">\(A=\frac{1}{\sigma^2}\)</span> and <span class="math inline">\(B=\frac{\mu}{\sigma^2}\)</span> and to obtain the standard deviation <span class="math inline">\(A\)</span> needs to be re-arranged to <span class="math inline">\(\sigma = \sqrt{\frac{1}{A}}\)</span> and to obtain the mean <span class="math inline">\(\mu=\frac{B}{A}=\frac{\frac{\mu}{\sigma^2}}{\frac{1}{\sigma^2}}\)</span></p>
+<p><strong>Conclusion)</strong></p>
+<p>In Premise 8
+<span class="math display">\[
+exp(-\frac{1}{2}\cdot\theta^2(\frac{1}{\sigma_{prior}^2}+\frac{1}{\sigma_{sample}^2})+
+-2\theta(\frac{\mu_{prior}}{\sigma_{prior}^2}+\frac{\mu_{sample}}{\sigma_{sample}^2})+C)
+\]</span>
+In Premise 9
+<span class="math display">\[
+\sigma = \sqrt{\frac{1}{A}}, A=\frac{1}{\sigma^2}\\
+\mu=\frac{B}{A}=\frac{\frac{\mu}{\sigma^2}}{\frac{1}{\sigma^2}}
+\]</span>
+Which implies that
+<span class="math display">\[
+\sigma_{posterior}=\sqrt{\frac{1}{\frac{1}{\sigma_{prior}^2}+\frac{1}{\sigma_{sample}^2}}}\\
+\mu_{posterior}=\frac{\frac{\mu_{prior}}{\sigma_{prior}^2} + \frac{\mu_{sample}}{\sigma_{sample}^2}}{\frac{1}{\sigma_{prior}^2} + \frac{1}{\sigma_{sample}^2}}
+\]</span>
+Another way to obtain the posterior including the sample size is via:
+<span class="math display">\[\mu_{posterior}=\frac{\frac{\mu_{prior}}{\sigma_{prior}^2}+\mu_{sample}*\frac{n}{\sigma_{sample}^2}}
+{\frac{1}{\sigma_{prior}^2}+\frac{n}{\sigma_{sample}^2}}\]</span></p>
+<p><strong>Derivation:</strong></p>
+<p><strong>Premise 1)</strong></p>
+<p><span class="math display">\[
+Prior: P(\mu_{prior})=\frac{1}{2\cdot \sqrt{\sigma_{prior} \pi}}\cdot exp(-\frac{1}{2}(\frac{\theta-\mu_{prior}}{\sigma_{prior}})^2)
+\\
+Likelihood: P(Data|\mu_{sample})=\prod_{i=1}^n \frac{1}{2\cdot \sqrt{\sigma_{sample} \pi}}\cdot exp(-\frac{1}{2}(\frac{x_i-\theta}{\sigma_{sample}})^2)
+\]</span></p>
+<p><strong>Premise 2)</strong></p>
+<p>Both <span class="math inline">\(\frac{1}{2\cdot \sqrt{\sigma_{prior} \pi}}\)</span> and <span class="math inline">\(\frac{1}{2\cdot \sqrt{\sigma_{sample} \pi}}\)</span> are scalars and can be left out of the equation.</p>
+<p><strong>Premise 3)</strong></p>
+<p>The likelihood is the product of <span class="math inline">\(n\)</span>&gt;1 random variables
+<span class="math inline">\(exp(a)\cdot exp(b) = exp(a+b)\)</span> thus <span class="math inline">\(exp(a_i)\cdot, ...,\cdot exp(a_n)=exp(\sum_{i=1}^n(a_i))\)</span>.</p>
+<p><span class="math display">\[
+exp(\sum_{i=1}^n-\frac{1}{2}\cdot(\frac{x_i-\theta}{\sigma_{sample}})^2)=exp(-\frac{1}{2}\cdot\sum_{i=1}^n(\frac{x_i-\theta}{\sigma_{sample}})^2)
+\]</span>
+<strong>Premise 4)</strong></p>
+<p>As in premise 6 of the previous derivation we expand all terms and ignore terms independent of <span class="math inline">\(\theta\)</span>.</p>
+<p><span class="math display">\[
+\sum_{i=1}^n(x_i-\theta)=\sum_{i=1}^nx_i^2-2x_i\cdot \theta +\theta^2
+=\sum_{i=1}^nx_i-\sum_{i=1}^n2x_i\cdot\theta+\sum_{i=1}^n\theta^2=
+\sum_{i=1}^nx_i-2\theta\sum_{i=1}^nx_i+\sum_{i=1}^n\theta^2=
+-2\theta\sum_{i=1}^nx_i+n\theta^2
+\]</span></p>
+<p><strong>Premise 5)</strong></p>
+<p>Substitute the expression back into the equation.</p>
+<p><span class="math display">\[
+exp(\frac{1}{2}\cdot[\frac{-2\theta\sum_{i=1}^nx_i+n\theta^2}{\sigma^2_{sample}}])
+\]</span></p>
+<p><strong>Premise 6)</strong></p>
+<p>The posterior can then be rewritten as <span class="math inline">\(P(\mu|Data) \propto P(Data|\mu) \cdot P(\mu)\)</span></p>
+<p><span class="math display">\[
+exp(\frac{1}{2}\cdot[\frac{-2\theta\sum_{i=1}^nx_i+n\theta^2}{\sigma^2_{sample}}])
+*exp(-\frac{1}{2}\cdot(\frac{\theta-\mu_{prior}}{\sigma^2_{prior}})^2)=\\
+exp(\frac{1}{2}\cdot[\frac{-2\theta\sum_{i=1}^nx_i+n\theta^2}{\sigma^2_{sample}}+\frac{\theta-\mu_{prior}}{\sigma^2_{prior}})^2])
+\]</span></p>
+<p><strong>Premise 7)</strong></p>
+<p>Expanding the term of the nominator in the prior and substitute it back in the previous equation.
+<span class="math display">\[
+(\theta-\mu_{prior})^2=\theta^2-2\theta\mu_{prior}+\mu_{prior}^2
+\\
+\frac{\theta^2}{\sigma_{prior}^2}+\frac{-2\theta\mu_{prior}}{\sigma_{prior}^2}+\frac{\mu_{prior}^2}{\sigma_{prior}^2}
+\\
+exp(-\frac{1}{2}\cdot[\frac{\theta^2}{\sigma_{prior}^2}+\frac{-2\theta\mu_{prior}}{\sigma_{prior}^2}+\frac{\mu_{prior}^2}{\sigma_{prior}^2}+
+\frac{-2\theta\sum_{i=1}^nx_i+n\theta^2}{\sigma^2_{sample}}])
+\]</span></p>
+<p><strong>Premise 8)</strong></p>
+<p>Expand the last term and divide by <span class="math inline">\(\sigma^2_{sample}\)</span></p>
+<p><span class="math display">\[
+exp(-\frac{1}{2}\cdot[\frac{\theta^2}{\sigma_{prior}^2}+\frac{-2\theta\mu_{prior}}{\sigma_{prior}^2}+\frac{\mu_{prior}^2}{\sigma_{prior}^2}-
+\frac{2\theta\sum_{i=1}^nx_i}{\sigma^2_{sample}}+\frac{n\theta^2}{\sigma^2_{sample}}])
+\]</span></p>
+<p><strong>Premise 9)</strong></p>
+<p>Group each term by its nominator</p>
+<p><span class="math display">\[
+exp(-\frac{1}{2}\cdot\theta^2(\frac{1}{\sigma_{prior}^2}+\frac{n}{\sigma_{sample}^2})+
+-2\theta(\frac{\mu_{prior}}{\sigma_{prior}^2}+\frac{\sum_{i=1}^nx_i}{\sigma_{sample}^2})
++not\ dependent\ on\ \theta])\]</span></p>
+<p>Since: <span class="math inline">\(\sum_{i=1}^nx_i=\mu_{sample}\cdot n\)</span></p>
+<p><span class="math display">\[
+exp(-\frac{1}{2}\cdot\theta^2(\frac{1}{\sigma_{prior}^2}+\frac{n}{\sigma_{sample}^2})+
+-2\theta(\frac{\mu_{prior}}{\sigma_{prior}^2}+\frac{\mu_{sample}\cdot n}{\sigma_{sample}^2})
++not\ dependent\ on\ \theta])
+\]</span></p>
+<p><strong>Conclusion)</strong></p>
+<p>From the steps 8 and 9 in the previous derivation we arive at</p>
+<p><span class="math display">\[
+\sigma_{posterior}=\sqrt{\frac{1}{\frac{1}{\sigma_{prior}^2}+\frac{n}{\sigma_{sample}^2}}}\\
+\mu_{posterior}=\frac{\frac{\mu_{prior}}{\sigma_{prior}^2} + \frac{\mu_{sample}\cdot n}{\sigma_{sample}^2}}{\frac{1}{\sigma_{prior}^2} + \frac{n}{\sigma_{sample}^2}}
+\]</span></p>
+<p>As might be clear this is less computational heavy than MCMC methods. For more then two parameter such an analytically approach becomes more cumbersome. And, if conjugacy is not satisfied no closed form solution is available. In this regards, Laplacian approximation is also computational easy. Yet, the equation clearly formulate the idea what happens in Bayes theorem.</p>
+</div>
+<div id="approximate-bayesian-computation-with-rejection-sampling" class="section level3 hasAnchor" number="5.2.4">
+<h3><span class="header-section-number">5.2.4</span> Approximate Bayesian Computation with rejection sampling<a href="bayes-and-empirical-bayes.html#approximate-bayesian-computation-with-rejection-sampling" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Approximate Bayesian Computation with rejection sampling (ABC-rejection) is a computationally expensive method for approximating the posterior distribution. However, when the number of parameters is relatively small, the posterior can still be approximated quite well. ABC-rejection is especially useful when the likelihood function cannot be computed or approximated accurately.</p>
+<p>One example is the use of ABC to explore potential bias in the EcoPostView package. In a simplified case, assuming both the prior and the data-generating model are normally distributed, the ABC-rejection algorithm begins by simulating a parameter from the prior distribution.</p>
+<p><span class="math display">\[
+\mu_{i}^*\sim N(\mu_{prior},\sigma_{prior}^2) \\
+\sigma_{i}^{2*}\sim Exp(rate)
+\]</span></p>
+<p>The asterisk (<span class="math inline">\(^*\)</span>) denotes that these parameters are temporary, and this will become important later.Next, a data-generating model is used to simulate data based on these temporary parameters. We assume the observed data is approximately normally distributed, though any model could be used. For each simulation, we generate <span class="math inline">\(n_{data}\)</span> values.</p>
+<p><span class="math display">\[
+x_{i}\sim N(\mu^*, \sigma^{2*})
+\]</span></p>
+<p>Depending on the parameter of interest (e.g., <span class="math inline">\(\mu\)</span>, <span class="math inline">\(\sigma\)</span>, mode, or median), a summary statistic is computed from the simulated data. In this example, we focus on estimating <span class="math inline">\(\mu\)</span>.</p>
+<p><span class="math display">\[
+\hat{x}_{sim, i}=\frac{\sum_{i=1}^n(x_i, ..., x_n)}{n_{data}}
+\]</span></p>
+<p>Each simulated mean <span class="math inline">\(\hat{x}_{sim, i}\)</span> (typically out of 100,000 simulations) is compared to the observed mean <span class="math inline">\(\hat{x}_{data}\)</span> using the Euclidean distance.</p>
+<p><span class="math display">\[
+E_{i}=\sqrt{(\hat{x}_{sim, i} - \hat{x}_{data})^2}
+\]</span></p>
+<p>A tolerance threshold is then selected to determine which simulated values are accepted. Simulations with <span class="math inline">\(E_i &gt; tolerance\)</span> are rejected, while those with <span class="math inline">\(E_i \leq tolerance\)</span> are retained. While a tolerance of zero would yield the most accurate posterior, it would typically result in rejecting all simulations. On the other hand, setting the tolerance too high would allow in too many poor matches.</p>
+<p>Each accepted simulation corresponds to an accepted pair of simulated parameters <span class="math inline">\(\mu_{i}^*, \sigma_{i}^{2}*\)</span>. Since all <span class="math inline">\(\mu_{i}^*\)</span> were originally drawn from the prior, the subset of accepted values approximates the posterior distribution of <span class="math inline">\(\mu\)</span>.</p>
+</div>
+</div>
+<div id="introduction-to-bayesian-model-averaging-bma" class="section level2 hasAnchor" number="5.3">
+<h2><span class="header-section-number">5.3</span> Introduction to Bayesian Model Averaging (BMA)<a href="bayes-and-empirical-bayes.html#introduction-to-bayesian-model-averaging-bma" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Instead of <span class="math inline">\(P\)</span> the function ‘<span class="math inline">\(f\)</span>’ are used this to highlight that the probability is a mapping function. A mapping function being a ‘rule’ that maps <span class="math inline">\(x\)</span> to <span class="math inline">\(y\)</span> and so <span class="math inline">\(y=f(x)\)</span>.
+<span class="math display">\[
+f(\beta \mid Data, Info) =
+\frac{f(Data \mid \beta) \cdot f(\beta \mid Info)}
+{\int f(Data \mid \beta) \cdot f(\beta \mid Info)}
+\]</span>
+The integral in the denominator is used to scale the posterior probability to one. This expression is sometimes simplified to
+<span class="math display">\[f(\beta \mid Data, Info) = f(Data \mid \beta) \propto f(\beta \mid Info)\]</span>
+Where the <span class="math inline">\(\propto\)</span> symbol indicates ‘proportional to’ highlighting the idea of exchangeability. Therefore, the posterior is nothing more than a function that describes the probability <span class="math inline">\(y\)</span> as a function of <span class="math inline">\(\beta\)</span> conditional on <span class="math inline">\(Data\)</span> and <span class="math inline">\(Info\)</span> (<span class="math inline">\(y=f(\beta \mid Data, Info)\)</span>). This cannot be solely conditional on the <span class="math inline">\(Data\)</span> as the <span class="math inline">\(Data\)</span> is not uncertain our information/believe is uncertain about a none existing object <span class="math inline">\(\beta\)</span> (unless Platonism is true).</p>
+<p>In the previous part a single prior model was used. Bayesian Model Averaging (BMA) has the advantages that it allows multiple (<span class="math inline">\(k\)</span>) functions to be utilized as prior. I specifically choose the use of <span class="math inline">\(f\)</span> so multiple priors as <span class="math inline">\(f_k\)</span> in the equation below can be seen nothing more as multiple functions (or models). This in my opinion makes it easier to see that there is only optimized between multiple functions. It sound weird to say to optimize between probabilities.
+Hence, multiple possible scenarios that could have been responsible for <span class="math inline">\(\beta\)</span> can be introduced as below.
+<span class="math display">\[
+f(\beta \mid Data,Info) = \frac{f(Data \mid \beta) \cdot f_k(\beta \mid Info)}{\int \left( \sum_{k=1}^{k} f(Data \mid \beta) \cdot f_k(\beta \mid Info) \right)}
+\]</span>
+Now it should be clear that each <span class="math inline">\(\beta\)</span> contained within <span class="math inline">\(g(E(y \mid x_{ij})) = \sum_{j=1}^{v} \beta_j \cdot x_{ij}\)</span> is being restricted by the prior models. While in frequentism it is unrestricted and ‘complete indifference’ towards the possibility of <span class="math inline">\(\beta\)</span>. All these methods can be used in a meta-analysis.</p>
+</div>
+<div id="meta-analysis" class="section level2 hasAnchor" number="5.4">
+<h2><span class="header-section-number">5.4</span> Meta-analysis<a href="bayes-and-empirical-bayes.html#meta-analysis" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>A standard meta-analysis uses a measure of location (mean) and scale (precision) to estimate a pooled value based on all parameters. For a fixed meta-analysis the pooled parameter is derived via the following equation.
+<span class="math display">\[\theta_{pooled} = \frac{\sum_{i=1}^{k}(\theta_i\cdot w_i)}{\sum_{k=1}^kw_i}\]</span>
+<span class="math inline">\(\theta_i\)</span> is the extracted effect-size for a study <span class="math inline">\(i\)</span>. The <span class="math inline">\(w_i\)</span> is the weight per study <span class="math inline">\(i\)</span> for allk <span class="math inline">\(k\)</span> studies, derived from the precision <span class="math inline">\(1/se_i^2\)</span> via the equation below.
+<span class="math display">\[w_i = \frac{1}{se_i^2}\]</span>
+The standard error for the pooled effect-size can then be derived via the formula given below.</p>
+<p><span class="math display">\[se(\theta_{pooled})=\frac{1}{\sqrt\sum_{i=1}^{k}(w_i)}\]</span>
+For a random-effect meta-analysis the variance between studies is separately modeled. In the metafor package REML or (Restricted Maximum Likelihood) is used to estimate this between study variance. However it is also possible using the DerSimonian and Laird method.
+<span class="math display">\[
+\tau^2=max(0, \frac{Q-(k-1)}{\sum_{i=1}^{k}\frac{1}{w_i}-\frac{\sum_{i=1}^{k}1/w_i^2}{\sum_{i=1}^{k}1/w_i}})\
+\\
+w^*_i=\frac{1}{(\frac{1}{w_i}+\tau^2)}
+\\
+\theta_{pooled} = \frac{\sum_{i=1}^{k}(\theta_i\cdot w^*_i)}{\sum_{i=1}^{k}(w^*_i)}
+\\
+se(\theta_{pooled})=\frac{1}{\sqrt(\sum_{i=1}^{k}w^*_i)}
+\]</span>
+If we now go back to how we analytically derived the posterior we can devise a function that can analytically perform a fixed effect meta-analysis with ease. I have placed this in a function called ‘abmeta’. In in simple cases it approximates the results of metafor and the meta function inf EcoPostView relatively well. Of course the variance component slightly differs with that from metafor and the ‘meta’ function due to the different method of estimation.</p>
+</div>
+<div id="bma-and-meta-analysis" class="section level2 hasAnchor" number="5.5">
+<h2><span class="header-section-number">5.5</span> BMA and meta-analysis<a href="bayes-and-empirical-bayes.html#bma-and-meta-analysis" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>In a meta-analysis we do not talk about <span class="math inline">\(\beta\)</span> but about a set of estimates <span class="math inline">\(\beta=\{\beta_{i}, ..., \beta_{n}\}\)</span> meaning that <span class="math inline">\(f(Meta-data\mid\{\beta_{i}, ..., \beta_{n}\})\)</span>. Hereby the flexibility allows that these estimates are either likelihood estimates (<span class="math inline">\(\hat{\beta}\)</span>) or posterior estimates (<span class="math inline">\(\beta\)</span>). and we end up with an expression that should capture the inference to an underlying pooled model parameter.
+<span class="math display">\[
+f(\beta_{poolded} \mid Meta-data,Info) = \frac{f(Meta-data \mid \{\beta_{i}, ..., \beta_{n}\}) \cdot f_k(\beta_{pooled} \mid Info)}{\int \left( \sum_{k=1}^{m} f(Meta-data \mid \{\beta_{i}, ..., \beta_{n}\}) \cdot f_k(\beta_{pooled} \mid Info) \right)}
+\]</span>
+Assuming the pooled parameter <span class="math inline">\(\beta_pooled\)</span>is derived the equation layed out before the variance of the pooled parameter can be analytically derived as given by Hoeting et al. (1999):</p>
+<p><span class="math display">\[
+SE(\beta_{pooled}) = \sqrt{\sum^m_{k=1}( w_{prior} \cdot (\beta_k^2+SE(\beta_k)^2))-\beta_{pooled}^2}\\
+\]</span></p>
+</div>
+<div id="sequential-updating" class="section level2 hasAnchor" number="5.6">
+<h2><span class="header-section-number">5.6</span> Sequential updating<a href="bayes-and-empirical-bayes.html#sequential-updating" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Bayesian sequential updating refers to the practice of re-using the derived posterior of a previous model as the prior for the new model. For this the assumption of conditional independence between the the datasets is assumed. The parameter of interest is <span class="math inline">\(\theta\)</span> based on a dataset <span class="math inline">\(Data_1\)</span> and we derive the posterior.
+<span class="math display">\[P(\theta|Data_1) = \frac{P(Data_1|\theta) \cdot P(\theta)}{P(Data_1)}\]</span>
+The next would be
+<span class="math display">\[P(\theta|Data_1, Data_2) = \frac{P(Data_2|\theta) \cdot P(\theta|Data_1)}{P(Data_2)}\]</span>
+till <span class="math display">\[P(\theta|Data_n) = \frac{P(Data_n|\theta) \cdot P(\theta|Data_1,\cdots,Data_{n-1})}{P(Data_n)}\]</span></p>
+<p>For example, we would like to know what <span class="math inline">\(\mu\)</span> from a population of interest. Our example population has <span class="math inline">\(\mu=0.5\)</span>, <span class="math inline">\(\sigma=5\)</span> and each study would have an error of <span class="math inline">\(\alpha = 40\%\)</span> when when we assume <span class="math inline">\(\alpha=5\%\)</span> (meaning that our heterogeneity is larger than expected). Our first prior starts with <span class="math inline">\(N(0, 5)\)</span> after which the posterior of previous is sequentially re-used visually represented in Fig. 2a below. Where more studies increase the precision of the estimated posterior.</p>
+<p>If the focus lies on objectivity and the error control over the different studies and assume iid then the curve between studies would follow that of Fig. 2b below.</p>
+<p>In a less formal way is the Bayesian framework more focused on transfer of information an precision. On the other hand the frequentist framework is more interested in objectivity, consistency and error among studies.</p>
+<p><img src="EcoPostView_files/figure-html/sequential%20updating-1.png" width="768" /></p>
+<p><em>Figure 2: Sequential updating with credibility intervals on the left panel and a long-run of means with confidence intervals on the right The left panel.</em></p>
+</div>
+<div id="a-short-reflection-on-uncertainty" class="section level2 hasAnchor" number="5.7">
+<h2><span class="header-section-number">5.7</span> A short reflection on uncertainty<a href="bayes-and-empirical-bayes.html#a-short-reflection-on-uncertainty" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>I do not believe statistics reflects uncertainty about events; rather, it reflects the information in the data under a particular model or the uncertainty about our belief in a parameter (<span class="math inline">\(\theta, \beta, \mu\)</span>, etc.). The later concept is often vague and confusing because, if one assumes the parameter does not exist independently of the mind, then what exactly is uncertain - our belief? The claim to ‘objective probability’ is already compromised by the assumption that the parameter is objective. However, if the parameter does not exist outside the mind, the meaning of ‘objective’ in this context becomes questionable.</p>
+<p>When people refer to objectivity, they often mean that the data itself is the most ‘objective’ part of the process. However, if some conditions are not met, such as (1) the data is not randomly sampled from a population of interest, (2) the model is not pre-selected in advance, (3) a sufficiently large sample size is not chosen based on the model, and (4) confounding variables are present, then even the data cannot be considered truly objective unless these limitations are explicitly acknowledged. Moreover, model selection procedures further contaminate the objectivity of the data, meaning that the estimated model parameters no longer fully reflect the objectivity of the data which is often implied in our conclusions (Gelman and Loken, 2013; Tong, 2019).</p>
+<p>In Bayesian updating, the prior reflects the extent to which we want to sacrifice over the objectivity of the likelihood by using information which cannot be formalized into the likelihood. This is captured by the relationship <span class="math inline">\(f(\theta \mid Data, Info) = f(Data \mid \theta) \propto f(\theta \mid Info)\)</span></p>
+<p>The posterior, therefore, is merely the weighted combination of the prior and likelihood. It represents the relationship (e.g., <span class="math inline">\(0.25\)</span> as <span class="math inline">\(0.5 \cdot 0.5\)</span>) between the prior and the likelihood. There is no invalidity in a logical argument such as:(Premise 1.) All unicorns are orange. (Premise 2.) I have a unicorn. (Conclusion) Therefore, my unicorn is orange.</p>
+<p>While this argument may be unsound — because unicorns do not exist — the reasoning itself is not flawed. The issue lies with the premises, not the structure of the argument. Hence, Uncertainty does not exist in the ‘real’ world; it resides solely in our minds. We cannot be ‘wrong’ or ‘correct’ about <span class="math inline">\(f(\beta \mid \text{Data, Info})\)</span> because it does not exist as a tangible entity. Even if it did, its existence would have no impact on reality because uncertainty is unrelated to the way reality operates. In the real world, events either occur or they do not. If my unicorn does not exist, I will never see it, and it was never orange in the first place.</p>
+<p>We should also avoid treating models as a definitive representation of reality. Models are tools that convey information and serve as pragmatic instruments. The the model itself is not the result, the strength of the results relies on the argument, and how well the premises within the argument are clarified and supported by the model.</p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="epistemic-authenticity.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="references.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

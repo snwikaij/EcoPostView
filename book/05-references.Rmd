@@ -1,0 +1,112 @@
+# References 
+
+Anat, Biletzki, and Matar Anat. 2021. “Ludwig Wittgenstein.” Stanford Encyclopedia of Philosophy: 46. https://plato.stanford.edu/entries/wittgenstein/. 
+
+Baguley, Thom. 2009. “Standardized or Simple Effect Size: What Should Be Reported?” British Journal of Psychology 100(3): 603–17. doi: 10.1348/000712608X377117.
+
+Bárdos, Dániel, and Adam Tamas Tuboly. 2025. Science, Pseudoscience, and the Demarcation Problem. Cambridge: Cambridge University Press. doi: 10.1017/9781009429597.
+
+Barnes, Jonathan. 2007. The Toils of Scepticism. Digitally print. version. Cambridge: Cambridge Univ. Press.
+
+Barwise, Jon, John Etchemendy, Gerard Allwein, Dave Barker-Plummer, and Albert Liu. 2002. Language, Proof, and Logic. Stanford, Calif: CSLI Publications.
+
+Bronzo, Silver. 2022. Wittgenstein on Sense and Grammar. Cambridge New York (N.Y.): Cambridge university press. 
+
+Carthwright, Nancy, Jordi Cat, Lola Fleck, and E. Thomas Uebel. 1996. Otto Neurath: Philosophy between Science and Politics. Cambridge: Cambridge university press.
+
+Cramer, J. S. 1991. The Logit Model: An Introduction for Economists. London: Edward Arnold.
+
+Csilléry, Katalin, Michael G.B. Blum, Oscar E. Gaggiotti, and Olivier François. 2010. “Approximate Bayesian Computation (ABC) in Practice.” Trends in Ecology & Evolution 25(7): 410–18. doi: 10.1016/j.tree.2010.04.001.
+
+de Groot, W.T. 1998. “Problem-In-Context: A Framework for the Analysis, Explanation and Solution of Environmental Problems.” In Environmental Management in Practice: Vol 1: Instruments for Environmental Management, Oxford: Routledge, 22–43.
+
+Dewey, John. 1997. How We Think. Mineola, N.Y: Dover Publications.
+
+Ferrari, Filippo, and Massimiliano Carrara. 2025. Logic and Science: An Exploration of Logical Anti-Exceptionalism. Cambridge: Cambridge University Press. doi: 10.1017/9781009233897.
+
+Feyerabend, Paul. 1975. Against Method: Outline of an Anarchistic Theory of Knowledge. 4th ed. London and New York: Verso.
+
+Fisher, R. A. (1949). The Design of Experiments (5th ed.). Oliver and Boyd.
+
+Foucault, Michel. 1981. Power / Knowledge: Selected Interviews and Other Writings 1972 - 1977. ed. Colin Gordon. New York: Pantheon Books.
+
+Fumerton, Richard A. 1995. Metaepistemology and Skepticism. Lanham, Md.: Rowman & Littlefield.
+
+Gelman, Andrew, and Eric Loken. 2013. “The Garden of Forking Paths: Why Multiple Comparisons Can Be a Problem, Even When There Is No ‘FIshing Expedition’ or ‘p-Hacking’ and the Research Hypothesis Was Posited Ahead of Time.” 348(3): 1–17. doi: 10.1007/978-3-658-12153-2_7.
+
+Haack, Susan. 1978. Philosophy of Logics. 1st ed. Cambridge University Press. doi: 10.1017/CBO9780511812866.
+
+Harman, Gilbert. 1986. Change in View: Principles of Reasoning. A Bradford Book, The MIT press Cambridge, Massachusetts, London England.
+
+Hartig, Florian, Justin M. Calabrese, Björn Reineking, Thorsten Wiegand, and Andreas Huth. 2011. “Statistical Inference for Stochastic Simulation Models - Theory and Application: Inference for Stochastic Simulation Models.” Ecology Letters 14(8): 816–27. doi: 10.1111/j.1461-0248.2011.01640.x.
+
+Heidegger, Martin. 1929. “What Is Metaphysics.” https://www.stephenhicks.org/wp-content/uploads/2013/03/heideggerm-what-is-metaphysics.pdf.
+
+Heidegger, Martin. 2016. Logic: The Question of Truth. First paperback edition. Bloomington Indianapolis: Indiana University Press.
+
+Hinne, Max, Quentin F. Gronau, Don Van Den Bergh, and Eric-Jan Wagenmakers. 2020. “A Conceptual Introduction to Bayesian Model Averaging.” Advances in Methods and Practices in Psychological Science 3(2):200–215. doi: 10.1177/2515245919898657.
+
+Hoeting, Jennifer A., David Madigan, Adrian E. Raftery, and Chris T. Volinsky. 1999. “Bayesian Model Averaging: A Tutorial.” Statistical Science 14(4):382–417. doi: 10.1214/ss/1009212519.
+
+Hume, David. 1739. A Treatise of Human Nature  [2007, Dutch Translated Version: Traktaat over de Menselijk Natuur]. Amsterdam: Uitgeverij Boom.
+
+Kale, Alex, Francis Nguyen, Matthew Kay, and Jessica Hullman. 2019. “Hypothetical Outcome Plots Help Untrained Observers Judge Trends in Ambiguous Data.” IEEE Transactions on Visualization and Computer Graphics 25(1): 892–902. doi: 10.1109/TVCG.2018.2864909.
+
+Labukt, Ivar. 2021. “Is Logic Distinctively Normative?” Erkenntnis 86(4): 1025–43. doi: 10.1007/s10670-019-00142-1.
+
+Lamme, V. 2011. Vrije Wil Bestaat Niet. Amsterdam: Prometheus.
+
+Laudan, Larry. 1983. “The Demise of the Demarcation Problem.” In Physics, Philosophy and Psychoanalysis, Boston Studies in the Philosophy of Science, eds. R. S. Cohen and L. Laudan. Dordrecht: Springer Netherlands, 111–27. doi: 10.1007/978-94-009-7055-7_6.
+
+Lazurca, Vladimir. 2025. “Scepticism about Meaning in the German Enlightenment.” International Journal for the Study of Skepticism 15(1): 1–31. doi: 10.1163/22105700-bja10095. 
+
+Lee, Siu-Fan. 2017. Logic: A Complete Introduction. Great Britain: Hodder & Stoughton.
+
+Lynch, Michael P. 2001. The Nature of Truth: Classic and Contemporary Pespectives. Cambridge, Massachusetts, London, England: The MIT press.
+
+Maier, Maximilian, František Bartoš, and Eric-Jan Wagenmakers. 2023. “Robust Bayesian Meta-Analysis: Addressing Publication Bias with Model-Averaging.” Psychological Methods 28(1): 107–22. doi: 10.1037/met0000405.
+
+Mayo, D. G. (2018). Statistical Inference as Severe Testing: How to Get Beyond the Statistics Wars. Cambridge University Press.
+
+Moreno, Santiago G., Alex J. Sutton, Ae Ades, Tom D. Stanley, Keith R. Abrams, Jaime L. Peters, and Nicola J. Cooper. 2009. “Assessment of Regression-Based Methods to Adjust for Publication Bias through a Comprehensive Simulation Study.” BMC Medical Research Methodology 9(1):2. doi: 10.1186/1471-2288-9-2.
+
+Markowitz, David M., and Jeffrey T. Hancock. 2016. “Linguistic Obfuscation in Fraudulent Science.” Journal of Language and Social Psychology 35(4): 435–45. doi: 10.1177/0261927X15614605.
+
+Pearl, J. (2009). Causality. Cambridge university press.
+
+Pearl, Judea, and Dana Mackenzie. 2019. The Book of Why: The New Science of Cause and Effect. London: Penguin Books.
+
+Peters, Jaime L., Alex J. Sutton, David R. Sones, Keith R. Abrams, and Lesley Rushton. 2006. “Comparison of Two Methods to Detect Publication Bias in Meta-Analysis.” JAMA 295(6):676. doi: 10.1001/jama.295.6.676.
+
+Popper, Karl Raimund. 1968. The Logic of Scientific Discovery. Basic Books.
+
+Puppo, Federico. 2019. Informal Logic: A “Canadian” Approach to Argument. Windsor Studies in Argumentation.
+
+Shrader-Frechette, K. S., and Earl D. Mccoy. 1994. “How the Tail Wags the Dog: How Value Judgments Determine Ecological Science.” Environmental Values 3(2): 107–20. doi: 10.3197/096327194776679764.
+
+Smith, Peter. 2021. An Introduction to Formal Logic. Second edition, reprinted with corrections. Monee, IL: Logic Matters.
+
+Stanley, T. D., and Hristos Doucouliagos. 2014. “Meta-Regression Approximations to Reduce Publication Selection Bias.” Research Synthesis Methods 5(1):60–78. doi: 10.1002/jrsm.1095.
+
+Stefan, Sienkiewicz. 2019. Five Modes of Scepticism: Sextus Empiricus and the Agrippan Modes. Great Clarendon Street, Oxfored, OX2 6DP, United Kingdom: Oxford University Press.
+
+Stone, James V. 2015. Information Theory: A Tutorial Introduction. First edition. Sheffield, UK: Sebtel Press.
+
+Tukey, John W. 1969. “Analysing Data: Sanctification or Detective Work?” American Psychologist 24(2): 83–91. doi: 10.1037/h0027108.
+
+Tong, Christopher. 2019. “Statistical Inference Enables Bad Science; Statistical Thinking Enables Good Science.” The American Statistician 73(sup1): 246–61. doi: 10.1080/00031305.2018.1518264.
+
+Usó-Doménech, J. L., and J. Nescolarde-Selva. 2016. “What Are Belief Systems?” Foundations of Science 21(1): 147–52. doi: 10.1007/s10699-015-9409-z
+
+Van Ditmarsch, Hans, Wiebe Van Der Hoek, and Barteld Kooi. 2008. Dynamic Epistemic Logic. Dordrecht: Springer Netherlands. doi: 10.1007/978-1-4020-5839-4. 
+
+Van Fraassen, Bas C. 1980. The Scientific Image. Oxford University Press.
+
+Van Zwet, E.W., Cator, E.A., 2021. "The significance filter, the winner’s curse and the need to shrink." Stat. Neerlandica 75, 437–452. doi: 10.1111/stan.12241
+
+Wasserstein, Ronald L., and Nicole A. Lazar. 2016. “The ASA Statement on p -Values: Context, Process, and Purpose.” The American Statistician 70(2): 129–33. doi: 10.1080/00031305.2016.1154108.
+
+Wittgenstein, Ludwig. 1921. Tractatus Logico-Philosophicus [English Translation: Ogden C.K.]. Garden city, New York: Dover Publications. 
+
+Woolridge, Jeffery M. 2001. Econometric Analysis of Cross Section and Panel Data. Cambridge, Massachusetts, London, England: The MIT press.
+

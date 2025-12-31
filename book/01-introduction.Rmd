@@ -1,0 +1,72 @@
+# Introduction
+
+Ecological data is scattered throughout the literature in varying formats. It is often case-specific and not representative of the full range of ecological conditions encountered in the real world. As a result, a large amount of noise is introduced, limiting the generalizability of results. Moreover, there is no coherent framework to re-use, generalize, and integrate large amount of ecological data into understandable and predictive models. This lack of structure hampers ecological understanding and leads to a loss of valuable information.
+
+As ecologists, we are not only interested in isolated, case-specific explanations or post-hoc rationalizations. We aim to build cumulative knowledge and apply it across diverse contexts. Working with logic, metadata, and stochastic processes can help solidify our understanding of ecological relationships. These tools enable us to make probability based statements and generate predictions. This R package is designed to assist with exactly that. Its goal is to facilitate the integration of multiple sources of information, combining their strengths to generate broader insights.
+
+The core function of the package utilizes outputs from multiple fitted Linear and Generalized Linear Models ((G)LMs), leveraging Bayesian methods to generalize their effects into a single, meta-analytic (G)LM. This synthesized model can then be visualized (see Fig. 1 below) and used to make predictions on new data. The ultimate aim is to provide a robust, generalized understanding of ecological relationships by drawing from all available sources of information.
+
+```{r, intro-plot,  fig.width=8, fig.height=4, echo=F, warning=FALSE}
+library(EcoPostView)
+library(ggplot2)
+library(cowplot)
+data("example1")
+
+mod_intro <- meta(estimate=example2$est,         
+                  stderr=example2$se,            
+                  parameter=example2$parameter,  
+                  predictor=example2$predictor,  
+                  link_function=example2$link,   
+                  grouping=example2$group,       
+                  n_chain=6,
+                  n_thin=10,
+                  print_summary=F)
+
+pl1 <- hop(mod_intro ,                                              
+           group = "Invertebrates",                            
+           predictor = c("Salinity", "Sediment"),                   
+           xlab = expression(Conductivity ~ mu * S ~ cm^-1),                          
+           ylab = "Fine sediment fraction",                   
+           pdp_resolution = 100,                                   
+           link_function = "logit",
+           exp_disp = T, 
+           round_x_axis = 0,
+           round_y_axis = 2,
+           xlim=c(2.99, 6.215), 
+           ylim=c(-4.61, -0.92))
+pl1 <- pl1+ggplot2::theme(legend.position = "none")
+
+pl2 <- hop(mod_intro ,                                              
+           group = "Invertebrates",                            
+           predictor = c("Salinity", "Sediment"),                   
+           xlab = expression(Conductivity ~ mu * S ~ cm^-1),          
+           ylab = "Fine sediment fraction",                   
+           gradient_title = "Evenness \naquatic \ninvertebrates",
+           pdp_resolution = 100,                                   
+           link_function = "logit",
+           exp_axis = T, 
+           round_x_axis = 0,
+           round_y_axis = 2,
+           xlim=c(2.99, 6.215), 
+           ylim=c(-4.61, -0.92))
+pl2 <- pl2+ggplot2::theme(axis.title.y = element_blank())
+
+intro_plot <- cowplot::plot_grid(pl1, pl2, rel_widths = c(0.43, 0.57))
+print(intro_plot)
+rm(mod_intro)
+```
+
+*Figure 1: Expected evenness of aquatic invertebrates as a function of conductivity and fine sediment fraction within a river reach. The left panel shows the relationship on the response scale, while the right panel presents it on the log scale for improved visualization.*
+
+This package offers tools for ecological statistical modeling, with a strong emphasis on (subjective) Bayesian methods and visualisation. While a basic understanding of R is sufficient to use the core functions, a more in-depth theoretical background is provided in chapter 3 for those interested in exploring the underlying concepts. Please note that this is an actively developed R package, and improvements or updates may be introduced over time.
+
+## R-package installation
+To start using this R-package, both JAGS and devtools must be installed. JAGS can be installed from https://sourceforge.net/projects/mcmc-jags/ and devtools can be installed in R via CRAN. The most recent version of the EcoPostView it can be installed from GitHub. Of course, any problems, questions or possible improvements can be directed to me.
+
+```{r setup_2}
+#install.packages("devtools")
+library(devtools)
+
+#install.github("snwikaij/EcoPostView")
+library(EcoPostView)
+```

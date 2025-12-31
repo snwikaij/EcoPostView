@@ -7,6 +7,20 @@
 #' @param order_group The order of the groups
 #' @param xlab The x-label text
 #'
+#' @importFrom ggplot2 coord_flip
+#' @importFrom ggplot2 geom_density
+#' @importFrom ggplot2 scale_color_manual
+#' @importFrom ggplot2 geom_vline
+#' @importFrom ggplot2 facet_wrap
+#' @importFrom ggplot2 geom_errorbar
+#' @importFrom ggplot2 geom_hline
+#' @importFrom ggplot2 scale_fill_gradientn
+#' @importFrom ggplot2 geom_text
+#' @importFrom ggplot2 geom_tile
+#' @importFrom ggplot2 theme_classic
+#' @importFrom ggplot2 theme
+#' @importFrom ggplot2 position_dodge
+#'
 #' @export
 senscheck <- function(mod1, mod0, interval=0.9,
                       order_predictor=NULL, order_group=NULL,
@@ -73,11 +87,11 @@ senscheck <- function(mod1, mod0, interval=0.9,
   overlaydf       <- split(overlaydf, overlaydf$link)
 
   pl1 <- lapply(overlaydf, function(x) ggplot(x, aes(Est, col=Model))+
-                  geom_density()+xlab("Estimate")+ylab("Posterior density")+
-                  scale_color_manual(breaks=c("M1", "M0"),
+                  ggplot2::geom_density()+xlab("Estimate")+ylab("Posterior density")+
+                  ggplot2::scale_color_manual(breaks=c("M1", "M0"),
                                      values = c("grey10",  "grey70"))+
-                  geom_vline(xintercept = 0, lty=2, lwd=0.6, col="tomato3")+
-                  facet_wrap(.~group+predictor, scales = "free")+
+                  ggplot2::geom_vline(xintercept = 0, lty=2, lwd=0.6, col="tomato3")+
+                  ggplot2::facet_wrap(.~group+predictor, scales = "free")+
                   theme_classic()+
                   theme(legend.position = "bottom",
                         axis.text.x = element_text(size = 6),
@@ -85,15 +99,15 @@ senscheck <- function(mod1, mod0, interval=0.9,
                         axis.ticks.y = element_blank()))
 
   pl2 <- ggplot(split_odds$b1, aes(x=group, y=map, col=link))+
-    coord_flip()+
-    scale_color_manual(breaks=c("log", "logit", "identity"),
+    ggplot2::coord_flip()+
+    ggplot2::scale_color_manual(breaks=c("log", "logit", "identity"),
                        values = c("grey10", "grey50", "grey90"))+
-    facet_wrap(.~predictor)+
-    geom_errorbar(data=split_odds$b1, aes(ymin=as.numeric(ll), ymax=as.numeric(ul), y=0),
-                  width=0, lwd=0.6, position = position_dodge(width = 0.7))+
+    ggplot2::facet_wrap(.~predictor)+
+    ggplot2::geom_errorbar(data=split_odds$b1, aes(ymin=as.numeric(ll), ymax=as.numeric(ul), y=0),
+                  width=0, lwd=0.6, position = ggplot2::position_dodge(width = 0.7))+
     ylab(xlab)+labs(col="Link")+
-    geom_hline(yintercept = 0)+
-    geom_point(position = position_dodge(width = 0.7))+
+    ggplot2::geom_hline(yintercept = 0)+
+    ggplot2::geom_point(position = ggplot2::position_dodge(width = 0.7))+
     theme_classic()+
     theme(axis.title.y = element_blank())
 
@@ -102,8 +116,8 @@ senscheck <- function(mod1, mod0, interval=0.9,
 
   pl3 <- ggplot(split_odds$b1 , aes(x= group, y = predictor, fill = post)) +
     ggplot2::geom_tile()+labs(fill="Shift in posterior positive direction")+
-    facet_wrap(.~link, nrow=lord_group, ncol=lord_pred)+
-    geom_text(aes(label = round(post, 2)), color = "black")+
+    ggplot2::facet_wrap(.~link, nrow=lord_group, ncol=lord_pred)+
+    ggplot2::geom_text(aes(label = round(post, 2)), color = "black")+
     ggplot2::scale_fill_gradientn(colors = c("tomato3", "white", "dodgerblue3"),
                                   breaks=seq(0,1,0.2),
                                   limits=c(0,1)) +

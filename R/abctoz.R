@@ -73,7 +73,9 @@ abctoz <- function(p, operator=NULL,
 
   #set seed
   set.seed(seed)
-  results <- foreach::foreach(i = 1:nsim, .packages = c("truncnorm", "truncdist")) %dopar% {
+  results <- foreach::foreach(i = 1:nsim,
+                              .export = c("catp"),
+                              .packages = c("truncnorm", "truncdist")) %dopar% {
 
     #impute pvalues if half reported
     if(!is.null(operator)){

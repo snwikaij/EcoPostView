@@ -8,10 +8,6 @@
 #' @param tau_2 The method used to estimate tau^2 either a heuristic method 'HE0' or
 #' 'DSL'=DerSimonian and Laird method (default = DSL).
 #' @param interval Credibility intervals for the summary (default=0.9)
-#' @param interval_type The given se and ci are either prediction intervals ('PI') or
-#' confidence intervals ('CI'). Since this function underlies the PPMN function I found it easier
-#' to have PI as the default. When 'PI' the se is the predictive SD and the ll and ul are the predictive
-#' intervals. If 'CI' se is the SEM and the ll and ull the CI intervals.
 #' @param RE An argument indicating if RE or FE should be used (default RE=TRUE)
 #'
 #' @description
@@ -28,7 +24,7 @@
 #
 #' @export
 abmeta <- function(estimate, stderr, prior_mu=0, prior_mu_se=1000, prior_weights=NULL,
-                   a=-Inf, b=Inf, tau_2="DSL", interval=0.9, interval_type="CI", RE=T, warnings=F) {
+                   a=-Inf, b=Inf, tau_2="DSL", interval=0.9, RE=T, warnings=F) {
 
   #Give warning if estimate length is 1
   if(length(estimate) == 1){RE <- F;   if(warnings==T){warning("Number of estimates is 1 then RE is automatically set to FALSE.")}}
@@ -124,18 +120,16 @@ abmeta <- function(estimate, stderr, prior_mu=0, prior_mu_se=1000, prior_weights
     #Calculate SE
     se  <- sqrt(sum(prior_weights*(post_se^2+post_mu^2))-pooled^2)
 
-    #Calculate PI
-    if (interval_type=="PI"){
-    se  <- sqrt(se^2+tau2)}
+    sdpi<- sqrt(se^2+tau2)
   }
 
   #Simple ETI intervals because its is normal ETI is HDI
   ci    <- pooled+se*c(-1, 1)*qnorm(interval+((1-interval)/2))
 
   if(RE==T){
-      results <- c(mu=as.numeric(pooled), se=as.numeric(se), ll=ci[1], ul=ci[2], tau2=tau2, a=a, b=b, n=length(estimate))
+      results <- c(mu=as.numeric(pooled), se=as.numeric(se), ll=ci[1], ul=ci[2],  sd=as.numeric(sdpi), tau2=tau2, I2=tau2/(se^2+tau2), a=a, b=b, n=length(estimate))
   }else{
-      results <- c(mu=as.numeric(pooled), se=as.numeric(se), ll=ci[1], ul=ci[2], tau2=0, a=a, b=b, n=length(estimate))
+      results <- c(mu=as.numeric(pooled), se=as.numeric(se), ll=ci[1], ul=ci[2], sd=as.numeric(se), tau2=0, I2=0, a=a, b=b, n=length(estimate))
   }
 
   return(round(results, 4))}

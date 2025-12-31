@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>4 Epistemic authenticity | EcoPostView: Ecological Posterior View</title>
+  <meta name="description" content="4 Epistemic authenticity | EcoPostView: Ecological Posterior View" />
+  <meta name="generator" content="bookdown 0.43 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="4 Epistemic authenticity | EcoPostView: Ecological Posterior View" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="4 Epistemic authenticity | EcoPostView: Ecological Posterior View" />
+  
+  
+  
+
+<meta name="author" content="Willem (Wim) Kaijser" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="meta-analysis-over-effect-sizes-and-model-parameters.html"/>
+<link rel="next" href="bayes-and-empirical-bayes.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  background-color: #f8f8f8; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ef2929; } /* Alert */
+code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #204a87; } /* Attribute */
+code span.bn { color: #0000cf; } /* BaseN */
+code span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4e9a06; } /* Char */
+code span.cn { color: #8f5902; } /* Constant */
+code span.co { color: #8f5902; font-style: italic; } /* Comment */
+code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code span.dt { color: #204a87; } /* DataType */
+code span.dv { color: #0000cf; } /* DecVal */
+code span.er { color: #a40000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #0000cf; } /* Float */
+code span.fu { color: #204a87; font-weight: bold; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code span.ot { color: #8f5902; } /* Other */
+code span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code span.sc { color: #ce5c00; font-weight: bold; } /* SpecialChar */
+code span.ss { color: #4e9a06; } /* SpecialString */
+code span.st { color: #4e9a06; } /* String */
+code span.va { color: #000000; } /* Variable */
+code span.vs { color: #4e9a06; } /* VerbatimString */
+code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Overview</a></li>
+<li class="chapter" data-level="2" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>2</b> Introduction</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="introduction.html"><a href="introduction.html#r-package-installation"><i class="fa fa-check"></i><b>2.1</b> R-package installation</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="meta-analysis-over-effect-sizes-and-model-parameters.html"><a href="meta-analysis-over-effect-sizes-and-model-parameters.html"><i class="fa fa-check"></i><b>3</b> Meta-analysis over effect-sizes and model parameters</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="meta-analysis-over-effect-sizes-and-model-parameters.html"><a href="meta-analysis-over-effect-sizes-and-model-parameters.html#basic-model-structures-for-meta-analysis"><i class="fa fa-check"></i><b>3.1</b> Basic model structures for meta-analysis</a></li>
+<li class="chapter" data-level="3.2" data-path="meta-analysis-over-effect-sizes-and-model-parameters.html"><a href="meta-analysis-over-effect-sizes-and-model-parameters.html#meta-analysis-on-standardized-effect-sizes"><i class="fa fa-check"></i><b>3.2</b> Meta-analysis on standardized effect sizes</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="meta-analysis-over-effect-sizes-and-model-parameters.html"><a href="meta-analysis-over-effect-sizes-and-model-parameters.html#the-meta-function"><i class="fa fa-check"></i><b>3.2.1</b> The meta-function</a></li>
+<li class="chapter" data-level="3.2.2" data-path="meta-analysis-over-effect-sizes-and-model-parameters.html"><a href="meta-analysis-over-effect-sizes-and-model-parameters.html#check-for-bias"><i class="fa fa-check"></i><b>3.2.2</b> Check for bias</a></li>
+<li class="chapter" data-level="3.2.3" data-path="meta-analysis-over-effect-sizes-and-model-parameters.html"><a href="meta-analysis-over-effect-sizes-and-model-parameters.html#bias-adjustment"><i class="fa fa-check"></i><b>3.2.3</b> Bias adjustment</a></li>
+<li class="chapter" data-level="3.2.4" data-path="meta-analysis-over-effect-sizes-and-model-parameters.html"><a href="meta-analysis-over-effect-sizes-and-model-parameters.html#exploring-the-bias-pattern"><i class="fa fa-check"></i><b>3.2.4</b> Exploring the bias pattern</a></li>
+<li class="chapter" data-level="3.2.5" data-path="meta-analysis-over-effect-sizes-and-model-parameters.html"><a href="meta-analysis-over-effect-sizes-and-model-parameters.html#including-a-moderator"><i class="fa fa-check"></i><b>3.2.5</b> Including a moderator</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="meta-analysis-over-effect-sizes-and-model-parameters.html"><a href="meta-analysis-over-effect-sizes-and-model-parameters.html#meta-analysis-on-generalized-linear-models-glms"><i class="fa fa-check"></i><b>3.3</b> Meta-analysis on (Generalized) Linear Models (G)LMs</a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="meta-analysis-over-effect-sizes-and-model-parameters.html"><a href="meta-analysis-over-effect-sizes-and-model-parameters.html#data-and-models"><i class="fa fa-check"></i><b>3.3.1</b> Data and models</a></li>
+<li class="chapter" data-level="3.3.2" data-path="meta-analysis-over-effect-sizes-and-model-parameters.html"><a href="meta-analysis-over-effect-sizes-and-model-parameters.html#glms-and-extracting-data"><i class="fa fa-check"></i><b>3.3.2</b> (G)LMs and extracting data</a></li>
+<li class="chapter" data-level="3.3.3" data-path="meta-analysis-over-effect-sizes-and-model-parameters.html"><a href="meta-analysis-over-effect-sizes-and-model-parameters.html#the-meta-function-1"><i class="fa fa-check"></i><b>3.3.3</b> The meta-function</a>
+<ul>
+<li class="chapter" data-level="3.3.3.1" data-path="meta-analysis-over-effect-sizes-and-model-parameters.html"><a href="meta-analysis-over-effect-sizes-and-model-parameters.html#setting-priors"><i class="fa fa-check"></i><b>3.3.3.1</b> Setting priors</a></li>
+<li class="chapter" data-level="3.3.3.2" data-path="meta-analysis-over-effect-sizes-and-model-parameters.html"><a href="meta-analysis-over-effect-sizes-and-model-parameters.html#setting-multiple-priors-for-bayesian-model-averaging"><i class="fa fa-check"></i><b>3.3.3.2</b> Setting multiple priors for bayesian model averaging</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3.4" data-path="meta-analysis-over-effect-sizes-and-model-parameters.html"><a href="meta-analysis-over-effect-sizes-and-model-parameters.html#rescheck-function-and-bias"><i class="fa fa-check"></i><b>3.3.4</b> rescheck-function and bias</a></li>
+<li class="chapter" data-level="3.3.5" data-path="meta-analysis-over-effect-sizes-and-model-parameters.html"><a href="meta-analysis-over-effect-sizes-and-model-parameters.html#senscheck-function-and-prior-sensitivity"><i class="fa fa-check"></i><b>3.3.5</b> senscheck-function and prior sensitivity</a></li>
+<li class="chapter" data-level="3.3.6" data-path="meta-analysis-over-effect-sizes-and-model-parameters.html"><a href="meta-analysis-over-effect-sizes-and-model-parameters.html#pdplot-function"><i class="fa fa-check"></i><b>3.3.6</b> pdplot-function</a></li>
+<li class="chapter" data-level="3.3.7" data-path="meta-analysis-over-effect-sizes-and-model-parameters.html"><a href="meta-analysis-over-effect-sizes-and-model-parameters.html#forest-function"><i class="fa fa-check"></i><b>3.3.7</b> forest-function</a></li>
+<li class="chapter" data-level="3.3.8" data-path="meta-analysis-over-effect-sizes-and-model-parameters.html"><a href="meta-analysis-over-effect-sizes-and-model-parameters.html#hop-function-hypothetical-outcome-plots"><i class="fa fa-check"></i><b>3.3.8</b> hop-function (Hypothetical Outcome Plots)</a></li>
+<li class="chapter" data-level="3.3.9" data-path="meta-analysis-over-effect-sizes-and-model-parameters.html"><a href="meta-analysis-over-effect-sizes-and-model-parameters.html#hop-function-and-partial-dependency-plots"><i class="fa fa-check"></i><b>3.3.9</b> hop function (and Partial Dependency Plots)</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="epistemic-authenticity.html"><a href="epistemic-authenticity.html"><i class="fa fa-check"></i><b>4</b> Epistemic authenticity</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="epistemic-authenticity.html"><a href="epistemic-authenticity.html#introduction-1"><i class="fa fa-check"></i><b>4.1</b> Introduction</a></li>
+<li class="chapter" data-level="4.2" data-path="epistemic-authenticity.html"><a href="epistemic-authenticity.html#predicate-and-epistemic-logic"><i class="fa fa-check"></i><b>4.2</b> Predicate and epistemic logic</a>
+<ul>
+<li class="chapter" data-level="4.2.1" data-path="epistemic-authenticity.html"><a href="epistemic-authenticity.html#syllogism-and-propositional-logic"><i class="fa fa-check"></i><b>4.2.1</b> Syllogism and propositional logic</a></li>
+<li class="chapter" data-level="4.2.2" data-path="epistemic-authenticity.html"><a href="epistemic-authenticity.html#predicate-logic"><i class="fa fa-check"></i><b>4.2.2</b> Predicate logic</a></li>
+<li class="chapter" data-level="4.2.3" data-path="epistemic-authenticity.html"><a href="epistemic-authenticity.html#epistemic-logic"><i class="fa fa-check"></i><b>4.2.3</b> Epistemic logic</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="epistemic-authenticity.html"><a href="epistemic-authenticity.html#reasoning-logic-and-rules"><i class="fa fa-check"></i><b>4.3</b> Reasoning, logic and rules</a></li>
+<li class="chapter" data-level="4.4" data-path="epistemic-authenticity.html"><a href="epistemic-authenticity.html#deduction-induction-and-abuction"><i class="fa fa-check"></i><b>4.4</b> Deduction, induction and abuction</a></li>
+<li class="chapter" data-level="4.5" data-path="epistemic-authenticity.html"><a href="epistemic-authenticity.html#belief-information-and-facts"><i class="fa fa-check"></i><b>4.5</b> Belief, information and facts</a>
+<ul>
+<li class="chapter" data-level="4.5.1" data-path="epistemic-authenticity.html"><a href="epistemic-authenticity.html#sense-and-experience"><i class="fa fa-check"></i><b>4.5.1</b> Sense and experience</a></li>
+<li class="chapter" data-level="4.5.2" data-path="epistemic-authenticity.html"><a href="epistemic-authenticity.html#representation-and-exprience-of-beliefs"><i class="fa fa-check"></i><b>4.5.2</b> Representation and exprience of beliefs</a></li>
+<li class="chapter" data-level="4.5.3" data-path="epistemic-authenticity.html"><a href="epistemic-authenticity.html#belief"><i class="fa fa-check"></i><b>4.5.3</b> Belief</a></li>
+<li class="chapter" data-level="4.5.4" data-path="epistemic-authenticity.html"><a href="epistemic-authenticity.html#belief-and-information"><i class="fa fa-check"></i><b>4.5.4</b> Belief and information</a></li>
+<li class="chapter" data-level="4.5.5" data-path="epistemic-authenticity.html"><a href="epistemic-authenticity.html#knowledge"><i class="fa fa-check"></i><b>4.5.5</b> Knowledge</a></li>
+</ul></li>
+<li class="chapter" data-level="4.6" data-path="epistemic-authenticity.html"><a href="epistemic-authenticity.html#language-use-and-logic"><i class="fa fa-check"></i><b>4.6</b> Language use and logic</a>
+<ul>
+<li class="chapter" data-level="4.6.1" data-path="epistemic-authenticity.html"><a href="epistemic-authenticity.html#empirical-sense"><i class="fa fa-check"></i><b>4.6.1</b> Empirical sense</a></li>
+<li class="chapter" data-level="4.6.2" data-path="epistemic-authenticity.html"><a href="epistemic-authenticity.html#objective-language-and-normativity"><i class="fa fa-check"></i><b>4.6.2</b> Objective language and normativity</a></li>
+</ul></li>
+<li class="chapter" data-level="4.7" data-path="epistemic-authenticity.html"><a href="epistemic-authenticity.html#truth"><i class="fa fa-check"></i><b>4.7</b> Truth</a></li>
+<li class="chapter" data-level="4.8" data-path="epistemic-authenticity.html"><a href="epistemic-authenticity.html#cogency-of-arguments"><i class="fa fa-check"></i><b>4.8</b> Cogency of arguments</a></li>
+<li class="chapter" data-level="4.9" data-path="epistemic-authenticity.html"><a href="epistemic-authenticity.html#belief-structure-of-reasoning"><i class="fa fa-check"></i><b>4.9</b> Belief structure of reasoning</a></li>
+<li class="chapter" data-level="4.10" data-path="epistemic-authenticity.html"><a href="epistemic-authenticity.html#skepticism"><i class="fa fa-check"></i><b>4.10</b> Skepticism</a>
+<ul>
+<li class="chapter" data-level="4.10.1" data-path="epistemic-authenticity.html"><a href="epistemic-authenticity.html#first-line-of-attack"><i class="fa fa-check"></i><b>4.10.1</b> First line of attack</a></li>
+<li class="chapter" data-level="4.10.2" data-path="epistemic-authenticity.html"><a href="epistemic-authenticity.html#mode-of-disagreement"><i class="fa fa-check"></i><b>4.10.2</b> Mode of disagreement</a></li>
+<li class="chapter" data-level="4.10.3" data-path="epistemic-authenticity.html"><a href="epistemic-authenticity.html#mode-of-hypothesis"><i class="fa fa-check"></i><b>4.10.3</b> Mode of hypothesis</a></li>
+<li class="chapter" data-level="4.10.4" data-path="epistemic-authenticity.html"><a href="epistemic-authenticity.html#mode-of-circularity"><i class="fa fa-check"></i><b>4.10.4</b> Mode of circularity</a></li>
+<li class="chapter" data-level="4.10.5" data-path="epistemic-authenticity.html"><a href="epistemic-authenticity.html#mode-of-infinite-regress"><i class="fa fa-check"></i><b>4.10.5</b> Mode of infinite regress</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="bayes-and-empirical-bayes.html"><a href="bayes-and-empirical-bayes.html"><i class="fa fa-check"></i><b>5</b> Bayes and empirical Bayes</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="bayes-and-empirical-bayes.html"><a href="bayes-and-empirical-bayes.html#classical-statistics-and-estimation"><i class="fa fa-check"></i><b>5.1</b> Classical statistics and estimation</a></li>
+<li class="chapter" data-level="5.2" data-path="bayes-and-empirical-bayes.html"><a href="bayes-and-empirical-bayes.html#bayes-theorem-and-probablistic-estimation"><i class="fa fa-check"></i><b>5.2</b> Bayes theorem and probablistic estimation</a>
+<ul>
+<li class="chapter" data-level="5.2.1" data-path="bayes-and-empirical-bayes.html"><a href="bayes-and-empirical-bayes.html#bayes-theorem"><i class="fa fa-check"></i><b>5.2.1</b> Bayes theorem</a></li>
+<li class="chapter" data-level="5.2.2" data-path="bayes-and-empirical-bayes.html"><a href="bayes-and-empirical-bayes.html#bayes-theorem-in-use"><i class="fa fa-check"></i><b>5.2.2</b> Bayes theorem in use</a></li>
+<li class="chapter" data-level="5.2.3" data-path="bayes-and-empirical-bayes.html"><a href="bayes-and-empirical-bayes.html#bayes-theorem-and-conjugate-priors"><i class="fa fa-check"></i><b>5.2.3</b> Bayes theorem and conjugate priors</a></li>
+<li class="chapter" data-level="5.2.4" data-path="bayes-and-empirical-bayes.html"><a href="bayes-and-empirical-bayes.html#approximate-bayesian-computation-with-rejection-sampling"><i class="fa fa-check"></i><b>5.2.4</b> Approximate Bayesian Computation with rejection sampling</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="bayes-and-empirical-bayes.html"><a href="bayes-and-empirical-bayes.html#introduction-to-bayesian-model-averaging-bma"><i class="fa fa-check"></i><b>5.3</b> Introduction to Bayesian Model Averaging (BMA)</a></li>
+<li class="chapter" data-level="5.4" data-path="bayes-and-empirical-bayes.html"><a href="bayes-and-empirical-bayes.html#meta-analysis"><i class="fa fa-check"></i><b>5.4</b> Meta-analysis</a></li>
+<li class="chapter" data-level="5.5" data-path="bayes-and-empirical-bayes.html"><a href="bayes-and-empirical-bayes.html#bma-and-meta-analysis"><i class="fa fa-check"></i><b>5.5</b> BMA and meta-analysis</a></li>
+<li class="chapter" data-level="5.6" data-path="bayes-and-empirical-bayes.html"><a href="bayes-and-empirical-bayes.html#sequential-updating"><i class="fa fa-check"></i><b>5.6</b> Sequential updating</a></li>
+<li class="chapter" data-level="5.7" data-path="bayes-and-empirical-bayes.html"><a href="bayes-and-empirical-bayes.html#a-short-reflection-on-uncertainty"><i class="fa fa-check"></i><b>5.7</b> A short reflection on uncertainty</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i><b>6</b> References</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">EcoPostView: Ecological Posterior View</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="epistemic-authenticity" class="section level1 hasAnchor" number="4">
+<h1><span class="header-section-number">4</span> Epistemic authenticity<a href="epistemic-authenticity.html#epistemic-authenticity" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="introduction-1" class="section level2 hasAnchor" number="4.1">
+<h2><span class="header-section-number">4.1</span> Introduction<a href="epistemic-authenticity.html#introduction-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>I consider epistemics with a focus on reasoning and logic should play a central role in everyday life and science (but see Lakbut 2021 and Harman, 1986). In practice, reasoning - especially formal logic - is often not a major concern for many scientists. To be fair, some of the most significant scientific breakthroughs were not the result of formal reasoning (e.g., the discovery of penicillin; see Feyerabend, 1975). Nevertheless, structured reasoning and logic guide our thinking, shape clear arguments, and offer clarity to our thoughts. Perhaps the most immediate benefit of reasoning is not its guarantee of ‘truth’, but the aesthetic and coherence it brings to our argumentation.</p>
+<p>Despite the previous normative position and values, many conclusions drawn and claims made in contemporary society are neither reasonable or logically valid and sound. This becomes especially evident when one closely examines the structure of arguments in scientific papers and popular articles. Perhaps an immediate consequence of understanding reasoning and logic is the impossibility (or near impossibility) for <em>empirical</em> sciences to develop valid and sound arguments. Logic, in its formal sense, concerns itself with the structure of arguments: for example, if B follows from A, and C follows from B, then C follows from A. Logic does not concern itself with the ‘truth’ (or meaning) of A, B, or C - those could just as well be X, Y, Z or <span class="math inline">\(\alpha, \beta, \gamma\)</span>. What matters is that the form of reasoning obeys certain principles.</p>
+<p>It is often argued that reasoning, to some extent, depends on the principles of logic - though some (e.g., Harman, 1986) challenge this view. In everyday life, strict logical principles may not always be applicable or followed. Still, this does not diminish their potential instrumental value. To me applying logical principles can improve our ability to (1.) Decide what to believe about the world, (2.) clearly communicate our thoughts to others, and (3.) better understand the reasoning of others. This makes no attempt to “justify” why one should use logic (as I posited in the first paragraph), although it might lighten the burden of cognitive effort it demands in shaping a picture of the world.</p>
+<p>As someone with a background in ecology, I increasingly find that confusion in reasoning does not stem from the world itself but from the way we use (or not use) logic, reason and language specifically, from issues in syntax and semantics. Hence, I see the choice of words (semantics) and the way we lay connection between them (syntatical structure) is more central to scientific practice - including ecology - than is commonly acknowledged. Yet, it seems not the case our language and reasoning is used to delve into what might be believed to be true about the world. Often it is used with a focus on status (power) and with an underlying political agenda (Foucault, 1981). The issue not that this is the case, but that this is hidden and not strengthens nor serves the argument well.</p>
+<p>Throughout this work, I will use formal expressions - though not strictly within the syntax of formal predicate logic and epistemic logic. These expressions help expose the structure of beliefs and arguments, making their internal connections explicit. They are concise and avoid the ambiguities of natural language, aiming for a more neutral and formal presentation of meaning. There is less ambiguity about the form of the argument proposed and is useful to highlight confusion. While this is not intended to be a full introduction to logic - but focuses on reasoning - it will address key concepts such as validity, soundness, cogency, ambiguity, vagueness and the formalization of arguments. For a more comprehensive treatment, see Barwise et al. (2002), Lee (2017), and Smith (2021).</p>
+<p>Because I focus on what can be believed (or what it makes sense to believe), I inevitably engage with other fundamental epistemological concepts—such as truth, belief, justification, normativity, “knowledge,” and “science.” I do not claim to have fixed definitions of these terms, nor do I take a rigid stance on them. Still, my writing tends to lean toward a mix of pragmatism, instrumentalism, constructivism, and minimalism. This may be because I am inclined to resist, or at least postpone, full-blown skepticism for as long as possible. What I present is therefore closer to applied meta-epistemology than to formal reasoning, logic, or epistemics per se (see Fumerton 1995). At times, however, my work may read as pessimistic, cynical, or even critical - perhaps in some places it drifts closer to skepticism than I intended. That said, cynicism is undeniably present. While I believe humanity has enormous potential for empathy and radical acceptance, which could be cultivated through reasoning, I have not yet found convincing evidence of this in practice. For this reason, I also turn to questions of sociology and identity.</p>
+<p>Thus - as for now - the main (working) question can be empasized as (1.) When can we reasonably <em>belief</em> a claim to be an <em>authentic</em> search for <em>truth</em> in the world (2.) And perhaps more drastic (2.) How should we behave in light of this information?</p>
+</div>
+<div id="predicate-and-epistemic-logic" class="section level2 hasAnchor" number="4.2">
+<h2><span class="header-section-number">4.2</span> Predicate and epistemic logic<a href="epistemic-authenticity.html#predicate-and-epistemic-logic" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>As mentioned, some formal and syntactical logic will be used. This will be mainly in the form of predicate and epistemic logic and meta-language. It will also serve as a refresher and guide people into the specific style used for syllogism, propositional, predicate, and epistemic logic.</p>
+<div id="syllogism-and-propositional-logic" class="section level3 hasAnchor" number="4.2.1">
+<h3><span class="header-section-number">4.2.1</span> Syllogism and propositional logic<a href="epistemic-authenticity.html#syllogism-and-propositional-logic" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>A simple syllogistic argument consisting of two premises.</p>
+<p><span class="math display">\[
+\text{Major premise   1)} \ all \ insects \ have \ six \ legs, \\
+\text{Minor  premise  2)} \ x \ is \ an \ insect, \\
+\text{Conclusion)} \therefore \ x \ has \ six \ legs \\
+\]</span></p>
+<p>The argument above is called <strong>Modus Ponens</strong>, which follows a specific logical structure. In this form, the conclusion is entailed by the premises — that is, the truth of the premises guarantees the truth of the conclusion. Entailment means that in all cases where the premises are true, the conclusion cannot be false. If an argument has this feature, it is considered logically valid.</p>
+<p>This argument can be further condensed by abstracting away the content and focusing only on its structure. In this way, the validity of the argument depends solely on the form of the entailment, not on the specific subject matter.</p>
+<p><span class="math display">\[
+\text{Major premise  1)} \ all \ P \ are \ Q, \\
+\text{Minor  premise  2)} x \ is \ P, \\
+Conclusion) \therefore \ x \ is \ Q
+\]</span></p>
+<p>In an argument like the one above, all premises are declarative statements, also known as propositions — sentences that are either True or False, but not both. Each premise typically consists of a subject (or antecedent), a copula (such as is, are, will be, etc.), and a predicate (or consequent). These components express a logical relationship between concepts.</p>
+<p>An argument is said to be <strong>valid</strong> if, assuming all the premises are true, the conclusion cannot be false. In other words, the conclusion is logically entailed by the premises.
+An argument is <strong>sound</strong> if it is both valid and all of its premises are in factually true. Therefore, soundness implies both logical structure and factual accuracy.</p>
+<p>For example: P1: All unicorns fly when eating carrots, P2: my unicorn eats a carrot, C: therefore my unicorn will fly. This is a valid argument because if the premises were true, the conclusion would necessarily follow. However, it is not sound because unicorns do not exist (as far as I know), so now consider the following argument: P1: most grass is green P2: the sky is blue C: you are reading this text. Even if all three propositions happen to be true, this argument is not valid because the conclusion is not entailed by the premises — there is no logical connection between them. An argument where the conclusion does not follow from the premises is considered invalid, regardless of whether its statements are true.</p>
+<p>In propositional logic, the argument as given before can be formally expressed as below. In this formal expression <span class="math inline">\(\rightarrow\)</span> indicates an implication (as “implies”) and the three dots <span class="math inline">\(\therefore\)</span> indicates therefore. Similar <span class="math inline">\(\vee\)</span> means “or”, <span class="math inline">\(\wedge\)</span> means “and” and <span class="math inline">\(\neg\)</span> is the negation symbol. Thus for example <span class="math inline">\(\neg P\)</span> means not-P. Other operators include <span class="math inline">\(\vee\)</span> indicates “or” (disjunction) and <span class="math inline">\(\wedge\)</span> indicates “and” (conjunction). Using these basic operators, many more valid argument forms can be constructed—such as disjunctive syllogism, hypothetical syllogism, modus tollens, and more. These forms serve as the foundation for formal reasoning in logic.</p>
+<p>In <strong>meta-language</strong> it is addresses how we speak about the <strong>object language</strong>. The meta-language discusses how the object language should and is used. It can contain more operators as long as it is defined what they imply. For example <span class="math inline">\(\equiv\)</span> and <span class="math inline">\(\leftrightarrow\)</span> indicates equivalence which can be understood as <span class="math inline">\(A \leftrightarrow B\)</span> or <span class="math inline">\((A \rightarrow B) ∧ (B \rightarrow A)\)</span>. Hera <span class="math inline">\(A \equiv B\)</span> have equivalent logical status, but are not the same. <span class="math inline">\(=\)</span> indicates <span class="math inline">\(is\)</span> or an outcome as identity i.e., <span class="math inline">\(A = B\)</span> indicating A and B are the same. The symbol <span class="math inline">\(/\)</span> indicates over or divided by.</p>
+<p>In propositional logic some valid structure, such as <strong>Modus Ponens</strong> is then expressed as follows:
+<span class="math display">\[P \rightarrow Q, P \therefore Q\]</span></p>
+<p><strong>Modus Tollens</strong>
+<span class="math display">\[P \rightarrow Q, \neg Q \therefore \neg P\]</span></p>
+<p><strong>Hypothetical Syllogism</strong>
+<span class="math display">\[P \rightarrow Q, Q \rightarrow Z, P \therefore Z \]</span></p>
+<p><strong>Disjunctive Syllogism</strong>
+<span class="math display">\[Either \ P \vee Q, \neg P \therefore Q\]</span></p>
+<p><strong>Semantic equivalent structures</strong></p>
+<p><span class="math display">\[
+\text{Modus Ponens:} \ for \ all \ x \ that \ are \ P \ it \ implies \ they \ are \ Q, x \ is \ P \ therefore \ x \ is \ Q \\
+\text{Modus Tollens:} \ for \ all \ x \ that \ are \ P \ it \ implies \ they \ are \ Q, x \ is \ \neg Q \ therefore \ x \ is \ \neg P \\
+\text{Hypothetical Syllogism:} \ for \ all \ x \ that \ are \ P \ it \ implies \ they \ are \ Q, for \ all \ x \ that \ are \ Q \ it \ implies \ they \ are \ Z, \ x \ is \ P \ therefore \ x \ is \ Z\\
+\text{Disjunctive Syllogism:} \ either \ x \ is \ P \ or \ x \ is \ Q, x \ is\ \neg P \ therefore \ x \ is \ Q
+\]</span></p>
+<p>An <strong>valid</strong> argument - in the semantic interpretation of validity - in case <span class="math inline">\(p_n\)</span> <span class="math inline">\(p_i\)</span> is true in all interpretations in which <span class="math inline">\(p_1, ..., p_{n-1} ,p_n\)</span> are true. Simplistically, if all propositions are true the conclusion cannot be false. Such a valid argument can be notated as (see also Haack, 1978),</p>
+<p><span class="math display">\[p_1, …, p_{n-1} \models p_n\]</span></p>
+<p>In predicate logic modus ponens is expressed as <span class="math inline">\(\forall(P(x)\rightarrow Q(x))\)</span> where ‘<span class="math inline">\(\forall\)</span>’ indicates ‘for all’ and ‘<span class="math inline">\(\models\)</span>’ therefore.Each proposition referred to as <span class="math inline">\(p_i\)</span> consists of P and Q, called properties, and x is an element from a set <span class="math inline">\(x\in X\)</span>. The benefit of predicate logic (or approximating languages such as deontic-logic or a meta-language)is its possibility to quantify over different elements from a set <span class="math inline">\(x \in X\)</span> can be assessed.</p>
+</div>
+<div id="predicate-logic" class="section level3 hasAnchor" number="4.2.2">
+<h3><span class="header-section-number">4.2.2</span> Predicate logic<a href="epistemic-authenticity.html#predicate-logic" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>In predicate logic, the structures can be notated similarly. However, the advantage of predicate logic is the possibility to quantify over variables. The universal quantifier (<span class="math inline">\(\forall\)</span>) means “for all,” and the existential quantifier (<span class="math inline">\(\exists\)</span>) means “some,” “at least one,” or “few.” To quantify over all variables <span class="math inline">\(x\)</span> with a predicate <span class="math inline">\(P(..)\)</span>, we write <span class="math inline">\(\forall x P(x)\)</span>, which reads as “for all <span class="math inline">\(x\)</span> that have the property <span class="math inline">\(P\)</span>.” Similarly, for <span class="math inline">\(\exists\)</span>, the formula <span class="math inline">\(\exists x P(x)\)</span> reads as “there exists at least one <span class="math inline">\(x\)</span> that has the property <span class="math inline">\(P\)</span>.”</p>
+<p><span class="math display">\[
+\text{Modes Ponens:} \ \forall x(P(x)\rightarrow Q(x)), P(x) \vdash Q(x)\\
+\text{Modes Tollens:} \ \forall x(P(x)\rightarrow Q(x)), \neg Q(x) \vdash \neg P(x)\\
+\text{Hypotehtical Syllogism:}\ \forall x(P(x)\rightarrow Q(x)) \wedge \forall x(Q(x) \rightarrow Z(x)), P(x) \rightarrow Z(x)\\
+\text{Disjunctive Syllogism:} \ P(x) \vee Q(x), \neg P(x) \vdash Q(x)
+\]</span></p>
+</div>
+<div id="epistemic-logic" class="section level3 hasAnchor" number="4.2.3">
+<h3><span class="header-section-number">4.2.3</span> Epistemic logic<a href="epistemic-authenticity.html#epistemic-logic" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Epistemic logic is a modal extension of predicate logic, which is used to talk about an agent’s epistemic attitudes toward first-order (predicate-logic) statements. For example, the proposition <span class="math inline">\(\forall x (P(x) \rightarrow Q(x))\)</span> can be stored in <span class="math inline">\(p\)</span> as <span class="math inline">\(p := \forall x (P(x) \rightarrow Q(x))\)</span>. Then it is possible to speak about the proposition <span class="math inline">\(p\)</span>.</p>
+<p>The basic modal operators are indicated by a capital letter, i.e., <span class="math inline">\(K =\)</span> Knows, <span class="math inline">\(B =\)</span> Believes, <span class="math inline">\(O =\)</span> Ought (should). This capital is always accompanied by a subscript, e.g., <span class="math inline">\(K_a\)</span>, where “<span class="math inline">\(a\)</span>” indicates a single moral agent <span class="math inline">\(a\)</span>. A capital subscript “<span class="math inline">\(A\)</span>” indicates all moral agents of a community <span class="math inline">\(A\)</span>.</p>
+<p><span class="math inline">\(K_a(p)\)</span>: Indicates the modal operator for “moral agent <span class="math inline">\(a\)</span> knows <span class="math inline">\(p\)</span>.”<br>
+<span class="math inline">\(B_a(p)\)</span>: Indicates the modal operator for “moral agent <span class="math inline">\(a\)</span> believes <span class="math inline">\(p\)</span>.”<br>
+<span class="math inline">\(O_a(p)\)</span>: Indicates the modal operator for “moral agent <span class="math inline">\(a\)</span> ought to <span class="math inline">\(p\)</span>.”<br>
+<span class="math inline">\(J_a(p)\)</span>: Indicates the modal operator for “moral agent <span class="math inline">\(a\)</span> is justified to assert <span class="math inline">\(p\)</span>.” <br></p>
+</div>
+</div>
+<div id="reasoning-logic-and-rules" class="section level2 hasAnchor" number="4.3">
+<h2><span class="header-section-number">4.3</span> Reasoning, logic and rules<a href="epistemic-authenticity.html#reasoning-logic-and-rules" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>There exist some rules (axioms) of logic that are self evident. There are no clear rules of reasoning as far as I am aware. Of course there are ‘laws’ in logic that can be derived from within the object language. There some *normative?) rules of rationality that make intuitively sense if one is aware of them. Yet, it remains unclear if we actually use them. I will lay them out here for further support. This does not mean they are not normative, but they will be useful down the line.</p>
+<p><strong>Law of identity</strong>
+Informal: The law of identity states that any object that is equal to itself.
+<span class="math display">\[
+\text{Formal:}\ A=A \ or \ A(x)=A(x)
+\]</span></p>
+<p><strong>Law of excluded middle</strong>
+Informal: A proposition is either true or false (there is no middle ground)
+<span class="math display">\[
+\text{Formal:}\ A(x)\vee \neg A(x)
+\]</span></p>
+<p><strong>Law of non-contradiction</strong>
+Informal: One cannot rationally hold logically inconsistent beliefs.
+<span class="math display">\[
+\text{Formal:}\ \neg (A(x)\wedge \neg A(x))
+\]</span>
+It could further be expressed informally as: For agent (<span class="math inline">\(a\)</span>) to believe both <span class="math inline">\(p\)</span> and <span class="math inline">\(\neg p\)</span> is to be not a rational agent about p.
+<span class="math display">\[
+B_a(p) \wedge B_a(\neg p) \rightarrow \neg R_a(p)
+\\or
+\\B_a(p) \rightarrow \neg B_a(\neg p)
+\]</span>
+Furthermore, the following would also hold for a rational agent. If the agent believes the antecedent (<span class="math inline">\(p\)</span>) is followed by consequent (<span class="math inline">\(q\)</span>) and <span class="math inline">\(p\)</span> is the case the agent has to believe <span class="math inline">\(q\)</span> follows.</p>
+<p>Informal: If agent <span class="math inline">\(a\)</span> believes the premises of a valid argument, one must believe the conclusion.
+<span class="math display">\[
+(B_a(p \rightarrow q) \wedge B_a(p) \rightarrow B_a(q)) \rightarrow R_a(p)
+\]</span>
+Both the law of non-contradiction and norm of logical consequence are invoked albeit in different forms as a basis of ‘correct’ reasoning (not logic) by Harman (1986). This has been adapted by (Labukt 2021). I am unaware if this being actually taken serious, but they all make intuitively sense. The law of identity is also could be added as it is self evident that something that is different cannot be itself. Otherwise the law of excluded middle is largely supporting of the law of non-contradiction. Hence, if we cannot hold the belief that it is probable a proposition is either 80% true and 20% false but either 100% or 0% then it follows that we can neither belief both A or B to be true. This would seem to clash with the idea that beliefs come in degrees. Yet, there is a difference in believing something yes/no or expressing and modeling the belief.</p>
+<p>Informal: If the probability of <span class="math inline">\(A\)</span> can only take 1 and 0 <span class="math inline">\(P(A(x)) \in  \{ 0, 1 \}\)</span> (which is not a probability) and the probability of <span class="math inline">\(B\)</span> can only take 0 or 1 <span class="math inline">\(P(B(x)) \in  \{ 0, 1 \}\)</span> which implies that either A or B.
+<span class="math display">\[
+\text{Formal:}\ (P(A(x))=1 \ \vee P(A(x))=0) \ \wedge (P(B(x))=1-P(A(x)) ) \rightarrow  A(x)\vee \ B(x)
+\]</span></p>
+</div>
+<div id="deduction-induction-and-abuction" class="section level2 hasAnchor" number="4.4">
+<h2><span class="header-section-number">4.4</span> Deduction, induction and abuction<a href="epistemic-authenticity.html#deduction-induction-and-abuction" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p><strong>Deduction</strong></p>
+<p>Deductive reasoning moves from general principles to specific conclusions. It begins with premises that are assumed to be universally true and applies them to individual cases. If the premises are true and the reasoning is valid, the conclusion cannot be false. For example: P1: All humans are mortal, P2: I am a human C: Therefore I am mortal.
+<span class="math display">\[
+\forall x (H(x) \rightarrow M(x)), H(x) \models M(x)
+\]</span></p>
+<p>All the argument displayed before where deductive moving from axiomatic assumptions to individual elements or objects.</p>
+<p><strong>Induction</strong></p>
+<p>In contrast, inductive reasoning moves from specific observations to broader generalizations. It attempts to infer a universal rule or principle from limited data, and thus does not guarantee the truth of the conclusion — even if all observed instances support it. Induction tries to generalize from the instances (x) we observe to all <span class="math inline">\(\forall\)</span>.</p>
+<p>As such, if I observe twenty white swans therefore all swans are white.</p>
+<p><span class="math display">\[
+(Observe(x) \rightarrow WhiteSwan(x)) \models \forall(Observe(x) \rightarrow WhiteSwan(x))
+\]</span></p>
+<p>This reasoning is not valid. The observation of one swan with any other colour would negate the whole argument. This issue is known as the problem of induction. Hence, how can I justify my conclusion to be universally true based on a limited set of instances? This means inductive arguments might not be valid or sound.</p>
+<p><strong>Abduction</strong></p>
+<p>Abduction might be better seen in light of the Bayesian and looks more like affirming the consequent. If we state <span class="math inline">\(W1(a)\)</span> 50% of the swans are white or <span class="math inline">\(W2(a)\)</span> 90% of swans are white. We take 20 observations and see all are white we might therefore infer 10% of the swans are black.</p>
+<p><span class="math display">\[
+WS1(a) \vee WS2(a), ((Observe(x) \rightarrow WhiteSwan(x)) \models WS2(x)
+\]</span></p>
+<p>Of course also this is invalid because we might actual have sampled a wrong location where only white swans occurred. However, it can be derived more quantitative. This makes abduction appealing in practice, although often not applied due to its subjective perception of how WS1 or WS2 are derived.</p>
+</div>
+<div id="belief-information-and-facts" class="section level2 hasAnchor" number="4.5">
+<h2><span class="header-section-number">4.5</span> Belief, information and facts<a href="epistemic-authenticity.html#belief-information-and-facts" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="sense-and-experience" class="section level3 hasAnchor" number="4.5.1">
+<h3><span class="header-section-number">4.5.1</span> Sense and experience<a href="epistemic-authenticity.html#sense-and-experience" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Experience of observation and being in the natural world
+Before addressing foundational concepts, our perception of the world itself has to be addressed. We often speak about the natural world. But when we do so, we do this subjectively. This subjectivity can be highlighted reflecting on it via phenomenology (Zahavi 2025).</p>
+<p>The world is experienced from a first-person, subjective situated perspective. The experience being that of texture (touch), sound (hearing), smell, taste, colour (seing), and thought (Hume 1739; Lusthaus 2002). While thought is often unconventional, when I investigate it it often arises and just as the other five senses consciousness experiences our thought. Just as the other senses, they come and go, being temporal. What consciousness is, might be a question best left open (Lenharo 2023). However, to experience involves a subject-object duality. The experience is believed to come from an object, yet the only connection to an object is the experience itself. To suggest the experience of the object to be the object, is to presuppose the ontological commitment that all experiences are exactly what they are “reality”. However, our experiences are mediated by language, culture, biology, prior beliefs, ideas and cognition (For example, think about the fear of injecting the pain a needle can have, which for some is severe and others do not understand why).
+This is what phenomenology highlights not as the things themselves, but as they appear to the eyes of the subject. The readers’ understanding of this text or the pure disagreement of what is written. We can observe species and colours. Yet, these species are only socially defined by a taxonomic system. Colours are experienced but the experience can not be shared. Therefore we define an intersubjective social system with wavelengths providing a mentally reproducible definition of colour. If I see the green grass, I identify this organism as a species of Poa annua. It appoints properties to objects and based on a partial reductionist view of species traits or characteristics coded in its DNA, arising from molecules, consisting of atoms, built from subatomic particles till an underlying model of quantum fields. We dualize “the green grass” from what is not “the green grass”. The meaning of it all is intentional, heuristic and pragmatic from the creation of the atomic bomb to species identification for conservation. Our subjective experience (the I, ego or identity) is always busy with something. Meaning it itself is thereby a search for duality. Trying to search not for A=A, but A=not B. We try to generate context via duality or information via duality. It makes no sense to say that all=all. Hence, to learn something is to minimally exclude the belief in one of two propositions.</p>
+<p>Objectivity might then be characterized in two ways: unconditional- or non-being. Unconditional being, could be characterized as a presence without conceptualization, without duality, yet still experiential. It is not negating experience, but describing a mode of experience without the subject - object split. It experiences objects without conceptualising it for heuristic-practical use (experiencing the properties of a spoon without knowing it is a spoon).</p>
+<p>There is no “I see grass”. There is only seeing, or better yet: Being. This is not subjectivity stripped of concepts, but being prior to the need for a subjective heuristic-pragmatic spoon. Experience before duality, before identity, before categories. It asks a question: where does the “grassness” start? Hence there would be no grass without water, carbon dioxide, light etc. There would be no grassness without me assigning it the grassness to the object. What reason, beyond my reason, do I have to separate the grassness from the water, carbon dioxide and light? What objective reason do I have to separate my experience from the “greeness”? Without me there would be no grass, there would only be objects (but where would they start and end to be objects?). We acknowledge the properties. It is these questions that drive inquiry or ‘science’.
+However, often objectivity is viewed or misleadingly portrayed as a domain with no first- or third-person standpoint. No perspective. There is no experience, no subject, no object. Non-being, at least, not in a way that can be spoken of. This is the absolute outside of consciousness. No conditionality, no experience, no relation. Perhaps an extreme form of realism that equally requires extreme ontological commitments. This ontological commitment is often transcendental (e.g., Platonism).</p>
+<p>However, “objectivity” as a 3th person cannot be a view from nowhere, it is impossible any view or perspective presupposes a stance, and a stance presupposes being. Unconditional objectivity is the silence and emptiness at the edge of thought and language. Belief, truth, knowledge, purpose and meaning collapses into presence, presence collapses into silence, and silence gives way to unknowability. The only constant of “nothingness”. This would be a place without sense, a place we cannot speak, believe and think of. Hence, to go beyond ourselves means to project our beliefs into nothingness, but this would be to generate ontological commitment to something that cannot be sensed and not be spoken of (Anat and Anat 2021; Wittgenstein 1921).</p>
+<p>Ecology often claims objectivity, particularly through the use of models, data, and typologies that aim to describe the “natural world as it is”. The output of the models are seen as a transcendental object from a world inaccessible to humans. The models are defined as a “simplification of reality”, this definition a misuse of language. We can see this as follows: assume a t-test that compares the difference between two sample means (to a null model). Do these two sample means exist as physical objects? Hence, if we would both be in a room the person with an average height does not exist.</p>
+<p>Many ecological concepts (ecosystems, niches, typologies) only make sense within a conceptual (anthropogenic) framework that includes subjective, interpretive, and heuristic elements. It is in itself already subjective to speak about them. There is no non-conceptual access to “nature itself” that could validate or replace them. Even the most empirical model is grounded in prior theoretical and ontological commitments, data selection, and interpretive frameworks.</p>
+<p>By trying to adopt a purely third-person stance, ecology would strip itself of its own explanatory tools. It would strip itself from its access to the concept of ecosystem or nature. In fact, the act of modeling, measuring, and even observing always involves an epistemic perspective - a standpoint, a language, a purpose. It is subjective but it should be transparent in its epistemic and ontological commitments and thereby the meaning, intent and use of words. Pretending otherwise risks collapsing into either naïve realism or philosophical incoherence. The path forward is not to reject objectivity, but to redefine it as an intersubjective, rationally constrained, but perspectival process - not a meta-physical mirror of nature. However, this means the possibility to let-go of some theories and concepts (i.e., strict typologies or the idea of balance) to find a better fit under particular conditions.</p>
+</div>
+<div id="representation-and-exprience-of-beliefs" class="section level3 hasAnchor" number="4.5.2">
+<h3><span class="header-section-number">4.5.2</span> Representation and exprience of beliefs<a href="epistemic-authenticity.html#representation-and-exprience-of-beliefs" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>In general beliefs that in this moment are hold in the mind are termed <strong>explicity</strong> believes. Believes that are current not in the mind are termed <strong>implicit</strong> believes. For example, we know that grass will not often be purple or red. Therefore if we are asked about non common colours of grass we might give the answer green. Yet we do not actively think about as grass not having a white colour.</p>
+<p>Furthermore that I remember my past in the form of mental representations-perception (figures or movies) is regarded not the same as believing that I read that ‘most grass is green’. While both might be classified as believes the former described as <strong>episodic</strong> believes and the other as <strong>semantical believes</strong>. Both are believes but manifest in different ways. That most believes are communicated via semantics is a consequence of not being able to directly share particular beliefs.</p>
+<p>It might also be possible to regard the belief about a proposition also possible for paintings, figures and other forms of expressions. For example propaganda during th WWII can be seen a propositions to generate belief about the Allies or Axis. This seemingly more acceptable in informal logic than in formal logic (Puppo 2019).</p>
+<p>Through this text I speak about the believe in propositions this however does not mean that believe is <em>only</em> possible in and about propositions.</p>
+</div>
+<div id="belief" class="section level3 hasAnchor" number="4.5.3">
+<h3><span class="header-section-number">4.5.3</span> Belief<a href="epistemic-authenticity.html#belief" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Some philosophical theories — such as the dispositional account of belief (Silva 2024) — argue that beliefs are characterized by a tendency to act: to assert the proposition, to deliberate with it, or to behave in ways consistent with it. Yet this view seems to rely on a prior assumption: that the proposition being acted upon is taken to represent something about the world. If a belief had no representational content — no relevance to one’s understanding of reality (including social, cultural, or religious contexts) — it is unclear why it would influence behavior at all. Thus, even dispositionalist theories seem to rest upon a representational core.</p>
+<p>A belief, then, can be understood as an attitude toward a proposition (or other abstract representation as discussed before). It is a mental stance regarding how that proposition relates to the world. In this way, belief can be best described as a mental model or picture of reality. Whether this model reflects the world as it is or as it ought to be remains an open question. Often, belief is treated dichotomously: we either accept a proposition as true or we do not. For instance, if I believe the proposition “the grass is green”, then I regard it as a true statement about the world.</p>
+</div>
+<div id="belief-and-information" class="section level3 hasAnchor" number="4.5.4">
+<h3><span class="header-section-number">4.5.4</span> Belief and information<a href="epistemic-authenticity.html#belief-and-information" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Belief does not have to represent ‘knowledge’. Assume I have thermometer in my aquarium that indicates always the correct temperature. I can fool the aquarium thermometer by placing it in a small plastic box with higher water temperature in the aquarium, or directly next to the heating element. The thermometer does not indicate the temperature of the aquarium, and this would surely indicate a false believe in the aquarium. Yet we gave it the sticker aquarium temperature. If would give it the name hydrometer to measure the air humidity. Indeed we might say that is not incorrect but we make the who placed it in the wrong positions. Hence, it is our job to place and read the information the thermometer represents us correctly .</p>
+<p>The thermometer (or instrument) transfers information not believes. The information that is transferred is the information of the fact that the temperature is x degrees Celsius. In the same sense assume we have a frog and a frog has the instinct to try to jump and eat every small shade that moves by. Assume that small shades are created by the leaves of the trees and the frogs tries to jump and eat it. We would not suggest the frog is broken. The information that was transferred was insufficient for the frog to distinguish the dark spot of a shadow from a fly (adapted from, Bernecker and Dretske 2009).</p>
+<p>Does this mean the frog is broken or not functioning properly? I think not, the frog simply jumps and tries to eat it. It does not see these spots as more than they are unless it believes they are flies. The only difference is that the shadows cannot be eaten. There is nothing wrong as long there is no expectation (or goal): all shadows are flies. Similar we are not wrong by suggesting the medium in the thermometer stopped at the symbol of 40 degrees Celcius as long a there is no expectation (or goal): the symbol represents the temperature in the aquarium which is 25 degrees Celcius.</p>
+<p>The only thing that the liquid in the thermometer (for us) and black dots (for the frog) have in common is it relation to the state-of-affairs in the world. The information in itself not ‘wrong’ or ‘right’, ‘true’ or ‘false’. Information interpreted in the context of information theory transfers information through cables or wireless signals (Stone 2015). Assume that a person calls or text me, the voice I hear or the text I get is not the person actually speaking or reading. Even if I was to hear the person speaking the movement of the air reaches my ears where the movement of the … transfers it to signals which the brain interpreted. It could be said that through our senses we cannot truly experience the world. The flow that might reflect the state-of-affairs to me is then suggested to be information.</p>
+<p>This information also does not have to be believed to be or stand in some relation to the world. Assume I cannot speak mandarin. The person in front of me can perfectly write mandarin an gives me a text. In a corresponding book I search for the proper text for a response and write this back (akin to the Chinese Room argument). In this sense this might be similar to what Large Language Models (LLM) do. Furthermore, I would not know if I would not do the same under the assumption the universe is purely deterministic (Lamme (2011) presents ‘the frog’ example as well). Yet, the argument shows that we do not have to hold believes about the relation of the information to the world at all.</p>
+<p>Assume I am unaware a thermometer of my aquarium is broken, however it does indicate the correct temperature. After reading the temperature I would say I ‘know’ the correct temperature. Everybody unaware that the thermometer is broken would assume I am justified to suggest the temperature reading is correct.</p>
+<p>Of course, some approaches — such as Bayesian epistemology — interpret belief in terms of degrees of credence, assigning probabilities to propositions. This works well for events that can be framed in terms of empirical frequency or proportions — such as the likelihood of drawing a black marble from a jar. However, this probabilistic interpretation becomes less coherent when applied to abstract entities. For instance, I prefer to express the information I have about a slope of a linear regression in possibilities. Yet, the slope is a theoretical construct derived from data — it does not ‘exist’ in the same way a marble does. Thus, beliefs about such constructs are not directly about world but about beliefs of what these models represent of the data. This raises questions about what these beliefs actually represent and related to the world.</p>
+<p>Contemporary debates on causality, such as those involving Judea Pearl’s framework (Pearl 2009), often result in finger-pointing between philosophers, statisticians, and scientists (Pearl and Mackenzie 2019). These disputes frequently bypass a fundamental question: what exactly are ‘cause’ and ‘effect’ in the physical world? Seemingly because it prevents progress (Pearl and Mackenzie 2019). Yet, without clear definitions, critiques across disciplines often lack any substance. If we are arguing about something that has no content no definition it is impossible to discuss it. The same account is about ‘knowledge’.Consider I claim to ‘know’ that I wrote this text, then I am expressing that I remember writing it — i.e., I possess information tied to that act of writing. To distinguish ‘knowledge’ from ’held information (i.e., slope=y/x) leads to greater confusion rather than clarity.</p>
+<p>The classical definition of knowledge as Justified True Belief (JTB)—though long challenged by Gettier cases—complicates the matter further. A more straightforward solution might be to discard JTB and the ideas defining of knowledge (Lemos (2021) does not consider this to beneficial) and instead treat ‘knowledge’ as a historical term. For example, consider this Gettier-case like scenario that the thermometer of the previous example is in the aquarium, the aquarium is 25 degrees Celsius (Truth). I read thermometer indicating 25 degrees (Justified), I believe it is 25 degrees Celsius (Believe), but the thermometer is broken. Clearly I would be wrong at any other temperature, but since the water temperature is so constant this is not the case. Can we consider this than ‘knowledge’? For the information provided it matters how we acquired a piece of information and what source supports it. Importantly, information need not be true or justified in a strict sense. While we may question whether information is reliable enough to inform a model of the world, there is no objective requirement for such reliability — only a normative one tied to specific goals.</p>
+<p>If we insist that knowledge must be justified, then we are assuming that a sentence must be either a ‘true reflection’ or an ‘adequate representation’ of reality. Hence, the sentence has to stand in relation to something it needs to have <em>sense</em>. In such a framework, justification is the relational bridge between information and a particular purpose. But this leads directly to the problem of infinite regress: we must then define what we mean by ‘true’ and ‘adequate’, and ensure that these definitions are not themselves subject to the same ambiguities and vagueness. Otherwise, they may be applied inappropriately to cases or conditions to which they do not belong.</p>
+<p>Take, for instance, the cliché ‘correlation is not causation’. A correlation alone does not belong to an objects (case or condition) causation. Thus, ‘cause’ and ‘effect’ are part of a linguistic framework — a language game, in Wittgensteinian terms. We must define the conditions under which these terms are justified. Pearl’s (2009) work, then, can be viewed as an attempt to formalize the syntactic structure under which the semantics ‘cause’ and ‘effect’ are descriptors, but for what exactly? Pearl (2009) refers to the ontological structure of reality: “because causal relationships are ontological, describing objective physical constraints in our world”. This would mean ‘cause’ and ‘effect’ are physical. However, I could perfectly argue that the properties of an object P of object x interact with the properties Q of object y as in <span class="math inline">\(P(x) \wedge P(y) \rightarrow R(x,y)\)</span>, for example precipitating <span class="math inline">\(Ca^{2+}\)</span> salt as <span class="math inline">\(CaCO_3\)</span>from water by adding <span class="math inline">\(Na_2CO_3\)</span> via
+<span class="math display">\[
+Ca^2(aq) + CO_{3}^{2-}(aq) \rightarrow CaCO_3(s)
+\]</span>
+The implication sign is than nothing more that a way to describe ‘cause’ and the effect would be <span class="math inline">\(R(x, y)\)</span>. This means ‘cause’ and ‘effect’ are linguistic games. We could as well suggest that cause and effect are meta-physical transcendental entities. That are there but cannot be observed by us (like Platonism).</p>
+<p>Therefore we need to clarify what ‘cause’ and ‘effect’ are:</p>
+<p>Descriptive (1.): Cause and effect are a language to describe that observation <span class="math inline">\(y\)</span> is often or always followed by <span class="math inline">\(x\)</span>,</p>
+<p>Physical (2.): Cause and effect are physical cases/objects</p>
+<p>Metaphyscial/Transcedental (3.): Cause and effect exist beyond empirical observations.</p>
+<p>Each position carries its own philosophical commitments and pitfalls. My point is not to resolve the debate (I will end it here as I am not here to discuss causality), but to highlight that ambiguity and vagueness in the use of the terms ‘cause’ and ‘effect’ signify. Perhaps as well as knowledge we coul also abandon it in most cases as it leads to mis-communication about what is meant and what expectations arise. The consequence of this ambiguity and vagueness is the use of statistical tools (p-values, Bayes factors and intervals) to imply causes via ‘significant effects’ — not the tools themselves, but the assumptions smuggled in through their interpretation are an issue.</p>
+<p>A as a consequence to believe something about the world (given a proposition) is to make an ontological (and epistemic) commitment. We express our beliefs through symbols - words, numbers, figures - and thereby assume a relation between these symbols and the world. One possible philosophical position is to adopt a form of extreme realism (e.g., Platonism), where symbols such as the correlation coefficient reflect imperfect versions of ideal forms accessible only through reason. This view implies that relationships between variables like <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> are metaphysical in nature, and our human faculties only approximate them. The language we use reveals our ontological stance. In this context, I highlight two prevalent orientations:</p>
+<p><em>Nihilism</em>: An indifference to philosophical coherence or ontological reflection, often guided only by hedonistic utility (adapted from Gertz, 2019).
+<em>Dogmatism</em>: An appeal to authority or fixed ideology - whether realist, anti-realist, pragmatist, etc. - used to justify beliefs a claim (Sienkiewicz, 2019).</p>
+<p>I intentionally exclude <em>Skepticism</em> from this classification. I contend that no one is a true skeptic in practice, though skepticism remains a valuable methodological tool for examining beliefs, ontologies, and openness to alternate viewpoints. As such, skepticism—though not adequately defined here—serves as a recurring theme throughout this text.</p>
+<p>Consequently, I adopt a more traditional, dichotomous view of belief: we either hold a proposition to be true or we do not. This view aligns most closely with representationalism, which I take as foundational. The core of this position can be summarized formally:</p>
+<p><span class="math display">\[
+B_a(p_i) := \{ \text{At least part of what it is for an moral agent} \ \mathcal{a} \ \text{to believe proposition} \ \mathcal{p}_i \\ \text{ is for} \ \mathcal{a} \ \text{ to take } \mathcal{p}_i \text{ as an adequate representation of the world }\omega \}
+\]</span></p>
+<p>In contrast, dispositionalism claims that to believe <span class="math inline">\(P_i\)</span> is to be disposed to assert it, act on it, or treat it as a premise in deliberation (Silva 2024). Yet this still presumes that the agent regards <span class="math inline">\(P_i\)</span> as a adequate representation of <span class="math inline">\(\omega\)</span>. One would not be disposed to act on a proposition unless one first represents it as true or significant in relation to the world. Therefore, I argue that even dispositionalist accounts depend on — and cannot escape — an underlying representationalist framework.</p>
+</div>
+<div id="knowledge" class="section level3 hasAnchor" number="4.5.5">
+<h3><span class="header-section-number">4.5.5</span> Knowledge<a href="epistemic-authenticity.html#knowledge" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p><span class="math display">\[\emptyset\]</span></p>
+</div>
+</div>
+<div id="language-use-and-logic" class="section level2 hasAnchor" number="4.6">
+<h2><span class="header-section-number">4.6</span> Language use and logic<a href="epistemic-authenticity.html#language-use-and-logic" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="empirical-sense" class="section level3 hasAnchor" number="4.6.1">
+<h3><span class="header-section-number">4.6.1</span> Empirical sense<a href="epistemic-authenticity.html#empirical-sense" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Language and the logic of semantics are strongly intertwined and a rational perspective is necessary. Terminology such as validity on soundness have rather strict definitions in logic (Barwise et al. 2002; Haack 1978; Smith 2021) but are not properly used in ecology.</p>
+<p>Both validity and soundness are said to be about an argument. An argument consists of propositions which are declarative statements that can be either true or false (truth-apt). For example, ‘the grass is green’ is a proposition, whereas statements such as ‘watch out for the dog’ cannot be truth-apt.</p>
+<p>In the form of a single world epistemic logic (EL; Van Ditmarsch, Van Der Hoek, and Kooi 2008) a model (Mod) maps a sentence (S; text, statement, and statements) in a language (L), to a set of propositions (P) to which each proposition (p) truth-value (V) can be assigned.</p>
+<p><span class="math display">\[Model=⟨S,L,P,V ⟩\\p: =\{ p \in P \mid V(p) \in \{T, F\} \}\]</span></p>
+<p>An argument is said to be valid if all propositions are true the conclusion cannot be false. The truth value of a proposition is assessed via an valuation function (<span class="math inline">\(V\)</span>) <span class="math inline">\(V(p)=T\)</span>. If all propositions are true, the truth of the propositions is then entailed in the conclusion:</p>
+<p><span class="math display">\[p_1, \dots, p_{n-1} \models p_n\]</span></p>
+<p>Soundness is a stronger principle and refers to an argument to be valid and all propositions are factually true. Based on different propositions (<span class="math inline">\(p\)</span>) and the connections between them a “belief system” is generated (Harman 1986; Usó-Doménech and Nescolarde-Selva 2016).</p>
+<p>Since each proposition in the empirical sciences is expressed in a language (<span class="math inline">\(L\)</span>), the beliefs about the world are shaped by it. The concept of Language in this context can be understood rather informally (see also, Puppo 2019) as the totality of abstractions and symbols that converge information. The language and chosen words conveying the beliefs, intent, status, moral, prudential and political position of the author(s). Since language is not the world, but a way we communicate our ideas, beliefs and experience of it is used to convey meaning. Hence, the meaning of a language is thus not solely in its axioms, definitions and form, but also in its use (Wittgenstein 1953). This brings a clearly challenging issue with it that if “anyone could give the words whatever interpretation he wished, under the pretext that in this context it means thus and so, no matter what it may mean elsewhere” (Lazurca 2025) then what are we claiming when we understand and interpret the text. If the semantic validity of our text depends on the meaning and thereby truth of a proposition. If as proposition in a set of proposition is appointed to incorrect meaning the validity of the claim does not follow <span class="math inline">\(p_1, \dots, p_{n-1} \models p_n\)</span>. It is certainly the case that meaning language is dependent on its use, but this cannot be solely seen to be disentangled fully from its formalism. This or else the truth of each proposition will not be entailed in the conclusions: pesticides kill pests under sufficient concentration, there are pests on these plants, I apply sufficient pesticides, therefore they will be killed.</p>
+<p>Based on Wittgenstein (1921) it is possible to broadly categorize propositions according to their structure. I take only the (pragmatic parts) based from which try to construct a possible definition whether a proposition has empirical sense.</p>
+<p>I will take a proposition - according to Wittegenstein (1921), Anat and Anat (2021), and Bronzo (2022) - to have empirical sense (EL) if it is logically coherent, truth-apt (can be assigned a truth value), and refers (<span class="math inline">\(R_w\)</span>) directly or indirectly to the objects (<span class="math inline">\(w\)</span>) in the empirical world (<span class="math inline">\(W\)</span>).</p>
+<p><span class="math display">\[\exists w \in W: \exists p(V(p) \in \{T, F\} ∧ R_w(p, w) \rightarrow EL(p))\]</span></p>
+<p>Furthermore, both senseless and nonsense propositions are defined/interpreted. A proposition is senseless as when it is a tautology or true by identity alone (e.g., a = a, or 0 = 0) are true by virtue of logical form alone. While such propositions are valid and foundational to formal systems, they are empty from an empirical perspective. Propositions such as “we are correct if either the result is significant or non-significant” or “we are correct if either the results are plausible or non-plausible”. They are syntactically well-formed but tautological and do not, by themselves, contribute empirical content. Hence, while logically valid, they are senseless.</p>
+<p>A proposition is defined as nonsense when it is grammatically correct, but meaningless because they attempt to say what lies beyond the limits of language and sense, like “red is a colour” (meaningful would be to say my shoe answer is red). According to Wittgenstein the tractatus if no property is appointed to an object is nonsense. Another way to look at it is that by saying “red is a colour” is to speak about how to use the language. It seems like the use of a meta-language. We could say “specific stones have a colour and the colours are red, grey and white”. Nonsense in such a view seems to ascribe the mixing of object and meta-language.</p>
+<p>There is something peculiar about this, because it speaks about the world. We need to define how to interpret the language. We cannot refer to every word as being defined differently and apriori. If we assume our use of language and even logic is normative (source), then we have to define a foundation upon which the language is used. As in probability, a sample space is here a combination in which words apply. As such the meaning of the word is the use in its language. But we need to use a language in relation to the world or else we lose to get it detached. The issue is how to define if propositions and words relate to the world Rw(p, w). And if the proposition is truly empirical and exists <span class="math inline">\(∃w ∈ W\)</span>, because it would be truely nonsensical if <span class="math inline">\(\neg ∃w ∈ W\)</span>.</p>
+<p>Karl Popper did not focus at first on characterizing what is ‘science’ (Laudan 1983; Popper 1968). What was his main interest was the separation of the metaphysical from the physical. According to the interpretation of his view p is empirical if it can be refuted (falsified) via empirical means (testing). But the issue is that the sentence “if there is a significant effect, it is not observed by chance alone” cannot be formally and empirically falsified, it is still believed. The problem is, in the first instance we can keep believing the proposition. And what does it mean to empirically test something? The relation between chlorophyll-a and TP to be strong but it does not empirically address the mechanism that causes algae to take up TP and assimilate in the cell mass. What needs to be directly shown is the assimilation of PO4 into the cell mass. Furthermore, if we use a model parameter to assess it incompatibility with a null model P(Data&gt;=0|Theta_0) or the plausibility of the alternative P(Data|Theta_1)/P(Data|Theta_0). We do not address the mechanism, just a summary of the data. But how is this summary of the data empirical?</p>
+<p>In logic there is work on the principle of excluded middle either A or B. A bit of A or a bit of B does not work. As rectified from Popper, I would formulate the following principle of refutation, that does make an ontological (there exists at least) and normative (reasoning is needed) assumption. It is built on the law of excluded middle, the problem of induction and Modens tollens.</p>
+<p>Law of excluded middle. We either let our language and argument perform a fallacy of affirming the consequent (<span class="math inline">\(\alpha\)</span>) or a valid deductive inference (<span class="math inline">\(\beta\)</span>)</p>
+<p><span class="math display">\[Either \ \alpha \ or\ \beta\]</span></p>
+<p>Affirming the consequent. For example if it rains (<span class="math inline">\(A\)</span>) the ground is wet (<span class="math inline">\(B\)</span>). The ground is wet (<span class="math inline">\(B\)</span>) therefore it rained is invalid. There are numerous reasons why the ground is wet.
+<span class="math display">\[\alpha = \{ (A → B),  (B \not \models A) \}\]</span></p>
+<p>Modens tollens. For example if it rains (<span class="math inline">\(A\)</span>) the ground is wet (<span class="math inline">\(B\)</span>). The ground is not wet (<span class="math inline">\(~B\)</span>) therefore it did not rain (<span class="math inline">\(~A\)</span>) is valid.</p>
+<p><span class="math display">\[\beta = \{\forall(A → B),  (\neg B  \models \neg A) \}\]</span></p>
+<p>Since affirming the consequent is fallacious and not valid only <span class="math inline">\(\beta\)</span> remains.</p>
+<p><strong>Problem of induction</strong>: after observing only a few (objects <span class="math inline">\(x\)</span>) swans that are white (<span class="math inline">\(Q\)</span>) it is concluded all swans are white. Since it is assumed at least one case can show the invalidity of this argument to search for ~B is the most efficient.</p>
+<p><span class="math display">\[
+\neg B:=\{(P(x)\rightarrow Q(x)) \models \forall(P(x) \rightarrow Q(x)), \\
+\exists x(P(x) \rightarrow \neg Q(x) \not \models \forall(P(x) \rightarrow Q(x))) \}
+\]</span></p>
+<p>It is unreasonable to assume that all swans are white, because what valid rule exists to extend this to all swans?</p>
+<p><span class="math display">\[
+B:= \{ P(x) \rightarrow Q(x)) \models \forall(P(x) \rightarrow Q(x)) \}
+\]</span></p>
+<p>I short, since <span class="math inline">\(alpha\)</span> is invalid only <span class="math inline">\(\beta\)</span> remains. Thus the only logical way out of the issue is to accept the problem of induction and to search for inconsistencies. However, this creates a conflict with Quine (…) which, i.e., suggested defining the world into predicate logic and all variables that are existentially quantified reveal the ontological commitment. This means that at least an ontological commitment is made to <span class="math inline">\(\neg B\)</span>, in the sense we commit to the belief a case might exist where the rule does not hold.</p>
+<p>However, this still does not access what we can define as epistemically senseful. Assume there exist an animal that is a dog <span class="math inline">\(∃x(dog(x))\)</span> would be my ontological commitment to the existence of dogs in the same way that there exist an animal that is a unicorn. In this sense, the belief in the existence of ‘the probable’ of an event would be classified as ontological. Unless we disconnect the probable from the natural world. That is we treat it as epistemic or instrumental, then it is a meta-language about information, not about the world itself.</p>
+<p>The issue is that no one follows <span class="math inline">\(\beta\)</span> because a strict mechanistic falsification in argumentative form is never performed. In most cases we invalidly perform <span class="math inline">\(\alpha\)</span> as if it was probable. Hence, take restoration management if nutrients increase algae blooms occur, there is an algae bloom therefore nutrient increased. Hence, what is applied is affirming the consequent <span class="math inline">\(A \rightarrow B, B \not \models A\)</span>. The success of the principle than on the cases in which affirming the consequent turned out to correctly address<span class="math inline">\(A \rightarrow B, B \models A\)</span>. In probable terms it is: plausible that if nutrients increase algae blooms occur, there is an algae bloom therefore nutrient increases. This in regard is almost the application of Bayes rule, with exception of the prior: <span class="math inline">\(P(B|A)P(A|B) \cdot P(B)/P(A)\)</span>. In this regard we might also fall to a form of frequentism where we accumulate the proportion of successes <span class="math inline">\(A \rightarrow B,  B \models A\)</span> and failures <span class="math inline">\(A \rightarrow B,  B \not \models A\)</span>. Thus none of this really in line with Popper as clearly often is suggested when ‘refuting null hypothesis’ (…). In this sense, Popper did focus on mechanistic theories (e.g., evolution theory …) not on hypothesis per se. Hence the Quine-Duhem thesis suggests that even if a hypothesis seems unreasonable often an ‘auxiliary hypothesis’ is invoked when needed to save a theory. In ecology this often happens quite unconvincingly by suggesting it is “context dependent”.</p>
+</div>
+<div id="objective-language-and-normativity" class="section level3 hasAnchor" number="4.6.2">
+<h3><span class="header-section-number">4.6.2</span> Objective language and normativity<a href="epistemic-authenticity.html#objective-language-and-normativity" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Language and the beliefs shaped by it play a role in sharing information. The objectivity of the language and chosen words conveying the beliefs, intent, status, knowledge and moral and political position of the author. It is therefore used to convey meaning. Broadly there could be three levels of objective uses of language.</p>
+<p>(1.) <strong>Objective language</strong> uses statements of objects, stones, fish, rivers and <strong>Subjective language</strong> to feelings and emotions such as anger, happiness, good or despair.</p>
+<p>(2.) <strong>Objective language</strong> is used when one speaks of objects other than what is in the mind of a moral agent. For example, I saw a fish swimming, or your dad was angry are objective, while <strong>Subjective language</strong> would be, I think your dad is angry or I think I feel sad.</p>
+<p>(3.) <strong>Objective language</strong> is used in so far it is not coloured by emotions.
+For example an ‘Temperature is negatively correlated to invertebrate species number’ is objective (see also the lexicon used by (Markowitz and Hancock 2016)), while <strong>Subjective language</strong> of the same information would be ‘Worldwide anthropological altered temperature increase causes extreme negative effects on biodiversity’.</p>
+<p>Most statements in ecology are largely objective in 2. but subjective in 3. Also, while objectivity to 1. is often implied utterances contain subjectivity connected to 3. Hence, ‘good’ ecological quality, ‘natural’ or ‘balanced’ ecosystems are in itself judgments on ‘naturalness’ and ‘goodness’ (Shrader-Frechette and Mccoy 1994). Yet, superficial reasoning does not not make ends meet (Maier 2012). It needs either full proof of why this moral (normative) judgment is required.</p>
+<p>Additional 2. provides difficulties in that we end up in peril when talking about our data and models. Assume we sample the number of species in relation to an independent variable (e.g., temperature), then the set of numbers is subjective in 2 and 3 if we would speak about the outside world. A correlation coefficient is not the world, the data behind it is not the world. There are no data and correlation coefficients floating around in the universe. At least, that is the belief in what I ontologically commit myself to. Unless it can be shown (and fully proven) the correlation coefficient is part of the world independent of the mind of the moral agent. The phenomenology question of interest is how these beliefs structure the experience of the world as these views are forced into our writing.</p>
+<p>However, our being and experience is not the subjectivity, it is the unexamined assumptions and wishes that underlie the intentions and communication. We still seem to search for an objective world as unconditional from our subjective experience of it. But the whole implication of communication and language is a subjective being. What should be clearly communicated is what we mean, believe and justify and which assumption underlie this. The move towards a simplified language close to topic neutral disregards the emotive, social and hierarchical nature which is related to value laden normative statements.</p>
+<p>The issue being that the object language - the set of numbers and models (abstracts) describing objects/things - is not the meta-language. The meta-language describes what one “ought” to believe or act based on the interpretation of the object language. For example, the title “Global meta-analysis shows action is needed to halt genetic diversity loss” shows that we need to act based on what a meta-analysis shows. This mistakes that a statistic is not sufficient to generate such claims. We end up in the classical “is-ought” dilemma. We cannot make an “ought” of an “is”. In an analogy, if coconuts fall from trees and kill people we need to remove all coconut trees. This presumes the normative position that the death of people is a bad thing. Yet, this badness does not exist in a purely descriptive universe; it is a normative claim.</p>
+<p>In a short epistemic each identity of a subject arises from holding or asserting some normative beliefs formed via our interaction with the world (we form an identity as Sarte would say).</p>
+<p><strong>P1</strong>: propositions are used to conceptualize (navigate) the world by generating a belief about the relation between proposition and the world.</p>
+<p><span class="math display">\[
+B_a(p) \leftrightarrow  B_a(R_w(p, w))
+\]</span>
+<strong>P2</strong>: A proposition is true when it is believed the proposition is an adequate reflection of the world under the proper interpretation of the language.</p>
+<p><span class="math display">\[
+V(p)=T :=B_a(R_w(p, w))
+\]</span></p>
+<p>Language (abstracts, thoughts, ideas, paintings and figures) and belief are inseparable: our understanding of the world is always mediated through propositions that structure our beliefs. Truth- and false-hood do not pertain to the world itself - the world simply is as it is - but only to our beliefs about it.</p>
+<p><strong>P3</strong>: Normative propositions are not epistemically factual.</p>
+<p><span class="math display">\[
+B_a(O_a(p, w)) \rightarrow \neg F_a(p)
+\]</span>
+What “ought” (should) to be, is a statement relative to what “is”. What “ought” to be cannot generate an “is” statement. For example, we ought to restore a habitat is a normative statement.</p>
+<p><strong>C</strong>: For any concluding normative beliefs in a proposition, the belief can not be epistemically factual and the argument can not be sound.</p>
+<p><span class="math display">\[
+p_1, \dots, p_{n-1} \models p_n \\ and \\
+B_a(O_a(p_n, w)) \rightarrow \neg F_a(p_n)
+\]</span></p>
+<p>This in itself is not surprising nor counter intuitive and aligns with Hume (1739). However, this seems largely to be the case of the writing and arguments in ecology where facts are mixed with norms. At least many articles advocate environmentalism (ought to be) rather stating what is. Hence, normative reasoning is belief- and identity-based and not solely epistemically factual. This demands that we should be open about contextual, identity-relative, and not masked as empirical facts.</p>
+</div>
+</div>
+<div id="truth" class="section level2 hasAnchor" number="4.7">
+<h2><span class="header-section-number">4.7</span> Truth<a href="epistemic-authenticity.html#truth" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>In the previous paragraph it was shown the valuation of the truth- or false-hood of a proposition was performed by a valuation function. However, the valuation of propositions as true or false is not something that is performed independently of being. If the validity (and thereby soundness) of an argument is derived by the valuation of a proposition independent of being then no discussion and argument would be necessary. Then the truth of a proposition is solely defined by the factuality of the world (Lynch 2001). I will not shun realism, but there lies a peculiar difficulty in aligning facts, truth, belief and justification. While one could agree our abstractions are not reality this does not imply we need to forsaken realism (Armstrong 1978). Yet, this does also not mean we should search for an experience of the external world beyond our own being.</p>
+<p>The question is also not “does truth exist”, it is the question “what is it what we mean by truth”. Hence, the answer we cannot obtain “the truth” already presupposes it exists (Heidegger 2016). Thus, the question is when or by what criteria do we state that a proposition is true? I hereby simply take a minimalistic and more Tarskian semantic definition of truth. Hence, it is true when we utter “the grass is green” when “the grass is green” in the world. This is more conforming to a concordance theory of truth at first glance, yet it is more nuanced.</p>
+<p>Language (abstracts, thoughts, ideas, paintings and figures) and belief are inseparable: our understanding of the world is always mediated through propositions that structure our beliefs. Truth- and false-hood do not pertain to the world itself - the world simply is as it is - but only to our beliefs about how our belief of a proposition relates to the world. These beliefs are articulated in a language, and it is through this articulation that propositions acquire truth values. Without social interpretation and valuation, notions of truth- and false-hood would lack operational significance. It would become like a map with no reader. Thus, truth is not an intrinsic property of the world, but a feature of our social, cognitive, linguistic engagement with it.</p>
+<p>The world (w) as we experience it cannot exist independent of being. It is our belief in the fact, as a meta-physical commitment that is forever in a finite mental state. To state ‘the grass is green is a fact’ is to hold the inner belief that the grass is green independent of an observer. But the grass being green without me observing is epistemically nonsensical because there is no-one to assess the truth-value of the facts of “grassness” and “greeness”. Grassness (Poaceae) is the creation of a taxonomic system (a model of characteristics) to align the expressions of a social system to create coherence within a language.
+A counter argument could be that “water boils at 100°C”, but “boiling” is phase change from liquid to gas under standard conditions, “100°C” is a point on a human-devised temperature scale. ”Sea level” is the average surface of the ocean as a reference for pressure. Without humans or our measurement conventions, these concepts do not exist as meaningful distinctions in the universe - they are descriptive tools we impose on our experiences. Even if we would argue that both ‘the grass is green’ and ‘water boils at 100°C’ we make a meta-physical commitment - a belief in a proposition - of the ontological status. It is not that the ontological status (factual existence) of p as w cares, it is the necessity to convince the other that p factually exists as w. However, a pure ontological commitment would not see the necessity to convince the other because the fact is. Factuality disregards the mental state of individuals convincing a subject p exists as w.</p>
+<p>When reflecting on soundness, soundness asks for the facts as if words have sense, while validity asks for coherence, although coherence does not need sense. Therefore, a foundation needs to lie outside the system that is described, while the system itself should be logical coherent. Hence, soundness asks for the factuality of the information contained in <span class="math inline">\(p\)</span> relative to <span class="math inline">\(w\)</span> <span class="math inline">\(R_w(p, w)\)</span>. Validity conceptualises how <span class="math inline">\(p_1, …, p_{n-1} ⊨ p_n\)</span> entail each other. A valuation function on empirical truth needs to contain a function <span class="math inline">\(R_w\)</span>. Therefore, when an empirical derived proposition is believed it is valued against the world.</p>
+<p>In so far that our experience of the world and the fact itself are unmistakingly the same and influenced by our beliefs and social structure. The question if facts exist independently as in unconditional being makes only sense in contrast to the idea of conditional being. The facts are in itself described as independent of our experience. The unconditionality is a rather 3th person perspective (objective) from nowhere we seem to aim to formalize.</p>
+<p>Thus, truth is in this sense only a concordance of semantics with the facts believed as they are and the social structure of the language resides in. Hence, salvation from suffering after death might in the middle ages indeed have been valued to be ‘true’. As after death one is laid to rest. In the same instance ‘significance’ is currently found meaningful, indicative for an error-rate (although mistaken) or causality. The statements are valued to be ‘true’ and in a particular social community. Similar beliefs on patterns in the world based acceptance of others, background information and models can be considered a decent approximation i.e., <span class="math inline">\(log(Chlorophyll-a)=-1 \cdot 0.8 \cdot log(Total Phopshorus)\)</span>. This, even though the model might underfit and is too simplistic, we accept the statement there is a ‘causal’ relation between Total Phosphorus and Chlorophyll-a.</p>
+<p>The strength of the social construct that forms the belief in valuing the “truth” of a proposition can be completely social and power based (Foucault 1981). Hence, if we can control and change the meaning of words, abstractions and figures, we can control what truth consists of. Of course, this is extremely challenging for a perspective of realism; not only is truth not fixed, it is directed.</p>
+<p>A proposition is then true if and only if (iff) it is believed (or valued) to be concordant to objects in the world. And all agents in the community accept the meaning of the words within the coherence of a system, often under epistemic norms or institutional authority.</p>
+<p>Hence, it would be true to say ‘the correlation between x and y in the data is … ‘, iff ‘the correlation between x and y in the data is … ‘ It would be false to state that the correlation between x and y in the data is … ‘ then ‘the process that generated the data is causal’. We would need a premise that links the correlation between x and y to the concept of causality. (And if skeptical ask how causality is defined; skipped by many e.g., Pearl 2009). This indicates, that either a priori should be specified what it means for something or the relation to be causal, how this applies to the data, and how the data relates to the world. Hence, it would require more meta-physical assumptions to rely on a realist-concordance theory of truth.</p>
+</div>
+<div id="cogency-of-arguments" class="section level2 hasAnchor" number="4.8">
+<h2><span class="header-section-number">4.8</span> Cogency of arguments<a href="epistemic-authenticity.html#cogency-of-arguments" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>As explained before deduction on empirical data is not possible so no valid or sound argument can be generated. The universal quantifier ‘<span class="math inline">\(\forall\)</span>’ (largely?) unsupported and therefore <span class="math inline">\(\exists x(P(x) \rightarrow Q(x))\)</span> where ‘<span class="math inline">\(\exists\)</span>’ some. This indicates that propositions are merely acceptable. And in most cases ∃ can be ignored and as it would be wises to explicitly assume it. Meaning that <span class="math inline">\(p_i: (P(x)\rightarrow Q(x))\)</span> or <span class="math inline">\(P \rightarrow Q\)</span> and referred to as a conjecture. A conjecture is a proposition which is accepted as true via a valuation function <span class="math inline">\(V(p_i)=T\)</span> (True) or false <span class="math inline">\(V(p_i)=F\)</span> (False).</p>
+<p>Empirical science developing theories built upon conjectures. Where a conjecture has to be supported by either party in an argument. If a conjecture cannot be accepted by one of the parties, discussion is meaningless and the source of the rejection of one of the parties should be resolved (Popper 1968).</p>
+<p>Arguments are either weakly or strongly cogent (weak or strong arguments) as the conjectures cannot be guaranteed in empirical sciences. Strong arguments are then arguments where most conjectures are acceptable (e.g., temperature is 0 degrees when the thermometer works and indicates 0 degrees).</p>
+<p>Similar an argument is then indicated as: <span class="math inline">\(p_1, …, p_{n-1} \models p_n\)</span>, and should entail the truth of the conjectures within the derived conclusion. When this is the cases, such an argument is then valid when all parties agree on the truthood <span class="math inline">\(v(p_i)=T\)</span> (True) of the conjectures involved.</p>
+<p>The problem is that the empirical sciences has no axiomatic foundation from which the proof of an argument can be logically deduced. In the sense that I believe the the conclusion (<span class="math inline">\(p_3\)</span>) of the following argument. <span class="math inline">\(p_1\)</span>: All humans die, <span class="math inline">\(p_2\)</span>: I am human, conclusion (<span class="math inline">\(p_1 \models  p_2\)</span>), therefore I die (<span class="math inline">\(p_1 \rightarrow p_2, p_1 \models p_2\)</span>). The conclusion forming a conjecture in my belief system and that of others. However, it does not ensure the soundness of the argument, where soundness refers to the factuality of all propositions. Yet, having not known all humans ever lived or going to live the argument is not sound. Moreover, it is questionable if reasoning deals with valid conclusions. Where one better can speak about cogency of the argument.</p>
+<p>The agreement among parties - rather informally - forming a belief system that would be a function of acceptable (cogent) conjectures (Usó-Doménech and Nescolarde-Selva 2016). The conjectures tied together for each individual moral agent (Carthwright et al. 1996; van Fraassen 1980, Closely representing the nodes and edges in a network).</p>
+<p>The moral agent then entertains the relations between propositions and arguments. Counter intuitively, the moral agents also appoints a property to an element x. Hence, a colour blind person would not see the specific colours a person that is not color blind would see, therefore not appoint the same colour property. Or, if a person does not know the function of a wrench, and therefore does not appoint the property wrench to it. If a property is not appointed to an element then the cogency (or validity) of an argument does not follow because without a property on x, the element x remains inert and undefined. Therefore,<span class="math inline">\(V(p_i)=T\)</span> or <span class="math inline">\(V(p_i)=F\)</span> remains undecided because <span class="math inline">\((x \rightarrow Q(x)), x \models Q(x)\)</span> does not follow. Hence, each element is appointed a property, each proposition is valued, woven into an a cogent or not cogent (strong or weak) and formulated as a belief system.</p>
+</div>
+<div id="belief-structure-of-reasoning" class="section level2 hasAnchor" number="4.9">
+<h2><span class="header-section-number">4.9</span> Belief structure of reasoning<a href="epistemic-authenticity.html#belief-structure-of-reasoning" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>As highlighted earlier, the agreement among the beliefs of individuals and groups forms what we might call a belief system — a structure dependent on a set of acceptable propositions called conjectures. The way our beliefs are organized directly influences how we reason.</p>
+<p><img src="EcoPostView_files/figure-html/belief%20structure-1.png" width="768" /></p>
+<p><em>Figure 2: Examplified structure of a belief system</em></p>
+<p>A ‘string; of beliefs can be traced from a foundational or “hinge” proposition (labeled ’A’ in Fig. 2), which supports subsequent beliefs. If this foundational belief turns out to be false, all dependent beliefs — B, C, D, etc. — are undermined. This reflects the logical principle that if any proposition in a chain of implications <span class="math inline">\(p_1, …, p_{n-1}\)</span> is false, then the conclusion <span class="math inline">\(p_n\)</span> in <span class="math inline">\(p_1, …, p_{n-1}\models p_n\)</span> does not follow.</p>
+<p>For example, if <span class="math inline">\(A(x) \rightarrow B(x)\)</span> and the valuation <span class="math inline">\(V(A(x))=F\)</span> then logically <span class="math inline">\(A(x) \rightarrow \neg B(x)\)</span>. This view reflects what Harman (1986) refers to as the foundational theory of belief revision: a belief in a proposition <span class="math inline">\(p_n\)</span> needs to be supported by another proposition <span class="math inline">\(p_{n-1}\)</span>.</p>
+<p>It turns out that people do not follow this system most of the time and actually search to minimal reconstruct their believes system (Harman, 1986). This is termed the ‘maxim of minimal mutilation’ (Ferrari and Carrara 2025). For example, suppose we have <span class="math inline">\(F(x) \rightarrow H(x)\)</span> and <span class="math inline">\(V(F(x))=F\)</span>. This leads to <span class="math inline">\(F(x) \rightarrow \neg H(x)\)</span> threatening our belief in <span class="math inline">\(H(x)\)</span>. To preserve our believe in <span class="math inline">\(H(x)\)</span> we might adopt a new proposition <span class="math inline">\(G(x) \rightarrow H(x)\)</span>, provided it does not conflict with existing beliefs. This is the basis of coherence theory in belief revision (Harman, 1986): people tend to make minimal changes that preserve the overall structure and coherence of their belief system. This can also be refered to all. We can draw parallels to a system van Fraassen (1980) sketches.</p>
+<p>Consider a practical example. Suppose I believe I am bad at cooking because people dislike my food: <span class="math inline">\(DislikeFood(x) \rightarrow BadCooking(x)\)</span> However, I later realize that some people dislike vegetarian food specifically. In contrast, vegetarians enjoy my cooking. The original belief no longer holds because: <span class="math inline">\(\neg DislikeFood(x) \rightarrow BadCooking(x)\)</span>. Therefore I need to revise all my beliefs that follow from my <span class="math inline">\(BadCooking\)</span>. According to the foundational theory of belief revision I need to drop the belief I am bad at cooking. According to the coherence theory of belief revision I could rationalize that vegetarians “have no taste,” preserving my original belief. This mirrors the logic shift from <span class="math inline">\(F(x) \rightarrow \neg H(x)\)</span> to <span class="math inline">\(G(x) \rightarrow H(x)\)</span>.</p>
+<p>A hybrid view can integrate both the foundational and coherence models. Beliefs can be seen as clusters (e.g., D, E, F, H, I, J), connected via strings of core beliefs (A, B, D). Different set of strings and clusters can be connected. For example, the left cluster connects to the right cluster (A2, …, J2) bridging beliefs.</p>
+<p>Some beliefs (propositions) are accepted tentatively — neither fully embraced nor rejected. However, in practice, people often fully accept propositions because suspending judgment creates cognitive dissonance. Dewey (1997) notes that suspending belief is uncomfortable; full acceptance gives us peace of mind and reduces cognitive load (Harman, 1986).</p>
+<p>Yet, full acceptance of a belief implies the need for <em>justification</em>. We must ask: Why do we accept this proposition? And how do we justify it?</p>
+</div>
+<div id="skepticism" class="section level2 hasAnchor" number="4.10">
+<h2><span class="header-section-number">4.10</span> Skepticism<a href="epistemic-authenticity.html#skepticism" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>I will here focus my skepticism to skepticism against philosophy (or meta-physics), although I am convinced that most things we believe are meta-physical. Skepticism proposes a system in which the properties, propositions, or arguments are ‘attacked’. Considering the structure of a valid semantic argument <span class="math inline">\(p_1, …, p_{n-1} \models p_n\)</span> an attack tries to invoke disagreement so that the ground on which the properties within a proposition, and the propositions on which they are built cannot be considered true or false. Since valid argument is a believable argument unable to valuate the truth or falsehood of a proposition makes it impossible to asses its validity <span class="math inline">\(p_1, …, p_{n-1} \models p_n\)</span> or invalidity <span class="math inline">\(p_1, …, p_{n-1} \not\models p_n\)</span>. Since, neither truth or falsehood can be asses one can neither judge the conclusion to follow from it. Unable to close an argument leads to suspense in judgement on p_n$. What remains unclear is that whether the skeptic aims at the suspense of judgment on the factuality of the propositions, the validity of the argument or both. I would assume both are a target because it is eventually we want to talk about the factual universe not about the validity of an argument.</p>
+<p>The dogmatist - as opposed to the skeptic - always claims to have ‘knowledge’ or ‘truth’ but never able to show it upon attack. Nobody is really a full skeptic, nobody a full dogmatist therefore an absurd skeptic is unable to accept the suspense of judgement always in pursuit of refinement. The absurd skeptic searches for a different kind of meaning to ever regress propositional knowledge, perhaps to the annoyance of peers and willing ignorance of others due to the painful suspense of judgment (Dewey, 1979). It is willing to challenge its belief by entertaining ideas beyond dogma. It is both a revolt against to stagnation (status quo) and dogmatism.</p>
+<div id="first-line-of-attack" class="section level3 hasAnchor" number="4.10.1">
+<h3><span class="header-section-number">4.10.1</span> First line of attack<a href="epistemic-authenticity.html#first-line-of-attack" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>I will place the following sections under the first line of attack. These sections highlight different methods (3 modes) to causing doubt in the believed conjecture. Hence, if the conjecture cannot be believed to hold then it logically follows that <span class="math inline">\(p_1, …, p_{n-1} \not\models p_n\)</span>.</p>
+<p>The problem being the attachment of identity to knowledge (belief a proposition is true forming a conjecture). Hence, if one of the conjectures does not hold anymore and any belief that follow from it to <span class="math inline">\(V(p_i)=F\)</span>. This attacks the identity of the moral agent often leading to conflict. As such the logical counter argument cannot be accepted which in my experience often invokes an appeal to common practice or authority. I believe this to be the case because we believe the social hierarchy holds with identity. But to admit that most of the arguments we pose are invalid means to give up on social hierarchy.</p>
+</div>
+<div id="mode-of-disagreement" class="section level3 hasAnchor" number="4.10.2">
+<h3><span class="header-section-number">4.10.2</span> Mode of disagreement<a href="epistemic-authenticity.html#mode-of-disagreement" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The generation of an initial proposition <span class="math inline">\(p_1\)</span> and counter proposition <span class="math inline">\(p_2\)</span> generates a source of disagreement. For example, species x (P(x)) occurs more in freshwater (Q(x)) than in brackish water (~Q(x)). The latter can be utilized in the mode of disagreement either based on a dogmatic argument to disagreement between ‘experts’ of what brackish is, or on the basis that there is no demarcation line as salt in surface water is a concentration not a dichotomous anthropological defined boundary. Falling to the <strong>mode of relativity</strong>. Since experts decide whether x is Q(x) and ~Q(x) the ground of it relative. Either the expert provides full proof without contradiction or the expert cannot use the belief system with falling back to an appeal to authority.</p>
+<p>The grounds for <span class="math inline">\(V(p_1)=T\)</span> not known <span class="math inline">\(p_1, …, p_{n-1} \not\models p_n\)</span>. What is questioned is the valuation function <span class="math inline">\(V(...)\)</span> assigning a ‘truth’ value to a proposition and based on what grounds does the ecologist decide <span class="math inline">\(V(p_i)=T\)</span> or <span class="math inline">\(V(p_i)=F\)</span>. The state of this proposition called a ‘final variable’ or by De Groot (1998), describing the acceptance of <span class="math inline">\(V(p_i)=T\)</span> without requiring any more normative justification in similar fashion Wittgenstein referred to it as a ‘hinge proposition’. Hence, a source of disagreement is almost sure to appear when searching for foundation or support of a ‘basic belief’ (in foundationalism).</p>
+<p><strong>Equipollence</strong></p>
+<p>I consider the mode of disagreement a way to start the ‘attack’. I do no specifically consider it a mode. The principle of equipollence is for example a way to start or end an ‘attack’. Perhaps equipollence is to be situated on similar grounds as the mode of hypothesis, which will be addressed later. A skeptical ‘attack’ starts with often proposing an equipollent argument. An equipollent argument being with the same structure and weight, but absurd conclusion. Often they can be used to highlight an informal fallacy, such as an appeal to authority, common practice or reduction to the absurd . If an equal weighted equipollent argument has the same persuasion power and cannot be accepted on the same grounds, suspense of judgement should reasonably follow on the original argument.</p>
+<p>Equipollent arguments are however, not easily related to only the formal structure of an argument of a logical valid argument. A logical valid argument is <span class="math inline">\(C(x)→W(x), C(x) \models W(x)\)</span> has the same form as <span class="math inline">\(U(x)→G(x), U(x) \models G(x)\)</span> which are both valid. In plain language the former argument could be, A cactus (C) needs water to grow (W), there is no water, therefore it will not grow (modes tollens). This is as valid as the argument, my unicorn (U) can only fly when eating grass (G), my unicorn did not eat grass, therefore it cannot fly. An equipollent argument, thus attacks not only the validity of the argument, but mainly the context of the predicates or hidden premises. If I give the cactus salt brine water it will grow, which is absurd, in this case the argument is incomplete. As the argument is not complete it does not guarantee the the conclusion under all conditions. It is then reasonable to suggest it is internally valid iff these propositions would make up the context of the argument the moral agent refers to, but this is also absurd because that is not how the world works. Hence, the skeptic also attacks the soundness of the argument by pointing to the non-factual status of the propositions. Just as equipollent arguments highlight the incompleteness of premises, the problem of induction demonstrates that a finite set of observations cannot determine universal truths. This reinforces the skeptic’s claim that absolute certainty is unattainable.</p>
+</div>
+<div id="mode-of-hypothesis" class="section level3 hasAnchor" number="4.10.3">
+<h3><span class="header-section-number">4.10.3</span> Mode of hypothesis<a href="epistemic-authenticity.html#mode-of-hypothesis" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The mode of hypothesis asserting that if observing worldwide biodiversity decline (B) is caused by humans (H) it is equally evident that observing no worldwide biodiversity (~B) occur if no humans are present (~H) is equally valid: <span class="math inline">\(p_1: \forall x (B(x) \rightarrow H(x))\)</span> or <span class="math inline">\(p_2: \forall x (~B(x)→~H(x))\)</span>. If one has not proposed the counter proposition (hypothesis) and did not consider observations on <span class="math inline">\(p_1\)</span>, how to then to unbiased (with a straight face and conscience) suggest <span class="math inline">\(p_2\)</span> is not equally likely?</p>
+<p>Any proposition (<span class="math inline">\(p_1\)</span>) accepted as conjecture in an argument where a counter proposition (<span class="math inline">\(p_2\)</span>) has not been addressed can only be tautological. Since (<span class="math inline">\(p_2\)</span>) might be a possibility, and <span class="math inline">\(p_2\)</span> has been asserted then the commitment to believe <span class="math inline">\(p_1\)</span> might be the wrong. Since this commitment might be potential wrong, it does not guarantee the conclusion, suspense of judgment should reasonably follow.</p>
+</div>
+<div id="mode-of-circularity" class="section level3 hasAnchor" number="4.10.4">
+<h3><span class="header-section-number">4.10.4</span> Mode of circularity<a href="epistemic-authenticity.html#mode-of-circularity" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>If we can define support for <span class="math inline">\(p_1\)</span> via <span class="math inline">\(p_2\)</span> till <span class="math inline">\(p_n\)</span>, where <span class="math inline">\(p_n\)</span> is support for <span class="math inline">\(p_1\)</span> we have a circular argument. For example, <span class="math inline">\(p_1 :(D0(x)\rightarrow F(x))\)</span>, <span class="math inline">\(p_2: (F(x) \rightarrow C(x))\)</span> and <span class="math inline">\(p_3: (C(x) \rightarrow F(x))\)</span>. Here <span class="math inline">\(p_1\)</span>: When it is 0 degrees D0(x) water (x) freezes F(x). And <span class="math inline">\(p_2\)</span>: when the water is frozen F(x) it crystallizes C(x) and when the water is crystallized it is 0 degrees D0(x). Thus, when it is 0 degrees water freezes and when the water is frozen it is zero degrees <span class="math inline">\((D0(x)\leftrightarrow F(x) \leftrightarrow C(x))\)</span>. We cannot verify beyond the propositions. The same argument is used to defend a dogmatic boundary for ‘significance’ highlighted by Wasserstein and Lazar (2016).</p>
+<p>Q: Why do so many colleges and grad schools teach p = .05?
+A: Because that’s still what the scientific community and journal editors use.
+Q: Why do so many people still use p = .05?
+A: Because that’s what they were taught in college or grad school.</p>
+<p>The same issue accounts for other forms of boundaries. Hence, a BayesFactor01 &lt; .05 could be raised to the same dogmatic status.</p>
+</div>
+<div id="mode-of-infinite-regress" class="section level3 hasAnchor" number="4.10.5">
+<h3><span class="header-section-number">4.10.5</span> Mode of infinite regress<a href="epistemic-authenticity.html#mode-of-infinite-regress" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The claim to any proposition <span class="math inline">\(p_1\)</span> requires support by <span class="math inline">\(p_2\)</span> and <span class="math inline">\(p_2\)</span> by <span class="math inline">\(p_3\)</span> <span class="math inline">\(...\)</span> <span class="math inline">\(p_{\infty}\)</span>. Assume the following example <span class="math inline">\(p_1\)</span>: Grass is truely green, <span class="math inline">\(p_2\)</span> green light are particles having a particular wavelength, <span class="math inline">\(p_3\)</span> the particles have this wavelength because <span class="math inline">\(...\)</span>. When we regress till infinity we cannot support <span class="math inline">\(p_1\)</span> because <span class="math inline">\(p_{\infty}\)</span> is unknown. Therefore we cannot suggest that the grass is truly green because we do not know what greenness truly consists of <span class="math inline">\(p_{\infty}, ..., p_2 \not\models p_1\)</span>. Since, the soundness of <span class="math inline">\(p_1\)</span> cannot be supported based on a known foundation, judgement should reasonably follow. This does not mean infinite regress is a ’bad; thing. It highlights the weak basis arguments are founded on. Another example, <span class="math inline">\(p_1\)</span>: A BayesFactor10&gt;20 is strong support, <span class="math inline">\(p_2\)</span> &gt;20 indicates &gt;95%, <span class="math inline">\(p_3\)</span> we use &gt;95% because <span class="math inline">\(...\)</span>. Even a pragmatic reason for 95% would need a supporting proposition. For example, 95% is uses because 99% is too unstable in the iterations of the Markov-Chain-Monte-Carlo and then we can invoke the <strong>mode of hypothesis</strong> why is not 96% used? or <strong>mode of relativity</strong> what does 95% represent of reality?</p>
+<p>This highlight any believe in a proposition <span class="math inline">\(p_n\)</span> under some condition <span class="math inline">\(c \in C\)</span> in an argument <span class="math inline">\(p_1, …, p_{n-1} \models p_n\)</span>. Can be suspended based on any other premise that is not certain/conclusive and therefore <span class="math inline">\(p_n\)</span> does not follow.</p>
+<p>More formally, for any belief (claim) from an agent (<span class="math inline">\(a \in A\)</span>) there exists at least some propositions of disagreement over the claim under particular conditions so that the disagreement can be exploited in the mode of hypothesis (MH), Mode of Circularity (MC) and mode of infinite regress (MI).
+<span class="math display">\[
+\forall a \forall p \exists (B_a(p_n) \rightarrow Disagreement(B_a(p_n), c) \rightarrow \{MH \vee MC \vee MI\}
+\\
+MH: Pr(p_n)/Pr(\neg p_n) \neq \{0, \infty\} \rightarrow \neg J_a(B_a(p_n)) = Undecided
+\\
+MC: Valid(p_1, …, p_{n-1} \models p_n) \ p_n \in \{ p_1, …, p_{n-1} \}) \rightarrow \neg J_a(B_a(p_n)) = Circulair
+\\
+MI: \forall p_m \exists p_n (B_a(p_m \models p_n) \wedge p_m &lt;  p_n ) \rightarrow \neg J_a(B_s(p_m))=  Non-foundational
+\]</span></p>
+<p>This formal expression can be more clearly visualized in a diagram as in Fig. 3 below.</p>
+<p><img src="EcoPostView_files/figure-html/skeptic%20network-1.png" width="768" /></p>
+<p><em>Figure 3: Structure of a the skeptical network that can be applied to suspend judgment on propositional claims.</em></p>
+<p>There were previous chapters addressing ‘objective language’, the relation between ‘information, belief and facts’, ‘truth’ (still under construction) and ‘normativety’. They indicate the concepts that are normative such as what <em>should be</em> and what <em>is</em>.</p>
+
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="meta-analysis-over-effect-sizes-and-model-parameters.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="bayes-and-empirical-bayes.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

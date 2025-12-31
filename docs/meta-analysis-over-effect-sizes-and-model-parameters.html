@@ -365,9 +365,9 @@ Of course if bias is considered neglect non can be performed (method=0). I still
 <span id="cb15-7"><a href="meta-analysis-over-effect-sizes-and-model-parameters.html#cb15-7" tabindex="-1"></a><span class="co">#Extract the information from the results based on a selected threshold</span></span>
 <span id="cb15-8"><a href="meta-analysis-over-effect-sizes-and-model-parameters.html#cb15-8" tabindex="-1"></a>extract_abc <span class="ot">&lt;-</span> <span class="fu">extrabc</span>(result_abc, <span class="at">xpos =</span> <span class="dv">4</span>, <span class="at">dist_threshold =</span> <span class="fl">0.052</span>)</span></code></pre></div>
 <pre><code>##   Statistic   Mean     SE     ll     ul
-## 1         c 0.7884 0.0821 0.6322 0.9105
-## 2     mu(z) 1.2586 0.4745 0.4454 1.9235
-## 3     sd(z) 0.9335 0.1645 0.6869 1.2324</code></pre>
+## 1         c 0.7752 0.0990 0.6102 0.9039
+## 2     mu(z) 1.3296 0.4933 0.3858 1.9817
+## 3     sd(z) 0.9124 0.1821 0.6137 1.2404</code></pre>
 <div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="meta-analysis-over-effect-sizes-and-model-parameters.html#cb17-1" tabindex="-1"></a><span class="co">#Plot the histogram of the z-values with the simulated density lines of the posterior</span></span>
 <span id="cb17-2"><a href="meta-analysis-over-effect-sizes-and-model-parameters.html#cb17-2" tabindex="-1"></a><span class="fu">plot</span>(extract_abc<span class="sc">$</span>hist)</span></code></pre></div>
 <p><img src="EcoPostView_files/figure-html/exploring_bias_with_ABC-rejection-1.png" width="748.8" /></p>
@@ -746,22 +746,22 @@ Where <span class="math inline">\(x_{ij}\)</span> refers to the <span class="mat
 <span id="cb39-7"><a href="meta-analysis-over-effect-sizes-and-model-parameters.html#cb39-7" tabindex="-1"></a><span class="co">#Print the table</span></span>
 <span id="cb39-8"><a href="meta-analysis-over-effect-sizes-and-model-parameters.html#cb39-8" tabindex="-1"></a><span class="fu">print</span>(inv_df)</span></code></pre></div>
 <pre><code>##    predictor  link      prob
-## 1         NA   log 0.5019072
-## 2         NA   log 0.4683105
-## 3         NA logit 0.4879110
-## 4         NA logit 0.4796958
-## 5     Oxygen   log 0.5503834
-## 6     Oxygen   log 0.4543336
-## 7     Oxygen logit 0.5088733
-## 8     Oxygen logit 0.4042189
-## 9   Salinity   log 0.5019072
-## 10  Salinity   log 0.4683105
-## 11  Salinity logit 0.4879110
-## 12  Salinity logit 0.4796958
-## 13  Sediment   log 0.5503834
-## 14  Sediment   log 0.4543336
-## 15  Sediment logit 0.5088733
-## 16  Sediment logit 0.4042189</code></pre>
+## 1         NA   log 0.5004217
+## 2         NA   log 0.4700435
+## 3         NA logit 0.4876611
+## 4         NA logit 0.4791769
+## 5     Oxygen   log 0.5434253
+## 6     Oxygen   log 0.4482876
+## 7     Oxygen logit 0.5171460
+## 8     Oxygen logit 0.4023023
+## 9   Salinity   log 0.5004217
+## 10  Salinity   log 0.4700435
+## 11  Salinity logit 0.4876611
+## 12  Salinity logit 0.4791769
+## 13  Sediment   log 0.5434253
+## 14  Sediment   log 0.4482876
+## 15  Sediment logit 0.5171460
+## 16  Sediment logit 0.4023023</code></pre>
 <p>The table shows that for sediment in a logit-linear model related to fish, the posterior probability shifts from 0.38 in mod0 to 0.50 in mod1. This corresponds to a 12% increase, i.e.,
 0.50−0.38=0.12. This indicates that prior information contributes additional support for a negative relationship between fine sediment and lotic fish species — an relation is not fully supported by the data alone.</p>
 <p>This is not a limitation but rather reflects what occurs in practice: prior information often drawn from empirical studies or domain expertise tends to be more directional. This highlights the value of incorporating prior information from the literature when building and refining Bayesian models.</p>

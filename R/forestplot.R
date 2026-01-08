@@ -143,7 +143,7 @@ forestplot <- function(object, study_names=NULL, interval=0.9,
         "se=", round(object$Summary[x,"se"], 2), "\n",
         "ll=", round(object$Summary[x,"ll"], 2), " ",
         "ul=", round(object$Summary[x,"ul"], 2), " ",
-        "I2=", round(object$Summary[x,"I2"], 2), "\n",
+        "I2=", round(object$Summary[x,"I2"]*100, 2),"%\n",
         "BF=", bf_df[x]
       )} else {
       text <- paste0(

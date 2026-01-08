@@ -59,9 +59,9 @@ forestplot <- function(object, study_names=NULL, interval=0.9,
 
   #if names is NULL
   if(add_names == 0){
-    addn <- element_blank()
+    addn <- ggplot2::element_blank()
   }else{
-    addn <- element_text()
+    addn <- ggplot2::element_text()
   }
 
   #x-axis limits
@@ -81,7 +81,7 @@ forestplot <- function(object, study_names=NULL, interval=0.9,
 
     pl2 <- ggplot(split_df[[x]], aes(as.numeric(mu), study))+
       geom_point()+geom_vline(xintercept = 0, lty=2, lwd=0.6, col="tomato3")+
-      geom_errorbarh(data=split_df[[x]], aes(xmin=ll, xmax=ul), width=0)+
+      geom_errorbar(data=split_df[[x]], aes(xmin=ll, xmax=ul), orientation = "y", width=0)+
       theme_classic()+
       xlim_pl2+
       theme(axis.title.x = element_blank(),
@@ -160,7 +160,8 @@ forestplot <- function(object, study_names=NULL, interval=0.9,
     pl1 <- ggplot(post_df[[x]], aes(estimate, group=group))+
       xlim(c(xlims[1], xlims[2]))+
       geom_point(data=object$Summary[x,], aes(x=mu, y=0), inherit.aes = F)+
-      geom_errorbarh(data=post_bar, aes(xmin=ll, xmax=ul, y=0), width=0, inherit.aes = F)+
+      geom_errorbar(data=post_bar, aes(xmin = ll, xmax = ul, y = 0),width = 0,
+        orientation = "y", inherit.aes = FALSE)+
       geom_vline(xintercept = 0, lty=2, lwd=0.6, col="tomato3")+
       geom_density()+xlab(xlab)+
       theme_classic()+

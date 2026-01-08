@@ -59,9 +59,9 @@ forestplot <- function(object, study_names=NULL, interval=0.9,
 
   #if names is NULL
   if(add_names == 0){
-    addn <- ggplot2::element_blank()
+    addn <- element_blank()
   }else{
-    addn <- ggplot2::element_text()
+    addn <- element_text()
   }
 
   #x-axis limits
@@ -81,7 +81,7 @@ forestplot <- function(object, study_names=NULL, interval=0.9,
 
     pl2 <- ggplot(split_df[[x]], aes(as.numeric(mu), study))+
       geom_point()+geom_vline(xintercept = 0, lty=2, lwd=0.6, col="tomato3")+
-      geom_errorbar(data=split_df[[x]], aes(xmin=ll, xmax=ul), orientation = "y", width=0)+
+      geom_errorbar(data=split_df[[x]], aes(xmin=ll, xmax=ul), width=0, orientation="y")+
       theme_classic()+
       xlim_pl2+
       theme(axis.title.x = element_blank(),
@@ -109,7 +109,7 @@ forestplot <- function(object, study_names=NULL, interval=0.9,
     #generate prior df
     prior_df     <- do.call(rbind.data.frame, scaled_prior)
 
-    #if only two priors set to H1 H0
+    #if only two priors set to Mod1 Mod0
     if (length(unique(prior_df$p)) == 2) {
       map <- c(`1` = "H1", `2` = "H0")
       p_chr <- as.character(prior_df$p)
@@ -143,7 +143,7 @@ forestplot <- function(object, study_names=NULL, interval=0.9,
         "se=", round(object$Summary[x,"se"], 2), "\n",
         "ll=", round(object$Summary[x,"ll"], 2), " ",
         "ul=", round(object$Summary[x,"ul"], 2), " ",
-        "I2=", round(object$Summary[x,"I2"]*100, 2),"%\n",
+        "I2=", round(object$Summary[x,"I2"], 2)*100,"% \n",
         "BF=", bf_df[x]
       )} else {
       text <- paste0(
@@ -151,7 +151,7 @@ forestplot <- function(object, study_names=NULL, interval=0.9,
         "se=", round(object$Summary[x,"se"], 2), "\n",
         "ll=", round(object$Summary[x,"ll"], 2), " ",
         "ul=", round(object$Summary[x,"ul"], 2), " ",
-        "I2=", round(object$Summary[x,"I2"], 2)*100,"%")}
+        "I2=", round(object$Summary[x,"I2"]*100, 2), "%")}
 
     post_bar <- object$Summary[x,c("ll", "ul")]
     if(post_bar$ll<xlims[1]){post_bar$ll <- xlims[1]}
@@ -160,8 +160,7 @@ forestplot <- function(object, study_names=NULL, interval=0.9,
     pl1 <- ggplot(post_df[[x]], aes(estimate, group=group))+
       xlim(c(xlims[1], xlims[2]))+
       geom_point(data=object$Summary[x,], aes(x=mu, y=0), inherit.aes = F)+
-      geom_errorbar(data=post_bar, aes(xmin = ll, xmax = ul, y = 0),width = 0,
-        orientation = "y", inherit.aes = FALSE)+
+      geom_errorbar(data=post_bar, aes(xmin=ll, xmax=ul, y=0), orientation="y", width=0, inherit.aes = F)+
       geom_vline(xintercept = 0, lty=2, lwd=0.6, col="tomato3")+
       geom_density()+xlab(xlab)+
       theme_classic()+

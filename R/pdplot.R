@@ -50,6 +50,8 @@
 #' @importFrom ggplot2 element_line
 #' @importFrom grid unit
 #'
+#' @import ggplot2
+#'
 #' @export
 pdplot <- function(object, interval=0.9, display="b1",
                    order_predictor = NULL, order_group = NULL,

@@ -7,9 +7,14 @@
 extrabc(
   obj,
   dist_threshold = NULL,
+  warning = 50,
   interval = 0.9,
   n_dens = 100,
-  xpos = 6,
+  line_position = 1.96,
+  lab_size = 4,
+  bin_limit = 6,
+  bin_width = 0.5,
+  xpos = 10,
   ypos_lim = 0.99,
   alpha_dens = 0.3
 )
@@ -22,6 +27,12 @@ extrabc(
 \item{interval}{Interval level}
 
 \item{n_dens}{Number of density curves to generate}
+
+\item{line_position}{the position of the vertical line in the histogram}
+
+\item{bin_limit}{the limit to which the bins in the histogram extend}
+
+\item{bin_width}{the width of the bins in the histogram}
 
 \item{xpos}{Values for position of text along x-axis}
 

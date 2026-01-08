@@ -8,8 +8,12 @@ forestplot(
   object,
   study_names = NULL,
   interval = 0.9,
+  rel_heights = c(0.25, 0.55, 0.2),
+  label_x_pos = NULL,
+  label_y_pos = NULL,
   xlimit = NULL,
-  xlab = "Estimate"
+  xlab = "Estimate",
+  label_size = 3
 )
 }
 \arguments{
@@ -19,9 +23,17 @@ forestplot(
 
 \item{interval}{Credibility intervals for the summary (default=0.9)}
 
+\item{label_x_pos}{Position of the label along x-axis within the posterior plot}
+
+\item{label_y_pos}{Position of the label along y-axis within the posterior plot}
+
 \item{xlimit}{xlimit The limits of the x-axis}
 
 \item{xlab}{The name of the x-axis in the forest plot}
+
+\item{label_size}{The text size of the label}
+
+\item{rel_height}{Relative heights of the three sub-figures in the plot}
 }
 \description{
 A forest plot that indicates all priors used in the model, all estimates included and the posterior distribution of the pooled

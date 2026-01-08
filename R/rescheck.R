@@ -13,6 +13,8 @@
 #' relative to the inverse of the sample size (1/n) or inverse of the standard error (1/se). It is akin to classical funnel plots
 #' If bias is clear a diagonal pattern would become visible the dashed red line would than not fall directly over the blue line.
 #'
+#' @import ggplot2
+#'
 #' @export
 rescheck <- function(object, order_predictor = NULL, order_group = NULL,
                      xlimit=0.975, ylimit=c(0.025, 0.975), b0_out=T){

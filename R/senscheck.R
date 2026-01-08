@@ -21,6 +21,8 @@
 #' @importFrom ggplot2 theme
 #' @importFrom ggplot2 position_dodge
 #'
+#' @import ggplot2
+#'
 #' @export
 senscheck <- function(mod1, mod0, interval=0.9,
                       order_predictor=NULL, order_group=NULL,

@@ -18,6 +18,8 @@
 #' @importFrom ggplot2 scale_color_grey
 #' @importFrom stats quantile
 #'
+#' @import ggplot2
+#'
 #' @export
 forestplot <- function(object, study_names=NULL, interval=0.9,
                        rel_heights = c(0.25, 0.55, 0.2),

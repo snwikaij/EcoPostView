@@ -60,6 +60,8 @@
 #' @importFrom ggplot2 labs
 #' @importFrom ggplot2 scale_fill_gradientn
 #'
+#' @import ggplot2
+#'
 #' @export
 hop <- function(object, group=NULL, predictor=NULL, link_function=NULL,
                 nr_hops=1500, hop_lwd=1.2, hop_alpha=0.05, hop_col="dodgerblue1",

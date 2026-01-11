@@ -129,7 +129,7 @@ print(standard_meta$Summary)
 
 ### Data and models
 
-The information required for a meta-analytic approach can often be extracted from figures, tables, datasets, or combinations of these sources. However, such information is rarely used in a consistent or standardized way. Put simply, multiple datasets are needed on which (G)LMs can be fitted (see Kaijser et al., ...). This process often reveals that ecological data is noisy, potentially biased, and exhibits considerable heterogeneity across studies.
+The information required for a meta-analytic approach can often be extracted from figures, tables, datasets, or combinations of these sources. However, such information is rarely used in a consistent or standardized way. Put simply, multiple datasets are needed on which (G)LMs can be fitted (see Kaijser et al., 2025). This process often reveals that ecological data is noisy, potentially biased, and exhibits considerable heterogeneity across studies.
 
 These challenges pose difficulties for drawing causal inferences or controlling statistical error. Both error control and causal conclusions require controlled environments, well-designed experiments, and the identification or modeling of confounding variables. While it may not be possible to impose such controls retrospectively (i.e., a posteriori), the existing information is still highly valuable.
 
@@ -137,7 +137,7 @@ This data can be used to make probabilistic statements, generate predictions, an
 
 ### (G)LMs and extracting data
 
-To use this package effectively, data is required, and (G)LMs need to be fitted to that data. This (meta-)data can be obtained from figures (e.g., using tools like WebPlotDigitizer), tables (e.g., by converting PDFs to Excel files), datasets, or combinations of these sources (see Kaijser et al., ...).
+To use this package effectively, data is required, and (G)LMs need to be fitted to that data. This (meta-)data can be obtained from figures (e.g., using tools like WebPlotDigitizer), tables (e.g., by converting PDFs to Excel files), datasets, or combinations of these sources (see Kaijser et al., 2025).
 
 The so-called "effects" we refer to are, more precisely, model parameters, commonly known as the intercept and slope - typically denoted as (*b0* or *β0*) and (*b1* or *β1*). These parameters define the equation:
 
@@ -260,7 +260,7 @@ The prior for the between-study variance ($\tau^2$) is, by default, specified as
 
 To offer users flexibility, the argument `prior_var_fam` can be set to `"exp"` to use an exponential distribution instead of the default `"unif"` (uniform distribution). When using`"unif"`, the variance prior is specified as $Unif(0, \text{prior_study_var})$. When "exp" is selected, the prior variance becomes $Exponential(\frac{1}{\text{prior_study_var})}$
 
-In general, for complex meta-analyses with many predictors and responses (e.g., Kaijser et al. ...), the uniform prior is recommended, provided that convergence is achieved. In contrast, for more focused analyses with fewer predictors and responses - and particularly with small datasets (e.g., $n < 10$) — an exponential prior (e.g., with a mean of 1000) may be more appropriate.
+In general, for complex meta-analyses with many predictors and responses (e.g., Kaijser et al. 2025), the uniform prior is recommended, provided that convergence is achieved. In contrast, for more focused analyses with fewer predictors and responses - and particularly with small datasets (e.g., $n < 10$) — an exponential prior (e.g., with a mean of 1000) may be more appropriate.
 
 These recommendations are heuristic — they are grounded in practical experience and prior applications, but should not be treated as universally optimal. Users are strongly encouraged to conduct sensitivity analyses to assess how prior assumptions influence the results.
 

@@ -50,6 +50,8 @@ Hoeting, Jennifer A., David Madigan, Adrian E. Raftery, and Chris T. Volinsky. 1
 
 Hume, David. 1739. A Treatise of Human Nature  [2007, Dutch Translated Version: Traktaat over de Menselijk Natuur]. Amsterdam: Uitgeverij Boom.
 
+Kaijser, Willem, Michelle Musiol, Andrea R. Schneider, Sebastian Prati, Verena S. Brauer, Rike Bayer, Sebastian Birk, Mario Brauns, Louisa Dunne, Julian Enss, Luan Farias, Christian K. Feld, Lena Feldhaus, Svenja M. Gillmann, Kamil Hupało, Stephen E. Osakpolor, Sarah L. M. Olberg, Iris Madge Pimentel, Ralf B. Schäfer, Christian Schlautmann, Jessica Schwelm, Bernd Sures, Cornelia S. Wagner, Nicole E. Wells, Franziska Wenskus, Christian Schürings, and Daniel Hering. 2025. “Meta-Analysis-Derived Estimates of Stressor–Response Associations for Riverine Organism Groups.” Nature Ecology & Evolution. doi: 10.1038/s41559-025-02884-4.
+ 
 Kale, Alex, Francis Nguyen, Matthew Kay, and Jessica Hullman. 2019. “Hypothetical Outcome Plots Help Untrained Observers Judge Trends in Ambiguous Data.” IEEE Transactions on Visualization and Computer Graphics 25(1): 892–902. doi: 10.1109/TVCG.2018.2864909.
 
 Labukt, Ivar. 2021. “Is Logic Distinctively Normative?” Erkenntnis 86(4): 1025–43. doi: 10.1007/s10670-019-00142-1.

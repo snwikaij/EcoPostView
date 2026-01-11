@@ -70,12 +70,12 @@ $$
 In accordance with the previous
 
 $$
-P(A| B) \cdot P(A) = P(A \cap B)
+P(A| B) \cdot P(B) = P(A \cap B)
 $$
 and
 
 $$
-P(B | A) \cdot P(B) = P(B \cap A)
+P(B | A) \cdot P(A) = P(B \cap A)
 $$
 **Conclusion)**
 

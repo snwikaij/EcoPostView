@@ -21,8 +21,8 @@ pdplot-function
 forest-function
 hop-function-hypothetical-outcome-plots
 hop-function-and-partial-dependency-plots
-epistemic-authenticity
-introduction-1
+meta-epistemic-authenticity
+reasoning-and-logic
 predicate-and-epistemic-logic
 syllogism-and-propositional-logic
 predicate-logic
@@ -30,7 +30,6 @@ epistemic-logic
 reasoning-logic-and-rules
 deduction-induction-and-abuction
 belief-information-and-facts
-sense-and-experience
 representation-and-exprience-of-beliefs
 belief
 belief-and-information

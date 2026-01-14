@@ -22,6 +22,7 @@ forest-function
 hop-function-hypothetical-outcome-plots
 hop-function-and-partial-dependency-plots
 meta-epistemic-authenticity
+introduction-1
 reasoning-and-logic
 predicate-and-epistemic-logic
 syllogism-and-propositional-logic

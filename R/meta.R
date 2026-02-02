@@ -257,15 +257,15 @@ meta <- function(estimate, stderr, parameter=NULL, predictor=NULL,
                                            for (j in 1:L) {
 
                                              #random effects
-                                               beta_R[j] ~ dnorm(0, 1/1000^2)
+                                               beta_R[j] ~ dnorm(0, 1/100^2)
                                                beta_random[j] <- beta_R[j] * RP
 
                                              #Moderator
-                                               beta_M[j] ~ dnorm(0, 1/1000^2)
+                                               beta_M[j] ~ dnorm(0, 1/100^2)
                                                beta_moderator[j] <- beta_M[j] * MP
 
                                              #Bias adjustement
-                                             beta_A[j]      ~ dnorm(0, 1/1000^2)
+                                             beta_A[j]      ~ dnorm(0, 1/100^2)
                                              beta_adjust[j] <- beta_A[j] * AP
 
                                              sigma1[j] ~ dunif(0, Ps)
@@ -309,16 +309,16 @@ meta <- function(estimate, stderr, parameter=NULL, predictor=NULL,
 
                                                  #random effects
                                                  for(r in 1:R){
-                                                   beta_R[j,r]  ~ dnorm(0, 1/1000^2)
+                                                   beta_R[j,r]  ~ dnorm(0, 1/100^2)
                                                    beta_random[j,r] <- beta_R[j,r] * RP}
 
                                                  #Moderator
                                                  for(m in 1:M){
-                                                   beta_M[j,m] ~ dnorm(0, 1/1000^2)
+                                                   beta_M[j,m] ~ dnorm(0, 1/100^2)
                                                    beta_moderator[j,m] <- beta_M[j,m] * MP}
 
                                                  #Bias adjustement
-                                                 beta_A[j]      ~ dnorm(0, 1/1000^2)
+                                                 beta_A[j]      ~ dnorm(0, 1/100^2)
                                                  beta_adjust[j] <- beta_A[j] * AP
 
                                                  sigma1[j] ~ dunif(0, Ps)
@@ -362,15 +362,15 @@ meta <- function(estimate, stderr, parameter=NULL, predictor=NULL,
 
                                                  #random effects
                                                  for(r in 1:R){
-                                                   beta_R[j,r]  ~ dnorm(0, 1/1000^2)
+                                                   beta_R[j,r]  ~ dnorm(0, 1/100^2)
                                                    beta_random[j,r] <- beta_R[j,r] * RP}
 
                                                  #Moderator
-                                                 beta_M[j] ~ dnorm(0, 1/1000^2)
+                                                 beta_M[j] ~ dnorm(0, 1/100^2)
                                                  beta_moderator[j] <- beta_M[j] * MP
 
                                                  #Bias adjustement
-                                                 beta_A[j]      ~ dnorm(0, 1/1000^2)
+                                                 beta_A[j]      ~ dnorm(0, 1/100^2)
                                                  beta_adjust[j] <- beta_A[j] * AP
 
                                                  sigma1[j] ~ dunif(0, Ps)
@@ -413,16 +413,16 @@ meta <- function(estimate, stderr, parameter=NULL, predictor=NULL,
                                              for (j in 1:L) {
 
                                                #random effects
-                                               beta_R[j] ~ dnorm(0, 1/1000^2)
+                                               beta_R[j] ~ dnorm(0, 1/100^2)
                                                beta_random[j] <- beta_R[j] * RP
 
                                                #Moderator
                                                for(m in 1:M){
-                                                 beta_M[j,m] ~ dnorm(0, 1/1000^2)
+                                                 beta_M[j,m] ~ dnorm(0, 1/100^2)
                                                  beta_moderator[j,m] <- beta_M[j,m] * MP}
 
                                                #Bias adjustement
-                                               beta_A[j]      ~ dnorm(0, 1/1000^2)
+                                               beta_A[j]      ~ dnorm(0, 1/100^2)
                                                beta_adjust[j] <- beta_A[j] * AP
 
                                                sigma1[j] ~ dunif(0, Ps)
@@ -463,15 +463,15 @@ meta <- function(estimate, stderr, parameter=NULL, predictor=NULL,
                                              for (j in 1:L) {
 
                                                #random effects
-                                                 beta_R[j] ~ dnorm(0, 1/1000^2)
+                                                 beta_R[j] ~ dnorm(0, 1/100^2)
                                                  beta_random[j] <- beta_R[j] * RP
 
                                                #Moderator
-                                                 beta_M[j] ~ dnorm(0, 1/1000^2)
+                                                 beta_M[j] ~ dnorm(0, 1/100^2)
                                                  beta_moderator[j] <- beta_M[j] * MP
 
                                                #Bias adjustement
-                                               beta_A[j]      ~ dnorm(0, 1/1000^2)
+                                               beta_A[j]      ~ dnorm(0, 1/100^2)
                                                beta_adjust[j] <- beta_A[j] * AP
 
                                                mu[j]           ~ dnorm(Pm[j], 1/Pe[j]^2)
@@ -507,16 +507,16 @@ meta <- function(estimate, stderr, parameter=NULL, predictor=NULL,
 
                                                #random effects
                                                for(r in 1:R){
-                                                 beta_R[j,r]  ~ dnorm(0, 1/1000^2)
+                                                 beta_R[j,r]  ~ dnorm(0, 1/100^2)
                                                  beta_random[j,r] <- beta_R[j,r] * RP}
 
                                                #Moderator
                                                for(m in 1:M){
-                                                 beta_M[j,m] ~ dnorm(0, 1/1000^2)
+                                                 beta_M[j,m] ~ dnorm(0, 1/100^2)
                                                  beta_moderator[j,m] <- beta_M[j,m] * MP}
 
                                                #Bias adjustement
-                                               beta_A[j]      ~ dnorm(0, 1/1000^2)
+                                               beta_A[j]      ~ dnorm(0, 1/100^2)
                                                beta_adjust[j] <- beta_A[j] * AP
 
                                                mu[j]           ~ dnorm(Pm[j], 1/Pe[j]^2)
@@ -552,15 +552,15 @@ meta <- function(estimate, stderr, parameter=NULL, predictor=NULL,
 
                                                  #random effects
                                                  for(r in 1:R){
-                                                   beta_R[j,r]  ~ dnorm(0, 1/1000^2)
+                                                   beta_R[j,r]  ~ dnorm(0, 1/100^2)
                                                    beta_random[j,r] <- beta_R[j,r] * RP}
 
                                                  #Moderator
-                                                 beta_M[j] ~ dnorm(0, 1/1000^2)
+                                                 beta_M[j] ~ dnorm(0, 1/100^2)
                                                  beta_moderator[j] <- beta_M[j] * MP
 
                                                  #Bias adjustement
-                                                 beta_A[j]      ~ dnorm(0, 1/1000^2)
+                                                 beta_A[j]      ~ dnorm(0, 1/100^2)
                                                  beta_adjust[j] <- beta_A[j] * AP
 
                                                  mu[j]           ~ dnorm(Pm[j], 1/Pe[j]^2)
@@ -595,16 +595,16 @@ meta <- function(estimate, stderr, parameter=NULL, predictor=NULL,
                                               for (j in 1:L) {
 
                                                 #random effects
-                                                beta_R[j] ~ dnorm(0, 1/1000^2)
+                                                beta_R[j] ~ dnorm(0, 1/100^2)
                                                 beta_random[j] <- beta_R[j] * RP
 
                                                 #Moderator
                                                 for(m in 1:M){
-                                                  beta_M[j,m] ~ dnorm(0, 1/1000^2)
+                                                  beta_M[j,m] ~ dnorm(0, 1/100^2)
                                                   beta_moderator[j,m] <- beta_M[j,m] * MP}
 
                                                 #Bias adjustement
-                                                beta_A[j]      ~ dnorm(0, 1/1000^2)
+                                                beta_A[j]      ~ dnorm(0, 1/100^2)
                                                 beta_adjust[j] <- beta_A[j] * AP
 
                                                 mu[j]           ~ dnorm(Pm[j], 1/Pe[j]^2)

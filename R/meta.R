@@ -130,6 +130,12 @@ meta <- function(estimate, stderr, parameter=NULL, predictor=NULL,
   #If grouping is not given set to non-specified
   if(is.null(grouping)){grouping <- rep("none-specified", length(estimate))}
 
+  #If predictor argument contains "_" then give error
+  if(any(grepl("_", df$predictor))){stop("Names within the predictor argument cannot contain `_`.")}
+
+  #If grouping argument contains "_" then give error
+  if(any(grepl("_", df$grouping))){stop("Names within the groupig argument cannot contain `_`.")}
+
   #Combine input to generate levels
   level <- paste(parameter, predictor, link_function, grouping, sep = "_")
 
@@ -146,7 +152,8 @@ meta <- function(estimate, stderr, parameter=NULL, predictor=NULL,
     }else{stop(paste0("The the priors are not nummeric or the priors for prior_mu and prior_mu_se are not of the same dimensions."))}
 
   #If prior weights are fixed and not stochastic npw > 1
-  if(fixed_prior==T && npw == 1){stop("The number of priors provided needs to be > 1.")}
+  if(fixed_prior==T && npw == 1){stop("If fixed is TRUE, the number of priors per unique combination of
+                                      predictor and grouping needs to be at least 2.")}
   if(fixed_prior==T){FP <- c(0,1)}else{FP <- c(1,0)}
 
   #If prior mu is given appoint to data

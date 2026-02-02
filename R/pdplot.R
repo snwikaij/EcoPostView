@@ -153,8 +153,8 @@ pl <- ggplot(data.frame(x=sub_data), aes(x=x))+
     scale_x_continuous(breaks = xbreak,
                        limits = c(auto_limx[1],  auto_limx[2]))+
     geom_point(data=est_df[i,], aes(x=as.numeric(map), y=0), col=dens_col, inherit.aes = F, size=point_size)+
-    geom_errorbarh(data=est_df[i,], aes(xmin=as.numeric(ll), xmax=as.numeric(ul),y=0),
-                   col=dens_col, height=0, lwd=err_bar_lwd)+
+    geom_errorbarh(data=est_df[i,], aes(xmin=as.numeric(ll), xmax=as.numeric(ul), width=0, orientation="y"),
+                   col=dens_col, width=0, lwd=err_bar_lwd)+
     theme_classic()+
     theme(axis.title = element_blank(),
           axis.text.y = element_blank(),

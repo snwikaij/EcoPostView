@@ -59,7 +59,7 @@ abmeta <- function(estimate, stderr, prior_mu=0, prior_mu_se=1000, prior_weights
       Z     <- pnorm(beta)-pnorm(alpha)
 
       if(Z <= .Machine$double.eps) {
-        stop("Truncated posterior has negligible denstity within a and b.")
+        stop("Truncated posterior has negligible density within a and b.")
       } else {
         phi_a <- dnorm(alpha)
         phi_b <- dnorm(beta)

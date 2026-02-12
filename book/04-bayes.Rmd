@@ -35,7 +35,7 @@ Then according to the weak law of large numbers suggest that the probability of 
 
 $$\lim_{n\to\infty} P\left(|\bar{X}_n-\mu|\geq \epsilon\right)=0$$
 This means that according to the central limit theorem 
-$$Z_n=\frac{\bar{X}_n-\mu}{\sigma/\sqrt(n)}$$
+$$Z_n=\frac{(\bar{X}_n-\mu)}{\sigma/\sqrt(n)}$$
 converges to the normal. The probability of observing $Z$ under a long-run of repetitions
 
 $$P(-1.96\lesssim Z \lesssim 1.96)=0.95$$. 
@@ -322,11 +322,38 @@ $$
 
 As might be clear this is less computational heavy than MCMC methods. For more then two parameter such an analytically approach becomes more cumbersome. And, if conjugacy is not satisfied no closed form solution is available. In this regards, Laplacian approximation is also computational easy. Yet, the equation clearly formulate the idea what happens in Bayes theorem.
 
+### Generalized Bayes Updating
+
+Standard Bayesian models update the likelihood and prior to the posterior via 
+$$P(\theta|x) = \frac{ P(x|\theta) \cdot P(\theta)}{P(x)}$$. 
+taking the log of the terms results in 
+$$log(P(\theta|x)) = log(P(x|\theta)) + log(P(\theta)) - log(P(x))$$ 
+Here the likelihood is written as $-log(P(x|\theta))$ the (negative log-likelihood). So this is similar to 
+$$-log(P(x|\theta))=L(x; \theta)\\
+log(P(x|\theta))=-L(x; \theta)$$ 
+where $L$ is a loss function of the data $x$ connected to the model parameter $\theta$. Fully, this is corresponding to 
+$$log(P(\theta|x)) = -L(x; \theta) + log(P(\theta)) - log(p(x))$$
+The exponent of this becomes
+$$
+exp(log(P(\theta|x))) = exp(-L(x; \theta)) \cdot exp(log(P(\theta))) \cdot exp(-log(P(x)))
+$$
+This results in 
+$$
+P(\theta|x) = exp(-L(x; \theta)) \cdot P(\theta) \cdot \frac{1}{P(x)}
+$$
+which is equally to
+$$
+P(\theta|x) = \frac{exp(-L(x; \theta)) \cdot P(\theta)}{P(x)}
+$$
+which can be re-written as
+$$
+P(\theta|x) = exp(-L(x; \theta)) \cdot P(\theta)
+$$
 ### Approximate Bayesian Computation with rejection sampling
 
 Approximate Bayesian Computation with rejection sampling (ABC-rejection) is a computationally expensive method for approximating the posterior distribution. However, when the number of parameters is relatively small, the posterior can still be approximated quite well. ABC-rejection is especially useful when the likelihood function cannot be computed or approximated accurately.
 
-One example is the use of ABC to explore potential bias in the EcoPostView package. In a simplified case, assuming both the prior and the data-generating model are normally distributed, the ABC-rejection algorithm begins by simulating a parameter from the prior distribution.
+In a simplified case, assuming both the prior and the data-generating model are normally distributed, the ABC-rejection algorithm begins by simulating a parameter from the prior distribution.
 
 $$
 \mu_{i}^*\sim N(\mu_{prior},\sigma_{prior}^2) \\

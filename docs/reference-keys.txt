@@ -47,13 +47,12 @@ mode-of-disagreement
 mode-of-hypothesis
 mode-of-circularity
 mode-of-infinite-regress
-bayes-and-empirical-bayes
+heterodox-bayes
 classical-statistics-and-estimation
 bayes-theorem-and-probablistic-estimation
 bayes-theorem
-bayes-theorem-in-use
 bayes-theorem-and-conjugate-priors
-approximate-bayesian-computation-with-rejection-sampling
+generalized-bayes-updating
 introduction-to-bayesian-model-averaging-bma
 meta-analysis
 bma-and-meta-analysis

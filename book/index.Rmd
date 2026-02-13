@@ -27,6 +27,10 @@ body {
 
 ```{r setup_1, include = FALSE}
 library(EcoPostView)
+
+#setwd("C:/Users/admin/OneDrive/Bureaublad/EcoPostView/book")
+#bookdown::render_book("index.Rmd")
+
 ```
 
 # Overview

@@ -212,6 +212,7 @@ code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="5.2.1" data-path="heterodox-bayes.html"><a href="heterodox-bayes.html#bayes-theorem"><i class="fa fa-check"></i><b>5.2.1</b> Bayes theorem</a></li>
 <li class="chapter" data-level="5.2.2" data-path="heterodox-bayes.html"><a href="heterodox-bayes.html#bayes-theorem-and-conjugate-priors"><i class="fa fa-check"></i><b>5.2.2</b> Bayes theorem and conjugate priors</a></li>
 <li class="chapter" data-level="5.2.3" data-path="heterodox-bayes.html"><a href="heterodox-bayes.html#generalized-bayes-updating"><i class="fa fa-check"></i><b>5.2.3</b> Generalized Bayes Updating</a></li>
+<li class="chapter" data-level="5.2.4" data-path="heterodox-bayes.html"><a href="heterodox-bayes.html#approximate-bayesian-computation-with-rejection-sampling"><i class="fa fa-check"></i><b>5.2.4</b> Approximate Bayesian Computation with rejection sampling</a></li>
 </ul></li>
 <li class="chapter" data-level="5.3" data-path="heterodox-bayes.html"><a href="heterodox-bayes.html#introduction-to-bayesian-model-averaging-bma"><i class="fa fa-check"></i><b>5.3</b> Introduction to Bayesian Model Averaging (BMA)</a></li>
 <li class="chapter" data-level="5.4" data-path="heterodox-bayes.html"><a href="heterodox-bayes.html#meta-analysis"><i class="fa fa-check"></i><b>5.4</b> Meta-analysis</a></li>
@@ -496,8 +497,10 @@ P(\theta|x) = \frac{exp(-L(x; \theta)) \cdot P(\theta)}{P(x)}
 which can be re-written as
 <span class="math display">\[
 P(\theta|x) = exp(-L(x; \theta)) \cdot P(\theta)
-\]</span>
-### Approximate Bayesian Computation with rejection sampling</p>
+\]</span></p>
+</div>
+<div id="approximate-bayesian-computation-with-rejection-sampling" class="section level3 hasAnchor" number="5.2.4">
+<h3><span class="header-section-number">5.2.4</span> Approximate Bayesian Computation with rejection sampling<a href="heterodox-bayes.html#approximate-bayesian-computation-with-rejection-sampling" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Approximate Bayesian Computation with rejection sampling (ABC-rejection) is a computationally expensive method for approximating the posterior distribution. However, when the number of parameters is relatively small, the posterior can still be approximated quite well. ABC-rejection is especially useful when the likelihood function cannot be computed or approximated accurately.</p>
 <p>In a simplified case, assuming both the prior and the data-generating model are normally distributed, the ABC-rejection algorithm begins by simulating a parameter from the prior distribution.</p>
 <p><span class="math display">\[

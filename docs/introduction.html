@@ -212,6 +212,7 @@ code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="5.2.1" data-path="heterodox-bayes.html"><a href="heterodox-bayes.html#bayes-theorem"><i class="fa fa-check"></i><b>5.2.1</b> Bayes theorem</a></li>
 <li class="chapter" data-level="5.2.2" data-path="heterodox-bayes.html"><a href="heterodox-bayes.html#bayes-theorem-and-conjugate-priors"><i class="fa fa-check"></i><b>5.2.2</b> Bayes theorem and conjugate priors</a></li>
 <li class="chapter" data-level="5.2.3" data-path="heterodox-bayes.html"><a href="heterodox-bayes.html#generalized-bayes-updating"><i class="fa fa-check"></i><b>5.2.3</b> Generalized Bayes Updating</a></li>
+<li class="chapter" data-level="5.2.4" data-path="heterodox-bayes.html"><a href="heterodox-bayes.html#approximate-bayesian-computation-with-rejection-sampling"><i class="fa fa-check"></i><b>5.2.4</b> Approximate Bayesian Computation with rejection sampling</a></li>
 </ul></li>
 <li class="chapter" data-level="5.3" data-path="heterodox-bayes.html"><a href="heterodox-bayes.html#introduction-to-bayesian-model-averaging-bma"><i class="fa fa-check"></i><b>5.3</b> Introduction to Bayesian Model Averaging (BMA)</a></li>
 <li class="chapter" data-level="5.4" data-path="heterodox-bayes.html"><a href="heterodox-bayes.html#meta-analysis"><i class="fa fa-check"></i><b>5.4</b> Meta-analysis</a></li>
@@ -249,10 +250,10 @@ code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warni
 <h2><span class="header-section-number">2.1</span> R-package installation<a href="introduction.html#r-package-installation" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>To start using this R-package, both JAGS and devtools must be installed. JAGS can be installed from <a href="https://sourceforge.net/projects/mcmc-jags/" class="uri">https://sourceforge.net/projects/mcmc-jags/</a> and devtools can be installed in R via CRAN. The most recent version of the EcoPostView it can be installed from GitHub. Of course, any problems, questions or possible improvements can be directed to me.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="introduction.html#cb1-1" tabindex="-1"></a><span class="co">#install.packages(&quot;devtools&quot;)</span></span>
-<span id="cb1-2"><a href="introduction.html#cb1-2" tabindex="-1"></a><span class="fu">library</span>(devtools)</span></code></pre></div>
-<pre><code>## Loading required package: usethis</code></pre>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="introduction.html#cb3-1" tabindex="-1"></a><span class="co">#install.github(&quot;snwikaij/EcoPostView&quot;)</span></span>
-<span id="cb3-2"><a href="introduction.html#cb3-2" tabindex="-1"></a><span class="fu">library</span>(EcoPostView)</span></code></pre></div>
+<span id="cb1-2"><a href="introduction.html#cb1-2" tabindex="-1"></a><span class="fu">library</span>(devtools)</span>
+<span id="cb1-3"><a href="introduction.html#cb1-3" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="introduction.html#cb1-4" tabindex="-1"></a><span class="co">#install.github(&quot;snwikaij/EcoPostView&quot;)</span></span>
+<span id="cb1-5"><a href="introduction.html#cb1-5" tabindex="-1"></a><span class="fu">library</span>(EcoPostView)</span></code></pre></div>
 
 </div>
 </div>

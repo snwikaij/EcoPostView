@@ -349,6 +349,7 @@ which can be re-written as
 $$
 P(\theta|x) = exp(-L(x; \theta)) \cdot P(\theta)
 $$
+
 ### Approximate Bayesian Computation with rejection sampling
 
 Approximate Bayesian Computation with rejection sampling (ABC-rejection) is a computationally expensive method for approximating the posterior distribution. However, when the number of parameters is relatively small, the posterior can still be approximated quite well. ABC-rejection is especially useful when the likelihood function cannot be computed or approximated accurately.

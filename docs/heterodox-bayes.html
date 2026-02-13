@@ -210,15 +210,15 @@ code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="5.2" data-path="heterodox-bayes.html"><a href="heterodox-bayes.html#bayes-theorem-and-probablistic-estimation"><i class="fa fa-check"></i><b>5.2</b> Bayes theorem and probablistic estimation</a>
 <ul>
 <li class="chapter" data-level="5.2.1" data-path="heterodox-bayes.html"><a href="heterodox-bayes.html#bayes-theorem"><i class="fa fa-check"></i><b>5.2.1</b> Bayes theorem</a></li>
-<li class="chapter" data-level="5.2.2" data-path="heterodox-bayes.html"><a href="heterodox-bayes.html#bayes-theorem-and-conjugate-priors"><i class="fa fa-check"></i><b>5.2.2</b> Bayes theorem and conjugate priors</a></li>
-<li class="chapter" data-level="5.2.3" data-path="heterodox-bayes.html"><a href="heterodox-bayes.html#generalized-bayes-updating"><i class="fa fa-check"></i><b>5.2.3</b> Generalized Bayes Updating</a></li>
-<li class="chapter" data-level="5.2.4" data-path="heterodox-bayes.html"><a href="heterodox-bayes.html#approximate-bayesian-computation-with-rejection-sampling"><i class="fa fa-check"></i><b>5.2.4</b> Approximate Bayesian Computation with rejection sampling</a></li>
+<li class="chapter" data-level="5.2.2" data-path="heterodox-bayes.html"><a href="heterodox-bayes.html#sequential-updating"><i class="fa fa-check"></i><b>5.2.2</b> Sequential updating</a></li>
+<li class="chapter" data-level="5.2.3" data-path="heterodox-bayes.html"><a href="heterodox-bayes.html#bayes-theorem-and-conjugate-priors"><i class="fa fa-check"></i><b>5.2.3</b> Bayes theorem and conjugate priors</a></li>
+<li class="chapter" data-level="5.2.4" data-path="heterodox-bayes.html"><a href="heterodox-bayes.html#generalized-bayes-updating"><i class="fa fa-check"></i><b>5.2.4</b> Generalized Bayes Updating</a></li>
+<li class="chapter" data-level="5.2.5" data-path="heterodox-bayes.html"><a href="heterodox-bayes.html#approximate-bayesian-computation-with-rejection-sampling"><i class="fa fa-check"></i><b>5.2.5</b> Approximate Bayesian Computation with rejection sampling</a></li>
 </ul></li>
 <li class="chapter" data-level="5.3" data-path="heterodox-bayes.html"><a href="heterodox-bayes.html#introduction-to-bayesian-model-averaging-bma"><i class="fa fa-check"></i><b>5.3</b> Introduction to Bayesian Model Averaging (BMA)</a></li>
 <li class="chapter" data-level="5.4" data-path="heterodox-bayes.html"><a href="heterodox-bayes.html#meta-analysis"><i class="fa fa-check"></i><b>5.4</b> Meta-analysis</a></li>
 <li class="chapter" data-level="5.5" data-path="heterodox-bayes.html"><a href="heterodox-bayes.html#bma-and-meta-analysis"><i class="fa fa-check"></i><b>5.5</b> BMA and meta-analysis</a></li>
-<li class="chapter" data-level="5.6" data-path="heterodox-bayes.html"><a href="heterodox-bayes.html#sequential-updating"><i class="fa fa-check"></i><b>5.6</b> Sequential updating</a></li>
-<li class="chapter" data-level="5.7" data-path="heterodox-bayes.html"><a href="heterodox-bayes.html#a-short-reflection-on-uncertainty"><i class="fa fa-check"></i><b>5.7</b> A short reflection on uncertainty</a></li>
+<li class="chapter" data-level="5.6" data-path="heterodox-bayes.html"><a href="heterodox-bayes.html#a-short-reflection-on-uncertainty"><i class="fa fa-check"></i><b>5.6</b> A short reflection on uncertainty</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i><b>6</b> References</a></li>
 </ul>
@@ -240,28 +240,38 @@ code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="heterodox-bayes" class="section level1 hasAnchor" number="5">
 <h1><span class="header-section-number">5</span> Heterodox Bayes<a href="heterodox-bayes.html#heterodox-bayes" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<p>In most cases books on Bayesian ‘things’ focus directly on the application of linear and generalized linear models of MCMC using JAGS, Stan or Brms (see the great books of Gelman 2013, Kruschke, 2014, McElreath, 2015). The previous books are - of course - recommended literature for any statistician, methodological or R user. However, these books are focused directly on application of the preferred methods. They are called full Bayesian methods considering it uses a full likelihood and prior on the model parameters. These full Bayesian metods integrate full ;uncertainty’ about all parameters in the model ‘uncertainty’.</p>
-<p>This booklet will focus on Heterodoxic Bayesian methods (a term coined by Richard Hahn). These methods do not follow direct orthodox Bayes interpretation. Often they miss an exact likelihood and thus in the orthodox Bayesian sense do not directly attach ‘uncertainty’ to the estimation of a probability measure of the data given some model parameter. This in itself brings some issues with the logical interpretation of the outcomes as the probability is not a pure reflection of the parameter.</p>
+<p>In most cases, books on Bayesian ‘things’ focus directly on the application of linear and generalized linear models of MCMC using JAGS, Stan or Brms (see the great books of Gelman 2013, Kruschke, 2014, McElreath, 2015). The previous books are - of course - recommended literature for any statistician, methodologist or R user. However, these books are focused directly on application of the preferred methods. They are called full Bayesian methods considering it uses a full likelihood and prior on the model parameters. These full Bayesian methods integrate full; uncertainty’ about all parameters in the model ‘uncertainty’.</p>
+<p>This booklet will focus largely on Heterodox Bayesian methods (a term coined by Richard Hahn). These methods do not follow direct orthodox Bayes interpretation. Often they miss an exact likelihood and thus in the orthodox Bayesian sense do not directly attach ‘uncertainty’ to the estimation of a probability measure of the data given some model parameter. This in itself brings some challenges with the logical interpretation of the outcomes as the probability is not a pure reflection of the data given a model parameter.</p>
 <p>A simple generalization of Bayes theorem as <span class="math inline">\(Posterior \ probability \propto Likelihood \cdot Prior\)</span> which can be more formally expressed as <span class="math inline">\(P(\theta | x) \propto P(x|\theta) \cdot P(\theta )\)</span>. As discussed before the heterodoxy of many methods (not all) methods describe here do <span class="math inline">\(Information? \ \propto Funky\ thing \cdot Prior\)</span>. Because the likelihood is not an exact, the posterior is that neither. A standard notation could be like <span class="math inline">\(\omega(\theta|x) \propto \omega(x; \theta) \cdot P(\theta)\)</span>. Here <span class="math inline">\(\omega\)</span> would indicate a loss, pseud-likelihood, weight or other data generating model to extract information from the data. A full expression would then be of the form</p>
 <p><span class="math display">\[
 \omega(\theta|x) = \frac{ \omega(x; \theta)\cdot P(\theta)}{\int\omega(x; \theta)\cdot P(u)\cdot d(u) }
 \]</span>
-In this view, the posterior need not be interpreted as a conditional probability under a joint model for data and parameters. It may instead be understood as a normalized re-weighting of prior belief by a data-dependent information functions of the model parameter.</p>
+In this equation the <span class="math inline">\(x\)</span> representing the data and <span class="math inline">\(\theta\)</span> a quantity of interest. The <span class="math inline">\(w\)</span> denotes some data dependent function. In this view, the posterior need not be interpreted as a conditional probability under a joint model for data and parameters. It may instead be understood as a normalized re-weighting of prior belief by a data-dependent information functions of the model parameter.</p>
 <p>In general this also brings some benefits with it. Assume we take the following propositions serious <span class="math inline">\(p_1 = \{ \text{Models do not ontologically exist they are concepts} \}\)</span> (Cox …) and so also probability is a model then deFinetti (…) <span class="math inline">\(p_2 = \{ \text{Probability does not ontologically exist} \}\)</span>. In these propositions exists would mean exists as ontological. The following statement would not therefore logically follow as a decent ontological commitment <span class="math inline">\(s_1 = \{ \text{I believe the model parameter is ...} \}\)</span>. The question arising from this statement what is this believe in the model parameter? It would not be a representational definition of believe. Skepticism blocks us to commit ontological. Hence, we can take a pragmatic-instrumental stance by suggest that it is an expression or compression of information of data. Then it is more about predictive adequacy, coherence, internal consistency.</p>
 <p>This section introduces some theory. However, if you are already familiar with it or find it too technical, feel free to skip it.</p>
 <div id="classical-statistics-and-estimation" class="section level2 hasAnchor" number="5.1">
 <h2><span class="header-section-number">5.1</span> Classical statistics and estimation<a href="heterodox-bayes.html#classical-statistics-and-estimation" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>All statistics focuses on estimating the parameter of interest <span class="math inline">\(\theta\)</span> which in most (G)LMs is denoted as the parameter <span class="math inline">\(\mu\)</span> or <span class="math inline">\(\beta\)</span>. For consistency I will use the parameter of interest <span class="math inline">\(\mu\)</span> or <span class="math inline">\(\theta\)</span>. The later is presented as a more general expression for e.g., mean, median, mode etc. However, in the following <span class="math inline">\(\mu\)</span> will be used.</p>
 <p>The population parameter <span class="math inline">\(\mu\)</span> is fixed but unknown. To investigate the plausible values for <span class="math inline">\(\mu\)</span>, we collect measurements or samples. These observed data points, denoted as <span class="math inline">\(x = {x_1, \dots, x_n}\)</span>, are realizations of an underlying random variable <span class="math inline">\(X = {X_1, \dots, X_n}\)</span>, where each <span class="math inline">\(X_i \in \mathbb{R}\)</span>. We assume that these observations are independently and identically distributed (i.i.d.) from a common distribution.</p>
-<p><span class="math display">\[X\stackrel{\text{iid}}{\sim} N(\mu, \sigma^2)\]</span></p>
+<p><span class="math display">\[
+X\stackrel{\text{iid}}{\sim} N(\mu, \sigma^2)
+\]</span></p>
 <p>Since we do not have <span class="math inline">\(X\)</span> but only a set of realizations we need an estimator, which is the sample mean <span class="math inline">\(\bar{x}(x)\)</span>. Hence, the sample mean would be</p>
-<p><span class="math display">\[\bar{x}=\frac{\sum_{i=1}^n(x_i)}{n}\]</span></p>
+<p><span class="math display">\[
+\bar{x}=\frac{\sum_{i=1}^n(x_i)}{n}
+\]</span></p>
 <p>If x is indeed i.i.d. then <span class="math inline">\(\hat{x}\)</span> would serve as an unbiased estimator for <span class="math inline">\(\mu\)</span>. Therefore, the sample mean has certain properties.</p>
-<p><span class="math display">\[\mathbb{E}[\bar{x}]=\mu \ and \ SD(\bar{x})=\frac{\sigma}{\sqrt{n}}\]</span></p>
+<p><span class="math display">\[
+\mathbb{E}[\bar{x}]=\mu \ and \ SD(\bar{x})=\frac{\sigma}{\sqrt{n}}
+\]</span></p>
 <p>Then according to the weak law of large numbers suggest that the probability of deviation from the population parameter decreases when sample size <span class="math inline">\(n\)</span> increases till it eventually converges.</p>
-<p><span class="math display">\[\lim_{n\to\infty} P\left(|\bar{X}_n-\mu|\geq \epsilon\right)=0\]</span>
+<p><span class="math display">\[
+\lim_{n\to\infty} P\left(|\bar{X}_n-\mu|\geq \epsilon\right)=0
+\]</span>
 This means that according to the central limit theorem
-<span class="math display">\[Z_n=\frac{(\bar{X}_n-\mu)}{\sigma/\sqrt(n)}\]</span>
+<span class="math display">\[
+Z_n=\frac{(\bar{X}_n-\mu)}{\sigma/\sqrt(n)}
+\]</span>
 converges to the normal. The probability of observing <span class="math inline">\(Z\)</span> under a long-run of repetitions</p>
 <p><span class="math display">\[P(-1.96\lesssim Z \lesssim 1.96)=0.95\]</span>.</p>
 <p>Similar, the probability of the intervals of <span class="math inline">\(\bar{x}\)</span> to cover <span class="math inline">\(\mu\)</span> in a long-run of repeated experiments at 95% is</p>
@@ -273,7 +283,7 @@ converges to the normal. The probability of observing <span class="math inline">
 <h2><span class="header-section-number">5.2</span> Bayes theorem and probablistic estimation<a href="heterodox-bayes.html#bayes-theorem-and-probablistic-estimation" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <div id="bayes-theorem" class="section level3 hasAnchor" number="5.2.1">
 <h3><span class="header-section-number">5.2.1</span> Bayes theorem<a href="heterodox-bayes.html#bayes-theorem" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>Informally Bayes Theorem would be notated <span class="math inline">\(\text{Posterior}\, \text{probability} = \frac{\text{Likelihood} \cdot \text{Prior}}{\text{Evidence}}\)</span>. More formally Bayes theorem is often notated with A and B where P indicates probability and ‘|’ given or conditional on. <span class="math inline">\(P(A|B) = \frac{P(B|A) \cdot P(A)}{P(B)}\)</span>.Other expression such as <span class="math inline">\(P(\theta|Data, Info) = \frac{P(Data|\theta) \cdot P(\theta|info)}{P(Data)}\)</span> are to highlight that the posterior describes the information of that conditional on the prior information that is given in there.</p>
+<p>Informally Bayes Theorem would be notated <span class="math inline">\(\text{Posterior}\, \text{probability} = \frac{\text{Likelihood} \cdot \text{Prior}}{\text{Evidence}}\)</span>. More formally Bayes theorem is often notated with A and B where P indicates probability and ‘|’ given or conditional on. <span class="math inline">\(P(A|B) = \frac{P(B|A) \cdot P(A)}{P(B)}\)</span>. Other expression such as <span class="math inline">\(P(\theta|Data, Info) = \frac{P(Data|\theta) \cdot P(\theta|info)}{P(Data)}\)</span> are to highlight that the posterior describes the information of that conditional on the prior information that is given. Many more notations are common where <span class="math inline">\(\theta\)</span> is used to express a quantity of interested, mostly the expected values of a model parameter. This often in combination with <span class="math inline">\(x\)</span> that represent the data. Below I will use A and B, and hope in the future to fall back to consistently use just <span class="math inline">\(\theta\)</span>, <span class="math inline">\(\mu\)</span> and <span class="math inline">\(x\)</span>. Since I have been writing parts together and dumping information in here the consistency of notations was not my concern at all.</p>
 <p>The derivation of Bayes theorem relies on the axioms probability theory.</p>
 <p><strong>Premise 1)</strong></p>
 <p><span class="math display">\[
@@ -310,8 +320,28 @@ P(A | B) \cdot P(A) = P(B | A) \cdot P(B)
 P(A|B) = \frac{P(B|A) \cdot P(A)}{P(B)}
 \]</span></p>
 </div>
-<div id="bayes-theorem-and-conjugate-priors" class="section level3 hasAnchor" number="5.2.2">
-<h3><span class="header-section-number">5.2.2</span> Bayes theorem and conjugate priors<a href="heterodox-bayes.html#bayes-theorem-and-conjugate-priors" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="sequential-updating" class="section level3 hasAnchor" number="5.2.2">
+<h3><span class="header-section-number">5.2.2</span> Sequential updating<a href="heterodox-bayes.html#sequential-updating" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>As formally introduced the frequentist optimizes over a long-run of repeated experiments so that the coverage, denoted as <span class="math inline">\(c\)</span> is <span class="math inline">\(1-c\)</span>. More formally <span class="math inline">\(c\)</span> would be expressed as <span class="math inline">\(\alpha\)</span>. The Bayesian does not focus on the consistency between studies or error, between studies. The Bayesian focuses on the coherence from prior to posterior. The Bayesian focuses more on precision and information containmentn (?). Bayesian sequential updating then seem to naturally follow from that.</p>
+<p>Bayesian sequential updating refers to the practice of re-using the derived posterior of a previous model as the prior for the new model. For this the assumption of conditional independence between the the datasets is assumed. The parameter of interest is <span class="math inline">\(\theta\)</span> based on a dataset <span class="math inline">\(Data_1\)</span> and we derive the posterior.
+<span class="math display">\[
+P(\theta|x_1) = \frac{P(x_1|\theta) \cdot P(\theta)}{P(x_1)}
+\]</span>
+The next would be
+<span class="math display">\[
+P(\theta|x_1, x_2) = \frac{P(x_2|\theta) \cdot P(\theta|x_1)}{P(x_2)}
+\]</span>
+till
+<span class="math display">\[
+P(\theta|x_n) = \frac{P(x_n|\theta) \cdot P(\theta|x_1,\cdots,x_{n-1})}{P(x_n)}
+\]</span></p>
+<p>For example, we would like to know what <span class="math inline">\(\mu\)</span> from a population of interest. Our example population has <span class="math inline">\(\mu=0.5\)</span>, <span class="math inline">\(\sigma=5\)</span> and each study would have an error of <span class="math inline">\(\alpha = 40\%\)</span> when when we assume <span class="math inline">\(\alpha=5\%\)</span> (meaning that our heterogeneity is larger than expected). Our first prior starts with <span class="math inline">\(N(0, 5)\)</span> after which the posterior of previous is sequentially re-used visually represented in Fig. 2a below. Where more studies increase the precision of the estimated posterior.</p>
+<p>If the focus lies on objectivity and the error-control over the different studies and assume iid then the curve between studies would follow that of Fig. 2b below.</p>
+<p><img src="EcoPostView_files/figure-html/sequential%20updating-1.png" width="768" /></p>
+<p><em>Figure 2: Sequential updating with credibility intervals on the left panel and a long-run of means with confidence intervals on the right The left panel.</em></p>
+</div>
+<div id="bayes-theorem-and-conjugate-priors" class="section level3 hasAnchor" number="5.2.3">
+<h3><span class="header-section-number">5.2.3</span> Bayes theorem and conjugate priors<a href="heterodox-bayes.html#bayes-theorem-and-conjugate-priors" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>The previous example works for simpler approximations yet if we want to derive an interval for a particular parameter <span class="math inline">\(\theta\)</span> then we can approach this analytically using conjugate priors. Where a prior is conjugate to a likelihood if the resulting posterior is in the same family as the prior.</p>
 <p>As introduced, in statistics and estimation is about finding out the value for <span class="math inline">\(\theta\)</span> which is assumed be <span class="math inline">\(\mu\)</span>. Where in the frequentist framework this is considered fixed and unknown, this is in the Bayesian framework considered to be random ‘and approximately’ known. Of course also in the Bayesian framework samples <span class="math inline">\(x\)</span> are taken. Assume that we already know something about <span class="math inline">\(\mu\)</span> then it is possible to restrict to exclude unreasonable values or for the information we have on <span class="math inline">\(\mu\)</span> to more acceptable values.</p>
 <p><span class="math display">\[
@@ -471,13 +501,13 @@ exp(-\frac{1}{2}\cdot\theta^2(\frac{1}{\sigma_{prior}^2}+\frac{n}{\sigma_{sample
 \]</span></p>
 <p>As might be clear this is less computational heavy than MCMC methods. For more then two parameter such an analytically approach becomes more cumbersome. And, if conjugacy is not satisfied no closed form solution is available. In this regards, Laplacian approximation is also computational easy. Yet, the equation clearly formulate the idea what happens in Bayes theorem.</p>
 </div>
-<div id="generalized-bayes-updating" class="section level3 hasAnchor" number="5.2.3">
-<h3><span class="header-section-number">5.2.3</span> Generalized Bayes Updating<a href="heterodox-bayes.html#generalized-bayes-updating" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="generalized-bayes-updating" class="section level3 hasAnchor" number="5.2.4">
+<h3><span class="header-section-number">5.2.4</span> Generalized Bayes Updating<a href="heterodox-bayes.html#generalized-bayes-updating" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Standard Bayesian models update the likelihood and prior to the posterior via
-<span class="math display">\[P(\theta|x) = \frac{ P(x|\theta) \cdot P(\theta)}{P(x)}\]</span>.
+<span class="math display">\[P(\theta|x) = \frac{ P(x|\theta) \cdot P(\theta)}{P(x)}\]</span>
 taking the log of the terms results in
 <span class="math display">\[log(P(\theta|x)) = log(P(x|\theta)) + log(P(\theta)) - log(P(x))\]</span>
-Here the likelihood is written as <span class="math inline">\(-log(P(x|\theta))\)</span> the (negative log-likelihood). So this is similar to
+Here the likelihood is written as <span class="math inline">\(-log(P(x|\theta))\)</span>, the negative log-likelihood. So this is similar to
 <span class="math display">\[-log(P(x|\theta))=L(x; \theta)\\
 log(P(x|\theta))=-L(x; \theta)\]</span>
 where <span class="math inline">\(L\)</span> is a loss function of the data <span class="math inline">\(x\)</span> connected to the model parameter <span class="math inline">\(\theta\)</span>. Fully, this is corresponding to
@@ -499,8 +529,8 @@ which can be re-written as
 P(\theta|x) = exp(-L(x; \theta)) \cdot P(\theta)
 \]</span></p>
 </div>
-<div id="approximate-bayesian-computation-with-rejection-sampling" class="section level3 hasAnchor" number="5.2.4">
-<h3><span class="header-section-number">5.2.4</span> Approximate Bayesian Computation with rejection sampling<a href="heterodox-bayes.html#approximate-bayesian-computation-with-rejection-sampling" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="approximate-bayesian-computation-with-rejection-sampling" class="section level3 hasAnchor" number="5.2.5">
+<h3><span class="header-section-number">5.2.5</span> Approximate Bayesian Computation with rejection sampling<a href="heterodox-bayes.html#approximate-bayesian-computation-with-rejection-sampling" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Approximate Bayesian Computation with rejection sampling (ABC-rejection) is a computationally expensive method for approximating the posterior distribution. However, when the number of parameters is relatively small, the posterior can still be approximated quite well. ABC-rejection is especially useful when the likelihood function cannot be computed or approximated accurately.</p>
 <p>In a simplified case, assuming both the prior and the data-generating model are normally distributed, the ABC-rejection algorithm begins by simulating a parameter from the prior distribution.</p>
 <p><span class="math display">\[
@@ -572,21 +602,8 @@ Assuming the pooled parameter <span class="math inline">\(\beta_pooled\)</span>i
 SE(\beta_{pooled}) = \sqrt{\sum^m_{k=1}( w_{prior} \cdot (\beta_k^2+SE(\beta_k)^2))-\beta_{pooled}^2}\\
 \]</span></p>
 </div>
-<div id="sequential-updating" class="section level2 hasAnchor" number="5.6">
-<h2><span class="header-section-number">5.6</span> Sequential updating<a href="heterodox-bayes.html#sequential-updating" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>Bayesian sequential updating refers to the practice of re-using the derived posterior of a previous model as the prior for the new model. For this the assumption of conditional independence between the the datasets is assumed. The parameter of interest is <span class="math inline">\(\theta\)</span> based on a dataset <span class="math inline">\(Data_1\)</span> and we derive the posterior.
-<span class="math display">\[P(\theta|Data_1) = \frac{P(Data_1|\theta) \cdot P(\theta)}{P(Data_1)}\]</span>
-The next would be
-<span class="math display">\[P(\theta|Data_1, Data_2) = \frac{P(Data_2|\theta) \cdot P(\theta|Data_1)}{P(Data_2)}\]</span>
-till <span class="math display">\[P(\theta|Data_n) = \frac{P(Data_n|\theta) \cdot P(\theta|Data_1,\cdots,Data_{n-1})}{P(Data_n)}\]</span></p>
-<p>For example, we would like to know what <span class="math inline">\(\mu\)</span> from a population of interest. Our example population has <span class="math inline">\(\mu=0.5\)</span>, <span class="math inline">\(\sigma=5\)</span> and each study would have an error of <span class="math inline">\(\alpha = 40\%\)</span> when when we assume <span class="math inline">\(\alpha=5\%\)</span> (meaning that our heterogeneity is larger than expected). Our first prior starts with <span class="math inline">\(N(0, 5)\)</span> after which the posterior of previous is sequentially re-used visually represented in Fig. 2a below. Where more studies increase the precision of the estimated posterior.</p>
-<p>If the focus lies on objectivity and the error control over the different studies and assume iid then the curve between studies would follow that of Fig. 2b below.</p>
-<p>In a less formal way is the Bayesian framework more focused on transfer of information an precision. On the other hand the frequentist framework is more interested in objectivity, consistency and error among studies.</p>
-<p><img src="EcoPostView_files/figure-html/sequential%20updating-1.png" width="768" /></p>
-<p><em>Figure 2: Sequential updating with credibility intervals on the left panel and a long-run of means with confidence intervals on the right The left panel.</em></p>
-</div>
-<div id="a-short-reflection-on-uncertainty" class="section level2 hasAnchor" number="5.7">
-<h2><span class="header-section-number">5.7</span> A short reflection on uncertainty<a href="heterodox-bayes.html#a-short-reflection-on-uncertainty" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="a-short-reflection-on-uncertainty" class="section level2 hasAnchor" number="5.6">
+<h2><span class="header-section-number">5.6</span> A short reflection on uncertainty<a href="heterodox-bayes.html#a-short-reflection-on-uncertainty" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>I do not believe statistics reflects uncertainty about events; rather, it reflects the information in the data under a particular model or the uncertainty about our belief in a parameter (<span class="math inline">\(\theta, \beta, \mu\)</span>, etc.). The later concept is often vague and confusing because, if one assumes the parameter does not exist independently of the mind, then what exactly is uncertain - our belief? The claim to ‘objective probability’ is already compromised by the assumption that the parameter is objective. However, if the parameter does not exist outside the mind, the meaning of ‘objective’ in this context becomes questionable.</p>
 <p>When people refer to objectivity, they often mean that the data itself is the most ‘objective’ part of the process. However, if some conditions are not met, such as (1) the data is not randomly sampled from a population of interest, (2) the model is not pre-selected in advance, (3) a sufficiently large sample size is not chosen based on the model, and (4) confounding variables are present, then even the data cannot be considered truly objective unless these limitations are explicitly acknowledged. Moreover, model selection procedures further contaminate the objectivity of the data, meaning that the estimated model parameters no longer fully reflect the objectivity of the data which is often implied in our conclusions (Gelman and Loken, 2013; Tong, 2019).</p>
 <p>In Bayesian updating, the prior reflects the extent to which we want to sacrifice over the objectivity of the likelihood by using information which cannot be formalized into the likelihood. This is captured by the relationship <span class="math inline">\(f(\theta \mid Data, Info) = f(Data \mid \theta) \propto f(\theta \mid Info)\)</span></p>

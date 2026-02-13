@@ -51,12 +51,12 @@ heterodox-bayes
 classical-statistics-and-estimation
 bayes-theorem-and-probablistic-estimation
 bayes-theorem
+sequential-updating
 bayes-theorem-and-conjugate-priors
 generalized-bayes-updating
 approximate-bayesian-computation-with-rejection-sampling
 introduction-to-bayesian-model-averaging-bma
 meta-analysis
 bma-and-meta-analysis
-sequential-updating
 a-short-reflection-on-uncertainty
 references

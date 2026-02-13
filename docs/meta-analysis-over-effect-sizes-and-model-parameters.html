@@ -210,15 +210,15 @@ code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="5.2" data-path="heterodox-bayes.html"><a href="heterodox-bayes.html#bayes-theorem-and-probablistic-estimation"><i class="fa fa-check"></i><b>5.2</b> Bayes theorem and probablistic estimation</a>
 <ul>
 <li class="chapter" data-level="5.2.1" data-path="heterodox-bayes.html"><a href="heterodox-bayes.html#bayes-theorem"><i class="fa fa-check"></i><b>5.2.1</b> Bayes theorem</a></li>
-<li class="chapter" data-level="5.2.2" data-path="heterodox-bayes.html"><a href="heterodox-bayes.html#bayes-theorem-and-conjugate-priors"><i class="fa fa-check"></i><b>5.2.2</b> Bayes theorem and conjugate priors</a></li>
-<li class="chapter" data-level="5.2.3" data-path="heterodox-bayes.html"><a href="heterodox-bayes.html#generalized-bayes-updating"><i class="fa fa-check"></i><b>5.2.3</b> Generalized Bayes Updating</a></li>
-<li class="chapter" data-level="5.2.4" data-path="heterodox-bayes.html"><a href="heterodox-bayes.html#approximate-bayesian-computation-with-rejection-sampling"><i class="fa fa-check"></i><b>5.2.4</b> Approximate Bayesian Computation with rejection sampling</a></li>
+<li class="chapter" data-level="5.2.2" data-path="heterodox-bayes.html"><a href="heterodox-bayes.html#sequential-updating"><i class="fa fa-check"></i><b>5.2.2</b> Sequential updating</a></li>
+<li class="chapter" data-level="5.2.3" data-path="heterodox-bayes.html"><a href="heterodox-bayes.html#bayes-theorem-and-conjugate-priors"><i class="fa fa-check"></i><b>5.2.3</b> Bayes theorem and conjugate priors</a></li>
+<li class="chapter" data-level="5.2.4" data-path="heterodox-bayes.html"><a href="heterodox-bayes.html#generalized-bayes-updating"><i class="fa fa-check"></i><b>5.2.4</b> Generalized Bayes Updating</a></li>
+<li class="chapter" data-level="5.2.5" data-path="heterodox-bayes.html"><a href="heterodox-bayes.html#approximate-bayesian-computation-with-rejection-sampling"><i class="fa fa-check"></i><b>5.2.5</b> Approximate Bayesian Computation with rejection sampling</a></li>
 </ul></li>
 <li class="chapter" data-level="5.3" data-path="heterodox-bayes.html"><a href="heterodox-bayes.html#introduction-to-bayesian-model-averaging-bma"><i class="fa fa-check"></i><b>5.3</b> Introduction to Bayesian Model Averaging (BMA)</a></li>
 <li class="chapter" data-level="5.4" data-path="heterodox-bayes.html"><a href="heterodox-bayes.html#meta-analysis"><i class="fa fa-check"></i><b>5.4</b> Meta-analysis</a></li>
 <li class="chapter" data-level="5.5" data-path="heterodox-bayes.html"><a href="heterodox-bayes.html#bma-and-meta-analysis"><i class="fa fa-check"></i><b>5.5</b> BMA and meta-analysis</a></li>
-<li class="chapter" data-level="5.6" data-path="heterodox-bayes.html"><a href="heterodox-bayes.html#sequential-updating"><i class="fa fa-check"></i><b>5.6</b> Sequential updating</a></li>
-<li class="chapter" data-level="5.7" data-path="heterodox-bayes.html"><a href="heterodox-bayes.html#a-short-reflection-on-uncertainty"><i class="fa fa-check"></i><b>5.7</b> A short reflection on uncertainty</a></li>
+<li class="chapter" data-level="5.6" data-path="heterodox-bayes.html"><a href="heterodox-bayes.html#a-short-reflection-on-uncertainty"><i class="fa fa-check"></i><b>5.6</b> A short reflection on uncertainty</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i><b>6</b> References</a></li>
 </ul>
@@ -272,10 +272,8 @@ Of course if bias is considered neglect non can be performed (method=0). I still
 ## meta(estimate = example1$est, stderr = example1$se)
 ## 
 ## Summary:
-##   parameter      predictor     link          group     map      mu     se      ll      ul
-## 1        b1 none-specified identity none-specified -0.2225 -0.2283 0.0208 -0.2624 -0.1943
-##       I2  n
-## 1 0.3573 83</code></pre>
+##   parameter      predictor     link          group     map      mu     se      ll      ul     I2  n
+## 1        b1 none-specified identity none-specified -0.2225 -0.2283 0.0208 -0.2624 -0.1943 0.3573 83</code></pre>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="meta-analysis-over-effect-sizes-and-model-parameters.html#cb4-1" tabindex="-1"></a><span class="co">#Results metafor</span></span>
 <span id="cb4-2"><a href="meta-analysis-over-effect-sizes-and-model-parameters.html#cb4-2" tabindex="-1"></a><span class="fu">print</span>(standard_metafor)</span></code></pre></div>
 <pre><code>## 
@@ -298,10 +296,8 @@ Of course if bias is considered neglect non can be performed (method=0). I still
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="meta-analysis-over-effect-sizes-and-model-parameters.html#cb6-1" tabindex="-1"></a><span class="co">#Results EcoPostView</span></span>
 <span id="cb6-2"><a href="meta-analysis-over-effect-sizes-and-model-parameters.html#cb6-2" tabindex="-1"></a><span class="fu">print</span>(standard_meta<span class="sc">$</span>Summary)</span></code></pre></div>
-<pre><code>##   Name parameter      predictor     link          group     map      mu     se      ll
-## 1 Main        b1 none-specified identity none-specified -0.2225 -0.2283 0.0208 -0.2624
-##        ul     I2  n
-## 1 -0.1943 0.3573 83</code></pre>
+<pre><code>##   Name parameter      predictor     link          group     map      mu     se      ll      ul     I2  n
+## 1 Main        b1 none-specified identity none-specified -0.2225 -0.2283 0.0208 -0.2624 -0.1943 0.3573 83</code></pre>
 <p>Both the metafor and EcoPostView packages yield similar means (-0.22) and standard errors. This suggests that, in many cases, not specifying priors may be uninformative.</p>
 </div>
 <div id="check-for-bias" class="section level3 hasAnchor" number="3.2.2">
@@ -336,17 +332,12 @@ Of course if bias is considered neglect non can be performed (method=0). I still
 ##     n_thin = 5, n_iter = 30000)
 ## 
 ## Summary:
-##   parameter      predictor     link          group     map     mu     se      ll      ul
-## 1        b1 none-specified identity none-specified -0.0742 -0.072 0.0262 -0.1157 -0.0306
-##       I2  n
-## 1 0.1982 83</code></pre>
+##   parameter      predictor     link          group     map     mu     se      ll      ul     I2  n
+## 1        b1 none-specified identity none-specified -0.0742 -0.072 0.0262 -0.1157 -0.0306 0.1982 83</code></pre>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="meta-analysis-over-effect-sizes-and-model-parameters.html#cb12-1" tabindex="-1"></a><span class="fu">print</span>(adjusted_meta<span class="sc">$</span>Summary)</span></code></pre></div>
-<pre><code>##     Name parameter      predictor     link          group       map        mu       se
-## 1   Main        b1 none-specified identity none-specified  -0.07420  -0.07200 0.026200
-## 2 Adjust        b1 none-specified identity none-specified -10.61454 -10.55618 1.526953
-##          ll        ul     I2  n
-## 1  -0.11570 -0.030600 0.1982 83
-## 2 -13.09256 -8.106732     NA NA</code></pre>
+<pre><code>##     Name parameter      predictor     link          group       map        mu       se        ll        ul     I2  n
+## 1   Main        b1 none-specified identity none-specified  -0.07420  -0.07200 0.026200  -0.11570 -0.030600 0.1982 83
+## 2 Adjust        b1 none-specified identity none-specified -10.61454 -10.55618 1.526953 -13.09256 -8.106732     NA NA</code></pre>
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="meta-analysis-over-effect-sizes-and-model-parameters.html#cb14-1" tabindex="-1"></a>res_bias2 <span class="ot">&lt;-</span> <span class="fu">rescheck</span>(adjusted_meta)</span>
 <span id="cb14-2"><a href="meta-analysis-over-effect-sizes-and-model-parameters.html#cb14-2" tabindex="-1"></a><span class="fu">print</span>(res_bias2<span class="sc">$</span>bias_se)</span></code></pre></div>
 <p><img src="EcoPostView_files/figure-html/adjusting_bias_via_Eggers_approach-1.png" width="748.8" /></p>
@@ -365,9 +356,9 @@ Of course if bias is considered neglect non can be performed (method=0). I still
 <span id="cb15-7"><a href="meta-analysis-over-effect-sizes-and-model-parameters.html#cb15-7" tabindex="-1"></a><span class="co">#Extract the information from the results based on a selected threshold</span></span>
 <span id="cb15-8"><a href="meta-analysis-over-effect-sizes-and-model-parameters.html#cb15-8" tabindex="-1"></a>extract_abc <span class="ot">&lt;-</span> <span class="fu">extrabc</span>(result_abc, <span class="at">xpos =</span> <span class="dv">4</span>, <span class="at">dist_threshold =</span> <span class="fl">0.052</span>)</span></code></pre></div>
 <pre><code>##   Statistic   Mean     SE     ll     ul
-## 1         c 0.7792 0.0883 0.6195 0.9044
-## 2     mu(z) 1.2575 0.5020 0.3472 2.0168
-## 3     sd(z) 0.9459 0.1712 0.6753 1.2218</code></pre>
+## 1         c 0.7739 0.0867 0.6135 0.8926
+## 2     mu(z) 1.2878 0.4757 0.5118 1.9221
+## 3     sd(z) 0.9294 0.1797 0.6623 1.2618</code></pre>
 <div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="meta-analysis-over-effect-sizes-and-model-parameters.html#cb17-1" tabindex="-1"></a><span class="co">#Plot the histogram of the z-values with the simulated density lines of the posterior</span></span>
 <span id="cb17-2"><a href="meta-analysis-over-effect-sizes-and-model-parameters.html#cb17-2" tabindex="-1"></a><span class="fu">plot</span>(extract_abc<span class="sc">$</span>hist)</span></code></pre></div>
 <p><img src="EcoPostView_files/figure-html/exploring_bias_with_ABC-rejection-1.png" width="748.8" /></p>
@@ -384,18 +375,13 @@ Of course if bias is considered neglect non can be performed (method=0). I still
 ## meta(estimate = example1$est, stderr = example1$se, moderator = example1$mod)
 ## 
 ## Summary:
-##   parameter      predictor     link          group     map      mu     se      ll      ul
-## 1        b1 none-specified identity none-specified -0.1758 -0.1774 0.0219 -0.2132 -0.1415
-##     I2  n
-## 1 0.29 83</code></pre>
+##   parameter      predictor     link          group     map      mu     se      ll      ul   I2  n
+## 1        b1 none-specified identity none-specified -0.1758 -0.1774 0.0219 -0.2132 -0.1415 0.29 83</code></pre>
 <div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="meta-analysis-over-effect-sizes-and-model-parameters.html#cb20-1" tabindex="-1"></a><span class="co">#Results EcoPostView</span></span>
 <span id="cb20-2"><a href="meta-analysis-over-effect-sizes-and-model-parameters.html#cb20-2" tabindex="-1"></a><span class="fu">print</span>(standard_meta<span class="sc">$</span>Summary)</span></code></pre></div>
-<pre><code>##        Name parameter      predictor     link          group        map         mu        se
-## 1      Main        b1 none-specified identity none-specified -0.1758000 -0.1774000 0.0219000
-## 2 Moderator        b1 none-specified identity none-specified  0.9045858  0.8991034 0.2154674
-##           ll        ul   I2  n
-## 1 -0.2132000 -0.141500 0.29 83
-## 2  0.5362936  1.240691   NA NA</code></pre>
+<pre><code>##        Name parameter      predictor     link          group        map         mu        se         ll        ul   I2  n
+## 1      Main        b1 none-specified identity none-specified -0.1758000 -0.1774000 0.0219000 -0.2132000 -0.141500 0.29 83
+## 2 Moderator        b1 none-specified identity none-specified  0.9045858  0.8991034 0.2154674  0.5362936  1.240691   NA NA</code></pre>
 </div>
 </div>
 <div id="meta-analysis-on-generalized-linear-models-glms" class="section level2 hasAnchor" number="3.3">
@@ -437,14 +423,14 @@ Where <span class="math inline">\(x_{ij}\)</span> refers to the <span class="mat
 <div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="meta-analysis-over-effect-sizes-and-model-parameters.html#cb22-1" tabindex="-1"></a><span class="fu">data</span>(example2)</span>
 <span id="cb22-2"><a href="meta-analysis-over-effect-sizes-and-model-parameters.html#cb22-2" tabindex="-1"></a><span class="fu">head</span>(example2)</span></code></pre></div>
 <pre><code>## # A tibble: 6 × 9
-##   doi                             link  group predictor parameter     est    se     n    mean
-##   &lt;chr&gt;                           &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;     &lt;chr&gt;       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;
-## 1 10.1127/1863-9135/2007/0168-00… log   Inve… Salinity  b1         0.0697 0.202    10 870.   
-## 2 10.1127/1863-9135/2007/0168-00… log   Inve… Oxygen    b1         0.319  0.196    10   8.15 
-## 3 10.1127/1863-9135/2007/0168-00… log   Inve… Sediment  b1         0.258  0.164    10   0.385
-## 4 10.1127/1863-9135/2007/0168-00… logit Inve… Salinity  b1        -0.950  0.723    10 870.   
-## 5 10.1127/1863-9135/2007/0168-00… logit Inve… Oxygen    b1        -0.136  0.353    10   8.15 
-## 6 10.1127/1863-9135/2007/0168-00… logit Inve… Sediment  b1         0.266  0.309    10   0.385</code></pre>
+##   doi                              link  group         predictor parameter     est    se     n    mean
+##   &lt;chr&gt;                            &lt;chr&gt; &lt;chr&gt;         &lt;chr&gt;     &lt;chr&gt;       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;
+## 1 10.1127/1863-9135/2007/0168-0055 log   Invertebrates Salinity  b1         0.0697 0.202    10 870.   
+## 2 10.1127/1863-9135/2007/0168-0055 log   Invertebrates Oxygen    b1         0.319  0.196    10   8.15 
+## 3 10.1127/1863-9135/2007/0168-0055 log   Invertebrates Sediment  b1         0.258  0.164    10   0.385
+## 4 10.1127/1863-9135/2007/0168-0055 logit Invertebrates Salinity  b1        -0.950  0.723    10 870.   
+## 5 10.1127/1863-9135/2007/0168-0055 logit Invertebrates Oxygen    b1        -0.136  0.353    10   8.15 
+## 6 10.1127/1863-9135/2007/0168-0055 logit Invertebrates Sediment  b1         0.266  0.309    10   0.385</code></pre>
 <p>In the example above, the <strong>est</strong> column contains the estimated model parameters, while the <strong>se</strong> column holds the standard error of those estimates. The <strong>group</strong> column can represent an organism group, specific species, or taxon (or any other category you wish to use for grouping). The <strong>predictor</strong> column denotes the specific predictor variable, and the <strong>parameter</strong> column indicates whether the estimate corresponds to the intercept (<em>b0</em>) or a regression coefficient (<em>b1</em>). The link column specifies the link function used in the model. Additionally, it is recommended to include the sample size (<strong>n</strong>) in your dataset to adjust for ‘small-sample effects’ if needed (Peters et al., 2006; Moreno et al., 2009).</p>
 <p>The meta-function can be applied over the example data via the following argument.</p>
 <div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="meta-analysis-over-effect-sizes-and-model-parameters.html#cb24-1" tabindex="-1"></a>mod1 <span class="ot">&lt;-</span> <span class="fu">meta</span>(<span class="at">estimate=</span>example2<span class="sc">$</span>est,         <span class="co">#Model estimate</span></span>
@@ -521,18 +507,18 @@ Where <span class="math inline">\(x_{ij}\)</span> refers to the <span class="mat
 <div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="meta-analysis-over-effect-sizes-and-model-parameters.html#cb28-1" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;example2&quot;</span>)</span>
 <span id="cb28-2"><a href="meta-analysis-over-effect-sizes-and-model-parameters.html#cb28-2" tabindex="-1"></a><span class="fu">print</span>(example2)</span></code></pre></div>
 <pre><code>## # A tibble: 705 × 9
-##    doi                            link  group predictor parameter     est    se     n    mean
-##    &lt;chr&gt;                          &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;     &lt;chr&gt;       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;
-##  1 10.1127/1863-9135/2007/0168-0… log   Inve… Salinity  b1         0.0697 0.202    10 8.70e+2
-##  2 10.1127/1863-9135/2007/0168-0… log   Inve… Oxygen    b1         0.319  0.196    10 8.15e+0
-##  3 10.1127/1863-9135/2007/0168-0… log   Inve… Sediment  b1         0.258  0.164    10 3.85e-1
-##  4 10.1127/1863-9135/2007/0168-0… logit Inve… Salinity  b1        -0.950  0.723    10 8.70e+2
-##  5 10.1127/1863-9135/2007/0168-0… logit Inve… Oxygen    b1        -0.136  0.353    10 8.15e+0
-##  6 10.1127/1863-9135/2007/0168-0… logit Inve… Sediment  b1         0.266  0.309    10 3.85e-1
-##  7 10.2307/1468008                log   Inve… Sediment  b1        -0.254  0.109    94 9.47e-2
-##  8 10.1007/s10530-020-02374-7(01… logit Inve… Salinity  b1         0.825  0.204    27 2.87e+2
-##  9 10.1007/s10530-020-02374-7(01… log   Fish  Salinity  b1        -0.151  0.143    25 2.86e+2
-## 10 10.1007/s10661-021-09196-7     log   Inve… Oxygen    b1        -0.370  0.391    10 2.71e+0
+##    doi                                                       link  group         predictor parameter     est    se     n     mean
+##    &lt;chr&gt;                                                     &lt;chr&gt; &lt;chr&gt;         &lt;chr&gt;     &lt;chr&gt;       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
+##  1 10.1127/1863-9135/2007/0168-0055                          log   Invertebrates Salinity  b1         0.0697 0.202    10 870.    
+##  2 10.1127/1863-9135/2007/0168-0055                          log   Invertebrates Oxygen    b1         0.319  0.196    10   8.15  
+##  3 10.1127/1863-9135/2007/0168-0055                          log   Invertebrates Sediment  b1         0.258  0.164    10   0.385 
+##  4 10.1127/1863-9135/2007/0168-0055                          logit Invertebrates Salinity  b1        -0.950  0.723    10 870.    
+##  5 10.1127/1863-9135/2007/0168-0055                          logit Invertebrates Oxygen    b1        -0.136  0.353    10   8.15  
+##  6 10.1127/1863-9135/2007/0168-0055                          logit Invertebrates Sediment  b1         0.266  0.309    10   0.385 
+##  7 10.2307/1468008                                           log   Invertebrates Sediment  b1        -0.254  0.109    94   0.0947
+##  8 10.1007/s10530-020-02374-7(0123456789().,-volV)( 01234567 logit Invertebrates Salinity  b1         0.825  0.204    27 287.    
+##  9 10.1007/s10530-020-02374-7(0123456789().,-volV)( 01234567 log   Fish          Salinity  b1        -0.151  0.143    25 286.    
+## 10 10.1007/s10661-021-09196-7                                log   Invertebrates Oxygen    b1        -0.370  0.391    10   2.71  
 ## # ℹ 695 more rows</code></pre>
 <div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="meta-analysis-over-effect-sizes-and-model-parameters.html#cb30-1" tabindex="-1"></a>mod2 <span class="ot">&lt;-</span> <span class="fu">meta</span>(<span class="at">estimate=</span>example2<span class="sc">$</span>est,        </span>
 <span id="cb30-2"><a href="meta-analysis-over-effect-sizes-and-model-parameters.html#cb30-2" tabindex="-1"></a>                    <span class="at">stderr=</span>example2<span class="sc">$</span>se,            </span>
@@ -569,64 +555,35 @@ Where <span class="math inline">\(x_{ij}\)</span> refers to the <span class="mat
 ## 12        b1  Sediment logit Invertebrates -0.2187 -0.2121 0.0769 -0.3380 -0.0866 0.0135 26</code></pre>
 <div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="meta-analysis-over-effect-sizes-and-model-parameters.html#cb32-1" tabindex="-1"></a><span class="co">#Display the summarized results</span></span>
 <span id="cb32-2"><a href="meta-analysis-over-effect-sizes-and-model-parameters.html#cb32-2" tabindex="-1"></a><span class="fu">print</span>(mod2<span class="sc">$</span>Summary)</span></code></pre></div>
-<pre><code>##      Name parameter predictor  link         group           map            mu           se
-## 1    Main        b1    Oxygen   log          Fish  3.711000e-01  3.566000e-01 1.005000e-01
-## 2    Main        b1    Oxygen   log Invertebrates  1.792000e-01  1.972000e-01 8.080000e-02
-## 3    Main        b1    Oxygen logit          Fish  2.221000e-01  1.490000e-01 2.485000e-01
-## 4    Main        b1    Oxygen logit Invertebrates  1.172000e-01  7.470000e-02 1.433000e-01
-## 5    Main        b1  Salinity   log          Fish -6.420000e-02 -5.550000e-02 5.840000e-02
-## 6    Main        b1  Salinity   log Invertebrates -1.078000e-01 -1.099000e-01 2.510000e-02
-## 7    Main        b1  Salinity logit          Fish -2.942000e-01 -2.763000e-01 2.034000e-01
-## 8    Main        b1  Salinity logit Invertebrates -2.754000e-01 -2.929000e-01 8.300000e-02
-## 9    Main        b1  Sediment   log          Fish -1.380000e-02 -5.750000e-02 1.562000e-01
-## 10   Main        b1  Sediment   log Invertebrates -5.610000e-02 -5.730000e-02 1.550000e-02
-## 11   Main        b1  Sediment logit          Fish -3.266000e-01 -3.309000e-01 1.871000e-01
-## 12   Main        b1  Sediment logit Invertebrates -2.187000e-01 -2.121000e-01 7.690000e-02
-## 13 Adjust        b0        NA   log          Fish -5.109015e-05 -4.932263e-05 4.611614e-05
-## 14 Adjust        b1    Oxygen   log          Fish -4.560827e-05 -4.203272e-05 2.642763e-05
-## 15 Adjust        b1  Salinity   log          Fish -3.384888e-05 -3.941297e-05 3.818205e-05
-## 16 Adjust        b1  Sediment   log          Fish -3.568222e-05 -1.828781e-05 9.609997e-05
-## 17 Adjust        b0        NA logit          Fish  1.282226e-04  9.482775e-05 1.551216e-03
-## 18 Adjust        b1    Oxygen logit          Fish -2.655013e-04 -3.037635e-04 3.216326e-04
-## 19 Adjust        b1  Salinity logit          Fish  7.125142e-05  5.976862e-05 1.701535e-04
-## 20 Adjust        b1  Sediment logit          Fish  2.993586e-05  1.036368e-05 2.519442e-04
-## 21 Adjust        b0        NA   log Invertebrates -8.004157e-09 -4.928497e-09 3.475176e-08
-## 22 Adjust        b1    Oxygen   log Invertebrates  1.363751e-06  6.973553e-07 6.672871e-06
-## 23 Adjust        b1  Salinity   log Invertebrates -1.714578e-09 -1.901168e-09 3.236347e-09
-## 24 Adjust        b1  Sediment   log Invertebrates -2.988813e-08 -2.213373e-08 1.522298e-07
-## 25 Adjust        b0        NA logit Invertebrates -1.376791e-05 -5.749704e-06 5.113420e-05
-## 26 Adjust        b1    Oxygen logit Invertebrates  2.034396e-05  2.258677e-05 4.427064e-05
-## 27 Adjust        b1  Salinity logit Invertebrates -1.466133e-05 -1.411271e-05 2.767021e-05
-## 28 Adjust        b1  Sediment logit Invertebrates -2.356307e-07 -1.094706e-06 5.327189e-06
-##               ll            ul     I2  n
-## 1   2.130000e-01  5.323000e-01 0.5998 27
-## 2   7.200000e-02  3.339000e-01 0.5371 59
-## 3  -2.718000e-01  5.201000e-01 0.2445 14
-## 4  -1.594000e-01  3.129000e-01 0.8235 38
-## 5  -1.536000e-01  3.530000e-02 0.4564 29
-## 6  -1.497000e-01 -6.730000e-02 0.4878 83
-## 7  -5.949000e-01  3.160000e-02 0.5444 13
-## 8  -4.313000e-01 -1.561000e-01 0.3862 52
-## 9  -3.098000e-01  1.989000e-01 0.6627  9
-## 10 -8.260000e-02 -3.250000e-02 0.8733 46
-## 11 -6.244000e-01 -7.720000e-02 0.6358  6
-## 12 -3.380000e-01 -8.660000e-02 0.0135 26
-## 13 -1.209478e-04  2.801339e-05     NA NA
-## 14 -8.129904e-05 -9.666053e-07     NA NA
-## 15 -9.827232e-05  2.463036e-05     NA NA
-## 16 -1.626278e-04  1.194527e-04     NA NA
-## 17 -2.432399e-03  2.574546e-03     NA NA
-## 18 -8.037165e-04  2.551030e-04     NA NA
-## 19 -2.381799e-04  3.038913e-04     NA NA
-## 20 -2.436701e-04  2.420605e-04     NA NA
-## 21 -6.166694e-08  5.065854e-08     NA NA
-## 22 -9.614258e-06  1.221858e-05     NA NA
-## 23 -6.857288e-09  3.419455e-09     NA NA
-## 24 -2.698153e-07  2.293962e-07     NA NA
-## 25 -8.771998e-05  7.646278e-05     NA NA
-## 26 -4.560722e-05  9.724465e-05     NA NA
-## 27 -5.685341e-05  3.332325e-05     NA NA
-## 28 -1.006590e-05  7.113999e-06     NA NA</code></pre>
+<pre><code>##      Name parameter predictor  link         group           map            mu           se            ll            ul     I2  n
+## 1    Main        b1    Oxygen   log          Fish  3.711000e-01  3.566000e-01 1.005000e-01  2.130000e-01  5.323000e-01 0.5998 27
+## 2    Main        b1    Oxygen   log Invertebrates  1.792000e-01  1.972000e-01 8.080000e-02  7.200000e-02  3.339000e-01 0.5371 59
+## 3    Main        b1    Oxygen logit          Fish  2.221000e-01  1.490000e-01 2.485000e-01 -2.718000e-01  5.201000e-01 0.2445 14
+## 4    Main        b1    Oxygen logit Invertebrates  1.172000e-01  7.470000e-02 1.433000e-01 -1.594000e-01  3.129000e-01 0.8235 38
+## 5    Main        b1  Salinity   log          Fish -6.420000e-02 -5.550000e-02 5.840000e-02 -1.536000e-01  3.530000e-02 0.4564 29
+## 6    Main        b1  Salinity   log Invertebrates -1.078000e-01 -1.099000e-01 2.510000e-02 -1.497000e-01 -6.730000e-02 0.4878 83
+## 7    Main        b1  Salinity logit          Fish -2.942000e-01 -2.763000e-01 2.034000e-01 -5.949000e-01  3.160000e-02 0.5444 13
+## 8    Main        b1  Salinity logit Invertebrates -2.754000e-01 -2.929000e-01 8.300000e-02 -4.313000e-01 -1.561000e-01 0.3862 52
+## 9    Main        b1  Sediment   log          Fish -1.380000e-02 -5.750000e-02 1.562000e-01 -3.098000e-01  1.989000e-01 0.6627  9
+## 10   Main        b1  Sediment   log Invertebrates -5.610000e-02 -5.730000e-02 1.550000e-02 -8.260000e-02 -3.250000e-02 0.8733 46
+## 11   Main        b1  Sediment logit          Fish -3.266000e-01 -3.309000e-01 1.871000e-01 -6.244000e-01 -7.720000e-02 0.6358  6
+## 12   Main        b1  Sediment logit Invertebrates -2.187000e-01 -2.121000e-01 7.690000e-02 -3.380000e-01 -8.660000e-02 0.0135 26
+## 13 Adjust        b0        NA   log          Fish -5.109015e-05 -4.932263e-05 4.611614e-05 -1.209478e-04  2.801339e-05     NA NA
+## 14 Adjust        b1    Oxygen   log          Fish -4.560827e-05 -4.203272e-05 2.642763e-05 -8.129904e-05 -9.666053e-07     NA NA
+## 15 Adjust        b1  Salinity   log          Fish -3.384888e-05 -3.941297e-05 3.818205e-05 -9.827232e-05  2.463036e-05     NA NA
+## 16 Adjust        b1  Sediment   log          Fish -3.568222e-05 -1.828781e-05 9.609997e-05 -1.626278e-04  1.194527e-04     NA NA
+## 17 Adjust        b0        NA logit          Fish  1.282226e-04  9.482775e-05 1.551216e-03 -2.432399e-03  2.574546e-03     NA NA
+## 18 Adjust        b1    Oxygen logit          Fish -2.655013e-04 -3.037635e-04 3.216326e-04 -8.037165e-04  2.551030e-04     NA NA
+## 19 Adjust        b1  Salinity logit          Fish  7.125142e-05  5.976862e-05 1.701535e-04 -2.381799e-04  3.038913e-04     NA NA
+## 20 Adjust        b1  Sediment logit          Fish  2.993586e-05  1.036368e-05 2.519442e-04 -2.436701e-04  2.420605e-04     NA NA
+## 21 Adjust        b0        NA   log Invertebrates -8.004157e-09 -4.928497e-09 3.475176e-08 -6.166694e-08  5.065854e-08     NA NA
+## 22 Adjust        b1    Oxygen   log Invertebrates  1.363751e-06  6.973553e-07 6.672871e-06 -9.614258e-06  1.221858e-05     NA NA
+## 23 Adjust        b1  Salinity   log Invertebrates -1.714578e-09 -1.901168e-09 3.236347e-09 -6.857288e-09  3.419455e-09     NA NA
+## 24 Adjust        b1  Sediment   log Invertebrates -2.988813e-08 -2.213373e-08 1.522298e-07 -2.698153e-07  2.293962e-07     NA NA
+## 25 Adjust        b0        NA logit Invertebrates -1.376791e-05 -5.749704e-06 5.113420e-05 -8.771998e-05  7.646278e-05     NA NA
+## 26 Adjust        b1    Oxygen logit Invertebrates  2.034396e-05  2.258677e-05 4.427064e-05 -4.560722e-05  9.724465e-05     NA NA
+## 27 Adjust        b1  Salinity logit Invertebrates -1.466133e-05 -1.411271e-05 2.767021e-05 -5.685341e-05  3.332325e-05     NA NA
+## 28 Adjust        b1  Sediment logit Invertebrates -2.356307e-07 -1.094706e-06 5.327189e-06 -1.006590e-05  7.113999e-06     NA NA</code></pre>
 <p>The results of the meta-analysis are summarized in a table that includes the Maximum A Posteriori (MAP) estimates, the posterior mean (<span class="math inline">\(\mu\)</span>), standard error (<span class="math inline">\(se\)</span>), and the High Density Interval (HDI), which by default is set to 90%. Additionally, the heterogeneity among studies is quantified using the <span class="math inline">\(I^2\)</span> statistic.</p>
 <p>The prior for the between-study variance (<span class="math inline">\(\tau^2\)</span>) is, by default, specified as a uniform distribution ranging from 0 to 5. This choice has the benefit of producing wider intervals, which can be conservative—particularly useful when dealing with smaller sample sizes. However, this conservatism can also be a drawback in cases where more precision is desired.</p>
 <p>To offer users flexibility, the argument <code>prior_var_fam</code> can be set to <code>"exp"</code> to use an exponential distribution instead of the default <code>"unif"</code> (uniform distribution). When using<code>"unif"</code>, the variance prior is specified as <span class="math inline">\(Unif(0, \text{prior_study_var})\)</span>. When “exp” is selected, the prior variance becomes <span class="math inline">\(Exponential(\frac{1}{\text{prior_study_var})}\)</span></p>
@@ -707,22 +664,22 @@ Where <span class="math inline">\(x_{ij}\)</span> refers to the <span class="mat
 <span id="cb39-7"><a href="meta-analysis-over-effect-sizes-and-model-parameters.html#cb39-7" tabindex="-1"></a><span class="co">#Print the table</span></span>
 <span id="cb39-8"><a href="meta-analysis-over-effect-sizes-and-model-parameters.html#cb39-8" tabindex="-1"></a><span class="fu">print</span>(inv_df)</span></code></pre></div>
 <pre><code>##    predictor  link      prob
-## 1         NA   log 0.5004217
-## 2         NA   log 0.4700435
-## 3         NA logit 0.4876611
-## 4         NA logit 0.4791769
-## 5     Oxygen   log 0.5434253
-## 6     Oxygen   log 0.4482876
-## 7     Oxygen logit 0.5171460
-## 8     Oxygen logit 0.4023023
-## 9   Salinity   log 0.5004217
-## 10  Salinity   log 0.4700435
-## 11  Salinity logit 0.4876611
-## 12  Salinity logit 0.4791769
-## 13  Sediment   log 0.5434253
-## 14  Sediment   log 0.4482876
-## 15  Sediment logit 0.5171460
-## 16  Sediment logit 0.4023023</code></pre>
+## 1         NA   log 0.5019072
+## 2         NA   log 0.4683105
+## 3         NA logit 0.4879110
+## 4         NA logit 0.4796958
+## 5     Oxygen   log 0.5503834
+## 6     Oxygen   log 0.4543336
+## 7     Oxygen logit 0.5088733
+## 8     Oxygen logit 0.4042189
+## 9   Salinity   log 0.5019072
+## 10  Salinity   log 0.4683105
+## 11  Salinity logit 0.4879110
+## 12  Salinity logit 0.4796958
+## 13  Sediment   log 0.5503834
+## 14  Sediment   log 0.4543336
+## 15  Sediment logit 0.5088733
+## 16  Sediment logit 0.4042189</code></pre>
 <p>The table shows that for sediment in a logit-linear model related to fish, the posterior probability shifts from 0.38 in mod0 to 0.50 in mod1. This corresponds to a 12% increase, i.e.,
 0.50−0.38=0.12. This indicates that prior information contributes additional support for a negative relationship between fine sediment and lotic fish species — an relation is not fully supported by the data alone.</p>
 <p>This is not a limitation but rather reflects what occurs in practice: prior information often drawn from empirical studies or domain expertise tends to be more directional. This highlights the value of incorporating prior information from the literature when building and refining Bayesian models.</p>
@@ -769,16 +726,14 @@ Where <span class="math inline">\(x_{ij}\)</span> refers to the <span class="mat
 ## `height` was translated to `width`.
 ## `height` was translated to `width`.
 ## `height` was translated to `width`.</code></pre>
-<pre><code>## Warning: Removed 1 row containing missing values or values outside the scale range
-## (`geom_vline()`).</code></pre>
+<pre><code>## Warning: Removed 1 row containing missing values or values outside the scale range (`geom_vline()`).</code></pre>
 <pre><code>## `height` was translated to `width`.
 ## `height` was translated to `width`.
 ## `height` was translated to `width`.
 ## `height` was translated to `width`.
 ## `height` was translated to `width`.
 ## `height` was translated to `width`.</code></pre>
-<pre><code>## Warning: Removed 1 row containing missing values or values outside the scale range
-## (`geom_vline()`).</code></pre>
+<pre><code>## Warning: Removed 1 row containing missing values or values outside the scale range (`geom_vline()`).</code></pre>
 <pre><code>## `height` was translated to `width`.</code></pre>
 <p>The object contains the figures generated for both the log</p>
 <div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="meta-analysis-over-effect-sizes-and-model-parameters.html#cb48-1" tabindex="-1"></a><span class="co">#For the models with the log-link</span></span>
@@ -859,9 +814,8 @@ BayesFactor_{12}=\frac{P(Data|M1)}{P(Data|M2)}\cdot\frac{P(M1)}{P(M2)}=\frac{P(D
 <span id="cb56-11"><a href="meta-analysis-over-effect-sizes-and-model-parameters.html#cb56-11" tabindex="-1"></a>                    <span class="at">method=</span><span class="dv">2</span>,</span>
 <span id="cb56-12"><a href="meta-analysis-over-effect-sizes-and-model-parameters.html#cb56-12" tabindex="-1"></a>                    <span class="at">n_thin=</span><span class="dv">10</span>,                          </span>
 <span id="cb56-13"><a href="meta-analysis-over-effect-sizes-and-model-parameters.html#cb56-13" tabindex="-1"></a>                    <span class="at">n_chain=</span><span class="dv">4</span>)                         </span></code></pre></div>
-<pre><code>## Warning in meta(estimate = salinity_df$est, stderr = salinity_df$se, parameter =
-## salinity_df$parameter, : The Rhat or/and effective sample size for some &gt;1.01 or/and &lt;1000.
-## Chains might not be mixing.</code></pre>
+<pre><code>## Warning in meta(estimate = salinity_df$est, stderr = salinity_df$se, parameter = salinity_df$parameter, : The Rhat or/and
+## effective sample size for some &gt;1.01 or/and &lt;1000. Chains might not be mixing.</code></pre>
 <pre><code>## Call:
 ## meta(estimate = salinity_df$est, stderr = salinity_df$se, parameter = salinity_df$parameter, 
 ##     predictor = salinity_df$predictor, link_function = salinity_df$link, 
@@ -874,8 +828,7 @@ BayesFactor_{12}=\frac{P(Data|M1)}{P(Data|M2)}\cdot\frac{P(M1)}{P(M2)}=\frac{P(D
 ## 1        b1  Salinity logit Invertebrates -0.3047 -0.2938 0.0848 -0.4363 -0.1694 0.2827 52</code></pre>
 <div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="meta-analysis-over-effect-sizes-and-model-parameters.html#cb59-1" tabindex="-1"></a><span class="co">#Generate a figure is more groups are included more plots are generated in order of &quot;mod$summary&quot;</span></span>
 <span id="cb59-2"><a href="meta-analysis-over-effect-sizes-and-model-parameters.html#cb59-2" tabindex="-1"></a>fig <span class="ot">&lt;-</span> <span class="fu">forestplot</span>(mod3, <span class="at">xlimit =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">2.5</span>, <span class="fl">1.5</span>))</span></code></pre></div>
-<pre><code>## Warning: Removed 2 rows containing missing values or values outside the scale range
-## (`geom_point()`).</code></pre>
+<pre><code>## Warning: Removed 2 rows containing missing values or values outside the scale range (`geom_point()`).</code></pre>
 <div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb61-1"><a href="meta-analysis-over-effect-sizes-and-model-parameters.html#cb61-1" tabindex="-1"></a><span class="co">#Display the most aesthetically appealing figure without adjusting the x-axis</span></span>
 <span id="cb61-2"><a href="meta-analysis-over-effect-sizes-and-model-parameters.html#cb61-2" tabindex="-1"></a><span class="fu">print</span>(fig<span class="sc">$</span>figures[[<span class="dv">1</span>]])</span></code></pre></div>
 <p><img src="EcoPostView_files/figure-html/meta4_BMA-1.png" width="768" /></p>

@@ -83,7 +83,8 @@ forestplot <- function(object, study_names=NULL, interval=0.9,
 
     pl2 <- ggplot(split_df[[x]], aes(as.numeric(mu), study))+
       geom_point()+geom_vline(xintercept = 0, lty=2, lwd=0.6, col="tomato3")+
-      geom_errorbar(data=split_df[[x]], aes(xmin=ll, xmax=ul), width=0, orientation="y")+
+      geom_segment(data = split_df[[x]],aes(x = ll, xend = ul, y = study, yend = study),
+                   linewidth = 0.4, inherit.aes = FALSE)+
       theme_classic()+
       xlim_pl2+
       theme(axis.title.x = element_blank(),
@@ -162,7 +163,8 @@ forestplot <- function(object, study_names=NULL, interval=0.9,
     pl1 <- ggplot(post_df[[x]], aes(estimate, group=group))+
       xlim(c(xlims[1], xlims[2]))+
       geom_point(data=object$Summary[x,], aes(x=mu, y=0), inherit.aes = F)+
-      geom_errorbar(data=post_bar, aes(xmin=ll, xmax=ul, y=0), orientation="y", width=0, inherit.aes = F)+
+      geom_segment(data = post_bar,aes(x = ll, xend = ul, y = 0, yend = 0),
+                            linewidth = 0.4,inherit.aes = FALSE)+
       geom_vline(xintercept = 0, lty=2, lwd=0.6, col="tomato3")+
       geom_density()+xlab(xlab)+
       theme_classic()+

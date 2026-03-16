@@ -131,10 +131,10 @@ meta <- function(estimate, stderr, parameter=NULL, predictor=NULL,
   if(is.null(grouping)){grouping <- rep("none-specified", length(estimate))}
 
   #If predictor argument contains "_" then give error
-  if(any(grepl("_", df$predictor))){stop("Names within the predictor argument cannot contain `_`.")}
+  if(any(grepl("_", predictor))){stop("Names within the predictor argument cannot contain `_`.")}
 
   #If grouping argument contains "_" then give error
-  if(any(grepl("_", df$grouping))){stop("Names within the groupig argument cannot contain `_`.")}
+  if(any(grepl("_", grouping))){stop("Names within the groupig argument cannot contain `_`.")}
 
   #Combine input to generate levels
   level <- paste(parameter, predictor, link_function, grouping, sep = "_")
@@ -494,7 +494,7 @@ meta <- function(estimate, stderr, parameter=NULL, predictor=NULL,
                                              for (i in 1:N) {
                                                est[i]  ~ dnorm(mu2[i], tau2[i])
                                                mu2[i]  ~ dnorm(mu1[i], tau1[level[i]])
-                                               mu1[i]  <- mu[level[i]] + inprod(beta_random[level[i], 1:R], random[i, 1:R]) + inprod(beta_moderate[level[i], 1:M], moderate[i, 1:M]) +
+                                               mu1[i]  <- mu[level[i]] + inprod(beta_random[level[i], 1:R], random[i, 1:R]) + inprod(beta_moderator[level[i], 1:M], moderate[i, 1:M]) +
                                                  ifelse(method==0, 0, ifelse(method==1, beta_adjust[level[i]]*se[i]^2, beta_adjust[level[i]]*Nsamp[i]^2))
                                                tau2[i] <- 1/(se[i]^2)}
 
@@ -583,7 +583,7 @@ meta <- function(estimate, stderr, parameter=NULL, predictor=NULL,
                                               for (i in 1:N) {
                                                 est[i]  ~ dnorm(mu2[i], tau2[i])
                                                 mu2[i]  ~ dnorm(mu1[i], tau1[level[i]])
-                                                mu1[i]  <- mu[level[i]] + beta_random[level[i]] * random[i] + inprod(beta_moderate[level[i], 1:M], moderate[i, 1:M]) +
+                                                mu1[i]  <- mu[level[i]] + beta_random[level[i]] * random[i] + inprod(beta_moderator[level[i], 1:M], moderate[i, 1:M]) +
                                                   ifelse(method==0, 0, ifelse(method==1, beta_adjust[level[i]]*se[i]^2, beta_adjust[level[i]]*Nsamp[i]^2))
                                                 tau2[i] <- 1/(se[i]^2)}
 
@@ -700,7 +700,7 @@ meta <- function(estimate, stderr, parameter=NULL, predictor=NULL,
 
                                          mcmc_I2       <- extract_chain(model$BUGSoutput$sims.list$I2, mod_data)
                                          mcmc_I2_b1    <- mcmc_I2[mcmc_I2$parameter!="b0",]
-                                         mcmc_sigma    <- model$BUGSoutput$sims.list$sigma
+                                         mcmc_sigma    <- model$BUGSoutput$sims.list$sigma1
 
                                          i2_summary                    <- aggregate(data=mcmc_I2_b1, estimate~., mean)$estimate
                                          basic_summary                 <- cbind(basic_summary[c(1:4)], round(unlist(basic_summary$estimate),4), round(i2_summary, 4))

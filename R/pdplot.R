@@ -63,152 +63,151 @@ pdplot <- function(object, interval=0.9, display="b1",
                    xylab_size=3, xtext_size=6,
                    xround=1, xbreaks=4){
 
-#Extract b1 or b0
-if(display=="b1"){object1   <- object$Estimates$b1}else{stop("b0 not yet implemented")}
+  #Extract b1 or b0
+  if(display=="b1"){object1   <- object$Estimates$b1}else{stop("b0 not yet implemented")}
 
-#Sample size
-df_n                        <- setNames(as.data.frame(object$N_level), c("code", "n"))
-df_n$code                   <- as.character(df_n$code)
+  #Sample size
+  df_n                        <- setNames(as.data.frame(object$N_level), c("code", "n"))
+  df_n$code                   <- as.character(df_n$code)
 
-#Split the mcmc chains per group predictor and link
-split_mcmc       <- split(object1$estimate, paste(object1$group, object1$predictor, object1$link, sep="_"))
+  #Split the mcmc chains per group predictor and link
+  split_mcmc       <- split(object1$estimate, paste(object1$group, object1$predictor, object1$link, sep="_"))
 
-#unique combinations
-names_mcmc  <- expand.grid(unique(object1$group), unique(object1$predictor), unique(object1$link))
-names_mcmc  <- setNames(cbind(names_mcmc, apply(names_mcmc, 1, paste, collapse = "_")), c("group", "predictor", "link", "code"))
-names_mcmc  <- merge(names_mcmc, df_n, by="code", all.x = T)
+  #unique combinations
+  names_mcmc  <- expand.grid(unique(object1$group), unique(object1$predictor), unique(object1$link))
+  names_mcmc  <- setNames(cbind(names_mcmc, apply(names_mcmc, 1, paste, collapse = "_")), c("group", "predictor", "link", "code"))
+  names_mcmc  <- merge(names_mcmc, df_n, by="code", all.x = T)
 
-#count groups and predictors
-n_group <- length(unique(names_mcmc$group))
-n_pred  <- length(unique(names_mcmc$predictor))
+  #count groups and predictors
+  n_group <- length(unique(names_mcmc$group))
+  n_pred  <- length(unique(names_mcmc$predictor))
 
-#order per group and predictor
-if(!is.null(order_group)&&!is.null(order_group)){
-  names_mcmc$group     <- factor(names_mcmc$group, levels = order_group)
-  names_mcmc$predictor <- factor(names_mcmc$predictor, levels = order_predictor)
-  names_mcmc           <- names_mcmc[order(names_mcmc$group, names_mcmc$predictor),]
-  split_mcmc           <- split_mcmc[c(names_mcmc$code)]
-}else if(!is.null(order_group)&&is.null(order_predictor)){
-  names_mcmc$group     <- factor(names_mcmc$group, levels = order_group)
-  names_mcmc$predictor <- factor(names_mcmc$predictor, levels = levels(names_mcmc$predictor))
-  names_mcmc           <- names_mcmc[order(names_mcmc$group),]
-  split_mcmc           <- split_mcmc[c(names_mcmc$code)]
-}else if(!is.null(order_predictor)&&is.null(order_group)){
-  names_mcmc$group     <- factor(names_mcmc$group, levels = levels(names_mcmc$group))
-  names_mcmc$predictor <- factor(names_mcmc$predictor, levels = order_predictor)
-  names_mcmc           <- names_mcmc[order(names_mcmc$predictor),]
-  split_mcmc           <- split_mcmc[c(names_mcmc$code)]
-}else{
-  names_mcmc$group     <- factor(names_mcmc$group, levels = levels(names_mcmc$group))
-  names_mcmc$predictor <- factor(names_mcmc$predictor, levels = levels(names_mcmc$predictor))
-  names_mcmc           <- names_mcmc[order(names_mcmc$group, names_mcmc$predictor),]
-  split_mcmc           <- split_mcmc[c(names_mcmc$code)]}
+  #order per group and predictor
+  if(!is.null(order_group)&&!is.null(order_predictor)){
+    names_mcmc$group     <- factor(names_mcmc$group, levels = order_group)
+    names_mcmc$predictor <- factor(names_mcmc$predictor, levels = order_predictor)
+    names_mcmc           <- names_mcmc[order(names_mcmc$group, names_mcmc$predictor),]
+    split_mcmc           <- split_mcmc[c(names_mcmc$code)]
+  }else if(!is.null(order_group)&&is.null(order_predictor)){
+    names_mcmc$group     <- factor(names_mcmc$group, levels = order_group)
+    names_mcmc$predictor <- factor(names_mcmc$predictor, levels = levels(names_mcmc$predictor))
+    names_mcmc           <- names_mcmc[order(names_mcmc$group),]
+    split_mcmc           <- split_mcmc[c(names_mcmc$code)]
+  }else if(!is.null(order_predictor)&&is.null(order_group)){
+    names_mcmc$group     <- factor(names_mcmc$group, levels = levels(names_mcmc$group))
+    names_mcmc$predictor <- factor(names_mcmc$predictor, levels = order_predictor)
+    names_mcmc           <- names_mcmc[order(names_mcmc$predictor),]
+    split_mcmc           <- split_mcmc[c(names_mcmc$code)]
+  }else{
+    names_mcmc$group     <- factor(names_mcmc$group, levels = levels(names_mcmc$group))
+    names_mcmc$predictor <- factor(names_mcmc$predictor, levels = levels(names_mcmc$predictor))
+    names_mcmc           <- names_mcmc[order(names_mcmc$group, names_mcmc$predictor),]
+    split_mcmc           <- split_mcmc[c(names_mcmc$code)]}
 
-#create a list to store figures
-plot_list              <- list()
-est_df                 <- setNames(as.data.frame(array(NA, dim=c(nrow(names_mcmc), 6))), c("map", "mu", "se", "ll", "ul", "x"))
+  #create a list to store figures
+  plot_list              <- list()
+  est_df                 <- setNames(as.data.frame(array(NA, dim=c(nrow(names_mcmc), 6))), c("map", "mu", "se", "ll", "ul", "x"))
 
-max_point_size <- abs(max(quantile(object1$estimate,.01, .99)))
+  max_point_size <- abs(max(quantile(object1$estimate,.01, .99)))
 
-for(i in 1:length(split_mcmc)){
+  for(i in 1:length(split_mcmc)){
 
-  if(is.null(split_mcmc[[i]])){plot_list[[names_mcmc$code[i]]]<- ggplot()+theme_void()}else{
+    if(is.null(split_mcmc[[i]])){plot_list[[names_mcmc$code[i]]]<- ggplot()+theme_void()}else{
 
-maxpost <- function(x){d <- density(x); d$x[which.max(d$y)]}
-hdi_fun <- function(x, level){
+      maxpost <- function(x){d <- density(x); d$x[which.max(d$y)]}
+      hdi_fun <- function(x, level){
 
-  orddata   <- sort(x)
-  nord      <- length(x)
-  infomass  <- ceiling(level*nord)
-  outmass   <- nord-infomass
+        orddata   <- sort(x)
+        nord      <- length(x)
+        infomass  <- ceiling(level*nord)
+        outmass   <- nord-infomass
 
-  min_width <- Inf
-  ll        <- NA
-  ul        <- NA
+        min_width <- Inf
+        ll        <- NA
+        ul        <- NA
 
-  for(i in 1:(outmass+1)){
-    int_width <- orddata[i+infomass-1]-orddata[i]
+        for(i in 1:(outmass+1)){
+          int_width <- orddata[i+infomass-1]-orddata[i]
 
-    if(int_width < min_width){
-      min_width <- int_width
-      ll <- orddata[i]
-      ul <- orddata[i+infomass-1]}}
+          if(int_width < min_width){
+            min_width <- int_width
+            ll <- orddata[i]
+            ul <- orddata[i+infomass-1]}}
 
-  c(ll, ul)}
+        c(ll, ul)}
 
-est_df[i,]              <- c(maxpost(split_mcmc[[i]]), mean(split_mcmc[[i]]),
-                             sd(split_mcmc[[i]]), hdi_fun(split_mcmc[[i]], interval), x=0)
+      est_df[i,]              <- c(maxpost(split_mcmc[[i]]), mean(split_mcmc[[i]]),
+                                   sd(split_mcmc[[i]]), hdi_fun(split_mcmc[[i]], interval), x=0)
 
-auto_limx <- quantile(split_mcmc[[i]], c(.0001, .999))
-xbreak    <- round(seq(auto_limx[1], auto_limx[2], length.out=xbreaks),xround)
+      auto_limx <- quantile(split_mcmc[[i]], c(.0001, .999))
+      xbreak    <- round(seq(auto_limx[1], auto_limx[2], length.out=xbreaks),xround)
 
-sub_data <- split_mcmc[[i]]
-sub_data <- sub_data[sub_data >= auto_limx[1] & sub_data <= auto_limx[2]]
+      sub_data <- split_mcmc[[i]]
+      sub_data <- sub_data[sub_data >= auto_limx[1] & sub_data <= auto_limx[2]]
 
-dens_col <- ifelse(est_df[i,]$map<0,"tomato3","dodgerblue3")
+      dens_col <- ifelse(est_df[i,]$map<0,"tomato3","dodgerblue3")
 
-pl <- ggplot(data.frame(x=sub_data), aes(x=x))+
-    geom_density(alpha=0.2, lwd=line_width, col=dens_col)+
-    geom_vline(xintercept = 0, lty=2, lwd=.4, col="black")+
-    scale_x_continuous(breaks = xbreak,
-                       limits = c(auto_limx[1],  auto_limx[2]))+
-    geom_point(data=est_df[i,], aes(x=as.numeric(map), y=0), col=dens_col, inherit.aes = F, size=point_size)+
-    geom_errorbarh(data=est_df[i,], aes(xmin=as.numeric(ll), xmax=as.numeric(ul), width=0, orientation="y"),
-                   col=dens_col, width=0, lwd=err_bar_lwd)+
-    theme_classic()+
-    theme(axis.title = element_blank(),
-          axis.text.y = element_blank(),
-          axis.ticks.y = element_blank(),
-          axis.text.x = element_text(size = xtext_size, colour = "black"),
-          line = element_line(linewidth = .4),
-          plot.margin = unit(c(0.1, 1.15, 0.1, 1.15), "mm"))
+      pl <- ggplot(data.frame(x=sub_data), aes(x=x))+
+        geom_density(alpha=0.2, lwd=line_width, col=dens_col)+
+        geom_vline(xintercept = 0, lty=2, lwd=.4, col="black")+
+        scale_x_continuous(breaks = xbreak,
+                           limits = c(auto_limx[1],  auto_limx[2]))+
+        geom_point(data=est_df[i,], aes(x=as.numeric(map), y=0), col=dens_col, inherit.aes = F, size=point_size)+
+        geom_segment(data = est_df[i,], aes(x = as.numeric(ll), xend = as.numeric(ul), y = 0, yend = 0),
+                     col = dens_col, linewidth = err_bar_lwd, inherit.aes = FALSE)+
+        theme_classic()+
+        theme(axis.title = element_blank(),
+              axis.text.y = element_blank(),
+              axis.ticks.y = element_blank(),
+              axis.text.x = element_text(size = xtext_size, colour = "black"),
+              line = element_line(linewidth = .4),
+              plot.margin = unit(c(0.1, 1.15, 0.1, 1.15), "mm"))
 
-xrange_pl<- ggplot_build(pl)$layout$panel_scales_x[[1]]$range$range
-yrange_pl<- ggplot_build(pl)$layout$panel_scales_y[[1]]$range$range
+      xrange_pl<- ggplot_build(pl)$layout$panel_scales_x[[1]]$range$range
+      yrange_pl<- ggplot_build(pl)$layout$panel_scales_y[[1]]$range$range
 
-if(sign(est_df[i,]$map)==1){
-  x_loc <- xrange_pl[1]+diff(xrange_pl)/4}else{
-    x_loc <- xrange_pl[2]-diff(xrange_pl)/4}
+      if(sign(est_df[i,]$map)==1){
+        x_loc <- xrange_pl[1]+diff(xrange_pl)/4}else{
+          x_loc <- xrange_pl[2]-diff(xrange_pl)/4}
 
-y_loc <- yrange_pl[2]-diff(yrange_pl)/5
+      y_loc <- yrange_pl[2]-diff(yrange_pl)/5
 
-if(est_display==T){
-lab_pl <- paste0("map=", round(est_df[i,]$map,2), "\nmean=", round(est_df[i,]$mu,2), "\nse=", round(est_df[i,]$se,2))
-pl     <- pl+annotate("text", x=x_loc, y_loc, label=lab_pl, size=label_size)}
+      if(est_display==T){
+        lab_pl <- paste0("map=", round(est_df[i,]$map,2), "\nmean=", round(est_df[i,]$mu,2), "\nse=", round(est_df[i,]$se,2))
+        pl     <- pl+annotate("text", x=x_loc, y_loc, label=lab_pl, size=label_size)}
 
-plot_list[[names_mcmc$code[i]]] <- pl
-}}
+      plot_list[[names_mcmc$code[i]]] <- pl
+    }}
 
-#separate the figures per link function
-linkfunction     <- unique(names_mcmc$link)
-link_list        <- vector("list", length(linkfunction))
-names(link_list) <- linkfunction
+  #separate the figures per link function
+  linkfunction     <- unique(names_mcmc$link)
+  link_list        <- vector("list", length(linkfunction))
+  names(link_list) <- linkfunction
 
-for(i in linkfunction){
-  do.call(rbind, strsplit(names(plot_list), "_"))[,3]
-link_list[[i]] <- plot_list[names_mcmc$link == i]}
+  for(i in linkfunction){
+    do.call(rbind, strsplit(names(plot_list), "_"))[,3]
+    link_list[[i]] <- plot_list[names_mcmc$link == i]}
 
-#create empty plots with group names
-grn <- lapply(unique(names_mcmc$group), function(x) ggplot()+annotate("text", 0, 0, label=x, size=title_size, fontface = "bold")+theme_void())
-groupnameplots <- cowplot::plot_grid(plotlist = grn, ncol=1)
+  #create empty plots with group names
+  grn <- lapply(unique(names_mcmc$group), function(x) ggplot()+annotate("text", 0, 0, label=x, size=title_size, fontface = "bold")+theme_void())
+  groupnameplots <- cowplot::plot_grid(plotlist = grn, ncol=1)
 
-#create empty plots with predictor names
-prn <- vector("list", length(unique(names_mcmc$predictor))+1)
-prn[2:length(prn)] <- lapply(unique(names_mcmc$predictor), function(x) ggplot()+annotate("text", 0, 0, label=x, size=title_size, fontface = "bold")+theme_void())
-prednameplots <- cowplot::plot_grid(plotlist = prn, nrow=1)
+  #create empty plots with predictor names
+  prn <- vector("list", length(unique(names_mcmc$predictor))+1)
+  prn[2:length(prn)] <- lapply(unique(names_mcmc$predictor), function(x) ggplot()+annotate("text", 0, 0, label=x, size=title_size, fontface = "bold")+theme_void())
+  prednameplots <- cowplot::plot_grid(plotlist = prn, nrow=1)
 
-#create x and y title
-xtitle <- ggplot()+annotate("text", 0, 0, label=xlab, size=xylab_size)+theme_void()
-ytitle <- ggplot()+annotate("text", 0, 0, label=ylab, size=xylab_size, angle = 90)+theme_void()
+  #create x and y title
+  xtitle <- ggplot()+annotate("text", 0, 0, label=xlab, size=xylab_size)+theme_void()
+  ytitle <- ggplot()+annotate("text", 0, 0, label=ylab, size=xylab_size, angle = 90)+theme_void()
 
-#create all density plots
-dens_list <- list()
-for(i in names(link_list)){
-densplots <- cowplot::plot_grid(plotlist = link_list[[i]], nrow = n_group, ncol = n_pred)
+  #create all density plots
+  dens_list <- list()
+  for(i in names(link_list)){
+    densplots <- cowplot::plot_grid(plotlist = link_list[[i]], nrow = n_group, ncol = n_pred)
 
-pl1 <- cowplot::plot_grid(groupnameplots, densplots, rel_widths = c(left_label, 1-left_label))
-pl2 <- cowplot::plot_grid(prednameplots, pl1, xtitle, rel_heights = c(top_label, 1-(top_label+0.03), 0.03), ncol = 1)
-dens_list[[i]] <- cowplot::plot_grid(pl2, ytitle, rel_widths = c(0.9, 0.03))}
+    pl1 <- cowplot::plot_grid(groupnameplots, densplots, rel_widths = c(left_label, 1-left_label))
+    pl2 <- cowplot::plot_grid(prednameplots, pl1, xtitle, rel_heights = c(top_label, 1-(top_label+0.03), 0.03), ncol = 1)
+    dens_list[[i]] <- cowplot::plot_grid(pl2, ytitle, rel_widths = c(0.9, 0.03))}
 
-return(invisible(list(posterior_density=dens_list, summary=round(est_df[,-ncol(est_df)],4))))}
-
+  return(invisible(list(posterior_density=dens_list, summary=round(est_df[,-ncol(est_df)],4))))}

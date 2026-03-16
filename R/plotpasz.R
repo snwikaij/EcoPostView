@@ -1,10 +1,10 @@
 #' Plot p-values as z-values
 #'
-#' @param p
-#' @param operator
-#' @param line_position
-#' @param bin_limit
-#' @param bin_width
+#' @param p a vector of numeric p-values
+#' @param operator an operator indication < or >
+#' @param line_position postion of the vertical line
+#' @param bin_limit maximum value on the x-axis for the bins
+#' @param bin_width width of the of the bins
 #'
 #' @returns
 #' @export

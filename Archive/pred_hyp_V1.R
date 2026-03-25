@@ -1,4 +1,4 @@
-pred_hyp     <- function(object, variable=NULL, input_values,
+pred_comp     <- function(object, variable=NULL, input_values,
                          family="normal", interval_type="CI",
                          prior_mu1=NULL, prior_sd1=NULL,
                          prior_mu0=NULL, prior_sd0=NULL,
@@ -164,3 +164,5 @@ pred_hyp     <- function(object, variable=NULL, input_values,
                                        axis.ticks.y = element_blank()))
 
   return(list(summary=results, likelihood=like_fig))}
+
+pred_hyp

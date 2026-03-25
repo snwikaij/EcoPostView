@@ -173,18 +173,28 @@ meta <- function(estimate, stderr, parameter=NULL, predictor=NULL,
     if(nrow(moderator)!=length(estimate)){stop("Moderator needs to be a numeric data frame or matrix with the same
                                            length as the estimates")}}
 
-  if(is.null(moderator)){ML <- 1; MP <- 0; moderator <- rep(0, length(estimate))}else if(is.null(dim(moderator))){
-    ML <- 1; MP <- 1; moderator <- as.numeric(moderator)}else{
-      ML <- ncol(moderator); moderator<- apply(moderator, 2, function(x) as.numeric(x))}
+  if(is.null(moderator)){
+    ML <- 1; MP <- 0; moderator <- rep(0, length(estimate)); nM <- 1
+  }else if(is.null(dim(moderator))){
+    ML <- 1; MP <- 1; moderator <- as.numeric(moderator); nM <- length(unique(moderator))
+  }else if(ncol(moderator) == 1) {
+    ML <- 1; MP <- 1; moderator <- as.integer(factor(moderator[,1])); nM <- length(unique(moderator))
+  }else{
+    ML <- ncol(moderator); moderator<- apply(moderator, 2, function(x) as.numeric(x))}
 
   #A random effect data frame
   if(!is.null(random) && is.data.frame(random)){
     if(nrow(random)!=length(estimate)){stop("Random  effect  needs to be a data frame or matrix with
                                            factors of same length as the estimates")}}
 
-  if(is.null(random)){RL <- 1; RP <- 0; random <- as.factor(rep(0, length(estimate)))}else if(is.null(dim(random))){
-    RL <- 1; RP <- 1; random <- as.factor(random)}else{
-      RL <- ncol(random); RP <- 1; random <- apply(random, 2, function(x) as.numeric(factor(x)))}
+  if(is.null(random)){
+    RL <- 1; RP <- 0; random <- as.factor(rep(0, length(estimate))); nR <- 1
+  }else if(is.null(dim(random))){
+    RL <- 1; RP <- 1; random <- as.integer(factor(random)); nR <- length(unique(random))
+  }else if(ncol(random) == 1) {
+    RL <- 1; RP <- 1; random <- as.integer(factor(random[,1])); nR <- length(unique(random))
+  }else{
+    RL <- ncol(random); RP <- 1; random <- apply(random, 2, function(x) as.integer(factor(x)))}
 
   #Set correction method for bias
   if(all(method != c(0, 1, 2))){
@@ -221,6 +231,7 @@ meta <- function(estimate, stderr, parameter=NULL, predictor=NULL,
                    random=random,
                    R=RL,
                    RP=RP,
+                   nR=nR,
                    moderator=moderator,
                    M=ML,
                    MP=MP,
@@ -240,7 +251,7 @@ meta <- function(estimate, stderr, parameter=NULL, predictor=NULL,
                                            for (i in 1:N) {
                                              est[i]  ~ dnorm(mu2[i], tau2[i])
                                              mu2[i]  ~ dnorm(mu1[i], tau1[level[i]])
-                                             mu1[i]  <- mu[level[i]] + beta_random[level[i]] * random[i] + beta_moderator[level[i]] * moderator[i] +
+                                             mu1[i]  <- mu[level[i]] +  beta_random[level[i], random[i]] + beta_moderator[level[i]] * moderator[i] +
                                                ifelse(method==0, 0, ifelse(method==1, beta_adjust[level[i]]*se[i]^2, beta_adjust[level[i]]*Nsamp[i]^2))
                                              tau2[i] <- 1/(se[i]^2)}
 
@@ -256,9 +267,12 @@ meta <- function(estimate, stderr, parameter=NULL, predictor=NULL,
 
                                            for (j in 1:L) {
 
+                                             sigma3[j] ~ dexp(0.01)
+
                                              #random effects
-                                               beta_R[j] ~ dnorm(0, 1/100^2)
-                                               beta_random[j] <- beta_R[j] * RP
+                                             for(r in 1:nR){
+                                               beta_R[j,r] ~ dnorm(0, 1/sigma3[j]^2)
+                                               beta_random[j,r] <- beta_R[j,r] * RP}
 
                                              #Moderator
                                                beta_M[j] ~ dnorm(0, 1/100^2)
@@ -291,7 +305,7 @@ meta <- function(estimate, stderr, parameter=NULL, predictor=NULL,
                                                for (i in 1:N) {
                                                  est[i]  ~ dnorm(mu2[i], tau2[i])
                                                  mu2[i]  ~ dnorm(mu1[i], tau1[level[i]])
-                                                 mu1[i]  <- mu[level[i]] + inprod(beta_random[level[i], 1:R], random[i, 1:R]) + inprod(beta_moderator[level[i], 1:M], moderator[i, 1:M]) +
+                                                 mu1[i]  <- mu[level[i]] +  beta_random[level[i], random[i]] + inprod(beta_moderator[level[i], 1:M], moderator[i, 1:M]) +
                                                    ifelse(method==0, 0, ifelse(method==1, beta_adjust[level[i]]*se[i]^2, beta_adjust[level[i]]*Nsamp[i]^2))
                                                  tau2[i] <- 1/(se[i]^2)}
 
@@ -307,9 +321,11 @@ meta <- function(estimate, stderr, parameter=NULL, predictor=NULL,
 
                                                for (j in 1:L) {
 
+                                                 sigma3[j] ~ dexp(0.01)
+
                                                  #random effects
-                                                 for(r in 1:R){
-                                                   beta_R[j,r]  ~ dnorm(0, 1/100^2)
+                                                 for(r in 1:nR){
+                                                   beta_R[j,r] ~ dnorm(0, 1/sigma3[j]^2)
                                                    beta_random[j,r] <- beta_R[j,r] * RP}
 
                                                  #Moderator
@@ -344,7 +360,7 @@ meta <- function(estimate, stderr, parameter=NULL, predictor=NULL,
                                                for (i in 1:N) {
                                                  est[i]  ~ dnorm(mu2[i], tau2[i])
                                                  mu2[i]  ~ dnorm(mu1[i], tau1[level[i]])
-                                                 mu1[i]  <- mu[level[i]] + inprod(beta_random[level[i], 1:R], random[i, 1:R]) + beta_moderator[level[i]] * moderator[i] +
+                                                 mu1[i]  <- mu[level[i]] + beta_random[level[i], random[i]] + beta_moderator[level[i]] * moderator[i] +
                                                    ifelse(method==0, 0, ifelse(method==1, beta_adjust[level[i]]*se[i]^2, beta_adjust[level[i]]*Nsamp[i]^2))
                                                  tau2[i] <- 1/(se[i]^2)}
 
@@ -360,9 +376,11 @@ meta <- function(estimate, stderr, parameter=NULL, predictor=NULL,
 
                                                for (j in 1:L) {
 
+                                                 sigma3[j] ~ dexp(0.01)
+
                                                  #random effects
-                                                 for(r in 1:R){
-                                                   beta_R[j,r]  ~ dnorm(0, 1/100^2)
+                                                 for(r in 1:nR){
+                                                   beta_R[j,r] ~ dnorm(0, 1/sigma3[j]^2)
                                                    beta_random[j,r] <- beta_R[j,r] * RP}
 
                                                  #Moderator
@@ -396,7 +414,7 @@ meta <- function(estimate, stderr, parameter=NULL, predictor=NULL,
                                              for (i in 1:N) {
                                                est[i]  ~ dnorm(mu2[i], tau2[i])
                                                mu2[i]  ~ dnorm(mu1[i], tau1[level[i]])
-                                               mu1[i]  <- mu[level[i]] + beta_random[level[i]] * random[i] +  inprod(beta_moderator[level[i], 1:M], moderator[i, 1:M]) +
+                                               mu1[i]  <- mu[level[i]] +  beta_random[level[i], random[i]] +  inprod(beta_moderator[level[i], 1:M], moderator[i, 1:M]) +
                                                  ifelse(method==0, 0, ifelse(method==1, beta_adjust[level[i]]*se[i]^2, beta_adjust[level[i]]*Nsamp[i]^2))
                                                tau2[i] <- 1/(se[i]^2)}
 
@@ -412,9 +430,12 @@ meta <- function(estimate, stderr, parameter=NULL, predictor=NULL,
 
                                              for (j in 1:L) {
 
+                                               sigma3[j] ~ dexp(0.01)
+
                                                #random effects
-                                               beta_R[j] ~ dnorm(0, 1/100^2)
-                                               beta_random[j] <- beta_R[j] * RP
+                                               for(r in 1:nR){
+                                                 beta_R[j,r] ~ dnorm(0, 1/sigma3[j]^2)
+                                                 beta_random[j,r] <- beta_R[j,r] * RP}
 
                                                #Moderator
                                                for(m in 1:M){
@@ -451,7 +472,7 @@ meta <- function(estimate, stderr, parameter=NULL, predictor=NULL,
                                              for (i in 1:N) {
                                                est[i]  ~ dnorm(mu2[i], tau2[i])
                                                mu2[i]  ~ dnorm(mu1[i], tau1[level[i]])
-                                               mu1[i]  <- mu[level[i]] + beta_random[level[i]] * random[i] + beta_moderator[level[i]] * moderator[i] +
+                                               mu1[i]  <- mu[level[i]] +  beta_random[level[i], random[i]] + beta_moderator[level[i]] * moderator[i] +
                                                           ifelse(method==0, 0, ifelse(method==1, beta_adjust[level[i]]*se[i]^2, beta_adjust[level[i]]*Nsamp[i]^2))
                                                tau2[i] <- 1/(se[i]^2)}
 
@@ -462,9 +483,12 @@ meta <- function(estimate, stderr, parameter=NULL, predictor=NULL,
 
                                              for (j in 1:L) {
 
+                                               sigma3[j] ~ dexp(0.01)
+
                                                #random effects
-                                                 beta_R[j] ~ dnorm(0, 1/100^2)
-                                                 beta_random[j] <- beta_R[j] * RP
+                                               for(r in 1:nR){
+                                                 beta_R[j,r] ~ dnorm(0, 1/sigma3[j]^2)
+                                                 beta_random[j,r] <- beta_R[j,r] * RP}
 
                                                #Moderator
                                                  beta_M[j] ~ dnorm(0, 1/100^2)
@@ -494,7 +518,7 @@ meta <- function(estimate, stderr, parameter=NULL, predictor=NULL,
                                              for (i in 1:N) {
                                                est[i]  ~ dnorm(mu2[i], tau2[i])
                                                mu2[i]  ~ dnorm(mu1[i], tau1[level[i]])
-                                               mu1[i]  <- mu[level[i]] + inprod(beta_random[level[i], 1:R], random[i, 1:R]) + inprod(beta_moderator[level[i], 1:M], moderate[i, 1:M]) +
+                                               mu1[i]  <- mu[level[i]] +  beta_random[level[i], random[i]] + inprod(beta_moderator[level[i], 1:M], moderator[i, 1:M]) +
                                                  ifelse(method==0, 0, ifelse(method==1, beta_adjust[level[i]]*se[i]^2, beta_adjust[level[i]]*Nsamp[i]^2))
                                                tau2[i] <- 1/(se[i]^2)}
 
@@ -505,9 +529,11 @@ meta <- function(estimate, stderr, parameter=NULL, predictor=NULL,
 
                                              for (j in 1:L) {
 
+                                               sigma3[j] ~ dexp(0.01)
+
                                                #random effects
-                                               for(r in 1:R){
-                                                 beta_R[j,r]  ~ dnorm(0, 1/100^2)
+                                               for(r in 1:nR){
+                                                 beta_R[j,r] ~ dnorm(0, 1/sigma3[j]^2)
                                                  beta_random[j,r] <- beta_R[j,r] * RP}
 
                                                #Moderator
@@ -539,7 +565,7 @@ meta <- function(estimate, stderr, parameter=NULL, predictor=NULL,
                                                for (i in 1:N) {
                                                  est[i]  ~ dnorm(mu2[i], tau2[i])
                                                  mu2[i]  ~ dnorm(mu1[i], tau1[level[i]])
-                                                 mu1[i]  <- mu[level[i]] + inprod(beta_random[level[i], 1:R], random[i, 1:R]) +  beta_moderator[level[i]] * moderator[i] +
+                                                 mu1[i]  <- mu[level[i]] +  beta_random[level[i], random[i]] +  beta_moderator[level[i]] * moderator[i] +
                                                    ifelse(method==0, 0, ifelse(method==1, beta_adjust[level[i]]*se[i]^2, beta_adjust[level[i]]*Nsamp[i]^2))
                                                  tau2[i] <- 1/(se[i]^2)}
 
@@ -550,9 +576,11 @@ meta <- function(estimate, stderr, parameter=NULL, predictor=NULL,
 
                                                for (j in 1:L) {
 
+                                                 sigma3[j] ~ dexp(0.01)
+
                                                  #random effects
-                                                 for(r in 1:R){
-                                                   beta_R[j,r]  ~ dnorm(0, 1/100^2)
+                                                 for(r in 1:nR){
+                                                   beta_R[j,r] ~ dnorm(0, 1/sigma3[j]^2)
                                                    beta_random[j,r] <- beta_R[j,r] * RP}
 
                                                  #Moderator
@@ -583,7 +611,7 @@ meta <- function(estimate, stderr, parameter=NULL, predictor=NULL,
                                               for (i in 1:N) {
                                                 est[i]  ~ dnorm(mu2[i], tau2[i])
                                                 mu2[i]  ~ dnorm(mu1[i], tau1[level[i]])
-                                                mu1[i]  <- mu[level[i]] + beta_random[level[i]] * random[i] + inprod(beta_moderator[level[i], 1:M], moderate[i, 1:M]) +
+                                                mu1[i]  <- mu[level[i]] +  beta_random[level[i], random[i]] + inprod(beta_moderator[level[i], 1:M], moderator[i, 1:M]) +
                                                   ifelse(method==0, 0, ifelse(method==1, beta_adjust[level[i]]*se[i]^2, beta_adjust[level[i]]*Nsamp[i]^2))
                                                 tau2[i] <- 1/(se[i]^2)}
 
@@ -594,9 +622,12 @@ meta <- function(estimate, stderr, parameter=NULL, predictor=NULL,
 
                                               for (j in 1:L) {
 
+                                                sigma3[j] ~ dexp(0.01)
+
                                                 #random effects
-                                                beta_R[j] ~ dnorm(0, 1/100^2)
-                                                beta_random[j] <- beta_R[j] * RP
+                                                for(r in 1:nR){
+                                                  beta_R[j,r] ~ dnorm(0, 1/sigma3[j]^2)
+                                                  beta_random[j,r] <- beta_R[j,r] * RP}
 
                                                 #Moderator
                                                 for(m in 1:M){
@@ -724,12 +755,12 @@ meta <- function(estimate, stderr, parameter=NULL, predictor=NULL,
                                          }else{mcmc_moderator <- NULL; summary_moderator  <- NULL}
 
                                          #Extract chains for random effect
-                                         if(RP==1){
-                                           mcmc_random     <- extract_chain(model$BUGSoutput$sims.list$beta_random, mod_data)
-                                           summary_random  <- aggregate(data=mcmc_random, estimate~., function(x) c(maxpost(x), mean(x), sd(x), hdi_fun(x, level = interval)))
-                                           summary_random  <- cbind(summary_random[-5], summary_random$estimate)
-                                           colnames(summary_random)[5:9] <- c("map", "mu", "se", "ll", "ul")
-                                        }else{mcmc_random <- NULL; summary_random  <- NULL}
+                                         #if(RP==1){
+                                         #mcmc_random     <- extract_chain(model$BUGSoutput$sims.list$beta_random, mod_data)
+                                         #summary_random  <- aggregate(data=mcmc_random, estimate~., function(x) c(maxpost(x), mean(x), sd(x), hdi_fun(x, level = interval)))
+                                         #summary_random  <- cbind(summary_random[-5], summary_random$estimate)
+                                         #colnames(summary_random)[5:9] <- c("map", "mu", "se", "ll", "ul")
+                                        #}else{mcmc_random <- NULL; summary_random  <- NULL}
 
                                          #Extract chains for posterior weights
                                          if(mod_data$npw>1){
@@ -745,8 +776,8 @@ meta <- function(estimate, stderr, parameter=NULL, predictor=NULL,
 
                                          total_summary <- list(Main=basic_summary,
                                                                Adjust=summary_adjust,
-                                                               Moderator=summary_moderator,
-                                                               Random=summary_random)
+                                                               Moderator=summary_moderator)#,
+                                                               #Random=summary_random)
 
                                          total_summary <- total_summary[!sapply(total_summary, is.null)]
 
@@ -783,7 +814,7 @@ meta <- function(estimate, stderr, parameter=NULL, predictor=NULL,
                                                                Chains_sigma=mcmc_sigma,
                                                                Chains_adjust=mcmc_adjust,
                                                                Chains_moderator=mcmc_moderator,
-                                                               Chains_random=mcmc_random,
+                                                               #Chains_random=mcmc_random,
                                                                Chains_podd=mcmc_podd,
                                                                Residuals=mcmc_mu_resid,
                                                                N_level=table(mod_data$level),

@@ -13,7 +13,15 @@ plotpasz(
 )
 }
 \arguments{
-\item{bin_width}{}
+\item{p}{a vector of numeric p-values}
+
+\item{operator}{an operator indication < or >}
+
+\item{line_position}{postion of the vertical line}
+
+\item{bin_limit}{maximum value on the x-axis for the bins}
+
+\item{bin_width}{width of the of the bins}
 }
 \description{
 Plot p-values as z-values

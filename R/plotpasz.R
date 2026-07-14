@@ -11,6 +11,7 @@
 #'
 #' @examples
 plotpasz <- function(p, operator=NULL,
+                     plot_operator=T,
                      line_position=1.96,
                      bin_limit=6, bin_width=0.5){
 
@@ -46,10 +47,24 @@ plotpasz <- function(p, operator=NULL,
 
     pos_line <- (line_position-(bin_width/2))/bin_width+1
 
+    if(plot_operator == T){
+
     plhist <- ggplot(df_bins, aes(x = bin, y = count, fill = operator)) +
       geom_bar(stat = "identity", col="black", width = 1) + scale_fill_grey(start = 0.85, end = 0.15)+
       theme_classic()+xlab("z-value")+geom_vline(xintercept=pos_line, lty=2, col="tomato3", lwd=0.8)+
       theme(axis.text.x = element_text(hjust=1, angle=45))
+
+    }else{
+
+      df_bins_total <- aggregate(data = df_bins, count ~ bin, sum)
+
+      plhist <- ggplot(df_bins_total, aes(x = bin, y = count)) +
+        geom_bar(stat = "identity", col = "black",width = 1, fill = "grey70") +
+        theme_classic()+xlab("z-value") +
+        geom_vline(xintercept = pos_line, lty = 2, col = "tomato3", linewidth = 0.8) +
+        theme(axis.text.x = element_text(hjust = 1, angle = 45))
+
+      }
 
   }else{
 

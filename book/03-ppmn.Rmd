@@ -189,18 +189,19 @@ foundational_ppmn <- build_ppmn(formula = formula, data = example4)
 
 This single link can be display in a DAG 
 
-```{r, examp_1_ppmn_c, warning=F}
+```{r, examp_1_ppmn_d, warning=F}
 foundational_ppmn$Plot_as_DAG
 ```
 
 Or as Bipartite Network where the boxes represent the functions and the variables the circles.
 
-```{r, examp_1_ppmn_c, warning=F}
+```{r, examp_1_ppmn_e, warning=F}
 foundational_ppmn$Plot_as_DAG
 ```
+
 Predictions can be made using the `predict_ppmn` function.
 
-```{r, examp_1_ppmn_d, warning=F}
+```{r, examp_1_ppmn_f, warning=F}
 
 test_TP <- data.frame(TP=c(5, 10, 20, 40, 80))
 

@@ -14,7 +14,6 @@ abctoz(
   prior_cens = c(1, 1.5),
   distribution = "z",
   density_steps = 100,
-  min_dens_steps = 20,
   seed = 1
 )
 }

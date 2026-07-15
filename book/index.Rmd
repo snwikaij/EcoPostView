@@ -28,6 +28,21 @@ body {
 ```{r setup_1, include = FALSE}
 library(EcoPostView)
 
+#unlink("C:/Users/admin/AppData/Local/R/win-library/4.3/_build/00LOCK-EcoPostView", recursive = TRUE, force = TRUE)
+#
+#unlink("C:/Users/admin/OneDrive/Bureaublad/EcoPostView.Rcheck", recursive = TRUE, force = TRUE)
+#
+#dir.exists("C:/Users/admin/AppData/Local/R/win-library/4.3/_build/00LOCK-EcoPostView")
+#dir.exists("C:/Users/admin/OneDrive/Bureaublad/EcoPostView.Rcheck")
+
+#check stuff
+#devtools::check(check_dir = "C:/temp/EcoPostView-check")
+#
+#build book
+#devtools::document()
+#devtools::install(upgrade = "never")
+#
+#create the book
 #setwd("C:/Users/admin/OneDrive/Bureaublad/EcoPostView/book")
 #bookdown::render_book("index.Rmd")
 
@@ -35,12 +50,6 @@ library(EcoPostView)
 
 # Overview
 
-This site reads like an incomplete book or essay. It serves as a way to organize my thoughts and collect fragments of information. The project originally started around the EcoPostView R package, but has since expanded into several loosely connected chapters that explore broader ideas.
+This is a working site with multiple projects, each chapter serves as a project although connected. It serves as a way to organize my thoughts and collect fragments of information. The project originally started including philosophical basis, but I have omitted this. Each chapter now contains a project or miscellaneous functions and ideas and some heterodox-statistical theory at the end.
 
-On the left, you will find these chapters in the drop down menu. They begin with an explorations of the EcoPostView package, move through topics or reasoning, logic and belief some topics in and end with a chapter on statistics (focused empirical Bayes). The order is mixed: where a logical structure would start with abstract foundations and move toward application, here it begins with practice. Many readers will find it easier to start with the R functions and skip the more abstract chapters. That is completely fine — the site is meant to support that kind of entry point.
-
-The reversed order reflects something about how we come to understand the world. We often begin with practice, then build frameworks around our experiences. But if we trace our tools and methods back far enough, we find ourselves dealing with metaphysical questions - about language, logic, and what we believe about reality. Reasoning, in my opinion, is not about discovering truth directly, but about trying to contain or express it through propositions. The point is not to assume these propositions are true, but to see what follows if we treat them as if they were.
-
-Ideally, one might begin with reasoning and logic, then move through statistical ideas, and finally arrive at practical application. But going in reverse — from code and data to abstract beliefs - it might even be confronting. These themes can feel more existential than scientific, but the boundary between those categories is itself unclear to me (Bárdos and Tuboly 2025; Heidegger 1929; Laudan 1983; Popper 1968).
-
-This site is still a work in progress — a kind of evolving rather than a polished presentation.
+On the left, you will find these chapters in the drop down menu. They begin with an explorations of the EcoPostView package. This site is still a work in progress — a kind of evolving rather than a polished presentation.

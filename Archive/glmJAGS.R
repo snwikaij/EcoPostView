@@ -9,18 +9,20 @@
 #' @param prior_dispersion The prior for the dispersion parameters (sigma or size) set via the gamma distribution
 #'
 #' @examples
-#'df  <- as.data.frame(array(rnorm(200), c(100,2)))
+#'df <- data.frame(V1 = rnorm(100), V2 = rnorm(100))
 #'b0=2
 #'b1=0.25
-#'b2=0.1
 #'
-#'df$V3 <- rpois(nrow(df), exp(b0+b1*df$V1+b2*df$V2))
+#'df$V3 <- rpois(nrow(df), exp(b0+b1*df$V1))
 #'
 #'results <- glmJAGS(V3~V1+V2, data=df, family = "pois_log")
 #'
+#' @importFrom R2jags jags.parallel
+#'
 #' @export
 glmJAGS <- function(formula=NULL, data=NULL, family="norm_ident",
-                     prior_mu=0, prior_mu_se=100, prior_dispersion=c(0.001, 0.001)){
+                    n_chain = 2, n_iter = 2000, n_burnin = 500, n_thin = 1,
+                    prior_mu=0, prior_mu_se=100, prior_dispersion=c(0.001, 0.001)){
 
   argument.call <- match.call()
   argument      <- gsub(" ", "", formula)
@@ -70,7 +72,7 @@ if(family=="norm_ident"){
       y[i]    ~ dgamma(mu[i]^2/sigma^2, mu[i]/sigma^2)
       mu[i]   <- b0+inprod(bn[],x[i,])}
 
-    b0 ~ dnorm(prior_mu, prior_mu_se)
+    b0 ~ dnorm(prior_mu, 1/prior_mu_se^2)
 
     for(j in 1:nx){bn[j] ~ dnorm(prior_mu, 1/prior_mu_se^2)}
 
@@ -86,7 +88,7 @@ if(family=="norm_ident"){
       y[i]         ~ dgamma(mu[i]^2/sigma^2, mu[i]/sigma^2)
       log(mu[i])   <- b0+inprod(bn[],x[i,])}
 
-    b0 ~ dnorm(prior_mu, prior_mu_se)
+    b0 ~ dnorm(prior_mu, 1/prior_mu_se^2)
 
     for(j in 1:nx){bn[j] ~ dnorm(prior_mu, 1/prior_mu_se^2)}
 
@@ -102,7 +104,7 @@ if(family=="norm_ident"){
       y[i]         ~ dpois(mu[i])
       mu[i]       <- b0+inprod(bn[],x[i,])}
 
-    b0 ~ dnorm(prior_mu, prior_mu_se)
+    b0 ~ dnorm(prior_mu, 1/prior_mu_se^2)
 
     for(j in 1:nx){bn[j] ~ dnorm(prior_mu, 1/prior_mu_se^2)}
 
@@ -118,7 +120,7 @@ if(family=="norm_ident"){
       y[i]         ~ dpois(mu[i])
       log(mu[i])  <- b0+inprod(bn[],x[i,])}
 
-    b0 ~ dnorm(prior_mu, prior_mu_se)
+    b0 ~ dnorm(prior_mu, 1/prior_mu_se^2)
 
     for(j in 1:nx){bn[j] ~ dnorm(prior_mu, 1/prior_mu_se^2)}
 
@@ -135,7 +137,7 @@ if(family=="norm_ident"){
 
       mu[i]       <- b0+inprod(bn[],x[i,])}
 
-    b0 ~ dnorm(prior_mu, prior_mu_se)
+    b0 ~ dnorm(prior_mu, 1/prior_mu_se^2)
 
     for(j in 1:nx){bn[j] ~ dnorm(prior_mu, 1/prior_mu_se^2)}
 
@@ -152,7 +154,7 @@ if(family=="norm_ident"){
 
       log(mu[i])   <- b0+inprod(bn[],x[i,])}
 
-    b0 ~ dnorm(prior_mu, prior_mu_se)
+    b0 ~ dnorm(prior_mu, 1/prior_mu_se^2)
 
     for(j in 1:nx){bn[j] ~ dnorm(prior_mu, 1/prior_mu_se^2)}
 
@@ -174,15 +176,15 @@ y     <- data[,argument[2]]
 #model data in final format#
 ############################
 
-model_list  <- list(y=y, x=x, ni=nrow(x), nx=ncol(x), rx=rx,
+model_list  <- list(y=y, x=x, ni=nrow(x), nx=ncol(x),
                       prior_mu=prior_mu, prior_mu_se=prior_mu_se, prior_dispersion=prior_dispersion)
 
-output <- jags.parallel(data = model_list, model.file = model,
+output <- R2jags::jags.parallel(data = model_list, model.file = model,
               parameters.to.save = return_parameters,
-              n.iter = 5500,
-              n.thin = 20,
-              n.burnin = 500,
-              n.chains = 10)
+              n.iter = n_iter,
+              n.thin = n_thin,
+              n.burnin = n_burnin,
+              n.chains = n_chain)
 
 summary <- output$BUGSoutput$summary
 rownames(summary)[1:c(1+model_list$nx)] <- c("Intercept", parts)

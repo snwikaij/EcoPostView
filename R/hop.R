@@ -21,10 +21,11 @@
 #' @param xlimit The limits of the x-axis
 #' @param ylimit The limits of the y-axis
 #' @param exp_axis Take the exponent of the axis number
-#' @param round_axis Round the number on the axis
 #' @param breaks_axis The number of breaks on the axis
 #' @param xlab The x-label text
 #' @param ylab The y-label text
+#' @param round_x_axis Round the numbers on the x-axis
+#' @param round_y_axis Round the numbers on the y-axis
 #' @param xlabsize The size of the x-label text
 #' @param ylabsize The size of the y-label text
 #' @param xtextsize The size of the x-axis text
@@ -33,19 +34,6 @@
 #' @description
 #' The hop function creates hypothetical regression lines simulated from the posterior values of the meta-analysis. If both
 #' b0 and b1 are indicated in the parameter column in the meta-analysis this function will display these HOP-lines.
-#'
-#'@examples
-#'data("example1")
-#'
-#'mod <-meta(estimate=example1$est, stderr=example1$se, RE=F,
-#'           parameter=example1$parameter, predictor=example1$predictor,
-#'           link_function=example1$link, grouping=example1$group)
-#'
-#'fig2 <- hop(mod, link="logit", group="Invertebrates", predictor="Sediment",
-#'            xlimit =c(-4.6,0), ylimit = c(0.35, 0.7),
-#'            exp_axis = T,
-#'            ylab = "Eveness",
-#'            xlab = "Fine sediment (%)")
 #'
 #'print(fig2)
 #'

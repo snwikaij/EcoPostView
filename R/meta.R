@@ -6,7 +6,8 @@
 #' @param predictor  A predictor name (e.g., salinity) as multiple predictors can be handled
 #' @param link_function The link function of the LM or GLM currently only 'identity', 'logit' and 'log' are supported and will only be used in the hop function
 #' @param grouping A category (name) for the group as multiple groups can be handled
-#' @param random An argument that needs to be a vector or  matrix of factors of the same number of rows as the estimate
+#' @param random An argument that needs to be a vector of factors of the same number of rows as the estimate (can only support one random effect at the moment)
+#' @param moderator can be used as a moderator in the meta-analysis needs to be a vector or matrix and can support multiple moderators
 #' @param method Indicates which adjustment performed 0 (='none'), 1 (='egger') or 2 (='peters')
 #' @param Nsamp A vector with the number of samples for each estimate (only used when method = 2)
 #' @param prior_mu Prior for the mean which can be vector (Bayesian meta-analysis) or matrix (Bayesian meta-analysis with model averaging)
@@ -85,12 +86,6 @@
 #'mod <-meta(estimate=example1$est, stderr=example1$se,
 #'           parameter=example1$parameter, predictor=example1$predictor,
 #'           link_function=example1$link, grouping=example1$group, method=1)
-#'
-#'#Standard random effect (RE) meta-analysis with peter's correction
-#'mod <-meta(estimate=example1$est, stderr=example1$se,
-#'           parameter=example1$parameter, predictor=example1$predictor,
-#'           link_function=example1$link, grouping=example1$group,
-#'           Nsamp=example1$n, method=2)
 #'
 #' @importFrom stats sd
 #' @importFrom stats aggregate

@@ -12,30 +12,18 @@
 #' @param label_size Size of the labels in the plots
 #' @param line_width The line width
 #' @param point_size The size of the point
-#' @param scale_point_line Scale point and line as function of model parameter
 #' @param err_bar_lwd The line width of the error bars
 #' @param xlab The x-label text
 #' @param ylab The y-label text
 #' @param xylab_size Size of x and y label
 #' @param xtext_size Size of the x-axis text
-#' @param xrounds rounding of the values on the x-axis
+#' @param xround rounding of the values on the x-axis
 #' @param xbreaks Size of the breaks on the x-axis
 #'
 #' @description
 #' This function displays the posterior density distribution of the chains. Thereby displaying to possible values of the model
 #' parameters. The lower point indicates the Maximum APosterior Value (MAP), which is a 'fancy' way to say mode. The intervals indicate
 #' the High Density Interval levels and colours red and blue indicate a negative or positive direction of the MAP, respectively.
-#'
-#' @examples
-#' data("example1")
-#'
-#'mod <-meta(estimate=example1$est, stderr=example1$se, RE=F,
-#'           parameter=example1$parameter, predictor=example1$predictor,
-#'           link_function=example1$link, grouping=example1$group)
-#'
-#'fig1 <- pdplot(mod)
-#'
-#'print(fig1$posterior_density$logit)
 #'
 #' @importFrom stats setNames
 #' @importFrom ggplot2 theme_void

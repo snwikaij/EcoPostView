@@ -1,0 +1,181 @@
+#' Predictive comparison
+#'
+#' @param object A foundational or updated PPMN
+#' @param child The child vertex of interest
+#' @param input_values The input values at root vertices
+#' @param family The appointed distributional family of the child vertex (default family = "normal") consisting of "normal", "gamma" or "beta"
+#' @param prior_mu1 Prior 1 for the mean of the the child vertex
+#' @param prior_sd1 SD 0 for the mean of the the child vertex
+#' @param prior_mu0 Prior 0 for the mean of the the child vertex
+#' @param prior_sd0 SD 0 for the mean of the the child vertex
+#' @param level Credibility level (default level = 0.9)
+#' @param nsim Number of simulations
+#' @param xlim Limit of the x-axis within the plot
+#'
+#' @export
+pred_comp     <- function(object, child=NULL, input_values,
+                          family="normal",
+                          prior_mu1=NULL, prior_sd1=NULL,
+                          prior_mu0=NULL, prior_sd0=NULL,
+                          level=0.9, nsim=10000, xlim=NULL){
+
+  #Check if all priors are used
+  if(any(sapply(list(prior_mu1, prior_mu0, prior_sd1, prior_sd0), is.null))){stop("mu and sd for both priors need to be appointed.")}
+
+  #Check if all roots are named
+  if(!all(names(input_values) %in% object$Roots)){stop("Not the correct names as input values.")}
+
+  input_df           <- rbind.data.frame(input_values)
+  colnames(input_df) <- names(input_values)
+  pred <- predict_ppmn(object, new_data=input_df, nsim=nsim)
+
+  #Check if there is only but only variable.
+  if(is.null(child)){stop("Select one child node")}else if(
+    length(child)>1){stop("Only one child node is allowed")}
+
+  #Check if the variable is in there
+  pred_var <- names(pred$Variance)
+  if(any(pred_var == child)==F){stop("name of the child node is not found")}
+
+  #HDI intervals
+  hdi_fun              <- function(x, level){
+
+    orddata   <- sort(x)
+    nord      <- length(x)
+    infomass  <- ceiling(level*nord)
+    outmass   <- nord-infomass
+
+    min_width <- Inf
+    ll        <- NA
+    ul        <- NA
+
+    for(i in 1:(outmass+1)){
+      int_width <- orddata[i+infomass-1]-orddata[i]
+
+      if(int_width < min_width){
+        min_width <- int_width
+        ll <- orddata[i]
+        ul <- orddata[i+infomass-1]}}
+
+    c(ll, ul)}
+
+  #Mode or MAP
+  maxpost              <- function(x){d <- density(x); d$x[which.max(d$y)]}
+
+  posterior <- as.numeric(unlist(pred$Variance[[child]]))
+  posterior <- na.omit(posterior)
+  post_pred <- c(mean(posterior, na.rm = T), sd(posterior, na.rm = T))
+
+  priors_mu <- c(prior_mu1, prior_mu0)
+  priors_sd <- c(prior_sd1, prior_sd0)
+
+  if(family == "normal"){
+
+    grid_range <- lapply(1:3, function(i){
+      mu <- c(post_pred[1], priors_mu)[i]
+      sd <- c(post_pred[2], priors_sd)[i]
+
+      qnorm(c(0.001,0.999), mu, sd)})
+
+    seq_min    <-  min(unlist(grid_range), na.rm = T)
+    seq_max    <-  max(unlist(grid_range), na.rm = T)
+
+    grid       <- seq(seq_min, seq_max, length.out=300000)
+    dens       <- density(posterior)
+
+    likelihood <- approx(dens$x, dens$y, rule = 2, xout = grid)$y
+    prior1     <- dnorm(grid, priors_mu[1], priors_sd[1])
+    prior2     <- dnorm(grid, priors_mu[2], priors_sd[2])
+
+    m1 <- sum(likelihood * prior1)*(grid[2]-grid[1])
+    m2 <- sum(likelihood * prior2)*(grid[2]-grid[1])
+
+    results <-  c(m1/m2, "map"=maxpost(posterior), hdi_fun(posterior, level=level))
+    xlims   <-  c(seq_min, seq_max)
+
+  }else if(family=="gamma"){
+
+    grid_range <- lapply(1:3, function(i){
+      mu <- c(post_pred[1], priors_mu)[i]
+      sd <- c(post_pred[2], priors_sd)[i]
+
+      qgamma(c(0.001,0.999), mu^2/sd^2, mu/sd^2)})
+
+    seq_min    <-  min(unlist(grid_range), na.rm = T)
+    seq_max    <-  max(unlist(grid_range), na.rm = T)
+
+    grid       <- seq(seq_min, seq_max, length.out=300000)
+    dens       <- density(posterior)
+
+    likelihood <- approx(dens$x, dens$y, rule = 2, xout = grid)$y
+    prior1     <- dgamma(grid, priors_mu[1]^2/priors_sd[1]^2, priors_mu[1]/priors_sd[1]^2)
+    prior2     <- dgamma(grid, priors_mu[2]^2/priors_sd[2]^2, priors_mu[2]/priors_sd[2]^2)
+
+    m1 <- sum(likelihood * prior1)*(grid[2]-grid[1])
+    m2 <- sum(likelihood * prior2)*(grid[2]-grid[1])
+
+    results <-  c(m1/m2, "map"=maxpost(posterior), hdi_fun(posterior, level=level))
+    xlims   <-  c(seq_min, seq_max)
+
+  }else if(family=="beta"){
+
+    if(any(priors_mu[1] <= 0 | priors_mu[1] >= 1)){stop("When using the familiy beta the priors for mu1 should be >0 or <1.")}
+    if(any(priors_mu[2] <= 0 | priors_mu[2] >= 1)){stop("When using the familiy beta the priors for mu0 should be >0 or <1.")}
+
+    if(any(priors_sd[1] <= 0 | priors_sd[1] >= 1)){stop("When using the familiy beta the priors for sd1 should be >0 or <1.")}
+    if(any(priors_sd[2] <= 0 | priors_sd[2] >= 1)){stop("When using the familiy beta the priors for sd0 should be >0 or <1.")}
+
+    if (priors_sd[1]^2 > priors_mu[1] * (1 - priors_mu[1])){stop("the sd^2 for prior 1 should be <mu*(1−mu)")}
+    if (priors_sd[2]^2 > priors_mu[2] * (1 - priors_mu[2])){stop("the sd^2 for prior 0 should be <mu*(1−mu)")}
+
+    grid_range <- lapply(1:3, function(i){
+      mu <- c(post_pred[1], priors_mu)[i]
+      sd <- c(post_pred[2], priors_sd)[i]
+
+      phi   <- (mu * (1 - mu) / sd^2) - 1
+      alpha <- mu * phi
+      beta  <- (1 - mu) * phi
+
+      qbeta(c(0.001,0.999), alpha, beta)})
+
+    seq_min    <-  min(unlist(grid_range))
+    seq_max    <-  max(unlist(grid_range))
+
+    grid       <- seq(seq_min, seq_max, length.out=300000)
+    dens       <- density(posterior)
+
+    likelihood <- approx(dens$x, dens$y, rule = 2, xout = grid)$y
+    phi1   <- (priors_mu[1] * (1 - priors_mu[1]) / priors_sd[1]^2) - 1
+    phi2   <- (priors_mu[2] * (1 - priors_mu[2]) / priors_sd[2]^2) - 1
+
+    prior1     <- dbeta(grid, priors_mu[1]*phi1, (1-priors_mu[1])*phi1)
+    prior2     <- dbeta(grid, priors_mu[2]*phi2, (1-priors_mu[2])*phi2)
+
+    m1 <- sum(likelihood * prior1)*(grid[2]-grid[1])
+    m2 <- sum(likelihood * prior2)*(grid[2]-grid[1])
+
+    results <- c(m1/m2, "map"=maxpost(posterior), hdi_fun(posterior, level=level))
+    xlims   <- c(seq_min, seq_max)
+
+  }else{stop("Not the correct family selected.")}
+
+  results        <- c(plogis(log(results[1])), results)
+  names(results) <- c("P(M1 > M0 | M, I)", "BF10", "predictive map", "ll", "ul")
+  results        <- round(results, 3)
+
+  df <-  data.frame(g=rep(c("Predictions \n(likelihood)", "M1", "M0"), each=length(grid)),
+                    x=rep(grid,3),
+                    y=c(likelihood/sum(likelihood), prior1/sum(prior1), prior2/sum(prior2)))
+
+  if(is.null(xlim)){xlims <- xlims}else{xlims <- xlim}
+
+  like_fig <- suppressWarnings(ggplot(df[df$g != "Posterior",], aes(x,y,group=g,colour = g))+
+                                 geom_line()+xlim(xlims)+xlab(child)+labs(colour = NULL)+
+                                 scale_color_manual(breaks = c("Predictions \n(likelihood)", "M1", "M0"),
+                                                    values = c("tomato3", "dodgerblue", "green2"))+
+                                 theme_classic()+ylab("Probability density")+
+                                 theme(legend.position = "bottom",
+                                       axis.text.y = element_blank(),
+                                       axis.ticks.y = element_blank()))
+
+  return(list(summary=results, likelihood=like_fig))}

@@ -23,6 +23,8 @@ forestplot(
 
 \item{interval}{Credibility intervals for the summary (default=0.9)}
 
+\item{rel_heights}{Relative heights of the three sub-figures in the plot}
+
 \item{label_x_pos}{Position of the label along x-axis within the posterior plot}
 
 \item{label_y_pos}{Position of the label along y-axis within the posterior plot}
@@ -32,8 +34,6 @@ forestplot(
 \item{xlab}{The name of the x-axis in the forest plot}
 
 \item{label_size}{The text size of the label}
-
-\item{rel_height}{Relative heights of the three sub-figures in the plot}
 }
 \description{
 A forest plot that indicates all priors used in the model, all estimates included and the posterior distribution of the pooled

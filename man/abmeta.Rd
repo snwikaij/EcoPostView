@@ -29,12 +29,18 @@ abmeta(
 
 \item{prior_weights}{Weights for prior odds (default=1/number of priors)}
 
+\item{a}{Lower truncation bound}
+
+\item{b}{Upper truncation bound}
+
 \item{tau_2}{The method used to estimate tau^2 either a heuristic method 'HE0' or
 'DSL'=DerSimonian and Laird method (default = DSL).}
 
 \item{interval}{Credibility intervals for the summary (default=0.9)}
 
 \item{RE}{An argument indicating if RE or FE should be used (default RE=TRUE)}
+
+\item{warnings}{An argument that if True returns a warning is the number of studies is 1 (default warnings = FALSE)}
 }
 \description{
 Empirical Bayesian meta-analysis with random-effect (RE) or fixed-effect (FE). For the estimation of

@@ -2,11 +2,13 @@
 #'
 #' @param obj An object from the abctoz function
 #' @param dist_threshold A threshold to accept the number of iterations
+#' @param warning Gives a warning when the number of accepted simulation is < warning
 #' @param interval Interval level
 #' @param n_dens Number of density curves to generate
-#' @param line_position the position of the vertical line in the histogram
-#' @param bin_limit the limit to which the bins in the histogram extend
-#' @param bin_width the width of the bins in the histogram
+#' @param line_position The position of the vertical line in the histogram
+#' @param lab_size Text size of the label within the plot
+#' @param bin_limit The limit to which the bins in the histogram extend
+#' @param bin_width The width of the bins in the histogram
 #' @param xpos Values for position of text along x-axis
 #' @param ypos_lim A value in fraction of the maximum density that indicates limits of the y-axis
 #' @param alpha_dens Transparency of the density lines

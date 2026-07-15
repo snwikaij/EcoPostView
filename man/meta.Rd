@@ -45,7 +45,9 @@ meta(
 
 \item{grouping}{A category (name) for the group as multiple groups can be handled}
 
-\item{random}{An argument that needs to be a vector or  matrix of factors of the same number of rows as the estimate}
+\item{random}{An argument that needs to be a vector of factors of the same number of rows as the estimate (can only support one random effect at the moment)}
+
+\item{moderator}{can be used as a moderator in the meta-analysis needs to be a vector or matrix and can support multiple moderators}
 
 \item{method}{Indicates which adjustment performed 0 (='none'), 1 (='egger') or 2 (='peters')}
 
@@ -141,11 +143,5 @@ mod <-meta(estimate=example1$est, stderr=example1$se,
 mod <-meta(estimate=example1$est, stderr=example1$se,
           parameter=example1$parameter, predictor=example1$predictor,
           link_function=example1$link, grouping=example1$group, method=1)
-
-#Standard random effect (RE) meta-analysis with peter's correction
-mod <-meta(estimate=example1$est, stderr=example1$se,
-          parameter=example1$parameter, predictor=example1$predictor,
-          link_function=example1$link, grouping=example1$group,
-          Nsamp=example1$n, method=2)
 
 }

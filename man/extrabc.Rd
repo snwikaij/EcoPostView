@@ -24,15 +24,19 @@ extrabc(
 
 \item{dist_threshold}{A threshold to accept the number of iterations}
 
+\item{warning}{Gives a warning when the number of accepted simulation is < warning}
+
 \item{interval}{Interval level}
 
 \item{n_dens}{Number of density curves to generate}
 
-\item{line_position}{the position of the vertical line in the histogram}
+\item{line_position}{The position of the vertical line in the histogram}
 
-\item{bin_limit}{the limit to which the bins in the histogram extend}
+\item{lab_size}{Text size of the label within the plot}
 
-\item{bin_width}{the width of the bins in the histogram}
+\item{bin_limit}{The limit to which the bins in the histogram extend}
+
+\item{bin_width}{The width of the bins in the histogram}
 
 \item{xpos}{Values for position of text along x-axis}
 

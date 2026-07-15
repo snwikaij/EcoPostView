@@ -2,14 +2,12 @@
 #'
 #' @param p a vector of numeric p-values
 #' @param operator an operator indication < or >
+#' @param plot_operator the operators =, < or > as a stacked barplot
 #' @param line_position postion of the vertical line
 #' @param bin_limit maximum value on the x-axis for the bins
 #' @param bin_width width of the of the bins
 #'
-#' @returns
 #' @export
-#'
-#' @examples
 plotpasz <- function(p, operator=NULL,
                      plot_operator=T,
                      line_position=1.96,

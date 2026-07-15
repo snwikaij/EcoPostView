@@ -81,6 +81,10 @@ hop(
 
 \item{ylab}{The y-label text}
 
+\item{round_x_axis}{Round the numbers on the x-axis}
+
+\item{round_y_axis}{Round the numbers on the y-axis}
+
 \item{breaks_axis}{The number of breaks on the axis}
 
 \item{xlabsize}{The size of the x-label text}
@@ -90,26 +94,10 @@ hop(
 \item{xtextsize}{The size of the x-axis text}
 
 \item{ytextsize}{The size of the y-axis text}
-
-\item{round_axis}{Round the number on the axis}
 }
 \description{
 The hop function creates hypothetical regression lines simulated from the posterior values of the meta-analysis. If both
 b0 and b1 are indicated in the parameter column in the meta-analysis this function will display these HOP-lines.
-}
-\examples{
-data("example1")
-
-mod <-meta(estimate=example1$est, stderr=example1$se, RE=F,
-          parameter=example1$parameter, predictor=example1$predictor,
-          link_function=example1$link, grouping=example1$group)
-
-fig2 <- hop(mod, link="logit", group="Invertebrates", predictor="Sediment",
-           xlimit =c(-4.6,0), ylimit = c(0.35, 0.7),
-           exp_axis = T,
-           ylab = "Eveness",
-           xlab = "Fine sediment (\%)")
 
 print(fig2)
-
 }

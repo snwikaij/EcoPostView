@@ -7,6 +7,7 @@
 plotpasz(
   p,
   operator = NULL,
+  plot_operator = T,
   line_position = 1.96,
   bin_limit = 6,
   bin_width = 0.5
@@ -16,6 +17,8 @@ plotpasz(
 \item{p}{a vector of numeric p-values}
 
 \item{operator}{an operator indication < or >}
+
+\item{plot_operator}{the operators =, < or > as a stacked barplot}
 
 \item{line_position}{postion of the vertical line}
 

@@ -161,19 +161,21 @@ However, the actual function is a linear equation where both the dependent and i
 $$
 x_{Chl}=f_{Chl|TP}(x_{TP}, \theta_{Chl|TP}) = exp\{\beta_0 + \beta_1 \cdot Log(x_{TP})\}
 $$
-This happens automatically when a GLM with log link and log-transformed independent variable (TP) was fitted. We just need a data frame (`example4`) with these colums (the column Comment could be omitted). 
+This happens automatically when a GLM with log link and log-transformed independent variable (TP) was fitted. We just need a data frame (`example4`) with these colums (the column `Comment` could be omitted). In this data frame the point `estimate` is added and the `error`, plus the `source`, `edge` and `parameter`. The parameter b0 = $\beta_0$ and b1 = $\beta_1$. These are the minimal columns that need to be filled in in this data frame.
 
-Since the fitted GLMs had a log link the function (`fun`) is *log*, the edge-functions names is *Chl~TP* and we also transformed (`trans`) the independent variable. If no transformation has been applied the argument does not have to be used and can be omitted. 
+Since the fitted GLMs had a log link the function (`fun`) is *log*, the edge-functions names is *Chl~TP* and we also transformed (`trans`) the independent variable and therefore use *log*. If a log transformation was not possible and a square-root transformation was used *sqrt* can be used. If no transformation has been applied the argument does not have to be used and can be omitted. Other transformations can be fitted on request if needed. 
 
 ```{r, examp_1_ppmn_a, warning=F}
+
 #load example
-load(example4)
+data("example4")
 
 #display head
 head(example4)
 ```
 
 Each parameter has a prior appointed. If no prior is given the default prior has a mean of 0 and se of 1000. For the intercept we assume that we a prior already know it falls somewhere around -0.5 (-1.5 and 0.5) and for the slope around 1 (0 and 2) and we assume it cannot be smaller than 0 and therefore truncate the lower boundary (`trunc_a_b1`) at 0.
+
 ```{r, examp_1_ppmn_b, warning=F}
 #we need to create a formula
 formula=list(c(fun="log", edge="Chl~TP", trans="log",

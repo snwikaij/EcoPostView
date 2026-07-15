@@ -1,6 +1,6 @@
 #' Get Bayes Factor
 #'
-#' @param Object Model object from the meta function
+#' @param object Model object from the meta function
 #' @param prior_names names to place above the priors in the table
 #'
 #' @description This simple function only works when one uses at least two priors

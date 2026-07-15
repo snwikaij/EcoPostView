@@ -1,2 +1,7 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
+^book$
+^docs$
+^.*_files$
+^Archive$
+^LICENSE\.md$

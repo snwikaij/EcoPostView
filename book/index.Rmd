@@ -50,6 +50,13 @@ library(EcoPostView)
 
 # Overview
 
-This is a working site with multiple projects, each chapter serves as a project although connected. It serves as a way to organize my thoughts and collect fragments of information. The project originally started including philosophical basis, but I have omitted this. Each chapter now contains a project or miscellaneous functions and ideas and some heterodox-statistical theory at the end.
+This is a working site with multiple projects, each chapter serves as a project although connected. It serves as a way to organize my thoughts and collect fragments of information. The project originally started including philosophical basis, but I have omitted this. Each chapter contains a project or miscellaneous functions and ideas/thoughts and some heterodox-statistical theory at the end.
 
-On the left, you will find these chapters in the drop down menu. They begin with an explorations of the EcoPostView package. This site is still a work in progress — a kind of evolving rather than a polished presentation.
+The after the first 
+Chapter (1.) *Introduction* is just a general introduction. 
+Chapter (2.) focuses *Meta-analysis over effect-sizes and model parameters* focuses on how to do a more broad scale meta-analysis, with possibility to included moderators, random effects, test hypothesis, check for bias and correct for bias. This chapter is connected to the publication of Kaijser et al. (2025)
+Chapter (3.) Introduces the method/framework of the *Posterior Predictive Meta-Analytic Network*. As for chapter (2.) It aims at synthesizing model parameters. However, it specifically aims at creating a network of this that can provide predictions, update its structure, and assess how information flows through the network. I hope to publish an article to this method soon.
+
+On the left, you will find these chapters in the drop down menu. This site is still a work in progress — a kind of evolving rather than a polished presentation. 
+
+

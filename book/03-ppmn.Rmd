@@ -1,7 +1,5 @@
 # Posterior Predictive Meta-Analytic Network
 
-## Introduction
-
 Ecological information is accumulated across numerous independent studies that describe interactions among biotic and abiotic components of ecosystems. Although this literature contains a wealth of ecological information, it is dispersed across publications, expressed using diverse statistical measures, and often communicated qualitatively. Consequently, ecological understanding remains fragmented rather than synthesized into coherent quantitative networks.
 
 This fragmentation is unavoidable. Ecological systems are high-dimensional, and no individual study can simultaneously measure all relevant abiotic and biotic variables. Furthermore, ecological understanding develops as new mechanisms and interactions are better understood. As a result, ecological networks are necessarily incomplete and continuously updated from scattered information.

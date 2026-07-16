@@ -170,15 +170,18 @@ data("example4")
 
 #display head
 head(example4)
+
 ```
 
 Each parameter has a prior appointed. If no prior is given the default prior has a mean of 0 and se of 1000. For the intercept we assume that we a prior already know it falls somewhere around -0.5 (-1.5 and 0.5) and for the slope around 1 (0 and 2) and we assume it cannot be smaller than 0 and therefore truncate the lower boundary (`trunc_a_b1`) at 0.
 
 ```{r, examp_1_ppmn_b, warning=F}
+
 #we need to create a formula
 formula=list(c(fun="log", edge="Chl~TP", trans="log",
                prior_mu_b0=-0.5, prior_se_b0=0.5,
                prior_mu_b1=1, prior_se_b1=0.5, trunc_a_b1=0))
+
 ```
 
 This formula represents a single edge-function from TP to Chl. To construct the foundational PPMN, both the formula and data need to be introduced into the `build_ppmn` function.

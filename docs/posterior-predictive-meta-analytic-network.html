@@ -171,7 +171,9 @@ code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4" data-path="posterior-predictive-meta-analytic-network.html"><a href="posterior-predictive-meta-analytic-network.html"><i class="fa fa-check"></i><b>4</b> Posterior Predictive Meta-Analytic Network</a>
 <ul>
 <li class="chapter" data-level="4.1" data-path="posterior-predictive-meta-analytic-network.html"><a href="posterior-predictive-meta-analytic-network.html#building-blocks"><i class="fa fa-check"></i><b>4.1</b> Building blocks</a></li>
-<li class="chapter" data-level="4.2" data-path="posterior-predictive-meta-analytic-network.html"><a href="posterior-predictive-meta-analytic-network.html#specifying-netowork-structure"><i class="fa fa-check"></i><b>4.2</b> Specifying netowork structure</a></li>
+<li class="chapter" data-level="4.2" data-path="posterior-predictive-meta-analytic-network.html"><a href="posterior-predictive-meta-analytic-network.html#specifying-network-structure"><i class="fa fa-check"></i><b>4.2</b> Specifying network structure</a></li>
+<li class="chapter" data-level="4.3" data-path="posterior-predictive-meta-analytic-network.html"><a href="posterior-predictive-meta-analytic-network.html#marginal-ppmn-function"><i class="fa fa-check"></i><b>4.3</b> Marginal PPMN function</a></li>
+<li class="chapter" data-level="4.4" data-path="posterior-predictive-meta-analytic-network.html"><a href="posterior-predictive-meta-analytic-network.html#predictive-fit-function"><i class="fa fa-check"></i><b>4.4</b> Predictive fit function</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="heterodox-bayes.html"><a href="heterodox-bayes.html"><i class="fa fa-check"></i><b>5</b> Heterodox Bayes</a>
 <ul>
@@ -225,8 +227,8 @@ d=\frac{\overline{x}_{treatment}-\overline{x}_{control}}{SD_{pooled}}
 <p><img src="EcoPostView_files/figure-html/fig1_ppmn-1.png" alt="" width="768" /></p>
 <p>Constructing a PPMN therefore requires two related specifications: the directed network structure and the parameterized edge-functions associated with each incoming edge. The following section shows how these components are defined in the package.</p>
 </div>
-<div id="specifying-netowork-structure" class="section level2 hasAnchor" number="4.2">
-<h2><span class="header-section-number">4.2</span> Specifying netowork structure<a href="posterior-predictive-meta-analytic-network.html#specifying-netowork-structure" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="specifying-network-structure" class="section level2 hasAnchor" number="4.2">
+<h2><span class="header-section-number">4.2</span> Specifying network structure<a href="posterior-predictive-meta-analytic-network.html#specifying-network-structure" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>We begin by defining each variable (<span class="math inline">\(X = \{ x_1, ..., x_n \}\)</span>) that constitute the network and the directed dependencies among them. Each non-root vertex must be associated with a link-function that maps its parent variable <span class="math inline">\(x_p\)</span> to a child vertex <span class="math inline">\(x_c\)</span>. A link-function is expressed as</p>
 <p><span class="math display">\[x_c=f_{c|p}(x_p, \theta_{c|p})\]</span>
 with it corresponding parameter <span class="math inline">\(\theta_{c|p}\)</span>. An example could be the relations between Total Phosphorus (TP) to Chlorophyll-a (Chl). We fitted for example three models A-D and found one intercept (<span class="math inline">\(b0\)</span>) and slope (<span class="math inline">\(b1\)</span>) in two separated studies. The function is formally expressed as.
@@ -237,8 +239,8 @@ However, the actual function is a linear equation where both the dependent and i
 <span class="math display">\[
 x_{Chl}=f_{Chl|TP}(x_{TP}, \theta_{Chl|TP}) = exp\{\beta_0 + \beta_1 \cdot Log(x_{TP})\}
 \]</span>
-This happens automatically when a GLM with log link and log-transformed independent variable (TP) was fitted. We just need a data frame (<code>example4</code>) with these colums (the column <code>Comment</code> could be omitted). In this data frame the point <code>estimate</code> is added and the <code>error</code>, plus the <code>source</code>, <code>edge</code> and <code>parameter</code>. The parameter b0 = <span class="math inline">\(\beta_0\)</span> and b1 = <span class="math inline">\(\beta_1\)</span>. These are the minimal columns that need to be filled in in this data frame.</p>
-<p>Since the fitted GLMs had a log link the function (<code>fun</code>) is <em>log</em>, the edge-functions names is <em>Chl~TP</em> and we also transformed (<code>trans</code>) the independent variable and therefore use <em>log</em>. If a log transformation was not possible and a square-root transformation was used <em>sqrt</em> can be used. If no transformation has been applied the argument does not have to be used and can be omitted. Other transformations can be fitted on request if needed.</p>
+This happens automatically when a GLM with log link and log-transformed independent variable (TP) was fitted. We just need a data frame (<code>example4</code>) with these columns (the columns <code>Source</code>, <code>Authors</code>, <code>Comment</code> could be omitted). In this data frame the point <code>estimate</code> is added and the <code>error</code>, plus the <code>edge</code> and <code>parameter</code>. The parameter b0 = <span class="math inline">\(\beta_0\)</span> and b1 = <span class="math inline">\(\beta_1\)</span>. These are the minimal columns that need to be filled in in this data frame. The function that builds the PPMN will search for these names to construct the network.</p>
+<p>Since the fitted GLMs had a log link the function (<code>fun</code>) is <em>log</em>, the edge-functions (<code>edge</code>) name is <em>Chl~TP</em> and we also transformed (<code>trans</code>) the independent variable and therefore use <em>log</em>. If a log transformation was not possible and a square-root transformation was used <em>sqrt</em> can be used. If no transformation has been applied the argument does not have to be used and can be omitted. Other transformations can be fitted on request if needed.</p>
 <div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb62-1"><a href="posterior-predictive-meta-analytic-network.html#cb62-1" tabindex="-1"></a><span class="co">#load example</span></span>
 <span id="cb62-2"><a href="posterior-predictive-meta-analytic-network.html#cb62-2" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;example4&quot;</span>)</span>
 <span id="cb62-3"><a href="posterior-predictive-meta-analytic-network.html#cb62-3" tabindex="-1"></a></span>
@@ -246,15 +248,15 @@ This happens automatically when a GLM with log link and log-transformed independ
 <span id="cb62-5"><a href="posterior-predictive-meta-analytic-network.html#cb62-5" tabindex="-1"></a><span class="fu">head</span>(example4)</span></code></pre></div>
 <pre><code>## # A tibble: 6 × 9
 ##   Source Authors Comment `function` transformation edge   parameter estimate error
-##   &lt;chr&gt;  &lt;chr&gt;   &lt;lgl&gt;   &lt;chr&gt;      &lt;lgl&gt;          &lt;chr&gt;  &lt;chr&gt;        &lt;dbl&gt; &lt;dbl&gt;
-## 1 A      A       NA      log        NA             Chl~TP b0           -0.8   0.2 
-## 2 A      A       NA      log        NA             Chl~TP b1            1.1   0.56
-## 3 B      A       NA      log        NA             Chl~TP b0           -0.2   0.5 
-## 4 B      A       NA      log        NA             Chl~TP b1            0.93  0.3 
-## 5 C      C       NA      log        NA             Chl~TP b0           -1.1   0.8 
-## 6 C      C       NA      log        NA             Chl~TP b1            1.05  0.3</code></pre>
-<p>Each parameter has a prior appointed. If no prior is given the default prior has a mean of 0 and se of 1000. For the intercept we assume that we a prior already know it falls somewhere around -0.5 (-1.5 and 0.5) and for the slope around 1 (0 and 2) and we assume it cannot be smaller than 0 and therefore truncate the lower boundary (<code>trunc_a_b1</code>) at 0.</p>
-<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb64-1"><a href="posterior-predictive-meta-analytic-network.html#cb64-1" tabindex="-1"></a><span class="co">#we need to create a formula</span></span>
+##   &lt;chr&gt;  &lt;chr&gt;   &lt;lgl&gt;   &lt;chr&gt;      &lt;chr&gt;          &lt;chr&gt;  &lt;chr&gt;        &lt;dbl&gt; &lt;dbl&gt;
+## 1 A      A       NA      log        log            Chl~TP b0           -0.8   0.2 
+## 2 A      A       NA      log        log            Chl~TP b1            1.1   0.56
+## 3 B      A       NA      log        log            Chl~TP b0           -0.2   0.5 
+## 4 B      A       NA      log        log            Chl~TP b1            0.93  0.3 
+## 5 C      C       NA      log        log            Chl~TP b0           -1.1   0.8 
+## 6 C      C       NA      log        log            Chl~TP b1            1.05  0.3</code></pre>
+<p>Each parameter has a prior appointed. If no prior is given the default prior has a mean of 0 and se of 1000. For the intercept we assume that we a prior already know it falls somewhere around -0.5 (-1.5 and 0.5) and for the slope around 1 (0 and 2) and we assume it cannot be smaller than 0 and therefore truncate the lower boundary (<code>trunc_a_b1</code>) at 0. All likelihoods and priors are assumed to be Gaussian distributed.</p>
+<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb64-1"><a href="posterior-predictive-meta-analytic-network.html#cb64-1" tabindex="-1"></a><span class="co">#We need to create a formula</span></span>
 <span id="cb64-2"><a href="posterior-predictive-meta-analytic-network.html#cb64-2" tabindex="-1"></a>formula<span class="ot">=</span><span class="fu">list</span>(<span class="fu">c</span>(<span class="at">fun=</span><span class="st">&quot;log&quot;</span>, <span class="at">edge=</span><span class="st">&quot;Chl~TP&quot;</span>, <span class="at">trans=</span><span class="st">&quot;log&quot;</span>,</span>
 <span id="cb64-3"><a href="posterior-predictive-meta-analytic-network.html#cb64-3" tabindex="-1"></a>               <span class="at">prior_mu_b0=</span><span class="sc">-</span><span class="fl">0.5</span>, <span class="at">prior_se_b0=</span><span class="fl">0.5</span>,</span>
 <span id="cb64-4"><a href="posterior-predictive-meta-analytic-network.html#cb64-4" tabindex="-1"></a>               <span class="at">prior_mu_b1=</span><span class="dv">1</span>, <span class="at">prior_se_b1=</span><span class="fl">0.5</span>, <span class="at">trunc_a_b1=</span><span class="dv">0</span>))</span></code></pre></div>
@@ -263,16 +265,66 @@ This happens automatically when a GLM with log link and log-transformed independ
 <pre><code>## Using &quot;tree&quot; as default layout
 ## Using &quot;tree&quot; as default layout
 ## Using &quot;tree&quot; as default layout</code></pre>
-<p>This single link can be display in a DAG</p>
+<p>This single link can be display in a DAG,</p>
 <div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb67-1"><a href="posterior-predictive-meta-analytic-network.html#cb67-1" tabindex="-1"></a>foundational_ppmn<span class="sc">$</span>Plot_as_DAG</span></code></pre></div>
 <p><img src="EcoPostView_files/figure-html/examp_1_ppmn_d-1.png" alt="" width="672" /></p>
-<p>Or as Bipartite Network where the boxes represent the functions and the variables the circles.</p>
+<p>or as a directed Bipartite Network where the boxes represent the functions and the variables the circles.</p>
 <div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb68-1"><a href="posterior-predictive-meta-analytic-network.html#cb68-1" tabindex="-1"></a>foundational_ppmn<span class="sc">$</span>Plot_as_BIP</span></code></pre></div>
 <p><img src="EcoPostView_files/figure-html/examp_1_ppmn_e-1.png" alt="" width="672" /></p>
-<p>Predictions can be made using the <code>predict_ppmn</code> function.</p>
-<div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb69-1"><a href="posterior-predictive-meta-analytic-network.html#cb69-1" tabindex="-1"></a>test_TP <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">TP=</span><span class="fu">c</span>(<span class="dv">5</span>, <span class="dv">10</span>, <span class="dv">20</span>, <span class="dv">40</span>, <span class="dv">80</span>))</span>
+<p>A slightly more complex example would to regress <em>Chl~TN+TP</em> and use Chl to predict Taxa richness of phytoplankton algae <em>Taxa~Chl</em></p>
+<p><span class="math display">\[
+f_{Chl|TN, TP}(.) = f_{Chl|TN, TP}(x_{TN}, x_{TP}, \theta_{Chl|TN,TP,1},  \theta_{Chl|TN,TP,2}) = exp\{\beta_0 + \beta_1 \cdot Log(x_{TN}) + \beta_1 \cdot Log(x_{TP})\}
+\\
+f_{Taxa|Chl}(.)=f_{Taxa|Chl}(x_{Chl}, \theta_{Taxa|Chl})=exp(\beta_0 + \beta_1 \cdot Log(x_{Chl}))
+\]</span>
+The full network would then be expressed as</p>
+<p><span class="math display">\[
+f_{Taxa|Chl}(f_{Chl|TN, TP}(x_{TN}, x_{TP}, \theta_{Chl|TN,TP,1},  \theta_{Chl|TN,TP,2}), \theta_{Taxa|Chl})
+\]</span>
+The formula should then be specified as below. A minor addition is the inclusion of two priors for the edge <em>Taxa~Chl</em>. Assume there are two individuals that generated a prior and then both sources of information may be added. Directly after building the foundational PPMN we choose to display the graphical representation.</p>
+<div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb69-1"><a href="posterior-predictive-meta-analytic-network.html#cb69-1" tabindex="-1"></a><span class="fu">data</span>(example5)</span>
 <span id="cb69-2"><a href="posterior-predictive-meta-analytic-network.html#cb69-2" tabindex="-1"></a></span>
-<span id="cb69-3"><a href="posterior-predictive-meta-analytic-network.html#cb69-3" tabindex="-1"></a>predicted_values <span class="ot">&lt;-</span> <span class="fu">predict_ppmn</span>(<span class="at">object =</span>  foundational_ppmn, <span class="at">new_data =</span> test_TP)</span></code></pre></div>
+<span id="cb69-3"><a href="posterior-predictive-meta-analytic-network.html#cb69-3" tabindex="-1"></a><span class="fu">head</span>(example5)</span></code></pre></div>
+<pre><code>## # A tibble: 6 × 9
+##   Source Authors Comment `function` transformation edge      parameter estimate error
+##   &lt;chr&gt;  &lt;chr&gt;   &lt;lgl&gt;   &lt;chr&gt;      &lt;chr&gt;          &lt;chr&gt;     &lt;chr&gt;        &lt;dbl&gt; &lt;dbl&gt;
+## 1 A      A       NA      log        log            Chl~TN+TP b0           -0.8   0.28
+## 2 A      A       NA      log        log            Chl~TN+TP b1            0.34  0.11
+## 3 A      A       NA      log        log            Chl~TN+TP b2            1.1   0.56
+## 4 B      B       NA      log        log            Chl~TN+TP b0           -0.2   0.5 
+## 5 B      B       NA      log        log            Chl~TN+TP b1            0.7   0.24
+## 6 B      B       NA      log        log            Chl~TN+TP b2            0.93  0.36</code></pre>
+<div class="sourceCode" id="cb71"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb71-1"><a href="posterior-predictive-meta-analytic-network.html#cb71-1" tabindex="-1"></a><span class="co">#Create a formula</span></span>
+<span id="cb71-2"><a href="posterior-predictive-meta-analytic-network.html#cb71-2" tabindex="-1"></a>formula<span class="ot">=</span><span class="fu">list</span>(<span class="fu">c</span>(<span class="at">fun=</span><span class="st">&quot;log&quot;</span>, <span class="at">edge=</span><span class="st">&quot;Chl~TN+TP&quot;</span>, <span class="at">trans=</span><span class="st">&quot;log&quot;</span>,</span>
+<span id="cb71-3"><a href="posterior-predictive-meta-analytic-network.html#cb71-3" tabindex="-1"></a>               <span class="at">prior_mu_b0=</span><span class="sc">-</span><span class="fl">0.5</span>, <span class="at">prior_se_b0=</span><span class="fl">0.5</span>,</span>
+<span id="cb71-4"><a href="posterior-predictive-meta-analytic-network.html#cb71-4" tabindex="-1"></a>               <span class="at">prior_mu_b1=</span><span class="fl">0.5</span>, <span class="at">prior_se_b1=</span><span class="fl">0.5</span>, <span class="at">trunc_a_b1=</span><span class="dv">0</span>,</span>
+<span id="cb71-5"><a href="posterior-predictive-meta-analytic-network.html#cb71-5" tabindex="-1"></a>               <span class="at">prior_mu_b2=</span><span class="dv">1</span>, <span class="at">prior_se_b2=</span><span class="fl">0.5</span>, <span class="at">trunc_a_b2=</span><span class="dv">0</span>),</span>
+<span id="cb71-6"><a href="posterior-predictive-meta-analytic-network.html#cb71-6" tabindex="-1"></a>             </span>
+<span id="cb71-7"><a href="posterior-predictive-meta-analytic-network.html#cb71-7" tabindex="-1"></a>             <span class="fu">c</span>(<span class="at">fun=</span><span class="st">&quot;log&quot;</span>, <span class="at">edge=</span><span class="st">&quot;Taxa~Chl&quot;</span>, <span class="at">trans=</span><span class="st">&quot;log&quot;</span>,</span>
+<span id="cb71-8"><a href="posterior-predictive-meta-analytic-network.html#cb71-8" tabindex="-1"></a>               <span class="at">prior_mu_b0=</span><span class="dv">0</span>, <span class="at">prior_se_b0=</span><span class="dv">5</span>,</span>
+<span id="cb71-9"><a href="posterior-predictive-meta-analytic-network.html#cb71-9" tabindex="-1"></a>               <span class="at">prior_mu_b1=</span><span class="fu">c</span>(<span class="fl">0.3</span>, <span class="fl">0.5</span>), <span class="at">prior_se_b1=</span><span class="fu">c</span>(<span class="fl">0.5</span>, <span class="dv">1</span>), <span class="at">trunc_a_b1=</span><span class="dv">0</span>)</span>
+<span id="cb71-10"><a href="posterior-predictive-meta-analytic-network.html#cb71-10" tabindex="-1"></a>             </span>
+<span id="cb71-11"><a href="posterior-predictive-meta-analytic-network.html#cb71-11" tabindex="-1"></a>             )</span>
+<span id="cb71-12"><a href="posterior-predictive-meta-analytic-network.html#cb71-12" tabindex="-1"></a></span>
+<span id="cb71-13"><a href="posterior-predictive-meta-analytic-network.html#cb71-13" tabindex="-1"></a><span class="co">#Build the foundational PPMN</span></span>
+<span id="cb71-14"><a href="posterior-predictive-meta-analytic-network.html#cb71-14" tabindex="-1"></a>foundational_ppmn <span class="ot">&lt;-</span> <span class="fu">build_ppmn</span>(<span class="at">formula =</span> formula, <span class="at">data =</span> example5, </span>
+<span id="cb71-15"><a href="posterior-predictive-meta-analytic-network.html#cb71-15" tabindex="-1"></a>                                <span class="at">node_width =</span> <span class="fl">0.06</span>,</span>
+<span id="cb71-16"><a href="posterior-predictive-meta-analytic-network.html#cb71-16" tabindex="-1"></a>                                <span class="at">fun_width =</span> <span class="fl">0.1</span>)</span></code></pre></div>
+<pre><code>## Using &quot;tree&quot; as default layout
+## Using &quot;tree&quot; as default layout
+## Using &quot;tree&quot; as default layout</code></pre>
+<div class="sourceCode" id="cb73"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb73-1"><a href="posterior-predictive-meta-analytic-network.html#cb73-1" tabindex="-1"></a><span class="co">#Display the directed Bipartite graph</span></span>
+<span id="cb73-2"><a href="posterior-predictive-meta-analytic-network.html#cb73-2" tabindex="-1"></a>foundational_ppmn<span class="sc">$</span>Plot_as_BIP</span></code></pre></div>
+<p><img src="EcoPostView_files/figure-html/examp_2_ppmn_a-1.png" alt="" width="672" /></p>
+</div>
+<div id="marginal-ppmn-function" class="section level2 hasAnchor" number="4.3">
+<h2><span class="header-section-number">4.3</span> Marginal PPMN function<a href="posterior-predictive-meta-analytic-network.html#marginal-ppmn-function" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>We might also wish display the marginal relations of a single edge-function of the model. Some data is created able to display the marginal distribution of the edge-function. This marginal relation is an added variable plot.</p>
+<p><img src="EcoPostView_files/figure-html/examp_2_ppmn_b-1.png" alt="" width="768" /></p>
+</div>
+<div id="predictive-fit-function" class="section level2 hasAnchor" number="4.4">
+<h2><span class="header-section-number">4.4</span> Predictive fit function<a href="posterior-predictive-meta-analytic-network.html#predictive-fit-function" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p><img src="EcoPostView_files/figure-html/examp_2_ppmn_c-1.png" alt="" width="768" /></p>
 
 </div>
 </div>

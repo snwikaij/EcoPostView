@@ -23,7 +23,9 @@ hop-function-hypothetical-outcome-plots
 hop-function-and-partial-dependency-plots
 posterior-predictive-meta-analytic-network
 building-blocks
-specifying-netowork-structure
+specifying-network-structure
+marginal-ppmn-function
+predictive-fit-function
 heterodox-bayes
 classical-statistics-and-estimation
 bayes-theorem-and-probablistic-estimation

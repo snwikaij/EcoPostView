@@ -146,7 +146,7 @@ ggplot(data.frame(a=1)) + xlim(0, 120) + ylim(0, 120) +
 
 Constructing a PPMN therefore requires two related specifications: the directed network structure and the parameterized edge-functions associated with each incoming edge. The following section shows how these components are defined in the package.
 
-## Specifying netowork structure
+## Specifying network structure
 
 We begin by defining each variable ($X = \{ x_1, ..., x_n \}$) that constitute the network and the directed dependencies among them. Each non-root vertex must be associated with a link-function that maps its parent variable $x_p$ to a child vertex $x_c$. A link-function is expressed as 
 
@@ -159,9 +159,9 @@ However, the actual function is a linear equation where both the dependent and i
 $$
 x_{Chl}=f_{Chl|TP}(x_{TP}, \theta_{Chl|TP}) = exp\{\beta_0 + \beta_1 \cdot Log(x_{TP})\}
 $$
-This happens automatically when a GLM with log link and log-transformed independent variable (TP) was fitted. We just need a data frame (`example4`) with these colums (the column `Comment` could be omitted). In this data frame the point `estimate` is added and the `error`, plus the `source`, `edge` and `parameter`. The parameter b0 = $\beta_0$ and b1 = $\beta_1$. These are the minimal columns that need to be filled in in this data frame.
+This happens automatically when a GLM with log link and log-transformed independent variable (TP) was fitted. We just need a data frame (`example4`) with these columns (the columns `Source`, `Authors`, `Comment` could be omitted). In this data frame the point `estimate` is added and the `error`, plus the `edge` and `parameter`. The parameter b0 = $\beta_0$ and b1 = $\beta_1$. These are the minimal columns that need to be filled in in this data frame. The function that builds the PPMN will search for these names to construct the network.
 
-Since the fitted GLMs had a log link the function (`fun`) is *log*, the edge-functions names is *Chl~TP* and we also transformed (`trans`) the independent variable and therefore use *log*. If a log transformation was not possible and a square-root transformation was used *sqrt* can be used. If no transformation has been applied the argument does not have to be used and can be omitted. Other transformations can be fitted on request if needed. 
+Since the fitted GLMs had a log link the function (`fun`) is *log*, the edge-functions (`edge`) name is *Chl~TP* and we also transformed (`trans`) the independent variable and therefore use *log*. If a log transformation was not possible and a square-root transformation was used *sqrt* can be used. If no transformation has been applied the argument does not have to be used and can be omitted. Other transformations can be fitted on request if needed. 
 
 ```{r, examp_1_ppmn_a, warning=F}
 
@@ -173,11 +173,11 @@ head(example4)
 
 ```
 
-Each parameter has a prior appointed. If no prior is given the default prior has a mean of 0 and se of 1000. For the intercept we assume that we a prior already know it falls somewhere around -0.5 (-1.5 and 0.5) and for the slope around 1 (0 and 2) and we assume it cannot be smaller than 0 and therefore truncate the lower boundary (`trunc_a_b1`) at 0.
+Each parameter has a prior appointed. If no prior is given the default prior has a mean of 0 and se of 1000. For the intercept we assume that we a prior already know it falls somewhere around -0.5 (-1.5 and 0.5) and for the slope around 1 (0 and 2) and we assume it cannot be smaller than 0 and therefore truncate the lower boundary (`trunc_a_b1`) at 0. All likelihoods and priors are assumed to be Gaussian distributed.
 
 ```{r, examp_1_ppmn_b, warning=F}
 
-#we need to create a formula
+#We need to create a formula
 formula=list(c(fun="log", edge="Chl~TP", trans="log",
                prior_mu_b0=-0.5, prior_se_b0=0.5,
                prior_mu_b1=1, prior_se_b1=0.5, trunc_a_b1=0))
@@ -192,7 +192,7 @@ foundational_ppmn <- build_ppmn(formula = formula, data = example4)
 
 ```
 
-This single link can be display in a DAG 
+This single link can be display in a DAG, 
 
 ```{r, examp_1_ppmn_d, warning=F}
 
@@ -200,7 +200,7 @@ foundational_ppmn$Plot_as_DAG
 
 ```
 
-Or as Bipartite Network where the boxes represent the functions and the variables the circles.
+or as a directed Bipartite Network where the boxes represent the functions and the variables the circles.
 
 ```{r, examp_1_ppmn_e, warning=F}
 
@@ -208,11 +208,80 @@ foundational_ppmn$Plot_as_BIP
 
 ```
 
-Predictions can be made using the `predict_ppmn` function.
+A slightly more complex example would to regress *Chl~TN+TP* and use Chl to predict Taxa richness of phytoplankton algae *Taxa~Chl*
 
-```{r, examp_1_ppmn_f, warning=F}
+$$
+f_{Chl|TN, TP}(.) = f_{Chl|TN, TP}(x_{TN}, x_{TP}, \theta_{Chl|TN,TP,1},  \theta_{Chl|TN,TP,2}) = exp\{\beta_0 + \beta_1 \cdot Log(x_{TN}) + \beta_1 \cdot Log(x_{TP})\}
+\\
+f_{Taxa|Chl}(.)=f_{Taxa|Chl}(x_{Chl}, \theta_{Taxa|Chl})=exp(\beta_0 + \beta_1 \cdot Log(x_{Chl}))
+$$
+The full network would then be expressed as
 
-test_TP <- data.frame(TP=c(5, 10, 20, 40, 80))
+$$
+f_{Taxa|Chl}(f_{Chl|TN, TP}(x_{TN}, x_{TP}, \theta_{Chl|TN,TP,1},  \theta_{Chl|TN,TP,2}), \theta_{Taxa|Chl})
+$$
+The formula should then be specified as below. A minor addition is the inclusion of two priors for the edge *Taxa~Chl*. Assume there are two individuals that generated a prior and then both sources of information may be added. Directly after building the foundational PPMN we choose to display the graphical representation.
 
-predicted_values <- predict_ppmn(object =  foundational_ppmn, new_data = test_TP)
+```{r, examp_2_ppmn_a, warning=F}
+
+data(example5)
+
+head(example5)
+
+#Create a formula
+formula=list(c(fun="log", edge="Chl~TN+TP", trans="log",
+               prior_mu_b0=-0.5, prior_se_b0=0.5,
+               prior_mu_b1=0.5, prior_se_b1=0.5, trunc_a_b1=0,
+               prior_mu_b2=1, prior_se_b2=0.5, trunc_a_b2=0),
+             
+             c(fun="log", edge="Taxa~Chl", trans="log",
+               prior_mu_b0=0, prior_se_b0=5,
+               prior_mu_b1=c(0.3, 0.5), prior_se_b1=c(0.5, 1), trunc_a_b1=0)
+             
+             )
+
+#Build the foundational PPMN
+foundational_ppmn <- build_ppmn(formula = formula, data = example5, 
+                                node_width = 0.06,
+                                fun_width = 0.1)
+
+#Display the directed Bipartite graph
+foundational_ppmn$Plot_as_BIP
+
+```
+
+## Marginal PPMN function
+
+We might also wish display the marginal relations of a single edge-function of the model. Some data is created able to display the marginal distribution of the edge-function. This marginal relation is an added variable plot.
+
+```{r, examp_2_ppmn_b,fig.width=8, fig.height=6, echo=F, warning=F}
+
+library(cowplot)
+
+df <- data.frame(TN=c(0.1, 1.25, 3.2, 2.23, 5), 
+                 TP=c(5, 11, 27, 42, 83), 
+                 Chl=c(0.2, 21, 30, 48, 92),
+                 Taxa=c(4, 3, 9, 14, 25))
+
+marginal_fig_Chl  <- marginal_ppmn(foundational_ppmn, response = "Chl", data =  df)
+marginal_fig_Taxa <- marginal_ppmn(foundational_ppmn, response = "Taxa", data =  df)
+
+cowplot::plot_grid(marginal_fig_Chl[[1]], #First object is TN
+                   marginal_fig_Chl[[2]], #Second object is TP
+                   marginal_fig_Taxa[[1]], 
+                   ncol=1, labels = "AUTO")
+
+```
+
+## Predictive fit function
+
+```{r, examp_2_ppmn_c, fig.width=8, fig.height=8, echo=F, warning=F}
+
+pred_performance <- pred_fit(object = foundational_ppmn, new_data = df)
+
+cowplot::plot_grid(pred_performance$plots$Stdz, #Predictive precision
+                   pred_performance$plots$Balance, #Predictive balance
+                   pred_performance$plots$Correlation, #Predictive correlation
+                   ncol=1, labels = "AUTO")
+
 ```

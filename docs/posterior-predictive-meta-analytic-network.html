@@ -170,9 +170,8 @@ code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="4" data-path="posterior-predictive-meta-analytic-network.html"><a href="posterior-predictive-meta-analytic-network.html"><i class="fa fa-check"></i><b>4</b> Posterior Predictive Meta-Analytic Network</a>
 <ul>
-<li class="chapter" data-level="4.1" data-path="posterior-predictive-meta-analytic-network.html"><a href="posterior-predictive-meta-analytic-network.html#introduction-1"><i class="fa fa-check"></i><b>4.1</b> Introduction</a></li>
-<li class="chapter" data-level="4.2" data-path="posterior-predictive-meta-analytic-network.html"><a href="posterior-predictive-meta-analytic-network.html#building-block"><i class="fa fa-check"></i><b>4.2</b> Building block</a></li>
-<li class="chapter" data-level="4.3" data-path="posterior-predictive-meta-analytic-network.html"><a href="posterior-predictive-meta-analytic-network.html#specifying-netowrk-structure"><i class="fa fa-check"></i><b>4.3</b> Specifying netowrk structure</a></li>
+<li class="chapter" data-level="4.1" data-path="posterior-predictive-meta-analytic-network.html"><a href="posterior-predictive-meta-analytic-network.html#building-block"><i class="fa fa-check"></i><b>4.1</b> Building block</a></li>
+<li class="chapter" data-level="4.2" data-path="posterior-predictive-meta-analytic-network.html"><a href="posterior-predictive-meta-analytic-network.html#specifying-netowrk-structure"><i class="fa fa-check"></i><b>4.2</b> Specifying netowrk structure</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="heterodox-bayes.html"><a href="heterodox-bayes.html"><i class="fa fa-check"></i><b>5</b> Heterodox Bayes</a>
 <ul>
@@ -210,8 +209,6 @@ code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="posterior-predictive-meta-analytic-network" class="section level1 hasAnchor" number="4">
 <h1><span class="header-section-number">4</span> Posterior Predictive Meta-Analytic Network<a href="posterior-predictive-meta-analytic-network.html#posterior-predictive-meta-analytic-network" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<div id="introduction-1" class="section level2 hasAnchor" number="4.1">
-<h2><span class="header-section-number">4.1</span> Introduction<a href="posterior-predictive-meta-analytic-network.html#introduction-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Ecological information is accumulated across numerous independent studies that describe interactions among biotic and abiotic components of ecosystems. Although this literature contains a wealth of ecological information, it is dispersed across publications, expressed using diverse statistical measures, and often communicated qualitatively. Consequently, ecological understanding remains fragmented rather than synthesized into coherent quantitative networks.</p>
 <p>This fragmentation is unavoidable. Ecological systems are high-dimensional, and no individual study can simultaneously measure all relevant abiotic and biotic variables. Furthermore, ecological understanding develops as new mechanisms and interactions are better understood. As a result, ecological networks are necessarily incomplete and continuously updated from scattered information.</p>
 <p>Existing syntheses frequently describe interactions only as positive or negative relationships. While such qualitative descriptions are useful for conceptual understanding, they provide little information about the magnitude of ecological responses. Conversely, conventional meta-analyses summarize information using standardized effect sizes, such as Cohen’s d,</p>
@@ -221,16 +218,15 @@ d=\frac{\overline{x}_{treatment}-\overline{x}_{control}}{SD_{pooled}}
 <p>while the enable comparison among study, they remove the original measurement units. Consequently, these effect sizes are difficult to interpret directly in ecological prediction because identical standardized effects can correspond to very different absolute ecological changes (Baguley, 2009; Tukey, 1969).</p>
 <p>For predictive ecological networks, quantities expressed in natural units are often more informative. For example, estimating the change in EPT abundance associated with a 1 <span class="math inline">\(mg\cdot L^{-1}\)</span> decline in dissolved oxygen yields a relationship that can be directly applied to field observations, propagated through ecological networks, and evaluated against future measurements. Such quantities possess immediate operational meaning for prediction and management.</p>
 <p>However, no general framework currently exists for systematically combining these heterogeneous quantitative relationships into an evolving ecological network. We therefore introduce the Posterior Predictive Meta-analytic Network (PPMN), a modular framework that synthesizes dispersed ecological information into a coherent predictive network. The PPMN combines Bayesian meta-analysis, probabilistic simulation, network modelling, and sequential updating to estimate and propagate ecological relationships without requiring a complete multivariate dataset. The framework supports prediction, structural evaluation, scenario exploration, and continual refinement as new information becomes available. In this way, qualitative ecological understanding is progressively formalized into an updateable quantitative network.</p>
-</div>
-<div id="building-block" class="section level2 hasAnchor" number="4.2">
-<h2><span class="header-section-number">4.2</span> Building block<a href="posterior-predictive-meta-analytic-network.html#building-block" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="building-block" class="section level2 hasAnchor" number="4.1">
+<h2><span class="header-section-number">4.1</span> Building block<a href="posterior-predictive-meta-analytic-network.html#building-block" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>A PPMN describes an ecological system as a generalized directed Bayesian network. <em>Vertices</em> (nodes), represent <em>ecological variables</em>, whereas directed <em>edges</em> (links), are represented by parameterized <em>edge-functions</em>. Each edge-function contains one or more <em>model parameters</em>. Information about these parameters is represented by probability distributions rather than by single fixed values. Together, the network structure, edge-functions, and parameter distributions determine the predictive behavior of the PPMN.</p>
-<p>The figure below illustrates a simple PPMN containing four variables and three parameterized edge-functions. For each edge-funtion, information from prior distributions and study-derived estimates is synthesized into a posterior parameter distribution.</p>
+<p>The figure below illustrates a simple PPMN containing four variables and three parameterized edge-functions. For each edge-function, information from prior distributions and study-derived estimates is synthesized into a posterior parameter distribution.</p>
 <p><img src="EcoPostView_files/figure-html/fig1_ppmn-1.png" alt="" width="768" /></p>
 <p>Constructing a PPMN therefore requires two related specifications: the directed network structure and the parameterized edge-functions associated with each incoming edge. The following section shows how these components are defined in the package.</p>
 </div>
-<div id="specifying-netowrk-structure" class="section level2 hasAnchor" number="4.3">
-<h2><span class="header-section-number">4.3</span> Specifying netowrk structure<a href="posterior-predictive-meta-analytic-network.html#specifying-netowrk-structure" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="specifying-netowrk-structure" class="section level2 hasAnchor" number="4.2">
+<h2><span class="header-section-number">4.2</span> Specifying netowrk structure<a href="posterior-predictive-meta-analytic-network.html#specifying-netowrk-structure" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>We begin by defining each variable (<span class="math inline">\(X = \{ x_1, ..., x_n \}\)</span>) that constitute the network and the directed dependencies among them. Each non-root vertex must be associated with a link-function that maps its parent variable <span class="math inline">\(x_p\)</span> to a child vertex <span class="math inline">\(x_c\)</span>. A link-function is expressed as</p>
 <p><span class="math display">\[x_c=f_{c|p}(x_p, \theta_{c|p})\]</span>
 with it corresponding parameter <span class="math inline">\(\theta_{c|p}\)</span>. An example could be the relations between Total Phosphorus (TP) to Chlorophyll-a (Chl). We fitted for example three models A-D and found one intercept (<span class="math inline">\(b0\)</span>) and slope (<span class="math inline">\(b1\)</span>) in two separated studies. The function is formally expressed as.
@@ -249,16 +245,14 @@ This happens automatically when a GLM with log link and log-transformed independ
 <span id="cb62-4"><a href="posterior-predictive-meta-analytic-network.html#cb62-4" tabindex="-1"></a><span class="co">#display head</span></span>
 <span id="cb62-5"><a href="posterior-predictive-meta-analytic-network.html#cb62-5" tabindex="-1"></a><span class="fu">head</span>(example4)</span></code></pre></div>
 <pre><code>## # A tibble: 6 × 9
-##   Source Authors Comment `function` transformation
-##   &lt;chr&gt;  &lt;chr&gt;   &lt;lgl&gt;   &lt;chr&gt;      &lt;lgl&gt;         
-## 1 A      A       NA      log        NA            
-## 2 A      A       NA      log        NA            
-## 3 B      A       NA      log        NA            
-## 4 B      A       NA      log        NA            
-## 5 C      C       NA      log        NA            
-## 6 C      C       NA      log        NA            
-## # ℹ 4 more variables: edge &lt;chr&gt;, parameter &lt;chr&gt;,
-## #   estimate &lt;dbl&gt;, error &lt;dbl&gt;</code></pre>
+##   Source Authors Comment `function` transformation edge   parameter estimate error
+##   &lt;chr&gt;  &lt;chr&gt;   &lt;lgl&gt;   &lt;chr&gt;      &lt;lgl&gt;          &lt;chr&gt;  &lt;chr&gt;        &lt;dbl&gt; &lt;dbl&gt;
+## 1 A      A       NA      log        NA             Chl~TP b0           -0.8   0.2 
+## 2 A      A       NA      log        NA             Chl~TP b1            1.1   0.56
+## 3 B      A       NA      log        NA             Chl~TP b0           -0.2   0.5 
+## 4 B      A       NA      log        NA             Chl~TP b1            0.93  0.3 
+## 5 C      C       NA      log        NA             Chl~TP b0           -1.1   0.8 
+## 6 C      C       NA      log        NA             Chl~TP b1            1.05  0.3</code></pre>
 <p>Each parameter has a prior appointed. If no prior is given the default prior has a mean of 0 and se of 1000. For the intercept we assume that we a prior already know it falls somewhere around -0.5 (-1.5 and 0.5) and for the slope around 1 (0 and 2) and we assume it cannot be smaller than 0 and therefore truncate the lower boundary (<code>trunc_a_b1</code>) at 0.</p>
 <div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb64-1"><a href="posterior-predictive-meta-analytic-network.html#cb64-1" tabindex="-1"></a><span class="co">#we need to create a formula</span></span>
 <span id="cb64-2"><a href="posterior-predictive-meta-analytic-network.html#cb64-2" tabindex="-1"></a>formula<span class="ot">=</span><span class="fu">list</span>(<span class="fu">c</span>(<span class="at">fun=</span><span class="st">&quot;log&quot;</span>, <span class="at">edge=</span><span class="st">&quot;Chl~TP&quot;</span>, <span class="at">trans=</span><span class="st">&quot;log&quot;</span>,</span>
@@ -273,7 +267,7 @@ This happens automatically when a GLM with log link and log-transformed independ
 <div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb67-1"><a href="posterior-predictive-meta-analytic-network.html#cb67-1" tabindex="-1"></a>foundational_ppmn<span class="sc">$</span>Plot_as_DAG</span></code></pre></div>
 <p><img src="EcoPostView_files/figure-html/examp_1_ppmn_d-1.png" alt="" width="672" /></p>
 <p>Or as Bipartite Network where the boxes represent the functions and the variables the circles.</p>
-<div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb68-1"><a href="posterior-predictive-meta-analytic-network.html#cb68-1" tabindex="-1"></a>foundational_ppmn<span class="sc">$</span>Plot_as_DAG</span></code></pre></div>
+<div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb68-1"><a href="posterior-predictive-meta-analytic-network.html#cb68-1" tabindex="-1"></a>foundational_ppmn<span class="sc">$</span>Plot_as_BIP</span></code></pre></div>
 <p><img src="EcoPostView_files/figure-html/examp_1_ppmn_e-1.png" alt="" width="672" /></p>
 <p>Predictions can be made using the <code>predict_ppmn</code> function.</p>
 <div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb69-1"><a href="posterior-predictive-meta-analytic-network.html#cb69-1" tabindex="-1"></a>test_TP <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">TP=</span><span class="fu">c</span>(<span class="dv">5</span>, <span class="dv">10</span>, <span class="dv">20</span>, <span class="dv">40</span>, <span class="dv">80</span>))</span>

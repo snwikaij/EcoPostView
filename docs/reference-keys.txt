@@ -22,7 +22,6 @@ forest-function
 hop-function-hypothetical-outcome-plots
 hop-function-and-partial-dependency-plots
 posterior-predictive-meta-analytic-network
-introduction-1
 building-block
 specifying-netowrk-structure
 heterodox-bayes

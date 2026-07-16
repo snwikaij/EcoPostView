@@ -50,10 +50,14 @@ marginal_ppmn <- function(object, response, data,
     upper <- unlist(lapply(object$Parameters, function(e) sapply(e, `[[`, "b")))
     theta <- tmvtnorm::rtmvnorm(nsim, mu_global, object$Sigma, lower, upper)}
 
-  theta           <- as.matrix(theta)
-  colnames(theta) <- names(mu_global)
+  theta <- matrix(theta,
+                  nrow = nsim,
+                  ncol = length(mu_global),
+                  dimnames = list(seq_len(nsim), names(mu_global)))
 
-  edge_name <- grep(paste0("^", response, "~"), names(object$Parameters), value = TRUE)
+  edge_name <- grep(paste0("^", response, "~"), names(object$Parameters), value = T)
+  if(length(edge_name) == 0L){stop("No edge-function found for response: ", response)}
+  if(length(edge_name) > 1L){stop("Multiple edge-functions found for response ",response,": ", paste(edge_name, collapse = ", "))}
   parents   <- strsplit(strsplit(edge_name, "~")[[1]][2], "\\+")[[1]]
   edge_pars <- object$Parameters[[edge_name]]
 

@@ -34,9 +34,9 @@ predict_ppmn <- function(object, new_data, nsim = 1000,
     theta_draws <- tmvtnorm::rtmvnorm(n=nsim, mean=mu_global, sigma=object$Sigma,lower=lower_global, upper=upper_global)}
 
   #store the draws in matrix and give names
-  theta_draws           <- as.matrix(theta_draws)
-  colnames(theta_draws) <- rownames(object$Sigma)
-  rownames(theta_draws) <- seq_len(nsim)
+  theta_draws <- matrix(theta_draws,
+                        nrow = nsim,
+                        dimnames = list(seq_len(nsim), names(mu_global)))
 
   #select the dag structure
   g          <- object$Structure$visual_dag$graph
@@ -69,7 +69,7 @@ predict_ppmn <- function(object, new_data, nsim = 1000,
   Variance <- list()
   for (i in topo_order) {
 
-    node        <- igraph::V(g)$name[i]
+    node         <- igraph::V(g)$name[i]
     parents      <- edge_table$indep[edge_table$dep == node]
     if (length(parents) == 0){next}
 

@@ -16,7 +16,7 @@ For predictive ecological networks, quantities expressed in natural units are of
 
 However, no general framework currently exists for systematically combining these heterogeneous quantitative relationships into an evolving ecological network. We therefore introduce the Posterior Predictive Meta-analytic Network (PPMN), a modular framework that synthesizes dispersed ecological information into a coherent predictive network. The PPMN combines Bayesian meta-analysis, probabilistic simulation, network modelling, and sequential updating to estimate and propagate ecological relationships without requiring a complete multivariate dataset. The framework supports prediction, structural evaluation, scenario exploration, and continual refinement as new information becomes available. In this way, qualitative ecological understanding is progressively formalized into an updateable quantitative network.
 
-## Building block
+## Building blocks
 
 A PPMN describes an ecological system as a generalized directed Bayesian network. *Vertices* (nodes), represent *ecological variables*, whereas directed *edges* (links), are represented by parameterized *edge-functions*. Each edge-function contains one or more *model parameters*. Information about these parameters is represented by probability distributions rather than by single fixed values. Together, the network structure, edge-functions, and parameter distributions determine the predictive behavior of the PPMN.
 
@@ -146,7 +146,7 @@ ggplot(data.frame(a=1)) + xlim(0, 120) + ylim(0, 120) +
 
 Constructing a PPMN therefore requires two related specifications: the directed network structure and the parameterized edge-functions associated with each incoming edge. The following section shows how these components are defined in the package.
 
-## Specifying netowrk structure
+## Specifying netowork structure
 
 We begin by defining each variable ($X = \{ x_1, ..., x_n \}$) that constitute the network and the directed dependencies among them. Each non-root vertex must be associated with a link-function that maps its parent variable $x_p$ to a child vertex $x_c$. A link-function is expressed as 
 

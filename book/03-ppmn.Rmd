@@ -20,7 +20,7 @@ However, no general framework currently exists for systematically combining thes
 
 A PPMN describes an ecological system as a generalized directed Bayesian network. *Vertices* (nodes), represent *ecological variables*, whereas directed *edges* (links), are represented by parameterized *edge-functions*. Each edge-function contains one or more *model parameters*. Information about these parameters is represented by probability distributions rather than by single fixed values. Together, the network structure, edge-functions, and parameter distributions determine the predictive behavior of the PPMN.
 
-The figure below illustrates a simple PPMN containing four variables and three parameterized edge-functions. For each edge-funtion, information from prior distributions and study-derived estimates is synthesized into a posterior parameter distribution.
+The figure below illustrates a simple PPMN containing four variables and three parameterized edge-functions. For each edge-function, information from prior distributions and study-derived estimates is synthesized into a posterior parameter distribution.
 
 ```{r, fig1_ppmn,  fig.width=8, fig.height=4, echo=F, warning=FALSE}
 
@@ -184,19 +184,25 @@ formula=list(c(fun="log", edge="Chl~TP", trans="log",
 This formula represents a single edge-function from TP to Chl. To construct the foundational PPMN, both the formula and data need to be introduced into the `build_ppmn` function.
 
 ```{r, examp_1_ppmn_c, warning=F}
+
 foundational_ppmn <- build_ppmn(formula = formula, data = example4)
+
 ```
 
 This single link can be display in a DAG 
 
 ```{r, examp_1_ppmn_d, warning=F}
+
 foundational_ppmn$Plot_as_DAG
+
 ```
 
 Or as Bipartite Network where the boxes represent the functions and the variables the circles.
 
 ```{r, examp_1_ppmn_e, warning=F}
-foundational_ppmn$Plot_as_DAG
+
+foundational_ppmn$Plot_as_BIP
+
 ```
 
 Predictions can be made using the `predict_ppmn` function.

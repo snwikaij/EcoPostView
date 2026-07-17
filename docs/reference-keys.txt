@@ -24,6 +24,7 @@ hop-function-and-partial-dependency-plots
 posterior-predictive-meta-analytic-network
 building-blocks
 specifying-network-structure
+build-ppmn-function
 marginal-ppmn-function
 predictive-fit-function
 heterodox-bayes

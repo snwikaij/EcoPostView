@@ -172,8 +172,9 @@ code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="4.1" data-path="posterior-predictive-meta-analytic-network.html"><a href="posterior-predictive-meta-analytic-network.html#building-blocks"><i class="fa fa-check"></i><b>4.1</b> Building blocks</a></li>
 <li class="chapter" data-level="4.2" data-path="posterior-predictive-meta-analytic-network.html"><a href="posterior-predictive-meta-analytic-network.html#specifying-network-structure"><i class="fa fa-check"></i><b>4.2</b> Specifying network structure</a></li>
-<li class="chapter" data-level="4.3" data-path="posterior-predictive-meta-analytic-network.html"><a href="posterior-predictive-meta-analytic-network.html#marginal-ppmn-function"><i class="fa fa-check"></i><b>4.3</b> Marginal PPMN function</a></li>
-<li class="chapter" data-level="4.4" data-path="posterior-predictive-meta-analytic-network.html"><a href="posterior-predictive-meta-analytic-network.html#predictive-fit-function"><i class="fa fa-check"></i><b>4.4</b> Predictive fit function</a></li>
+<li class="chapter" data-level="4.3" data-path="posterior-predictive-meta-analytic-network.html"><a href="posterior-predictive-meta-analytic-network.html#build-ppmn-function"><i class="fa fa-check"></i><b>4.3</b> Build PPMN function</a></li>
+<li class="chapter" data-level="4.4" data-path="posterior-predictive-meta-analytic-network.html"><a href="posterior-predictive-meta-analytic-network.html#marginal-ppmn-function"><i class="fa fa-check"></i><b>4.4</b> Marginal PPMN function</a></li>
+<li class="chapter" data-level="4.5" data-path="posterior-predictive-meta-analytic-network.html"><a href="posterior-predictive-meta-analytic-network.html#predictive-fit-function"><i class="fa fa-check"></i><b>4.5</b> Predictive fit function</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="heterodox-bayes.html"><a href="heterodox-bayes.html"><i class="fa fa-check"></i><b>5</b> Heterodox Bayes</a>
 <ul>
@@ -330,9 +331,9 @@ Of course if bias is considered neglect non can be performed (method=0). I still
 <span id="cb15-7"><a href="meta-analysis-over-effect-sizes-and-model-parameters.html#cb15-7" tabindex="-1"></a><span class="co">#Extract the information from the results based on a selected threshold</span></span>
 <span id="cb15-8"><a href="meta-analysis-over-effect-sizes-and-model-parameters.html#cb15-8" tabindex="-1"></a>extract_abc <span class="ot">&lt;-</span> <span class="fu">extrabc</span>(result_abc, <span class="at">xpos =</span> <span class="dv">4</span>, <span class="at">dist_threshold =</span> <span class="fl">0.052</span>)</span></code></pre></div>
 <pre><code>##   Statistic   Mean     SE     ll     ul
-## 1         c 0.7779 0.0956 0.6317 0.8934
-## 2     mu(z) 1.2771 0.5019 0.4040 1.9651
-## 3     sd(z) 0.9419 0.1948 0.6862 1.2733</code></pre>
+## 1         c 0.7764 0.0871 0.6037 0.8931
+## 2     mu(z) 1.2882 0.4873 0.3689 1.9200
+## 3     sd(z) 0.9363 0.1919 0.6815 1.3514</code></pre>
 <div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="meta-analysis-over-effect-sizes-and-model-parameters.html#cb17-1" tabindex="-1"></a><span class="co">#Plot the histogram of the z-values with the simulated density lines of the posterior</span></span>
 <span id="cb17-2"><a href="meta-analysis-over-effect-sizes-and-model-parameters.html#cb17-2" tabindex="-1"></a><span class="fu">plot</span>(extract_abc<span class="sc">$</span>hist)</span></code></pre></div>
 <p><img src="EcoPostView_files/figure-html/exploring_bias_with_ABC-rejection-1.png" alt="" width="748.8" /></p>
@@ -670,22 +671,22 @@ Where <span class="math inline">\(x_{ij}\)</span> refers to the <span class="mat
 <span id="cb39-7"><a href="meta-analysis-over-effect-sizes-and-model-parameters.html#cb39-7" tabindex="-1"></a><span class="co">#Print the table</span></span>
 <span id="cb39-8"><a href="meta-analysis-over-effect-sizes-and-model-parameters.html#cb39-8" tabindex="-1"></a><span class="fu">print</span>(inv_df)</span></code></pre></div>
 <pre><code>##    predictor  link      prob
-## 1         NA   log 0.5026234
-## 2         NA   log 0.4534880
-## 3         NA logit 0.4889556
-## 4         NA logit 0.4563614
-## 5     Oxygen   log 0.5463033
-## 6     Oxygen   log 0.4494655
-## 7     Oxygen logit 0.5468678
-## 8     Oxygen logit 0.4151167
-## 9   Salinity   log 0.5026234
-## 10  Salinity   log 0.4534880
-## 11  Salinity logit 0.4889556
-## 12  Salinity logit 0.4563614
-## 13  Sediment   log 0.5463033
-## 14  Sediment   log 0.4494655
-## 15  Sediment logit 0.5468678
-## 16  Sediment logit 0.4151167</code></pre>
+## 1         NA   log 0.5034852
+## 2         NA   log 0.4444669
+## 3         NA logit 0.4888628
+## 4         NA logit 0.4663503
+## 5     Oxygen   log 0.5526912
+## 6     Oxygen   log 0.4484440
+## 7     Oxygen logit 0.5209153
+## 8     Oxygen logit 0.4111305
+## 9   Salinity   log 0.5034852
+## 10  Salinity   log 0.4444669
+## 11  Salinity logit 0.4888628
+## 12  Salinity logit 0.4663503
+## 13  Sediment   log 0.5526912
+## 14  Sediment   log 0.4484440
+## 15  Sediment logit 0.5209153
+## 16  Sediment logit 0.4111305</code></pre>
 <p>The table shows that for sediment in a logit-linear model related to fish, the posterior probability shifts from 0.38 in mod0 to 0.50 in mod1. This corresponds to a 12% increase, i.e.,
 0.50−0.38=0.12. This indicates that prior information contributes additional support for a negative relationship between fine sediment and lotic fish species — an relation is not fully supported by the data alone.</p>
 <p>This is not a limitation but rather reflects what occurs in practice: prior information often drawn from empirical studies or domain expertise tends to be more directional. This highlights the value of incorporating prior information from the literature when building and refining Bayesian models.</p>

@@ -148,20 +148,18 @@ Constructing a PPMN therefore requires two related specifications: the directed 
 
 ## Specifying network structure
 
-We begin by defining each variable ($X = \{ x_1, ..., x_n \}$) that constitute the network and the directed dependencies among them. Each non-root vertex must be associated with a link-function that maps its parent variable $x_p$ to a child vertex $x_c$. A link-function is expressed as 
+We begin by defining each variable ($X = \{ x_1, ..., x_n \}$) that constitute the network and the directed dependencies among them. Each non-root vertex must be associated with a edge-function that maps its parent variable $x_p$ to a child vertex $x_c$. A edge-function is expressed as 
 
 $$x_c=f_{c|p}(x_p, \theta_{c|p})$$ 
-with it corresponding parameter $\theta_{c|p}$. An example could be the relations between Total Phosphorus (TP) to Chlorophyll-a (Chl). We fitted for example three models A-D and found one intercept ($b0$) and slope ($b1$) in two separated studies. The function is formally expressed as.
+with it corresponding parameter $\theta_{c|p}$. An example could be the relations between Total Phosphorus (TP) to Chlorophyll-a (Chl). We fitted for example three models A-D and found one intercept (b0) and slope (b1) in two separated studies (this is given in `example4` below). The function is formally expressed as.
 $$
 x_{Chl}=f_{Chl|TP}(x_{TP}, \theta_{Chl|TP}) 
 $$
-However, the actual function is a linear equation where both the dependent and independent variable are log transformed. Transforming the function to its predictive form
+However, the actual function is a linear equation where both the dependent and independent variable are log transformed. The expression of the function is to describe its relation and content. However, to the observant reader the fitted model is actually $log(y)=b0+b1*log(x)$ and describes the *deterministic* part of a GLM with log-link where the independent variable is log-transformed. Therefore, the expression above would in its predictive form be expressed as given below.
 $$
 x_{Chl}=f_{Chl|TP}(x_{TP}, \theta_{Chl|TP}) = exp\{\beta_0 + \beta_1 \cdot Log(x_{TP})\}
 $$
-This happens automatically when a GLM with log link and log-transformed independent variable (TP) was fitted. We just need a data frame (`example4`) with these columns (the columns `Source`, `Authors`, `Comment` could be omitted). In this data frame the point `estimate` is added and the `error`, plus the `edge` and `parameter`. The parameter b0 = $\beta_0$ and b1 = $\beta_1$. These are the minimal columns that need to be filled in in this data frame. The function that builds the PPMN will search for these names to construct the network.
-
-Since the fitted GLMs had a log link the function (`fun`) is *log*, the edge-functions (`edge`) name is *Chl~TP* and we also transformed (`trans`) the independent variable and therefore use *log*. If a log transformation was not possible and a square-root transformation was used *sqrt* can be used. If no transformation has been applied the argument does not have to be used and can be omitted. Other transformations can be fitted on request if needed. 
+We only needs to fit models to collect the `estimate` and `error` and indicate the functional relation between the dependent and independent variable(s) and how the independent variables have been transformed. As an example see the data frame (`example4`) with the following columns  below. In this data frame the columns `function`, `transformation`, `edge` `parameter`, `estimate` and `error` are required. The column `estimate` contains all numeric values of all intercept and slopes and the column `error` its corresponding standard error. We need to indicate to what `parameter` the `estimate` and `error` belong to. The parameter are b0 = $\beta_0$ and b1 = $\beta_1$, which in layman terms are called the intercept and slope, respectively. The column `edge` indicates the formula you would use in a standard `lm` or `glm` and is used to connect the dependent and independent variables. The column `transformation` indicates how all independent variables are transformed. It is applied to all independent variable and cannot be applied to one. The column `function` is important, it tells the code how we want to connect (what type of shape) the dependent and independent variables. The PPMN can apply different functions and used different types of parameters, that are not only intercepts or slopes and there can be functions added. Later we will come back to the functions currently available in the library. In the `example4` the columns `Source`, `Authors`, `Comment` could be omitted, but are displayed to show a table we would standard compile during a meta-analysis.
 
 ```{r, examp_1_ppmn_a, warning=F}
 
@@ -173,54 +171,68 @@ head(example4)
 
 ```
 
-Each parameter has a prior appointed. If no prior is given the default prior has a mean of 0 and se of 1000. For the intercept we assume that we a prior already know it falls somewhere around -0.5 (-1.5 and 0.5) and for the slope around 1 (0 and 2) and we assume it cannot be smaller than 0 and therefore truncate the lower boundary (`trunc_a_b1`) at 0. All likelihoods and priors are assumed to be Gaussian distributed.
+Each of the fitted models (`Source` = `A, B, C, D, E`) was a GLM, with log-link and log-transformed independent variable. It is also possible to only include an intercept or slope. To indicated the type of *deterministic* part of the GLM was used, the column `function` is indicated as *log*. Since the independent variable was log-transformed we denote *log* in the column `transformed`. If a log-transformation was not possible a square-root transformation *sqrt* can be used. If no transformation has been applied then the cell should remain empty. Other transformations can be added to the library on request. 
+
+## Build PPMN function
+
+We have a meta-analytic data frame (`example4`) with all columns and want to synthesize everything into a PPMN (which is at the moment only a single edge). We need to connect the data frame with information to the desired network structure and for this the `build_ppmn` function is used. This function builds the network structure and performs meta-analysis by connecting the columns `function`, `edge` `transformation` in the data frame (`example4`) to this structure. To specify each unique link we need to create a formula as given below. That formula should indicates the function `fun` *log* and the `edge` *Chl~TP* and type of transformation `trans` *log*. If no transformation is applied the argument `trans` can be omitted from the formula.
 
 ```{r, examp_1_ppmn_b, warning=F}
 
 #We need to create a formula
+formula=list(c(fun="log", edge="Chl~TP", trans="log"))
+
+```
+
+The PPMN however aims at maximizing information use. Therefore it uses a (empirical) Bayesian Meta-analysis in which the priors maximize the information to which a model cannot be fitted. Both the likelihood and prior in this model are assumed to approximate a Gaussian behavior. Therefore, the estimated parameters are specified via the mean `mu` ($\mu$) and standard error `se`. The prior for `mu` of each parameter b0, b1, b..., bn in an edge-function need tos be indicated with `prior_mu_b...` the prior for the `se` needs to be indicated with  `prior_se_b...`. If no prior is given the `mu` this defaults to 0 and if no prior is given for the `se` this defaults to 1000. Additionally, it is possible to truncate (cutoff) the distribution, restricting the outcome to only a part of the parameter space. For this we the lower truncation is indicated by `trunc_a_b...` and upper truncation > `trunc_b_b...`.
+
+```{r, examp_1_ppmn_c, warning=F}
 formula=list(c(fun="log", edge="Chl~TP", trans="log",
                prior_mu_b0=-0.5, prior_se_b0=0.5,
                prior_mu_b1=1, prior_se_b1=0.5, trunc_a_b1=0))
 
 ```
 
-This formula represents a single edge-function from TP to Chl. To construct the foundational PPMN, both the formula and data need to be introduced into the `build_ppmn` function.
+In our example a prior was already know the intercept falls around $-0.5$ and within the interval range of $~2.5\% = -0.5 - 2 \cdot 0.5=-1.5$ and $~97.5\% = -0.5 + 2 \cdot 0.5=0.5$. For the slope around $1$ and within the interval range of $~2.5\% = 1 - 2 \cdot 0.5=0$ and $~97.5\% = 1 + 2 \cdot 0.5=2$ we also assume the slope will definitely be >0 and therefore truncate the lower boundary (`trunc_a_b1`) at 0. This formula represents a single edge-function from TP to Chl. 
 
-```{r, examp_1_ppmn_c, warning=F}
+At this moment we have all ingredients (the formula and data) to build a foundational PPMN. To construct the foundational PPMN, both the formula and data need to be introduced into the `build_ppmn` function. This is shown below.
+
+```{r, examp_1_ppmn_d, warning=F}
 
 foundational_ppmn <- build_ppmn(formula = formula, data = example4)
 
 ```
 
-This single link can be display in a DAG, 
+After building the foundational PPMN, the single edge can be display in a DAG, 
 
-```{r, examp_1_ppmn_d, warning=F}
+```{r, examp_1_ppmn_e, warning=F}
 
 foundational_ppmn$Plot_as_DAG
 
 ```
 
-or as a directed Bipartite Network where the boxes represent the functions and the variables the circles.
+or as a Directed Bipartite Network, where the boxes represent the edge-functions and the variables the circles.
 
-```{r, examp_1_ppmn_e, warning=F}
+```{r, examp_1_ppmn_f, warning=F}
 
 foundational_ppmn$Plot_as_BIP
 
 ```
 
-A slightly more complex example would to regress *Chl~TN+TP* and use Chl to predict Taxa richness of phytoplankton algae *Taxa~Chl*
+A slightly more complex example would introduce use to a more complex edge-function and network. For example, we wish to regress *Chl~TN+TP* and use Chl to predict phytoplankton taxa richness of  *Taxa~Chl*. To bring a last formal expression of this network both edge-functions are described below.
 
 $$
 f_{Chl|TN, TP}(.) = f_{Chl|TN, TP}(x_{TN}, x_{TP}, \theta_{Chl|TN,TP,1},  \theta_{Chl|TN,TP,2}) = exp\{\beta_0 + \beta_1 \cdot Log(x_{TN}) + \beta_1 \cdot Log(x_{TP})\}
 \\
 f_{Taxa|Chl}(.)=f_{Taxa|Chl}(x_{Chl}, \theta_{Taxa|Chl})=exp(\beta_0 + \beta_1 \cdot Log(x_{Chl}))
 $$
-The full network would then be expressed as
+Both edge function are then combined to form a network expressed as below
 
 $$
 f_{Taxa|Chl}(f_{Chl|TN, TP}(x_{TN}, x_{TP}, \theta_{Chl|TN,TP,1},  \theta_{Chl|TN,TP,2}), \theta_{Taxa|Chl})
 $$
-The formula should then be specified as below. A minor addition is the inclusion of two priors for the edge *Taxa~Chl*. Assume there are two individuals that generated a prior and then both sources of information may be added. Directly after building the foundational PPMN we choose to display the graphical representation.
+
+The formula should then be specified as below. A minor addition is the inclusion of two priors for the edge *Taxa~Chl*. Assume there are two individuals authors/managers or methods to produce the priors then both sources of information are sources of uncertainty may be both be added. The meta-analysis incorporates this via Bayesian Model Averaging (BMA). Directly after building the foundational PPMN we choose to display the graphical representation as BIP.
 
 ```{r, examp_2_ppmn_a, warning=F}
 
@@ -252,7 +264,7 @@ foundational_ppmn$Plot_as_BIP
 
 ## Marginal PPMN function
 
-We might also wish display the marginal relations of a single edge-function of the model. Some data is created able to display the marginal distribution of the edge-function. This marginal relation is an added variable plot.
+The network structure shows only one view of the information we incorporated. As with the results of Kaijser et al. (2025) we might be interested in viewing the association or the marginal edge-function itself an added variable plot. To do so an example data frame is created as given below. If we wish to omitted the points as we do not actually have real data then set the argument `alpha` to 0.
 
 ```{r, examp_2_ppmn_b,fig.width=8, fig.height=6, echo=F, warning=F}
 
@@ -268,7 +280,7 @@ marginal_fig_Taxa <- marginal_ppmn(foundational_ppmn, response = "Taxa", data = 
 
 cowplot::plot_grid(marginal_fig_Chl[[1]], #First object is TN
                    marginal_fig_Chl[[2]], #Second object is TP
-                   marginal_fig_Taxa[[1]], 
+                   marginal_fig_Taxa[[1]],#This is Chl 
                    ncol=1, labels = "AUTO")
 
 ```

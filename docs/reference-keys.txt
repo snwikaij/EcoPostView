@@ -27,6 +27,7 @@ specifying-network-structure
 build-ppmn-function
 marginal-ppmn-function
 predictive-fit-function
+updating-the-ppmn
 heterodox-bayes
 classical-statistics-and-estimation
 bayes-theorem-and-probablistic-estimation

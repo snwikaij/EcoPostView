@@ -287,6 +287,27 @@ cowplot::plot_grid(marginal_fig_Chl[[1]], #First object is TN
 
 ## Predictive fit function
 
+The predictive fit function is used to assess the performance of the PPMN on new data. It return three metric to assess predictive performance.
+
+The standardize residual error (SRE) is calculated using residual error per child vertex $c$ of each simulation $s$ divided by over its standard deviation. An SRE close to 0 means that the prediction of the model is close to the observed data. An absolute SRE of approximately 1 indicates that the residual is equal to one estimated standard deviation of the residual distribution. Values of |3| or higher are extremely large.
+
+$$
+SRE_c=\frac{r_c^{(s)}}{\sigma(r_c)}
+$$
+
+The balance is given by the average fraction of positive signs and informs about the centrality of the model within for each prediction $\hat x$. Values close to 0.5 indicate that predictions lie centralized within observations, while balance close to 0 and 1 indicate predictions lie lower and higher than the observations.
+
+$$
+P(observed>predicted)=\frac{1}{N}\sum_{s=1}^S H(x_c > \hat x_c^{(s)})
+$$
+
+The pearson correlation correlated the the observed and predicted values. It provides I judges the sign and strength of the observations and prediction. A correlation of 0 indicates minimal correlation with the predictions, close to 1 a strong correlation and < 0 an opposing prediction.
+
+$$
+R(observed > predicted) = \frac{Cov(x_c, \hat x_c^{(s)})}{\sqrt{Var(x_c)\cdot Var(\hat x_c^{(s)}})}
+$$
+Below an example of the predictive fit function applied to the the example data given above.
+
 ```{r, examp_2_ppmn_c, fig.width=8, fig.height=8, echo=F, warning=F}
 
 pred_performance <- pred_fit(object = foundational_ppmn, new_data = df)
@@ -297,3 +318,6 @@ cowplot::plot_grid(pred_performance$plots$Stdz, #Predictive precision
                    ncol=1, labels = "AUTO")
 
 ```
+
+# Updating the PPMN
+

@@ -67,7 +67,7 @@ update_ppmn <- function(object, new_data, nsim = 3000, level = 0.9,
   #select observed nodes/variables
   obs_nodes <- intersect(colnames(x_obs), pred_nodes_all)
 
-  if (length(obs_nodes) == 0) {stop("No observed (non-root) nodes in new_data match model predicted nodes")}
+  if(length(obs_nodes) == 0){stop("No observed (non-root) nodes in new_data match model predicted nodes")}
 
   ###########################
   #standardize over all nsim#
@@ -122,12 +122,12 @@ update_ppmn <- function(object, new_data, nsim = 3000, level = 0.9,
         r        <- (y_raw-p_hat)/sqrt(p_hat*(1-p_hat)+eps)
         l        <- logistic_loss(y_raw, y_hat, eps)
       }else if(detect_count(y_raw)){
-        r <- sqrt(y_raw+3/8)-sqrt(pmax(y_hat, eps)+3/8)
-        l <- abs(r)
+        r        <- sqrt(y_raw+3/8)-sqrt(pmax(y_hat, eps)+3/8)
+        l        <- abs(r)
       }else{
         if(is.null(MAD)){"why is MAD  null?"}
-        r <- (y_raw-y_hat)/MAD
-        l <- r^2}
+        r        <- (y_raw-y_hat)/MAD
+        l        <- r^2}
 
       bad <- !is.finite(l)
 
@@ -151,7 +151,7 @@ update_ppmn <- function(object, new_data, nsim = 3000, level = 0.9,
       }else if(detect_count(y_raw)){
         r <- sqrt(y_raw+3/8)-sqrt(pmax(y_hat, eps)+3/8)
       }else{
-        if(is.null(MAD)){"why is MAD  null?"}
+        if(is.null(MAD)){stop("why is MAD  null?")}
         r <- (y_raw-y_hat)/MAD}
 
       return(r)}}
@@ -186,54 +186,52 @@ update_ppmn <- function(object, new_data, nsim = 3000, level = 0.9,
     w/sum(w)}
 
   #Calibrator stuff
-  lambda_calibrate <- function(loss, y_obs, y_particles, eps, max_lambda, family){
+  lambda_calibrate <- function(loss, y_obs, y_sim, eps, max_lambda, family){
 
-    ok_obs <- is.finite(y_obs)
-    y_obs <- y_obs[ok_obs]
-    y_particles <- y_particles[ok_obs, , drop = FALSE]
+    ok_obs      <- is.finite(y_obs)
+    y_obs       <- y_obs[ok_obs]
+    y_sim       <- y_sim[ok_obs, , drop = FALSE]
 
-    ok_part <- is.finite(loss) & apply(y_particles, 2, function(x) all(is.finite(x)))
-    loss <- loss[ok_part]
-    y_particles <- y_particles[, ok_part, drop = FALSE]
+    ok_part     <- is.finite(loss) & apply(y_sim, 2, function(x) all(is.finite(x)))
+    loss        <- loss[ok_part]
+    y_sim       <- y_sim[, ok_part, drop = FALSE]
 
     score <- function(lambda){
 
       w <- stable_weights(loss, lambda, eps)
-      if(any(!is.finite(w)) || sum(w) <= 0) return(.Machine$double.xmax)
+      if(any(!is.finite(w)) || sum(w) <= 0){return(.Machine$double.xmax)}
 
-      y_pred <- as.numeric(y_particles %*% w)
+      y_pred <- as.numeric(y_sim %*% w)
 
       if(family %in% c("binary", "beta")){
-        p <- pmin(pmax(y_pred, eps), 1 - eps)
-        r_data <- (y_obs - p) / sqrt(p * (1 - p) + eps)
+        p      <- pmin(pmax(y_pred, eps), 1-eps)
+        r_data <- (y_obs-p)/sqrt(p*(1-p)+eps)
 
-        r_part <- apply(y_particles, 2, function(pj){
-          pj <- pmin(pmax(pj, eps), 1 - eps)
-          mean((y_obs - pj) / sqrt(pj * (1 - pj) + eps), na.rm = TRUE)
-        })
+        r_part <- apply(y_sim, 2, function(pj){
+          pj   <- pmin(pmax(pj, eps), 1-eps)
+          mean((y_obs-pj)/sqrt(pj*(1-pj)+eps), na.rm = TRUE)})
 
       } else if(family == "count"){
-        r_data <- sqrt(y_obs + 3/8) - sqrt(pmax(y_pred, eps) + 3/8)
+        r_data <- sqrt(y_obs+3/8) - sqrt(pmax(y_pred, eps)+3/8)
 
-        r_part <- apply(y_particles, 2, function(mu){
-          sqrt(y_obs + 3/8) - sqrt(pmax(mu, eps) + 3/8)
-        })
+        r_part <- apply(y_sim, 2, function(mu){sqrt(y_obs + 3/8) - sqrt(pmax(mu, eps) + 3/8)})
         r_part <- colMeans(r_part, na.rm = TRUE)
 
       } else {
-        r_data <- y_obs - y_pred
-        r_part <- apply(y_particles, 2, function(mu) mean(y_obs - mu, na.rm = TRUE))
+        r_data <- y_obs-y_pred
+        r_part <- apply(y_sim, 2, function(mu){mean(y_obs-mu, na.rm = TRUE)})
       }
 
-      se_data <- sd(r_data, na.rm = TRUE) / sqrt(length(r_data))
-      ESS <- 1 / sum(w^2)
 
-      mu_r <- sum(w * r_part)
-      sd_post <- sqrt(sum(w * (r_part - mu_r)^2))
-      se_post <- sd_post / sqrt(ESS)
+      se_data  <- sd(r_data, na.rm = TRUE)/sqrt(length(r_data))
+      ESS      <- 1/sum(w^2)
 
-      out <- abs(se_post - se_data)
-      if(!is.finite(out)) .Machine$double.xmax else out
+      mu_r     <- sum(w * r_part)
+      sd_post  <- sqrt(sum(w*(r_part-mu_r)^2))
+      se_post  <- sd_post/sqrt(ESS)
+
+      out      <- abs(se_post-se_data)
+      if(!is.finite(out)){.Machine$double.xmax}else{out}
     }
 
     optimize(score, interval = c(0, max_lambda))$minimum
@@ -308,7 +306,7 @@ update_ppmn <- function(object, new_data, nsim = 3000, level = 0.9,
 
     y_obs <- obs_mat[,i]
 
-    y_particles <- do.call(
+    y_sim <- do.call(
       cbind,
       preds$Variance[[node]]
     )
@@ -326,7 +324,7 @@ update_ppmn <- function(object, new_data, nsim = 3000, level = 0.9,
     lambda_calibrate(
       loss = loss1_sim[, i],
       y_obs = y_obs,
-      y_particles = y_particles,
+      y_sim = y_sim,
       eps = eps,
       max_lambda = max_lambda,
       family = family
@@ -352,24 +350,22 @@ update_ppmn <- function(object, new_data, nsim = 3000, level = 0.9,
   ################
 
   #node_lambda to numeric vector
-  node_lambda   <- setNames(as.numeric(unlist(node_lambda)), colnames(loss1_sim))
-  lambda_vec    <- node_lambda
-  loss1_sim     <- loss1_sim[, names(lambda_vec), drop = FALSE]
+  lambda_vec <- setNames(as.numeric(unlist(node_lambda)), names(node_lambda))
 
   #residual cols in same order
-  loss1_sim <- loss1_sim[,names(lambda_vec), drop = FALSE]
+  loss1_sim <- loss1_sim[, names(lambda_vec), drop = FALSE]
 
   #global log weights
-  logw <- -rowSums(sweep(loss1_sim, 2, lambda_vec, "*"), na.rm = TRUE)
+  logw <- -as.numeric(loss1_sim %*% lambda_vec)
 
-  #stabalize prevent overflow
-  logw <- logw - max(logw, na.rm = TRUE)
+  #stabalize  overflow
+  logw <- logw-max(logw)
 
   #prevent issues
   w_global <- exp(logw)
 
   #global weights
-  w_global <- w_global/(sum(w_global)+eps)
+  w_global <- w_global / sum(w_global)
 
   #######################################
   #summarize all the nodes using weights#

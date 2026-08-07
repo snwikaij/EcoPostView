@@ -163,10 +163,10 @@ We only needs to fit models to collect the `estimate` and `error` and indicate t
 
 ```{r, examp_1_ppmn_a, warning=F}
 
-#load example
+#Load example
 data("example4")
 
-#display head
+#Display head
 head(example4)
 
 ```
@@ -236,8 +236,10 @@ The formula should then be specified as below. A minor addition is the inclusion
 
 ```{r, examp_2_ppmn_a, warning=F}
 
+#Load example
 data(example5)
 
+#Display first rows
 head(example5)
 
 #Create a formula
@@ -254,7 +256,7 @@ formula=list(c(fun="log", edge="Chl~TN+TP", trans="log",
 
 #Build the foundational PPMN
 foundational_ppmn <- build_ppmn(formula = formula, data = example5, 
-                                node_width = 0.06,
+                                vertex_width = 0.06,
                                 fun_width = 0.1)
 
 #Display the directed Bipartite graph
@@ -319,5 +321,131 @@ cowplot::plot_grid(pred_performance$plots$Stdz, #Predictive precision
 
 ```
 
-# Updating the PPMN
+## Updating the PPMN
 
+We will use a more elaborated network and data set following the steps that were explained above to update the PPMN. First we need to build the formula that defines the network structure.
+
+```{r, updating example large network}
+
+#Load example
+data(example6)
+
+#Display head
+head(example6)
+
+#Set the formula of the full network
+formula=list(c(fun="sigmoidal", edge="Chl~TP", trans="log",
+               prior_mu_b0=100, prior_se_b0=50, trunc_a_b0=0, trunc_b_b0=10000,
+               prior_mu_b1=6.2, prior_se_b1=1.6, trunc_a_b1=0,
+               prior_mu_b2=0, prior_se_b2=1, trunc_a_b2=0),
+
+             c(fun="log", edge="Macrophytes~Chl+Temp+CO2onlyuser", trans="log",
+               prior_mu_b0=3, prior_se_b0=0.25, trunc_a_b0=0,
+               prior_mu_b1=-0.3, prior_se_b1=0.1, trunc_b_b1=0,
+               prior_mu_b2=0.05, prior_se_b2=0.25,
+               prior_mu_b3=-0.05, prior_se_b3=0.025),
+
+             c(fun="class", edge="Characeae~Chl",
+               prior_mu_b0=5, prior_se_b0=5, trunc_a_b0=0,
+               prior_mu_b1=5, prior_se_b1=5, trunc_a_b1=0,
+               prior_mu_b2=50, prior_se_b2=100, trunc_a_b2=0,
+               prior_mu_b3=50, prior_se_b3=100, trunc_a_b3=0,
+               prior_mu_b4=0.4, prior_se_b4=0.05, trunc_a_b4=0, trunc_b_b4=1),
+
+             c(fun="sigmoidal", edge="pH~Chl",
+               prior_mu_b0=10, prior_se_b0=1.5, trunc_a_b0=0,
+               prior_mu_b2=0, prior_se_b2=10, trunc_a_b2=0),
+
+             c(fun="sigmoidal", edge="CO2~pH",
+               prior_mu_b0=60, prior_se_b0=30, trunc_a_b0=0,
+               prior_mu_b1=6, prior_se_b1=2,
+               prior_mu_b2=-0.5, prior_se_b2=1),
+
+             c(fun="logit", edge="CO2onlyuser~HCO3", trans="log",
+               prior_mu_b0=0, prior_se_b0=10,
+               prior_mu_b1=-0.5, prior_se_b1=1, trunc_b_b1=0),
+
+             c(fun="log", edge="DOC~Chl", trans="log"),
+
+             c(fun="log",  trans="log", edge="DO~DOC+Temp",
+               prior_mu_b0=2, prior_se_b0=1, trunc_a_b0=0,
+               prior_mu_b1=-0.1, prior_se_b1=0.25, trunc_b_b1=0,
+               prior_mu_b2=-0.25, prior_se_b2=0.125, trunc_b_b2=0),
+
+             c(fun="sigmoidal", edge="HCO3~pH",
+               prior_mu_b0=200, prior_se_b0=50, trunc_a_b0=0,
+               prior_mu_b1=7.5, prior_se_b1=2,
+               prior_mu_b2=0.5, prior_se_b2=1))
+
+#Build the PPMN and define size of the vertices
+foundational_ppmn <- build_ppmn(formula, data, txt_size = 3, vertex_height = 0.4, vertex_width = 0.48, arrow_offset = 4)
+
+#Display graph as biparite graph
+foundational_ppmn$Plot_as_BIP
+```
+
+The full foundational PPMN has now been build and all previous function can be applied. However, we are interested in updating the PPMN so that it can learn the constrains of the data if only the roots give provide information. For this the `update_ppmn` function can be use under default with the additionally data from which it can learn the multivariate constrains.
+
+```{r, upload training data, echo=F, warning=F}
+
+#Load example of training data
+data(train_data)
+
+#Display head
+head(train_data)
+
+#Update the foundational ppmn
+updated_ppmn <- update_ppmn(object = foundational_ppmn, new_data = train_data)
+
+#Display the residuals
+updated_ppmn$Residuals$residual_plot
+
+```
+
+It is also possible to update by setting the update strength as how much the data is allowed to dominate. This is performed by setting the amount of information that can be learned from the data. This is defined via the Kullback-Leibler divergence (KL-divergence).
+
+```{r, updating via KL-divergence, fig.width=8, fig.height=8, echo=F, warning=FALSE}
+
+#Update the foundational ppmn allowing the data to dominate by 5%
+updated_ppmn_5 <- update_ppmn(object = foundational_ppmn, new_data = train_data, kl_frac = 0.05)
+
+#Update the foundational ppmn allowing the data to dominate by 50%
+updated_ppmn_50 <- update_ppmn(object = foundational_ppmn, new_data = train_data, kl_frac = 0.5)
+
+#Update the foundational ppmn allowing the data to dominate by 95%
+updated_ppmn_95 <- update_ppmn(object = foundational_ppmn, new_data = train_data, kl_frac = 0.95)
+
+#Display the residuals on top of each other
+cowplot::plot_grid(
+updated_ppmn_5$Residuals$residual_plot,
+updated_ppmn_50$Residuals$residual_plot,
+updated_ppmn_95$Residuals$residual_plot,
+ncol=1)
+
+```
+
+Below  the box plots the number behind `Kl=` indicates the information learned from the data. The median and mu (mean) indicate the center of the residuals. For Characeae, the residuals are standardized. However, Characeae is a binary response variable, and while standardization via the pearson residuals is correct $\sqrt{p\cdot (1-p)}$there remains a gap especially because the data is dominated by presences. The majority of the residuals seem well centered with exception of DOC and HCO3. Ofcourse, this could be further investigated looking at the marginal predictions. This especially easy because each edge function is an univariate relation.
+
+```{r, examp_2_ppmn_b,fig.width=8, fig.height=6, echo=F, warning=F}
+
+library(cowplot)
+
+#Create the marginal plots
+marginal_fig_HCO3  <- marginal_ppmn(updated_ppmn, response = "HCO3", data = train_data)
+marginal_fig_DOC <- marginal_ppmn(updated_ppmn, response = "DOC", data = train_data)
+
+#Plot them togheter
+cowplot::plot_grid(marginal_fig_HCO3[[1]], 
+                   marginal_fig_DOC[[1]], 
+                   ncol=1, labels = "AUTO")
+
+```
+
+Investigating these figures it is relatively clear why the residuals of HCO3 are shifted. The PPMN over predicts the new data. For DOC this is also obvious, the whole log-linear function for DOC is in mismatch with the actual data. My question for DOC would be why I observe a negative trend in the data less DOC with more Chl, this seems contradictory to my expectations. I would expect that upon eutrophication the amount of DOC would increase due to the the amount of die-off caused by the increasing algae growth. Hence, the model also does not learn the negative pattern, because we are strongly invested in a positive relation between DOC~Chl. Hence, there are two simple reasons: 
+
+(1.) The edge function is not the right function.
+(2.) The data itself is not proper.
+
+Which one is a discussion point.
+
+These patterns can also be observed when we would move to validation using the validation data. Of course, this validation data is only a subset

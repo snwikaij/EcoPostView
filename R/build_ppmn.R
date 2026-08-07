@@ -3,9 +3,9 @@
 #' @param formula An list of expressions that defines the network structure
 #' @param data A list with estimates and standard errors to be synthesized
 #' @param txt_size Size of the text with a visualization of the graph
-#' @param node_size Diameter of the vertices in the DAG
-#' @param node_width Width of the variable vertices in the Bipartite graph
-#' @param node_height Height of the variable vertices in the Bipartite graph
+#' @param vertex_size Diameter of the vertices in the DAG
+#' @param vertex_width Width of the variable vertices in the Bipartite graph
+#' @param vertex_height Height of the variable vertices in the Bipartite graph
 #' @param fun_width Width of the vertices representing the edge-functions in the Bipartite graph
 #' @param fun_height Height of the vertices representing the edge-functions in the Bipartite graph
 #' @param fun_lwd Width of the edge-function vetices
@@ -36,8 +36,8 @@
 #' @importFrom grid unit
 #'
 #' @export
-build_ppmn   <- function(formula, data, txt_size=3, node_size=15,
-                         node_width=0.21, node_height=0.5,
+build_ppmn   <- function(formula, data, txt_size=3, vertex_size=15,
+                         vertex_width=0.21, vertex_height=0.5,
                          fun_width=0.5, fun_height=0.5,
                          fun_lwd=0.4, node_lwd=0.4,
                          arrow_size=2, arrow_offset=5.5,
@@ -284,7 +284,7 @@ build_ppmn   <- function(formula, data, txt_size=3, node_size=15,
                    arrow = arrow(length = unit(arrow_size, 'mm')),
                    end_cap = circle(arrow_offset, 'mm')) +
     ggraph::geom_node_point(shape = 21, fill = "white", color = "black",
-                    size = node_size, stroke = .8) +
+                    size = vertex_size, stroke = .8) +
     ggraph::geom_node_text(aes(label = name), color = "black", size = txt_size) +
     ggplot2::theme_classic() +
     ggplot2::coord_cartesian(clip = "off") +
@@ -310,8 +310,8 @@ build_ppmn   <- function(formula, data, txt_size=3, node_size=15,
                  data = nodes_var,
                  aes(x0 = x,
                      y0 = y,
-                     a = node_width,
-                     b = node_height,
+                     a = vertex_width,
+                     b = vertex_height,
                      angle = 0),
                  fill = "white", colour = "black")+
     ggraph::geom_node_tile(linewidth=fun_lwd,

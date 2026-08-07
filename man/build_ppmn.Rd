@@ -8,9 +8,9 @@ build_ppmn(
   formula,
   data,
   txt_size = 3,
-  node_size = 15,
-  node_width = 0.21,
-  node_height = 0.5,
+  vertex_size = 15,
+  vertex_width = 0.21,
+  vertex_height = 0.5,
   fun_width = 0.5,
   fun_height = 0.5,
   fun_lwd = 0.4,
@@ -28,11 +28,11 @@ build_ppmn(
 
 \item{txt_size}{Size of the text with a visualization of the graph}
 
-\item{node_size}{Diameter of the vertices in the DAG}
+\item{vertex_size}{Diameter of the vertices in the DAG}
 
-\item{node_width}{Width of the variable vertices in the Bipartite graph}
+\item{vertex_width}{Width of the variable vertices in the Bipartite graph}
 
-\item{node_height}{Height of the variable vertices in the Bipartite graph}
+\item{vertex_height}{Height of the variable vertices in the Bipartite graph}
 
 \item{fun_width}{Width of the vertices representing the edge-functions in the Bipartite graph}
 

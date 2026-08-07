@@ -446,6 +446,6 @@ Investigating these figures it is relatively clear why the residuals of HCO3 are
 (1.) The edge function is not the right function.
 (2.) The data itself is not proper.
 
-Which one is a discussion point.
+Which one is a discussion point. It is not a failure to establish this, we might not like it, but we cannot suppress what we do not like. It is a learning opportunity. if our structural explanation was that DOC~Chl relation was positive we need to revise this in light of this new information. Clearly there is a case where this is not so. For HCO3~pH the mismatch is less severe as we will consequently observe under further investigation.
 
-These patterns can also be observed when we would move to validation using the validation data. Of course, this validation data is only a subset
+These patterns can also be observed when we would move to validation using the validation data. Of course, this validation data is only a subset of the whole dataset. Therefore, it will display the same pattern. However, to obtain a test dataset that independent of training and validation dataset would provide a more comprehensive overview.

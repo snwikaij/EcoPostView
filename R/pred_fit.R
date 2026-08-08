@@ -115,4 +115,4 @@ pred_fit <- function(object, new_data, nsim = 1000, level=0.9,
     theme(axis.text.x = element_text(angle=rotate_x, hjust = hjust),
           axis.title.x = element_blank())
 
-  list(Stdz=mae_df, Balance=pbal_df, Correlation=cors_df, plots=list(Stdz=mae_plot, Balance=bal_plot, Correlation=r_plot))}
+  list(Balance=pbal_df, Correlation=cors_df, Stdz=mae_df, plots=list(Balance=bal_plot, Correlation=r_plot, Stdz=mae_plot))}

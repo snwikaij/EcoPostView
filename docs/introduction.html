@@ -175,7 +175,25 @@ code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4.3" data-path="posterior-predictive-meta-analytic-network.html"><a href="posterior-predictive-meta-analytic-network.html#build-ppmn-function"><i class="fa fa-check"></i><b>4.3</b> Build PPMN function</a></li>
 <li class="chapter" data-level="4.4" data-path="posterior-predictive-meta-analytic-network.html"><a href="posterior-predictive-meta-analytic-network.html#marginal-ppmn-function"><i class="fa fa-check"></i><b>4.4</b> Marginal PPMN function</a></li>
 <li class="chapter" data-level="4.5" data-path="posterior-predictive-meta-analytic-network.html"><a href="posterior-predictive-meta-analytic-network.html#predictive-fit-function"><i class="fa fa-check"></i><b>4.5</b> Predictive fit function</a></li>
-<li class="chapter" data-level="4.6" data-path="posterior-predictive-meta-analytic-network.html"><a href="posterior-predictive-meta-analytic-network.html#updating-the-ppmn"><i class="fa fa-check"></i><b>4.6</b> Updating the PPMN</a></li>
+<li class="chapter" data-level="4.6" data-path="posterior-predictive-meta-analytic-network.html"><a href="posterior-predictive-meta-analytic-network.html#updating-the-ppmn"><i class="fa fa-check"></i><b>4.6</b> Updating the PPMN</a>
+<ul>
+<li class="chapter" data-level="4.6.1" data-path="posterior-predictive-meta-analytic-network.html"><a href="posterior-predictive-meta-analytic-network.html#specifying-network-structure-1"><i class="fa fa-check"></i><b>4.6.1</b> Specifying network structure</a></li>
+<li class="chapter" data-level="4.6.2" data-path="posterior-predictive-meta-analytic-network.html"><a href="posterior-predictive-meta-analytic-network.html#default-training-mode"><i class="fa fa-check"></i><b>4.6.2</b> Default training mode</a></li>
+<li class="chapter" data-level="4.6.3" data-path="posterior-predictive-meta-analytic-network.html"><a href="posterior-predictive-meta-analytic-network.html#fixed-information-gain-training"><i class="fa fa-check"></i><b>4.6.3</b> Fixed information gain training</a></li>
+<li class="chapter" data-level="4.6.4" data-path="posterior-predictive-meta-analytic-network.html"><a href="posterior-predictive-meta-analytic-network.html#display-the-marginal-trends"><i class="fa fa-check"></i><b>4.6.4</b> Display the marginal trends</a></li>
+<li class="chapter" data-level="4.6.5" data-path="posterior-predictive-meta-analytic-network.html"><a href="posterior-predictive-meta-analytic-network.html#apply-predictive-fit-to-validation-data"><i class="fa fa-check"></i><b>4.6.5</b> Apply predictive fit to validation data</a></li>
+</ul></li>
+<li class="chapter" data-level="4.7" data-path="posterior-predictive-meta-analytic-network.html"><a href="posterior-predictive-meta-analytic-network.html#root-estimation"><i class="fa fa-check"></i><b>4.7</b> Root estimation</a></li>
+<li class="chapter" data-level="4.8" data-path="posterior-predictive-meta-analytic-network.html"><a href="posterior-predictive-meta-analytic-network.html#edge-functions"><i class="fa fa-check"></i><b>4.8</b> Edge functions</a>
+<ul>
+<li class="chapter" data-level="4.8.1" data-path="posterior-predictive-meta-analytic-network.html"><a href="posterior-predictive-meta-analytic-network.html#linear-equation"><i class="fa fa-check"></i><b>4.8.1</b> Linear equation</a></li>
+<li class="chapter" data-level="4.8.2" data-path="posterior-predictive-meta-analytic-network.html"><a href="posterior-predictive-meta-analytic-network.html#log-linear-equation"><i class="fa fa-check"></i><b>4.8.2</b> Log-linear equation</a></li>
+<li class="chapter" data-level="4.8.3" data-path="posterior-predictive-meta-analytic-network.html"><a href="posterior-predictive-meta-analytic-network.html#logit-linear-equation"><i class="fa fa-check"></i><b>4.8.3</b> Logit-linear equation</a></li>
+<li class="chapter" data-level="4.8.4" data-path="posterior-predictive-meta-analytic-network.html"><a href="posterior-predictive-meta-analytic-network.html#sigmoidal-equation"><i class="fa fa-check"></i><b>4.8.4</b> Sigmoidal equation</a></li>
+<li class="chapter" data-level="4.8.5" data-path="posterior-predictive-meta-analytic-network.html"><a href="posterior-predictive-meta-analytic-network.html#gompertz-equation"><i class="fa fa-check"></i><b>4.8.5</b> Gompertz equation</a></li>
+<li class="chapter" data-level="4.8.6" data-path="posterior-predictive-meta-analytic-network.html"><a href="posterior-predictive-meta-analytic-network.html#gaussian-equation"><i class="fa fa-check"></i><b>4.8.6</b> Gaussian equation</a></li>
+<li class="chapter" data-level="4.8.7" data-path="posterior-predictive-meta-analytic-network.html"><a href="posterior-predictive-meta-analytic-network.html#bayesian-classifier"><i class="fa fa-check"></i><b>4.8.7</b> Bayesian classifier</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="heterodox-bayes.html"><a href="heterodox-bayes.html"><i class="fa fa-check"></i><b>5</b> Heterodox Bayes</a>
 <ul>
@@ -223,10 +241,10 @@ code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warni
 <h2><span class="header-section-number">2.1</span> R-package installation<a href="introduction.html#r-package-installation" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>To start using this R-package, both JAGS and devtools must be installed. JAGS can be installed from <a href="https://sourceforge.net/projects/mcmc-jags/" class="uri">https://sourceforge.net/projects/mcmc-jags/</a> and devtools can be installed in R via CRAN. The most recent version of the EcoPostView it can be installed from GitHub. Of course, any problems, questions or possible improvements can be directed to me.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="introduction.html#cb1-1" tabindex="-1"></a><span class="co">#install.packages(&quot;devtools&quot;)</span></span>
-<span id="cb1-2"><a href="introduction.html#cb1-2" tabindex="-1"></a><span class="fu">library</span>(devtools)</span></code></pre></div>
-<pre><code>## Loading required package: usethis</code></pre>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="introduction.html#cb3-1" tabindex="-1"></a><span class="co">#install.github(&quot;snwikaij/EcoPostView&quot;)</span></span>
-<span id="cb3-2"><a href="introduction.html#cb3-2" tabindex="-1"></a><span class="fu">library</span>(EcoPostView)</span></code></pre></div>
+<span id="cb1-2"><a href="introduction.html#cb1-2" tabindex="-1"></a><span class="fu">library</span>(devtools)</span>
+<span id="cb1-3"><a href="introduction.html#cb1-3" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="introduction.html#cb1-4" tabindex="-1"></a><span class="co">#install.github(&quot;snwikaij/EcoPostView&quot;)</span></span>
+<span id="cb1-5"><a href="introduction.html#cb1-5" tabindex="-1"></a><span class="fu">library</span>(EcoPostView)</span></code></pre></div>
 
 </div>
 </div>

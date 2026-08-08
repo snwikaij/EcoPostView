@@ -278,7 +278,7 @@ build_ppmn   <- function(formula, data, txt_size=3, vertex_size=15,
   }
 
   # Plot DAG
-  dag_fig <- ggraph(g_vis, layout = layout_type, circular = circular) +
+  dag_fig <- suppressMessages(ggraph(g_vis, layout = layout_type, circular = circular) +
     ggraph::geom_edge_link(edge_width=0.4,
                    color = "black",
                    arrow = arrow(length = unit(arrow_size, 'mm')),
@@ -292,17 +292,18 @@ build_ppmn   <- function(formula, data, txt_size=3, vertex_size=15,
           axis.title = element_blank(),
           axis.text = element_blank(),
           axis.line = element_blank(),
-          axis.ticks = element_blank())
+          axis.ticks = element_blank()))
 
   #Extract visual Bipartite
   g_bip       <- dag_info$bipartite_dag$graph
-  lay         <- ggraph::create_layout(g_bip, layout = layout_type, circular = circular)
+  lay         <- suppressMessages(ggraph::create_layout(g_bip, layout = layout_type, circular = circular))
 
   nodes_var   <- lay[lay$type == "node", ]
   nodes_fun   <- lay[lay$type == "function", ]
 
   #Plot bipartite
-  bip_fig <- ggraph::ggraph(g_bip, layout = layout_type, circular = circular) +
+  bip_fig <- suppressMessages(
+  ggraph::ggraph(g_bip, layout = layout_type, circular = circular) +
     ggraph::geom_edge_link(edge_width=0.4,
                    arrow = arrow(length = unit(arrow_size, "mm")),
                    end_cap = circle(arrow_offset, "mm")) +
@@ -328,7 +329,7 @@ build_ppmn   <- function(formula, data, txt_size=3, vertex_size=15,
           axis.title = element_blank(),
           axis.text = element_blank(),
           axis.line = element_blank(),
-          axis.ticks = element_blank())
+          axis.ticks = element_blank()))
 
   theta_names <- unlist(
     Map(function(edge, pars) paste0(edge, "_", names(pars)),

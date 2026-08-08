@@ -449,15 +449,7 @@ SRE_c=\frac{r_c^{(s)}}{\sigma(r_c)}
 </div>
 <div id="apply-predictive-fit-to-validation-data" class="section level3 hasAnchor" number="4.6.5">
 <h3><span class="header-section-number">4.6.5</span> Apply predictive fit to validation data<a href="posterior-predictive-meta-analytic-network.html#apply-predictive-fit-to-validation-data" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<div class="sourceCode" id="cb81"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb81-1"><a href="posterior-predictive-meta-analytic-network.html#cb81-1" tabindex="-1"></a><span class="co">#Assess the performance of the updated ppmn on the validation data </span></span>
-<span id="cb81-2"><a href="posterior-predictive-meta-analytic-network.html#cb81-2" tabindex="-1"></a>pred_fit_val  <span class="ot">&lt;-</span> <span class="fu">pred_fit</span>(updated_ppmn, val_data, <span class="at">rotate_x =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>)</span>
-<span id="cb81-3"><a href="posterior-predictive-meta-analytic-network.html#cb81-3" tabindex="-1"></a></span>
-<span id="cb81-4"><a href="posterior-predictive-meta-analytic-network.html#cb81-4" tabindex="-1"></a><span class="co">#Plot the results of the updated model applied on the validation data</span></span>
-<span id="cb81-5"><a href="posterior-predictive-meta-analytic-network.html#cb81-5" tabindex="-1"></a>cowplot<span class="sc">::</span><span class="fu">plot_grid</span>(pred_fit_val<span class="sc">$</span>plots<span class="sc">$</span>Balance,</span>
-<span id="cb81-6"><a href="posterior-predictive-meta-analytic-network.html#cb81-6" tabindex="-1"></a>                   pred_fit_val<span class="sc">$</span>plots<span class="sc">$</span>Correlation,</span>
-<span id="cb81-7"><a href="posterior-predictive-meta-analytic-network.html#cb81-7" tabindex="-1"></a>                   pred_fit_val<span class="sc">$</span>plots<span class="sc">$</span>Stdz,</span>
-<span id="cb81-8"><a href="posterior-predictive-meta-analytic-network.html#cb81-8" tabindex="-1"></a>                   <span class="at">labels=</span><span class="st">&quot;AUTO&quot;</span>, <span class="at">ncol=</span><span class="dv">1</span>)</span></code></pre></div>
-<p><img src="EcoPostView_files/figure-html/apply%20updated%20pppn%20to%20validation%20data-1.png" alt="" width="672" /></p>
+<p><img src="EcoPostView_files/figure-html/apply%20updated%20pppn%20to%20validation%20data-1.png" alt="" width="768" /></p>
 <p>Also here we see that HCO3 and DOC deviate. Based on this I accept the deviation of HCO3. I have another dataset that only contains HCO3~pH containing which shows a ‘perfect’ fit. However, DOC~Chl I can not explain properly. This would need further explanation from literature. Having assessed on the validation data we could accepted the discrepancies and notate them or update on another data, or reconstruct the PPMN.</p>
 </div>
 </div>
@@ -481,38 +473,39 @@ SRE_c=\frac{r_c^{(s)}}{\sigma(r_c)}
 </div>
 <div id="edge-functions" class="section level2 hasAnchor" number="4.8">
 <h2><span class="header-section-number">4.8</span> Edge functions<a href="posterior-predictive-meta-analytic-network.html#edge-functions" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>There are different functions that can be used in the PPMN. These are not limited to the ones provided here. Upon request I can add different functions that might be useful for the user. Of course the standard functions consist of the linear equation and link functions used with GLMs. The R-package express the equation using “b” (<span class="math inline">\(\beta\)</span> or <span class="math inline">\(\theta\)</span>) for “b0” (<span class="math inline">\(\beta_0\)</span> or <span class="math inline">\(\theta_0\)</span>) or “b1” (<span class="math inline">\(\beta_1\)</span> or <span class="math inline">\(\theta_1\)</span>) etc. Each parameter in the equation follow the notation b0, b1, b2, …, etc.</p>
+<p>There are different functions that can be used in the PPMN. These are not limited to the ones provided here. Upon request I can add different functions that might be useful for the user. Of course the standard functions consist of the linear equation and link functions used with GLMs. The standard LM and GLM with random effect structure can be fit with most basic R-packages (e.g., lmer, glmmTMB or gamlss).</p>
+<p>The syntax used for the PPMN express the equation using “b” (<span class="math inline">\(\beta\)</span> or <span class="math inline">\(\theta\)</span>) for “b0” (<span class="math inline">\(\beta_0\)</span> or <span class="math inline">\(\theta_0\)</span>) or “b1” (<span class="math inline">\(\beta_1\)</span> or <span class="math inline">\(\theta_1\)</span>) etc. Each parameter in the equation follow the notation b0, b1, b2, …, etc.</p>
 <div id="linear-equation" class="section level3 hasAnchor" number="4.8.1">
 <h3><span class="header-section-number">4.8.1</span> Linear equation<a href="posterior-predictive-meta-analytic-network.html#linear-equation" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>For the linear equation equation the standard expression is used of which the name is <code>identity</code>. Where <span class="math inline">\(k\in K\)</span> describes the number of parameters.</p>
+<p>For the linear equation the standard expression is used of which the name is <code>identity</code>. In this equation Where <span class="math inline">\(p\in P\)</span> describes the number of parents (e.g., 1, 2, 3, …, P). In the linear equation also the number of parents, with exception of 0 is the number of parameters.</p>
 <p><span class="math display">\[
-x_c=b0+\sum_{k=1}^K(b_k\cdot x_k)
+x_c=b_0+\sum_{p=1}^P(b_p\cdot x_p)
 \]</span></p>
 </div>
 <div id="log-linear-equation" class="section level3 hasAnchor" number="4.8.2">
 <h3><span class="header-section-number">4.8.2</span> Log-linear equation<a href="posterior-predictive-meta-analytic-network.html#log-linear-equation" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>For the log-linear equation equation the standard expression is used of which the name is <code>log</code>.</p>
+<p>For the log-linear equation the standard expression is also used of which the name is <code>log</code>.</p>
 <p><span class="math display">\[
-log(x_c)=b0+\sum_{k=1}^K(b_k\cdot x_k)
+log(x_c)=b_0+\sum_{p=1}^P(b_p\cdot x_p)
 \]</span></p>
 </div>
 <div id="logit-linear-equation" class="section level3 hasAnchor" number="4.8.3">
 <h3><span class="header-section-number">4.8.3</span> Logit-linear equation<a href="posterior-predictive-meta-analytic-network.html#logit-linear-equation" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>For the log-linear equation equation the standard expression is used of which the name is <code>logit</code>.</p>
+<p>For the log-linear equation the name is <code>logit</code>.</p>
 <p><span class="math display">\[
-log(\frac{x_c}{(1-x_c)})=b0+\sum_{k=1}^K(b_k\cdot x_k)
-\]</span>### Logit-linear equation</p>
+log(\frac{x_c}{(1-x_c)})=b_0+\sum_{p=1}^P(b_p\cdot x_p)
+\]</span></p>
 </div>
 <div id="sigmoidal-equation" class="section level3 hasAnchor" number="4.8.4">
 <h3><span class="header-section-number">4.8.4</span> Sigmoidal equation<a href="posterior-predictive-meta-analytic-network.html#sigmoidal-equation" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>For the three parameter sigmoidal equation used of which the name is <code>sigmoidal</code>. b0 describes the asymptote, b1 the midpoint and b2 the scale parameter.</p>
+<p>For the three parameter sigmoidal equation used of which the name is <code>sigmoidal</code>. b0 describes the asymptote, b1 the midpoint and b2 the scale parameter. Indeed multiple parents are possible with this function which continues at b4. The parameters then enter as <span class="math inline">\(b_1-x_1+\sum_{p=4}^P( b_p\cdotx_2)\)</span> and continue from <span class="math inline">\(b_4\)</span> onwards. However, this function seems relatively unstable.</p>
 <p><span class="math display">\[
-x_c=\frac{b0}{(1+exp(\frac{(b1-x_k)}{b2}))}
+x_c=\frac{b_0}{(1+exp(\frac{(b_1-x_p)}{b_2}))}
 \]</span></p>
 </div>
 <div id="gompertz-equation" class="section level3 hasAnchor" number="4.8.5">
 <h3><span class="header-section-number">4.8.5</span> Gompertz equation<a href="posterior-predictive-meta-analytic-network.html#gompertz-equation" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>For the gompertz equation the name is <code>gompertz</code>. In this equation, b0 is the asymptote, b1 is the displacement constant and b2 is the growth rate.</p>
+<p>For the gompertz equation the name is <code>gompertz</code>. In this equation, b0 is the asymptote, b1 is the displacement constant and b2 is the growth rate. This function also allows other parameters to access the equation <span class="math inline">\(b_1-x_1+\sum_{p=4}^P( b_p\cdotx_2)\)</span> similair to the sigmoidal equation, but has the same curse.</p>
 <p><span class="math display">\[
 x_c=b0 \cdot exp(-exp( b1 - b2 \cdot x_k)))
 \]</span></p>
@@ -526,7 +519,7 @@ x_c = b0 * exp(-0.5 * (\frac{(x - b1)}{b2})^2)
 </div>
 <div id="bayesian-classifier" class="section level3 hasAnchor" number="4.8.7">
 <h3><span class="header-section-number">4.8.7</span> Bayesian classifier<a href="posterior-predictive-meta-analytic-network.html#bayesian-classifier" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>The Bayesian classifier is an equation that makes use of the mean and standard deviation of two groups. In this equation b0 and b1 are the mean and standard deviation of group 1, respectively. b2 and b3 are the mean and standard deviation of group 2. b5 is the proportion of group 1.</p>
+<p>The Bayesian classifier is an equation that makes use of the mean and standard deviation of two groups. The name of this edge function is <code>class</code>. In this equation b0 and b1 are the mean and standard deviation of group 1, respectively. b2 and b3 are the mean and standard deviation of group 2. b5 is the proportion of group 1.</p>
 <p><span class="math display">\[
 x_c = Log(\frac{N(x_p | b0, b1)}{N(x_p | b0, b1)})\cdot Log(\frac{b5}{1-b5})
 \]</span></p>

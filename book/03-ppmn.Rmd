@@ -339,46 +339,24 @@ formula=list(c(fun="sigmoidal", edge="Chl~TP", trans="log",
                prior_mu_b1=6.2, prior_se_b1=1.6, trunc_a_b1=0,
                prior_mu_b2=0, prior_se_b2=1, trunc_a_b2=0),
 
-             c(fun="log", edge="Macrophytes~Chl+Temp+CO2onlyuser", trans="log",
-               prior_mu_b0=3, prior_se_b0=0.25, trunc_a_b0=0,
-               prior_mu_b1=-0.3, prior_se_b1=0.1, trunc_b_b1=0,
-               prior_mu_b2=0.05, prior_se_b2=0.25,
-               prior_mu_b3=-0.05, prior_se_b3=0.025),
+             c(fun="log", edge="Macrophytes~Chl+Temp+CO2onlyuser", trans="log"),
 
-             c(fun="class", edge="Characeae~Chl",
-               prior_mu_b0=5, prior_se_b0=5, trunc_a_b0=0,
-               prior_mu_b1=5, prior_se_b1=5, trunc_a_b1=0,
-               prior_mu_b2=50, prior_se_b2=100, trunc_a_b2=0,
-               prior_mu_b3=50, prior_se_b3=100, trunc_a_b3=0,
-               prior_mu_b4=0.4, prior_se_b4=0.05, trunc_a_b4=0, trunc_b_b4=1),
+             c(fun="class", edge="Characeae~Chl"),
 
-             c(fun="sigmoidal", edge="pH~Chl",
-               prior_mu_b0=10, prior_se_b0=1.5, trunc_a_b0=0,
-               prior_mu_b2=0, prior_se_b2=10, trunc_a_b2=0),
+             c(fun="sigmoidal", edge="pH~Chl"),
 
-             c(fun="sigmoidal", edge="CO2~pH",
-               prior_mu_b0=60, prior_se_b0=30, trunc_a_b0=0,
-               prior_mu_b1=6, prior_se_b1=2,
-               prior_mu_b2=-0.5, prior_se_b2=1),
+             c(fun="sigmoidal", edge="CO2~pH"),
 
-             c(fun="logit", edge="CO2onlyuser~HCO3", trans="log",
-               prior_mu_b0=0, prior_se_b0=10,
-               prior_mu_b1=-0.5, prior_se_b1=1, trunc_b_b1=0),
+             c(fun="logit", edge="CO2onlyuser~HCO3", trans="log"),
 
              c(fun="log", edge="DOC~Chl", trans="log"),
 
-             c(fun="log",  trans="log", edge="DO~DOC+Temp",
-               prior_mu_b0=2, prior_se_b0=1, trunc_a_b0=0,
-               prior_mu_b1=-0.1, prior_se_b1=0.25, trunc_b_b1=0,
-               prior_mu_b2=-0.25, prior_se_b2=0.125, trunc_b_b2=0),
+             c(fun="log",  trans="log", edge="DO~DOC+Temp"),
 
-             c(fun="sigmoidal", edge="HCO3~pH",
-               prior_mu_b0=200, prior_se_b0=50, trunc_a_b0=0,
-               prior_mu_b1=7.5, prior_se_b1=2,
-               prior_mu_b2=0.5, prior_se_b2=1))
+             c(fun="sigmoidal", edge="HCO3~pH"))
 
 #Build the PPMN and define size of the vertices
-foundational_ppmn <- build_ppmn(formula, data, txt_size = 3, vertex_height = 0.4, vertex_width = 0.48, arrow_offset = 4)
+foundational_ppmn <- build_ppmn(formula = formula, data = example6, txt_size = 3, vertex_height = 0.4, vertex_width = 0.48, arrow_offset = 4)
 
 #Display graph as biparite graph
 foundational_ppmn$Plot_as_BIP
@@ -426,13 +404,11 @@ ncol=1)
 
 Below  the box plots the number behind `Kl=` indicates the information learned from the data. The median and mu (mean) indicate the center of the residuals. For Characeae, the residuals are standardized. However, Characeae is a binary response variable, and while standardization via the pearson residuals is correct $\sqrt{p\cdot (1-p)}$there remains a gap especially because the data is dominated by presences. The majority of the residuals seem well centered with exception of DOC and HCO3. Ofcourse, this could be further investigated looking at the marginal predictions. This especially easy because each edge function is an univariate relation.
 
-```{r, examp_2_ppmn_b,fig.width=8, fig.height=6, echo=F, warning=F}
-
-library(cowplot)
+```{r, marginal update plots, fig.width=8, fig.height=6, echo=F, warning=F}
 
 #Create the marginal plots
-marginal_fig_HCO3  <- marginal_ppmn(updated_ppmn, response = "HCO3", data = train_data)
-marginal_fig_DOC <- marginal_ppmn(updated_ppmn, response = "DOC", data = train_data)
+marginal_fig_HCO3 <- marginal_ppmn(updated_ppmn, response = "HCO3", data = train_data)
+marginal_fig_DOC  <- marginal_ppmn(updated_ppmn, response = "DOC", data = train_data)
 
 #Plot them togheter
 cowplot::plot_grid(marginal_fig_HCO3[[1]], 

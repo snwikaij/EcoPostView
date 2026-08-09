@@ -24,6 +24,19 @@ predict_edge <- function(func, beta, trans, x){
   if (func == "logit"){return(plogis(eta))}
 
   #non standard models that are useful
+  if (func == "asymptotic"){
+    b0 <- beta[1]
+    b1 <- beta[2]
+    b2 <- beta[3]
+
+    x  <- as.matrix(x)
+    x1 <- x[, 1]
+
+  if(ncol(x) > 1){gamma <- drop(x[, -1, drop = FALSE] %*% beta[-(1:3)])}else{gamma <- 0}
+    eta <- b2 * x1 + gamma
+
+    return(b0 - b1 * exp(-eta))}
+
   if (func == "gompertz"){
     b0 <- beta[1]
     b1 <- beta[2]
@@ -32,12 +45,8 @@ predict_edge <- function(func, beta, trans, x){
     x <- as.matrix(x)
     x1 <- x[, 1]
 
-    # sum(bj * xj) for j >= 3 corresponds to x columns 2..p
-    if (ncol(x) > 1) {
-      gamma <- drop(x[, -1, drop = FALSE] %*% beta[-(1:3)])
-    } else {
-      gamma <- 0
-    }
+    # sum(bj * xj) for j >= 3 corresponds to x columns
+  if (ncol(x) > 1) {gamma <- drop(x[, -1, drop = FALSE] %*% beta[-(1:3)])}else{gamma <- 0}
 
     eta <- b1 + gamma - b2 * x1
     return(b0 * exp(-exp(eta)))}
@@ -49,9 +58,10 @@ predict_edge <- function(func, beta, trans, x){
     x <- as.matrix(x)
     x1 <- x[, 1]
 
-    if (ncol(x) > 1) {gamma <- drop(x[, -1, drop = FALSE] %*% beta[-(1:3)])}else{gamma <- 0}
+  if (ncol(x) > 1){gamma <- drop(x[, -1, drop = FALSE] %*% beta[-(1:3)])}else{gamma <- 0}
     eta <- (x1 - b1 + gamma) / b2
     return(b0 / (1 + exp(-eta)))}
+
   if (func == "gaussian"){return(beta[1] * exp(-0.5 * ((x - beta[2]) / beta[3])^2))}
   if (func == "class"){p <- exp(dnorm(x, beta[1], beta[2], log = TRUE) - dnorm(x, beta[3], beta[4], log = TRUE))
   return(as.numeric((p * beta[5]) / ((p * beta[5]) + (1 - beta[5]))))}}

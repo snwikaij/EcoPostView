@@ -531,7 +531,7 @@ Clearly the observed variance of the expected value is much smaller for 15 macro
 
 ## Edge functions
 
-There are different functions that can be used in the PPMN. These are not limited to the ones provided here. Upon request I can add different functions that might be useful for the user. Of course the standard functions consist of the linear equation and link functions used with GLMs. The standard LM and GLM with random effect structure can be fit with most basic R-packages (e.g., lmer, glmmTMB or gamlss).
+There are different functions that can be used in the PPMN. These are not limited to the ones provided here. Upon request I can add different functions that might be useful for the user. Of course the standard functions consist of the linear equation and link functions used with GLMs. The standard LM and GLM with random effect structure can be fit with most basic R-packages (e.g., lmer, glmmTMB or gamlss). Not that standard practice, such as assessing the residuals is here implicitly assumed.
 
 The syntax used for the PPMN express the equation using "b" ($\beta$ or $\theta$) for "b0" ($\beta_0$ or $\theta_0$) or "b1" ($\beta_1$ or $\theta_1$) etc. Each parameter in the equation follow the notation b0, b1, b2, ..., etc.
 
@@ -568,7 +568,7 @@ x_c=\frac{b_0}{(1+exp(\frac{(b_1-x_p)}{b_2}))}
 $$
 This equation can be fitted with the `nls` function from the `stats` package in R. See the example below
 
-```{r, sigmoidal model fit}
+```{r, sigmoidal model fit, fig.width=8, fig.height=3.5, echo=F, warning=FALSE}
 
 #load the stats package
 library(stats)
@@ -590,6 +590,13 @@ y <- rgamma(length(eta), eta^2/30^2, eta/30^2)
 #Create data frame
 df <- data.frame(x, y)
 
+#Plot as figure
+ggplot(df, aes(x, y))+
+  geom_point(size=3, alpha=0.3)+
+  geom_line(data=data.frame(x, eta), aes(x, eta), inherit.aes = F,
+            col="dodgerblue3", lwd=1.2)+
+  theme_classic()
+
 #Fit model
 sigmoidal_mod <- nls(y ~ SSlogis(x, b0, b1, b2), 
                      data = df,
@@ -610,7 +617,7 @@ x_c=b_0 \cdot exp(-exp( b_1 - b_2 \cdot x_p)))
 $$
 This equation can also be fitted with the `nls` function. 
 
-```{r, gompertz model fit}
+```{r, gompertz model fit, fig.width=8, fig.height=3.5, echo=F, warning=FALSE}
 
 #Model parameters
 b0 <- 200
@@ -629,6 +636,13 @@ y <- rgamma(length(eta), eta^2/30^2, eta/30^2)
 #Create data frame
 df <- data.frame(x, y)
 
+#Plot as figure
+ggplot(df, aes(x, y))+
+  geom_point(size=3, alpha=0.3)+
+  geom_line(data=data.frame(x, eta), aes(x, eta), inherit.aes = F,
+            col="dodgerblue3", lwd=1.2)+
+  theme_classic()
+
 #Fit model
 gompertz_mod <- nls(y ~ b0 * exp(-exp(b1 - b2*x)),
                     data = df,
@@ -645,9 +659,9 @@ summary(gompertz_mod)
 For the Gaussian equation the name is `gaussian`. b0 represents the peak (max), b1 the mean and b2 the standard deviation.
 
 $$
-x_c = b_0 * exp(-0.5 * (\frac{(x - b_1)}{b_2})^2)
+x_c = b_0 \cdot exp(-0.5 \cdot (\frac{(x - b_1)}{b_2})^2)
 $$
-```{r, gaussian model fit}
+```{r, gaussian model fit, fig.width=8, fig.height=3.5, echo=F, warning=FALSE}
 
 #Model parameters
 b0 <- 200
@@ -666,6 +680,13 @@ y <- rgamma(length(eta), eta^2/30^2, eta/30^2)
 #Create data frame
 df <- data.frame(x, y)
 
+#Plot as figure
+ggplot(df, aes(x, y))+
+  geom_point(size=3, alpha=0.3)+
+  geom_line(data=data.frame(x, eta), aes(x, eta), inherit.aes = F,
+            col="dodgerblue3", lwd=1.2)+
+  theme_classic()
+
 #Fit model
 gaussian_mod <- nls(y ~ b0 * exp(-0.5 * ((x - b1)/b2)^2),
   data = df,
@@ -677,7 +698,6 @@ summary(gaussian_mod)
 
 ```
 
-
 ### Bayesian classifier
 
 The Bayesian classifier is an equation that makes use of the mean and standard deviation of two groups. There is no process of fitting with maximum likelihood necessary. The name of this edge function is `class`. In this equation b0 and b1 are the mean and standard deviation of group 1, respectively. b2 and b3 are the mean and standard deviation of group 2. b5 is the proportion of group 1.
@@ -685,3 +705,35 @@ The Bayesian classifier is an equation that makes use of the mean and standard d
 $$
 x_c = Log(\frac{N(x_p | b_0, b_1)}{N(x_p | b_2, b_3)})\cdot Log(\frac{b_4}{1-b_4})
 $$
+
+For the sake of displaying the pattern.
+
+```{r, bayes clasifier plot, fig.width=8, fig.height=3.5, echo=F, warning=FALSE}
+
+#Model parameters
+b0 <- 20
+b1 <- 5
+b2 <- 100
+b3 <- 25
+b4 <- 0.5
+
+#Independent variables
+x  <- runif(150, 10, 80)
+
+#Dependent variable
+p   <- exp(dnorm(x, b0, b1, log=T) - dnorm(x, b2, b3, log=T))
+eta <- (p*b4)/((p*b4)+(1-b4))
+
+#Add some noise
+y <- rbinom(length(eta), 1, eta)
+
+#Create data frame
+df <- data.frame(x, y)
+
+#Plot as figure
+ggplot(df, aes(x, y))+
+  geom_point(size=3, alpha=0.3)+
+  geom_line(data=data.frame(x, eta), aes(x, eta), inherit.aes = F,
+            col="dodgerblue3", lwd=1.2)+
+  theme_classic()
+```

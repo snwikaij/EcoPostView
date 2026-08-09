@@ -52,8 +52,8 @@ build_ppmn   <- function(formula, data, txt_size=3, vertex_size=15,
 
   #Check if the correct edge functions are given
   e_fun <- sapply(formula, function(x) x["fun"])
-  if (!all(e_fun %in% c('identity', 'log', 'logit', 'sigmoidal', 'gaussian', 'gompertz', 'class'))){
-    stop("Not the correct edge function given in data set, it should be identity, log, logit, sigmoidal, gaussian or class")}
+  if (!all(e_fun %in% c('identity', 'log', 'logit', 'asymptotic', 'sigmoidal', 'gaussian', 'gompertz', 'class'))){
+    stop("Not the correct edge function given in data set, it should be identity, log, logit, asymptotic, sigmoidal, gaussian, gompertz or class")}
 
   #match edge formula with the provided data
   matches        <- lapply(formula, function(x){
@@ -91,7 +91,7 @@ build_ppmn   <- function(formula, data, txt_size=3, vertex_size=15,
     if(any(edge_fun  %in%  c('identity', 'log', 'logit'))){
       pos_par       <- paste0(c("mu_b", "se_b"), rep(seq(0, length_iv, 1), each=2))
       pos_trunc     <- paste0(c("a_b", "b_b"), rep(seq(0, length_iv, 1), each=2))
-    }else if(edge_fun  %in% c('sigmoidal', 'gompertz')){
+    }else if(edge_fun  %in% c('asymptotic', 'sigmoidal', 'gompertz')){
       pos_par       <- c("mu_b0", "se_b0", "mu_b1", "se_b1", paste0(c("mu_b", "se_b"), rep(seq(2, length_iv+1, 1), each=2)))
       pos_trunc     <- c("a_b0", "b_b0", "a_b1", "b_b1", paste0(c("a_b", "b_b"), rep(seq(2, length_iv+1, 1), each=2)))
     }else if('class' %in% edge_fun){
@@ -234,7 +234,7 @@ build_ppmn   <- function(formula, data, txt_size=3, vertex_size=15,
     sub      <- param_est[[i]]
 
     indep    <- strsplit(strsplit(names(param_est)[i], "\\~")[[1]][2], "\\+")[[1]]
-    if(e_fun[[i]] %in% c("sigmoidal", 'gompertz', "gaussian")) {
+    if(e_fun[[i]] %in% c('asymptotic', "sigmoidal", 'gompertz', "gaussian")) {
       indep <- c(NA, NA, indep)
     } else if (e_fun[[i]] %in% c("class")){
       indep <- c(NA, indep, NA, indep, NA)

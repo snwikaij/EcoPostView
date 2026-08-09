@@ -356,9 +356,9 @@ Of course if bias is considered neglect non can be performed (method=0). I still
 <span id="cb15-7"><a href="meta-analysis-over-effect-sizes-and-model-parameters.html#cb15-7" tabindex="-1"></a><span class="co">#Extract the information from the results based on a selected threshold</span></span>
 <span id="cb15-8"><a href="meta-analysis-over-effect-sizes-and-model-parameters.html#cb15-8" tabindex="-1"></a>extract_abc <span class="ot">&lt;-</span> <span class="fu">extrabc</span>(result_abc, <span class="at">xpos =</span> <span class="dv">4</span>, <span class="at">dist_threshold =</span> <span class="fl">0.052</span>)</span></code></pre></div>
 <pre><code>##   Statistic   Mean     SE     ll     ul
-## 1         c 0.7808 0.0808 0.6338 0.9045
-## 2     mu(z) 1.2962 0.4851 0.4147 1.9843
-## 3     sd(z) 0.9358 0.1745 0.6759 1.2480</code></pre>
+## 1         c 0.7763 0.0857 0.5901 0.8835
+## 2     mu(z) 1.3278 0.4785 0.5215 2.0528
+## 3     sd(z) 0.9287 0.1792 0.6524 1.2499</code></pre>
 <div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="meta-analysis-over-effect-sizes-and-model-parameters.html#cb17-1" tabindex="-1"></a><span class="co">#Plot the histogram of the z-values with the simulated density lines of the posterior</span></span>
 <span id="cb17-2"><a href="meta-analysis-over-effect-sizes-and-model-parameters.html#cb17-2" tabindex="-1"></a><span class="fu">plot</span>(extract_abc<span class="sc">$</span>hist)</span></code></pre></div>
 <p><img src="EcoPostView_files/figure-html/exploring_bias_with_ABC-rejection-1.png" alt="" width="748.8" /></p>

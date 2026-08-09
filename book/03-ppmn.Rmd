@@ -250,9 +250,7 @@ formula=list(c(fun="log", edge="Chl~TN+TP", trans="log",
              
              c(fun="log", edge="Taxa~Chl", trans="log",
                prior_mu_b0=0, prior_se_b0=5,
-               prior_mu_b1=c(0.3, 0.5), prior_se_b1=c(0.5, 1), trunc_a_b1=0)
-             
-             )
+               prior_mu_b1=c(0.3, 0.5), prior_se_b1=c(0.5, 1), trunc_a_b1=0))
 
 #Build the foundational PPMN
 foundational_ppmn <- build_ppmn(formula = formula, data = example5, 
@@ -268,7 +266,7 @@ foundational_ppmn$Plot_as_BIP
 
 The network structure shows only one view of the information we incorporated. As with the results of Kaijser et al. (2025) we might be interested in viewing the association or the marginal edge-function itself an added variable plot. To do so an example data frame is created as given below. If we wish to omitted the points as we do not actually have real data then set the argument `alpha` to 0.
 
-```{r, examp_2_ppmn_b,fig.width=8, fig.height=6, echo=F, warning=F}
+```{r, examp_2_ppmn_b,fig.width=8, fig.height=6, warning=F}
 
 library(cowplot)
 
@@ -311,10 +309,12 @@ $$
 
 Below an example of the predictive fit function applied to the the example data given above.
 
-```{r, examp_2_ppmn_c, fig.width=8, fig.height=8, echo=F, warning=F}
+```{r, examp_2_ppmn_c, fig.width=8, fig.height=8, warning=F}
 
+#Apply the pred_fit function
 pred_performance <- pred_fit(object = foundational_ppmn, new_data = df)
 
+#Plot the results together
 cowplot::plot_grid(pred_performance$plots$Balance, #Predictive balance
                    pred_performance$plots$Correlation, #Predictive correlation
                    pred_performance$plots$Stdz, #Predictive precision
@@ -369,7 +369,7 @@ The full foundational PPMN has now been build and all previous function can be a
 
 ### Default training mode
 
-```{r, upload training data, echo=F, warning=F}
+```{r, upload training data, warning=F}
 
 #Load example of training data
 data(train_data)
@@ -389,7 +389,7 @@ updated_ppmn$Residuals$residual_plot
 
 It is also possible to update by setting the update strength as how much the data is allowed to dominate. This is performed by setting the amount of information that can be learned from the data. This is defined via the Kullback-Leibler divergence (KL-divergence).
 
-```{r, updating via KL-divergence, fig.width=8, fig.height=8, echo=F, warning=FALSE}
+```{r, updating via KL-divergence, fig.width=8, fig.height=8, warning=FALSE}
 
 #Update the foundational ppmn allowing the data to dominate by 5%
 updated_ppmn_5 <- update_ppmn(object = foundational_ppmn, new_data = train_data, kl_frac = 0.05)
@@ -413,7 +413,7 @@ Below  the box plots the number behind `Kl=` indicates the information learned f
 
 ### Display the marginal trends
 
-```{r, marginal update plots, fig.width=8, fig.height=6, echo=F, warning=F}
+```{r, marginal update plots, fig.width=8, fig.height=6, warning=F}
 
 #Create the marginal plots
 marginal_fig_HCO3 <- marginal_ppmn(updated_ppmn, response = "HCO3", data = train_data)
@@ -437,7 +437,7 @@ These patterns can also be observed when we would move to validation using the v
 
 ### Apply predictive fit to validation data
 
-```{r, apply updated pppn to validation data, fig.width=8, fig.height=6, echo=F, warning=F}
+```{r, apply updated pppn to validation data, fig.width=8, fig.height=6, warning=F}
 
 #Assess the performance of the updated ppmn on the validation data 
 pred_fit_val  <- pred_fit(updated_ppmn, val_data, rotate_x = 45, hjust = 1)
@@ -458,7 +458,7 @@ The root estimation allows a user to estimate value at the vertices that are roo
 
 I would need to generate monte carlo sampels for TP and Temperature that represent the priors.
 
-```{r, root estimation monte carlo priors, fig.width=8, fig.height=3.5, echo=F, warning=FALSE}
+```{r, root estimation monte carlo priors, fig.width=8, fig.height=3.5, warning=FALSE}
 
 #Set priors for TP and Temp
 prior        <- data.frame(TP = rgamma(3000, 80^2/100^2, 80/100^2),
@@ -482,7 +482,7 @@ ncol=2)
 
 The root estimation needs to be initiated by setting the targeted vertex that is observed (child). In this example this is `Macrophytes`. Standard display of the prior and posterior uses a standard Gaussian kernel density. However, using the Gaussian the visualization might reach negative values. 
 
-```{r, root estimation 15 and 1 macrophytes, fig.width=8, fig.height=4, echo=F, warning=FALSE}
+```{r, root estimation 15 and 1 macrophytes, fig.width=8, fig.height=4, warning=FALSE}
 
 #run estimation for 15 macrophytes
 mac_15 <-  root_est(updated_ppmn, child = "Macrophytes",
@@ -501,7 +501,7 @@ mac_1 <-  root_est(updated_ppmn, child = "Macrophytes",
 
 For 15 macrophyte species the expected values for TP and temperature are displayed as below.
 
-```{r, figure 15 macrophytes, fig.width=8, fig.height=3.5, echo=F, warning=FALSE}
+```{r, figure 15 macrophytes, fig.width=8, fig.height=3.5, warning=FALSE}
 
 #Plot results for 15 macrophytes
 cowplot::plot_grid(mac_15$plots$TP, 
@@ -515,7 +515,7 @@ mac_15$summary
 
 For 1 macrophyte species the expected valuss for TP and temperature are displayed as below.
 
-```{r, figure 1 macrophyte, fig.width=8, fig.height=3.5, echo=F, warning=FALSE}
+```{r, figure 1 macrophyte, fig.width=8, fig.height=3.5, warning=FALSE}
 
 #Plot results for 1 macrophyte
 cowplot::plot_grid(mac_1$plots$TP, 
@@ -568,7 +568,7 @@ x_c=\frac{b_0}{(1+exp(\frac{(b_1-x_p)}{b_2}))}
 $$
 This equation can be fitted with the `nls` function from the `stats` package in R. See the example below
 
-```{r, sigmoidal model fit, fig.width=8, fig.height=3, echo=F, warning=FALSE}
+```{r, sigmoidal model fit, fig.width=8, fig.height=3, warning=FALSE}
 
 #load the stats package
 library(stats)
@@ -613,11 +613,11 @@ summary(sigmoidal_mod)
 For the gompertz equation the name is `gompertz`. In this equation, b0 is the asymptote, b1 is the displacement constant and b2 is the growth rate. This function also allows other parameters to access the equation $b_1-x_1+\sum_{p=4}^P( b_p \cdot x_2)$ similar to the sigmoidal equation, but has the same curse.
 
 $$
-x_c=b_0 \cdot exp(-exp( b_1 - b_2 \cdot x_p)))
+x_c=b_0 \cdot exp(-exp( b_1 - b_2 \cdot x_p))
 $$
 This equation can also be fitted with the `nls` function. 
 
-```{r, gompertz model fit, fig.width=8, fig.height=3, echo=F, warning=FALSE}
+```{r, gompertz model fit, fig.width=8, fig.height=3, warning=FALSE}
 
 #Model parameters
 b0 <- 200
@@ -661,7 +661,7 @@ For the Gaussian equation the name is `gaussian`. b0 represents the peak (max), 
 $$
 x_c = b_0 \cdot exp(-0.5 \cdot (\frac{(x - b_1)}{b_2})^2)
 $$
-```{r, gaussian model fit, fig.width=8, fig.height=3, echo=F, warning=FALSE}
+```{r, gaussian model fit, fig.width=8, fig.height=3, warning=FALSE}
 
 #Model parameters
 b0 <- 200
@@ -708,7 +708,7 @@ $$
 
 For the sake of displaying the pattern.
 
-```{r, bayes clasifier plot, fig.width=8, fig.height=3, echo=F, warning=FALSE}
+```{r, bayes clasifier plot, fig.width=8, fig.height=3, warning=FALSE}
 
 #Model parameters
 b0 <- 20

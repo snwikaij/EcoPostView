@@ -561,32 +561,127 @@ $$
 
 ### Sigmoidal equation
 
-For the three parameter sigmoidal equation used of which the name is `sigmoidal`. b0 describes the asymptote, b1 the midpoint and b2 the scale parameter. Indeed multiple parents are possible with this function which continues at b4. The parameters then enter as $b_1-x_1+\sum_{p=4}^P( b_p\cdotx_2)$ and continue from $b_4$ onwards. However, this function seems relatively unstable.
+For the three parameter sigmoidal equation used of which the name is `sigmoidal`. b0 describes the asymptote, b1 the midpoint and b2 the scale parameter. Indeed multiple parents are possible with this function which continues at b4. The parameters then enter as $b_1-x_1+\sum_{p=4}^P( b_p \cdot x_2)$ and continue from $b_4$ onward. However, this function seems relatively unstable.
 
 $$
 x_c=\frac{b_0}{(1+exp(\frac{(b_1-x_p)}{b_2}))}
 $$
+This equation can be fitted with the `nls` package in R. See the example below
+
+```{r, sigmoidal model fit}
+
+#load the stats package
+library(stats)
+
+#Model parameters
+b0 <- 200
+b1 <- 6
+b2 <- 0.5
+
+#Independent variables
+x  <- runif(150, 3.5, 10)
+
+#Dependent variable
+eta <- b0/(1+exp((b1-x)/b2))
+
+#Add some noise
+y <- rgamma(length(eta), eta^2/30^2, eta/30^2)
+
+#Create data frame
+df <- data.frame(x, y)
+
+#Fit model
+sigmoidal_mod <- nls(y ~ SSlogis(x, b0, b1, b2), 
+                     data = df,
+                     control = nls.control(maxiter = 5000, warnOnly = TRUE),
+                     start = list(b0 = 200, b1=5, b2=.5))
+
+#Display estimated parameters that are being used in the PPMN
+summary(sigmoidal_mod)
+
+```
 
 ### Gompertz equation
 
-For the gompertz equation the name is `gompertz`. In this equation, b0 is the asymptote, b1 is the displacement constant and b2 is the growth rate. This function also allows other parameters to access the equation $b_1-x_1+\sum_{p=4}^P( b_p\cdotx_2)$ similair to the sigmoidal equation, but has the same curse.
+For the gompertz equation the name is `gompertz`. In this equation, b0 is the asymptote, b1 is the displacement constant and b2 is the growth rate. This function also allows other parameters to access the equation $b_1-x_1+\sum_{p=4}^P( b_p \cdot x_2)$ similar to the sigmoidal equation, but has the same curse.
 
 $$
-x_c=b0 \cdot exp(-exp( b1 - b2 \cdot x_k)))
+x_c=b_0 \cdot exp(-exp( b_1 - b_2 \cdot x_p)))
 $$
+This equation can also be fitted with the `nls` package in R. 
+
+```{r, gompertz model fit}
+
+#Model parameters
+b0 <- 200
+b1 <- 6
+b2 <- 1
+
+#Independent variables
+x  <- runif(150, 3.5, 10)
+
+#Dependent variable
+eta <- b0*exp(-exp(b1-b2*x))
+
+#Add some noise
+y <- rgamma(length(eta), eta^2/30^2, eta/30^2)
+
+#Create data frame
+df <- data.frame(x, y)
+
+#Fit model
+gompertz_mod <- nls(y ~ b0 * exp(-exp(b1 - b2*x)),
+                    data = df,
+                    control = nls.control(maxiter = 5000, warnOnly = TRUE),
+                    start = list(b0 = 200, b1 = 5, b2 = 1))
+
+#Display estimated parameters that are being used in the PPMN
+summary(gompertz_mod)
+
+```
 
 ### Gaussian equation
 
 For the Gaussian equation the name is `gaussian`. b0 represents the peak (max), b1 the mean and b2 the standard deviation.
 
 $$
-x_c = b0 * exp(-0.5 * (\frac{(x - b1)}{b2})^2)
+x_c = b_0 * exp(-0.5 * (\frac{(x - b_1)}{b_2})^2)
 $$
+```{r, gaussian model fit}
+
+#Model parameters
+b0 <- 200
+b1 <- 6
+b2 <- 1
+
+#Independent variables
+x  <- runif(150, 1.5, 9)
+
+#Dependent variable
+eta <- b0*exp(-0.5*((x-b1)/b2)^2)
+
+#Add some noise
+y <- rgamma(length(eta), eta^2/30^2, eta/30^2)
+
+#Create data frame
+df <- data.frame(x, y)
+
+#Fit model
+gaussian_mod <- nls(y ~ b0 * exp(-0.5 * ((x - b1)/b2)^2),
+  data = df,
+  control = nls.control(maxiter = 5000, warnOnly = TRUE),
+  start = list(b0 = 200,b1 = 6, b2 = 1.5))
+
+#Display estimated parameters that are being used in the PPMN
+summary(gaussian_mod)
+
+```
+
 
 ### Bayesian classifier
 
-The Bayesian classifier is an equation that makes use of the mean and standard deviation of two groups. The name of this edge function is `class`. In this equation b0 and b1 are the mean and standard deviation of group 1, respectively. b2 and b3 are the mean and standard deviation of group 2. b5 is the proportion of group 1.
+The Bayesian classifier is an equation that makes use of the mean and standard deviation of two groups. There is no process of fitting with maximum likelihood necessary. The name of this edge function is `class`. In this equation b0 and b1 are the mean and standard deviation of group 1, respectively. b2 and b3 are the mean and standard deviation of group 2. b5 is the proportion of group 1.
 
 $$
-x_c = Log(\frac{N(x_p | b0, b1)}{N(x_p | b0, b1)})\cdot Log(\frac{b5}{1-b5})
+x_c = Log(\frac{N(x_p | b0, b1)}{N(x_p | b2, b3)})\cdot Log(\frac{b4}{1-b4})
 $$

@@ -234,19 +234,17 @@ code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warni
 <p>Ecological information is scattered throughout the literature in varying formats. It is often case-specific and not representative of the full range of ecological conditions encountered in the world. As a result, this is limiting the use and generalization of our claims. Moreover, there is no coherent method to synthesize, re-use and generalize large amount of ecological information into understandable and predictive models. This lack of structure hampers ecological understanding and leads to a loss of valuable information.</p>
 <p>As ecologists, we are not only interested in qualitative stories based on isolated, case-specific explanations or post-hoc rationalizations. We aim to build cumulative information and apply it across diverse range of conditions. Working with logic, information, numbers, metadata, and stochastic processes can help solidify our understanding of ecological relationships. These tools enable us to make information based statements and generate predictions. This R package is designed to assist with exactly that. Its goal is to facilitate the synthesize of multiple sources of information, combining their strengths to generate broader insights.</p>
 <p>The core function of the package utilizes outputs from multiple fitted Linear and Generalized Linear Models ((G)LMs) and Non-Linear-Models (NLMs), leveraging Bayesian methods to generalize their parameters into a single, meta-analytic model. These synthesized model can then be visualized (see Fig. 1 below) and used to make predictions on new data. The ultimate aim is to provide a way to combine information and generalized understanding of ecological relationships by drawing from all available sources of information.</p>
-<pre><code>## Posit Community (formerly RStudio Community) is a great place to get help:
-## https://forum.posit.co/c/tidyverse</code></pre>
 <p><img src="EcoPostView_files/figure-html/intro-plot-1.png" alt="" width="768" /></p>
 <p><em>Figure 1: Expected evenness of aquatic invertebrates as a function of conductivity and fine sediment fraction within a river reach. The left panel shows the relationship on the response scale, while the right panel presents it on the log scale for improved visualization.</em></p>
 <p>This package offers tools for ecological statistical modeling, with a strong emphasis on Bayesian methods and visualisation. A basic understanding of R is sufficient to use the core functions. However, some understanding of functions and variables is needed to apply the full package. Please note that this is an actively developed R package, and improvements or updates may be introduced over time.</p>
 <div id="r-package-installation" class="section level2 hasAnchor" number="2.1">
 <h2><span class="header-section-number">2.1</span> R-package installation<a href="introduction.html#r-package-installation" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>To start using this R-package, both JAGS and devtools must be installed. JAGS can be installed from <a href="https://sourceforge.net/projects/mcmc-jags/" class="uri">https://sourceforge.net/projects/mcmc-jags/</a> and devtools can be installed in R via CRAN. The most recent version of the EcoPostView it can be installed from GitHub. Of course, any problems, questions or possible improvements can be directed to me.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="introduction.html#cb2-1" tabindex="-1"></a><span class="co">#install.packages(&quot;devtools&quot;)</span></span>
-<span id="cb2-2"><a href="introduction.html#cb2-2" tabindex="-1"></a><span class="fu">library</span>(devtools)</span></code></pre></div>
-<pre><code>## Loading required package: usethis</code></pre>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="introduction.html#cb4-1" tabindex="-1"></a><span class="co">#install.github(&quot;snwikaij/EcoPostView&quot;)</span></span>
-<span id="cb4-2"><a href="introduction.html#cb4-2" tabindex="-1"></a><span class="fu">library</span>(EcoPostView)</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="introduction.html#cb1-1" tabindex="-1"></a><span class="co">#install.packages(&quot;devtools&quot;)</span></span>
+<span id="cb1-2"><a href="introduction.html#cb1-2" tabindex="-1"></a><span class="fu">library</span>(devtools)</span>
+<span id="cb1-3"><a href="introduction.html#cb1-3" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="introduction.html#cb1-4" tabindex="-1"></a><span class="co">#install.github(&quot;snwikaij/EcoPostView&quot;)</span></span>
+<span id="cb1-5"><a href="introduction.html#cb1-5" tabindex="-1"></a><span class="fu">library</span>(EcoPostView)</span></code></pre></div>
 
 </div>
 </div>

@@ -566,7 +566,7 @@ For the three parameter sigmoidal equation used of which the name is `sigmoidal`
 $$
 x_c=\frac{b_0}{(1+exp(\frac{(b_1-x_p)}{b_2}))}
 $$
-This equation can be fitted with the `nls` package in R. See the example below
+This equation can be fitted with the `nls` function from the `stats` package in R. See the example below
 
 ```{r, sigmoidal model fit}
 
@@ -608,7 +608,7 @@ For the gompertz equation the name is `gompertz`. In this equation, b0 is the as
 $$
 x_c=b_0 \cdot exp(-exp( b_1 - b_2 \cdot x_p)))
 $$
-This equation can also be fitted with the `nls` package in R. 
+This equation can also be fitted with the `nls` function. 
 
 ```{r, gompertz model fit}
 
@@ -683,5 +683,5 @@ summary(gaussian_mod)
 The Bayesian classifier is an equation that makes use of the mean and standard deviation of two groups. There is no process of fitting with maximum likelihood necessary. The name of this edge function is `class`. In this equation b0 and b1 are the mean and standard deviation of group 1, respectively. b2 and b3 are the mean and standard deviation of group 2. b5 is the proportion of group 1.
 
 $$
-x_c = Log(\frac{N(x_p | b0, b1)}{N(x_p | b2, b3)})\cdot Log(\frac{b4}{1-b4})
+x_c = Log(\frac{N(x_p | b_0, b_1)}{N(x_p | b_2, b_3)})\cdot Log(\frac{b_4}{1-b_4})
 $$

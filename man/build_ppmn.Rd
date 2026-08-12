@@ -14,7 +14,7 @@ build_ppmn(
   fun_width = 0.5,
   fun_height = 0.5,
   fun_lwd = 0.4,
-  node_lwd = 0.4,
+  vertex_lwd = 0.4,
   arrow_size = 2,
   arrow_offset = 5.5,
   layout_type = "auto",
@@ -40,7 +40,7 @@ build_ppmn(
 
 \item{fun_lwd}{Width of the edge-function vetices}
 
-\item{node_lwd}{Width of the outlines variable vertices}
+\item{vertex_lwd}{Width of the outlines variable vertices}
 
 \item{arrow_size}{Size of the arrow lines}
 

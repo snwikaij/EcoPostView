@@ -9,7 +9,7 @@
 #' @param fun_width Width of the vertices representing the edge-functions in the Bipartite graph
 #' @param fun_height Height of the vertices representing the edge-functions in the Bipartite graph
 #' @param fun_lwd Width of the edge-function vetices
-#' @param node_lwd Width of the outlines variable vertices
+#' @param vertex_lwd Width of the outlines variable vertices
 #' @param arrow_size Size of the arrow lines
 #' @param arrow_offset Distance of the arrows from the vertices
 #' @param layout_type Type of layout
@@ -39,7 +39,7 @@
 build_ppmn   <- function(formula, data, txt_size=3, vertex_size=15,
                          vertex_width=0.21, vertex_height=0.5,
                          fun_width=0.5, fun_height=0.5,
-                         fun_lwd=0.4, node_lwd=0.4,
+                         fun_lwd=0.4, vertex_lwd=0.4,
                          arrow_size=2, arrow_offset=5.5,
                          layout_type="auto", circular=F){
 
@@ -169,8 +169,8 @@ build_ppmn   <- function(formula, data, txt_size=3, vertex_size=15,
 
     g_vis <- igraph::graph_from_edgelist(visual_edges, directed = TRUE)
 
-    # graph for visualisation: bipartite node-function graph
-    bip_edges <- do.call(rbind, lapply(seq_along(edges), function(i){
+    # graph for visualisation: directed bipartite node-function graph
+    dbn_edges <- do.call(rbind, lapply(seq_along(edges), function(i){
       parts   <- strsplit(edges[i], "~")[[1]]
       dep     <- parts[1]
       indep   <- strsplit(parts[2], "\\+")[[1]]
@@ -180,11 +180,11 @@ build_ppmn   <- function(formula, data, txt_size=3, vertex_size=15,
       rbind(cbind(from = indep,    to = fun_node),
         cbind(from = fun_node, to = dep))}))
 
-    g_bip <- igraph::graph_from_edgelist(bip_edges, directed = TRUE)
+    g_dbn <- igraph::graph_from_edgelist(dbn_edges, directed = TRUE)
 
-    igraph::V(g_bip)$type  <- ifelse(grepl("~", igraph::V(g_bip)$name), "function", "node")
-    igraph::V(g_bip)$label <- ifelse(igraph::V(g_bip)$type == "function", sub("_.*", "", igraph::V(g_bip)$name),
-    igraph::V(g_bip)$name)
+    igraph::V(g_dbn)$type  <- ifelse(grepl("~", igraph::V(g_dbn)$name), "function", "node")
+    igraph::V(g_dbn)$label <- ifelse(igraph::V(g_dbn)$type == "function", sub("_.*", "", igraph::V(g_dbn)$name),
+    igraph::V(g_dbn)$name)
 
     # sorting graph
     g_exec     <- igraph::graph_from_edgelist(visual_edges, directed = TRUE)
@@ -202,8 +202,8 @@ build_ppmn   <- function(formula, data, txt_size=3, vertex_size=15,
         edges = visual_edges),
 
       bipartite_dag = list(
-        graph = g_bip,
-        edges = bip_edges),
+        graph = g_dbn,
+        edges = dbn_edges),
 
       exec_dag = list(
         graph = g_exec,
@@ -294,20 +294,20 @@ build_ppmn   <- function(formula, data, txt_size=3, vertex_size=15,
           axis.line = element_blank(),
           axis.ticks = element_blank()))
 
-  #Extract visual Bipartite
-  g_bip       <- dag_info$bipartite_dag$graph
-  lay         <- suppressMessages(ggraph::create_layout(g_bip, layout = layout_type, circular = circular))
+  #Extract visual Directed Bipartite Network
+  g_dbn       <- dag_info$bipartite_dag$graph
+  lay         <- suppressMessages(ggraph::create_layout(g_dbn, layout = layout_type, circular = circular))
 
   nodes_var   <- lay[lay$type == "node", ]
   nodes_fun   <- lay[lay$type == "function", ]
 
   #Plot bipartite
-  bip_fig <- suppressMessages(
-  ggraph::ggraph(g_bip, layout = layout_type, circular = circular) +
+  dbn_fig <- suppressMessages(
+  ggraph::ggraph(g_dbn, layout = layout_type, circular = circular) +
     ggraph::geom_edge_link(edge_width=0.4,
                    arrow = arrow(length = unit(arrow_size, "mm")),
                    end_cap = circle(arrow_offset, "mm")) +
-    ggforce::geom_ellipse(linewidth=node_lwd,
+    ggforce::geom_ellipse(linewidth=vertex_lwd,
                  data = nodes_var,
                  aes(x0 = x,
                      y0 = y,
@@ -342,7 +342,7 @@ build_ppmn   <- function(formula, data, txt_size=3, vertex_size=15,
   dimnames(Sigma) <- list(theta_names, theta_names)
 
   return(list(Plot_as_DAG=dag_fig,
-              Plot_as_BIP=bip_fig,
+              Plot_as_DBN=dbn_fig,
               `Parameter table`=full_table,
               Formula=formula,
               Parameters=param_est,

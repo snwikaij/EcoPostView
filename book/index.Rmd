@@ -27,9 +27,11 @@ body {
 
 ```{r setup_1, include = FALSE}
 library(EcoPostView)
-
+#
+#remove.packages("EcoPostView")
+#
 #unlink("C:/Users/admin/AppData/Local/R/win-library/4.3/EcoPostView",recursive = TRUE, force = TRUE)
-
+#
 #unlink("C:/Users/admin/AppData/Local/R/win-library/4.3/_build/00LOCK-EcoPostView", recursive = TRUE, force = TRUE)
 #
 #unlink("C:/Users/admin/OneDrive/Bureaublad/EcoPostView.Rcheck", recursive = TRUE, force = TRUE)

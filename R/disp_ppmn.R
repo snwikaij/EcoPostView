@@ -4,12 +4,13 @@
 #' @param new_data New dataset with all root nodes and least one child node present
 #' @param nsim Number of simulations needed for updating
 #' @param level Credibility level (default level = 0.9)
+#' @param gd_display Display the Generalized Displacement (GD) in the name
 #'
 #' @export
-disp_ppmn <- function(object, new_data, nsim=1000, level=0.9){
+disp_ppmn <- function(object, new_data, nsim=1000, level=0.9, gd_display=F){
 
   pred1    <- predict_ppmn(object, new_data, nsim = nsim)
-  ppmn_100 <- update_ppmn(object, kl_frac = 1, val_data, nsim=nsim)
+  ppmn_100 <- update_ppmn(object, kl_frac = .99, new_data, nsim=nsim)
   pred_100 <- predict_ppmn(ppmn_100, new_data, nsim = nsim)
 
   #select predicted nodes
@@ -30,8 +31,9 @@ disp_ppmn <- function(object, new_data, nsim=1000, level=0.9){
 
   #substract difference
   diffpred <- pred1_stack-pred100_stack
+  diffpred <- na.omit(diffpred)
   #standardize per standard mod
-  sdpred1  <- apply(pred1_stack, 2, sd)
+  sdpred1  <- apply(pred1_stack, 2, function(x) sd(x, na.rm = T))
   #divide diff so by sd standard model
   stdzdiff <- sweep(diffpred, 2, sdpred1, "/")
 
@@ -47,8 +49,14 @@ disp_ppmn <- function(object, new_data, nsim=1000, level=0.9){
     q <- quantile(d, c((1-level)/2, 1-(1-level)/2))
     data.frame(Variable=obs_nodes[i], GD=m_link[i], median=median(d), map=maxpost(d), mu=mean(d), ll=q[1], ul=q[2])}))
 
+  if(gd_display == T){
+    setasname <- paste0(rownames(forestplot), "\nGD=",round(forestplot$GD,2))
+  }else{
+    setasname <- rownames(forestplot)
+  }
+
   #create final results
-  plot <- ggplot(forestplot, aes(paste0(rownames(forestplot), "\nGD=",round(GD,2)), median)) +
+  plot <- ggplot(forestplot, aes(setasname, median)) +
     geom_point()+
     geom_errorbar(aes(ymin = ll, ymax = ul),
                   width = 0, linewidth = 0.5)+

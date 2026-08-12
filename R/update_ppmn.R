@@ -188,54 +188,96 @@ update_ppmn <- function(object, new_data, nsim = 3000, level = 0.9,
   #Calibrator stuff
   lambda_calibrate <- function(loss, y_obs, y_sim, eps, max_lambda, family){
 
-    ok_obs      <- is.finite(y_obs)
-    y_obs       <- y_obs[ok_obs]
-    y_sim       <- y_sim[ok_obs, , drop = FALSE]
+    #remove observations that are  missing
+    ok_obs <- is.finite(y_obs)
+    y_obs  <- y_obs[ok_obs]
+    y_sim  <- y_sim[ok_obs, , drop = FALSE]
 
-    ok_part     <- is.finite(loss) & apply(y_sim, 2, function(x) all(is.finite(x)))
-    loss        <- loss[ok_part]
-    y_sim       <- y_sim[, ok_part, drop = FALSE]
+    #Pprotect against a non-finite simulation loss
+    bad_loss <- !is.finite(loss)
+
+    if(any(bad_loss)){
+      finite_loss <- loss[is.finite(loss)]
+
+      cap_loss <- if(length(finite_loss)){
+        max(finite_loss)
+      }else{
+        1
+      }
+
+      loss[bad_loss] <- cap_loss
+    }
 
     score <- function(lambda){
 
       w <- stable_weights(loss, lambda, eps)
-      if(any(!is.finite(w)) || sum(w) <= 0){return(.Machine$double.xmax)}
 
-      y_pred <- as.numeric(y_sim %*% w)
+      if(any(!is.finite(w)) || sum(w) <=0){return(.Machine$double.xmax)}
+
+      y_pred <- apply(y_sim, 1, function(y){
+
+        ok <- is.finite(y)
+
+        if(!any(ok)){return(NA_real_)}
+
+        #where prediction is NA set 0
+        ww <- w
+        ww[!ok] <- 0
+        ww <- ww/sum(ww)
+
+        sum(y[ok] * ww[ok])})
 
       if(family %in% c("binary", "beta")){
         p      <- pmin(pmax(y_pred, eps), 1-eps)
         r_data <- (y_obs-p)/sqrt(p*(1-p)+eps)
 
         r_part <- apply(y_sim, 2, function(pj){
-          pj   <- pmin(pmax(pj, eps), 1-eps)
-          mean((y_obs-pj)/sqrt(pj*(1-pj)+eps), na.rm = TRUE)})
 
-      } else if(family == "count"){
+          pj <- pmin(pmax(pj, eps), 1-eps)
+
+          mean(
+            (y_obs-pj)/sqrt(pj*(1-pj)+eps),
+            na.rm = TRUE
+          )
+        })
+
+      }else if(family == "count"){
         r_data <- sqrt(y_obs+3/8) - sqrt(pmax(y_pred, eps)+3/8)
 
-        r_part <- apply(y_sim, 2, function(mu){sqrt(y_obs + 3/8) - sqrt(pmax(mu, eps) + 3/8)})
-        r_part <- colMeans(r_part, na.rm = TRUE)
+        r_part <- apply(y_sim, 2, function(mu){
+        mean(sqrt(y_obs+3/8) - sqrt(pmax(mu, eps)+3/8), na.rm = TRUE)})
 
-      } else {
+      }else{
         r_data <- y_obs-y_pred
-        r_part <- apply(y_sim, 2, function(mu){mean(y_obs-mu, na.rm = TRUE)})
-      }
 
+        r_part <- apply(y_sim,2, function(mu){mean(y_obs-mu, na.rm = TRUE)})}
 
-      se_data  <- sd(r_data, na.rm = TRUE)/sqrt(length(r_data))
-      ESS      <- 1/sum(w^2)
+      r_data <- r_data[is.finite(r_data)]
 
-      mu_r     <- sum(w * r_part)
-      sd_post  <- sqrt(sum(w*(r_part-mu_r)^2))
-      se_post  <- sd_post/sqrt(ESS)
+      if(length(r_data) < 2){
+        return(.Machine$double.xmax)}
 
-      out      <- abs(se_post-se_data)
-      if(!is.finite(out)){.Machine$double.xmax}else{out}
-    }
+      se_data <- sd(r_data)/sqrt(length(r_data))
 
-    optimize(score, interval = c(0, max_lambda))$minimum
-  }
+      ok_r <- is.finite(r_part)
+
+      if(sum(ok_r) < 2){return(.Machine$double.xmax)}
+
+      ww <- w
+      ww[!ok_r] <- 0
+      ww <- ww/sum(ww)
+
+      mu_r <- sum(ww[ok_r] * r_part[ok_r])
+
+      sd_post <- sqrt(sum(ww[ok_r] * (r_part[ok_r]-mu_r)^2))
+      ESS     <- 1/sum(ww^2)
+
+      se_post <- sd_post/sqrt(ESS)
+      out    <- abs(se_post-se_data)
+
+      if(!is.finite(out)){.Machine$double.xmax}else{out}}
+
+    optimize(score,interval = c(0, max_lambda))$minimum}
 
   ############
   #null model#
@@ -471,6 +513,9 @@ update_ppmn <- function(object, new_data, nsim = 3000, level = 0.9,
 
   #extract se params
   theta_var <- unlist(lapply(object$Parameters, function(e) {sapply(e, function(p) as.numeric(p["se"])^2)}))
+
+  #protect agains se <= 0
+  theta_var[!is.finite(theta_var) | theta_var <= 0] <- eps
 
   Sigma_new           <- diag(theta_var)
   dimnames(Sigma_new) <- list(theta_names, theta_names)

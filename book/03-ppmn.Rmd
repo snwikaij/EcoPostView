@@ -187,10 +187,10 @@ formula=list(c(fun="log", edge="Chl~TP", trans="log"))
 The PPMN however aims at maximizing information use. Therefore it uses a (empirical) Bayesian Meta-analysis in which the priors maximize the information to which a model cannot be fitted. Both the likelihood and prior in this model are assumed to approximate a Gaussian behavior. Therefore, the estimated parameters are specified via the mean `mu` ($\mu$) and standard error `se`. The prior for `mu` of each parameter b0, b1, b..., bn in an edge-function need tos be indicated with `prior_mu_b...` the prior for the `se` needs to be indicated with  `prior_se_b...`. If no prior is given the `mu` this defaults to 0 and if no prior is given for the `se` this defaults to 1000. Additionally, it is possible to truncate (cutoff) the distribution, restricting the outcome to only a part of the parameter space. For this we the lower truncation is indicated by `trunc_a_b...` and upper truncation > `trunc_b_b...`.
 
 ```{r, examp_1_ppmn_c, warning=F}
+
 formula=list(c(fun="log", edge="Chl~TP", trans="log",
                prior_mu_b0=-0.5, prior_se_b0=0.5,
                prior_mu_b1=1, prior_se_b1=0.5, trunc_a_b1=0))
-
 ```
 
 In our example a prior was already know the intercept falls around $-0.5$ and within the interval range of $~2.5\% = -0.5 - 2 \cdot 0.5=-1.5$ and $~97.5\% = -0.5 + 2 \cdot 0.5=0.5$. For the slope around $1$ and within the interval range of $~2.5\% = 1 - 2 \cdot 0.5=0$ and $~97.5\% = 1 + 2 \cdot 0.5=2$ we also assume the slope will definitely be >0 and therefore truncate the lower boundary (`trunc_a_b1`) at 0. This formula represents a single edge-function from TP to Chl. 
@@ -199,7 +199,12 @@ At this moment we have all ingredients (the formula and data) to build a foundat
 
 ```{r, examp_1_ppmn_d, warning=F}
 
-foundational_ppmn <- build_ppmn(formula = formula, data = example4)
+foundational_ppmn <- build_ppmn(formula = formula, data = example4,
+                                vertex_size = 0.2,
+                                vertex_height = 0.15,
+                                vertex_width = 0.02,
+                                fun_width = 0.1,
+                                fun_height = 0.3)
 
 ```
 
@@ -215,7 +220,7 @@ or as a Directed Bipartite Network, where the boxes represent the edge-functions
 
 ```{r, examp_1_ppmn_f, warning=F}
 
-foundational_ppmn$Plot_as_BIP
+foundational_ppmn$Plot_as_DBN
 
 ```
 
@@ -232,7 +237,7 @@ $$
 f_{Taxa|Chl}(f_{Chl|TN, TP}(x_{TN}, x_{TP}, \theta_{Chl|TN,TP,1},  \theta_{Chl|TN,TP,2}), \theta_{Taxa|Chl})
 $$
 
-The formula should then be specified as below. A minor addition is the inclusion of two priors for the edge *Taxa~Chl*. Assume there are two individuals authors/managers or methods to produce the priors then both sources of information are sources of uncertainty may be both be added. The meta-analysis incorporates this via Bayesian Model Averaging (BMA). Directly after building the foundational PPMN we choose to display the graphical representation as BIP.
+The formula should then be specified as below. A minor addition is the inclusion of two priors for the edge *Taxa~Chl*. Assume there are two individuals authors/managers or methods to produce the priors then both sources of information are sources of uncertainty may be both be added. The meta-analysis incorporates this via Bayesian Model Averaging (BMA). Directly after building the foundational PPMN we choose to display the graphical representation as DBN.
 
 ```{r, examp_2_ppmn_a, warning=F}
 
@@ -257,8 +262,8 @@ foundational_ppmn <- build_ppmn(formula = formula, data = example5,
                                 vertex_width = 0.06,
                                 fun_width = 0.1)
 
-#Display the directed Bipartite graph
-foundational_ppmn$Plot_as_BIP
+#Display the Directed Bipartite Network
+foundational_ppmn$Plot_as_DBN
 
 ```
 
@@ -361,8 +366,8 @@ formula=list(c(fun="sigmoidal", edge="Chl~TP", trans="log",
 #Build the PPMN and define size of the vertices
 foundational_ppmn <- build_ppmn(formula = formula, data = example6, txt_size = 3, vertex_height = 0.4, vertex_width = 0.48, arrow_offset = 4)
 
-#Display graph as biparite graph
-foundational_ppmn$Plot_as_BIP
+#Display graph as directed bipartite network
+foundational_ppmn$Plot_as_DBN
 ```
 
 The full foundational PPMN has now been build and all previous function can be applied. However, we are interested in updating the PPMN so that it can learn the constrains of the data if only the roots give provide information. For this the `update_ppmn` function can be use under default with the additionally data from which it can learn the multivariate constrains.

@@ -4,7 +4,7 @@
 \alias{disp_ppmn}
 \title{Displacement test for PPMN}
 \usage{
-disp_ppmn(object, new_data, nsim = 1000, level = 0.9)
+disp_ppmn(object, new_data, nsim = 1000, level = 0.9, gd_display = F)
 }
 \arguments{
 \item{object}{A foundational or updated PPMN}
@@ -14,6 +14,8 @@ disp_ppmn(object, new_data, nsim = 1000, level = 0.9)
 \item{nsim}{Number of simulations needed for updating}
 
 \item{level}{Credibility level (default level = 0.9)}
+
+\item{gd_display}{Display the Generalized Displacement (GD) in the name}
 }
 \description{
 Displacement test for PPMN

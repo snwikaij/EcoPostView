@@ -200,11 +200,10 @@ At this moment we have all ingredients (the formula and data) to build a foundat
 ```{r, examp_1_ppmn_d, warning=F}
 
 foundational_ppmn <- build_ppmn(formula = formula, data = example4,
-                                vertex_size = 0.2,
-                                vertex_height = 0.15,
+                                vertex_height = 0.14,
                                 vertex_width = 0.02,
                                 fun_width = 0.1,
-                                fun_height = 0.3)
+                                fun_height = 0.25)
 
 ```
 
@@ -259,8 +258,8 @@ formula=list(c(fun="log", edge="Chl~TN+TP", trans="log",
 
 #Build the foundational PPMN
 foundational_ppmn <- build_ppmn(formula = formula, data = example5, 
-                                vertex_width = 0.06,
-                                fun_width = 0.1)
+                                vertex_width = 0.07,
+                                fun_width = 0.08)
 
 #Display the Directed Bipartite Network
 foundational_ppmn$Plot_as_DBN
@@ -410,7 +409,10 @@ cowplot::plot_grid(
 updated_ppmn_5$Residuals$residual_plot,
 updated_ppmn_50$Residuals$residual_plot,
 updated_ppmn_95$Residuals$residual_plot,
-ncol=1)
+ncol=1, labels=c("KL fraction 5%",
+                 "KL fraction 50%",
+                 "KL fraction 95%"),
+label_y = 1.02, label_x = 1.25)
 
 ```
 
@@ -442,7 +444,7 @@ These patterns can also be observed when we would move to validation using the v
 
 ### Apply predictive fit to validation data
 
-```{r, apply updated pppn to validation data, fig.width=8, fig.height=6, warning=F}
+```{r, apply updated pppn to validation data, fig.width=8, fig.height=8, warning=FALSE}
 
 #Assess the performance of the updated ppmn on the validation data 
 pred_fit_val  <- pred_fit(updated_ppmn, val_data, rotate_x = 45, hjust = 1)
